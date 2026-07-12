@@ -12,11 +12,11 @@ By simplifying target layout parsing from core semantics, the framework allows y
 
 To maintain clarity, everything is seperated from one another. **If you are new to Luramas, please visit the links below**:
 
-* **[Getting Started & Introduction](https://pidova.github.io/Luramas-Docs/docs/intro/)** – High-level architectural overviews, system design, and step-by-step guides for writing custom lifters.
+* **[Getting Started & Introduction](https://pidova.github.io/Luramas-Docs/docs/intro)** – High-level architectural overviews, system design, and step-by-step guides for writing custom lifters.
 
 ##  Roadmap
 
 To track feature releases, target support expansions, and optimization milestones, visit our roadmap:
 
-* **[Development Roadmap](https://pidova.github.io/Luramas-Docs/docs/roadmap/)** – Real-time tracking of active milestones, upcoming optimization passes, and expanding lifter support.
+* **[Development Roadmap](https://pidova.github.io/Luramas-Docs/docs/roadmap)** – Real-time tracking of active milestones, upcoming optimization passes, and expanding lifter support.
 
