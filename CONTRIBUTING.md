@@ -5,7 +5,7 @@ Thank you for your interest in contributing to the Luramas decompiler framework!
 To keep our development standards, all contribution documentation has been moved to the documentation hub.
 
 ### Read the Contribution Guide Here:
- **[Luramas Contribution Guidelines](https://pidova.github.io/Luramas-Docs/docs/contributing/)**
+ **[Luramas Contribution Guidelines](https://pidova.github.io/Luramas-Docs/docs/contributing)**
 
 
 ### Quick Reminder

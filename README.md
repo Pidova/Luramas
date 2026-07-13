@@ -2,9 +2,9 @@
 
 **The Retargetable & Customizable Decompiler Framework**
 
-Luramas is a retargetable decompiler framework made to disassemble, optimize, and lift abstract Virtual Machine/Native CPU bytecode architectures into an analyzable and recompilable state.
+Luramas is a retargetable decompiler framework made to disassemble, optimize, and lift abstract virtual machines and native CPU architectures into an analyzable and recompilable state.
 
-By separating target-specific parsing from core semantics, the framework allows you to construct custom frontends (**Lifters**) for arbitrary architectures while reusing a unified optimization pipeline.
+By separating target-specific parsing from their core semantics, the framework allows you to develop custom frontends (**Lifters**) for arbitrary bytecode while reusing the unified optimization pipeline.
 
 ***This repository serves as the framework core for Luramas and contains the engine infrastructure.***
 
@@ -22,7 +22,7 @@ To track feature releases, target support expansions, and optimization milestone
 
 ## Pipeline
 
-Luramas separates architecture-specific lifting from the core decompilation pipeline, allowing new targets to reuse existing analysis, optimization, and code generation infrastructure.
+Luramas separates architecture-specific lifting from the core decompilation pipeline, allowing new targets to reuse existing analysis, optimizations, and code generation.
 
 ```mermaid
 flowchart LR
@@ -41,6 +41,28 @@ Each Luramas build requires a target configuration to define the architecture-sp
 
 Detailed configuration instructions can be found in the [Configuration Guide](https://pidova.github.io/Luramas-Docs/docs/configuring).
 
+## Scripts
+
+Luramas includes helper scripts for automating common redundant tasks.
+
+These scripts are used for things like:
+
+- Parsing XML definitions for intrinsics and architecture data
+- Generating editor support files such as Notepad++ UDL syntax highlighting
+
+More information and usage examples can be found in the [Scripts](scripts/) directory.
+
+
+## Testing
+
+**Each testing directory contains a corresponding output directory with the output of every test code.**
+
+### Scripts
+
+The **test-scripts/** directory contains sample scripts used for validating the decompiler across supported targets.
+
+- **test-scripts/Lua_5.3.6/** — Lua 5.3.6 
+- **test-scripts/LuaU/** — Luau
 
 ## Examples
 

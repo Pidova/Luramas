@@ -1,0 +1,14 @@
+﻿---
+AlignAfterOpenBracket: DontAlign
+AlignTrailingComments: 'true'
+AllowAllParametersOfDeclarationOnNextLine: 'true'
+AllowShortFunctionsOnASingleLine: None
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+ColumnLimit: '0'
+IndentCaseLabels: 'true'
+IndentWidth: '6'
+NamespaceIndentation: All
+ReflowComments: 'false'
+IndentPPDirectives: None
+...
