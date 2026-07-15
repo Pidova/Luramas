@@ -61,8 +61,8 @@ More information and usage examples can be found in the [Scripts](scripts/) dire
 
 The **test-scripts/** directory contains sample scripts used for validating the decompiler across supported targets.
 
-- **test-scripts/Lua_5.3.6/** — Lua 5.3.6 
-- **test-scripts/LuaU/** — Luau
+- [test-scripts/Lua_5.3.6/](test-scripts/Lua_5.3.6/) - Lua 5.3.6 
+- [test-scripts/LuaU/](test-scripts/LuaU/) - Luau
 
 ## Examples
 
