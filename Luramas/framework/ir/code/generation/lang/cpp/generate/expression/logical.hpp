@@ -1,0 +1,75 @@
+#pragma once
+#include "../emit.hpp"
+#include "unary.hpp"
+
+namespace luramas::ir::code::emitter::cpp::logical {
+
+      inline void emit_operator(std::string &buffer, const luramas::il::arch::data::bin_kinds op, const std::shared_ptr<luramas::ir::data::format::format> &format) {
+
+            switch (op) {
+                  case luramas::il::arch::data::bin_kinds::and_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_and);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::or_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_or);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::lt_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_lessthan);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::lte_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_lessthanequal);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::eq_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_equal);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::ne_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_notequal);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::gt_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_greaterthan);
+                        break;
+                  }
+                  case luramas::il::arch::data::bin_kinds::gte_: {
+                        buffer += format->spacing.format_logical_operation(cpp_langkeyword_compare_greaterthanequal);
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
+            return;
+      }
+
+      /* Emits logical operation */
+      inline void emit_logical_operation(std::string &buffer, const luramas::il::arch::data::bin_kinds op, const std::string &lvalue, const std::string &rvalue, const std::shared_ptr<luramas::ir::data::format::format> &format) {
+            if (il::arch::data::is_kinds::unary(op)) {
+                  unary::emit_unary(buffer, op, format);
+            }
+            buffer += lvalue;
+            logical::emit_operator(buffer, op, format);
+            buffer += rvalue;
+            return;
+      }
+
+      /* Emits logical compare e.g. (?? ?? ??) */
+      inline void emit_logical_compare(std::string &buffer, const luramas::il::arch::data::bin_kinds op, const std::string &lvalue, const std::string &rvalue, const std::shared_ptr<luramas::ir::data::format::format> &format, const bool open = true, const bool close = true) {
+
+            if (open) {
+                  buffer += format->spacing.format_parenthesis_open(cpp_langkeyword_parenthesis_open);
+            }
+
+            luramas::ir::code::emitter::cpp::logical::emit_logical_operation(buffer, op, lvalue, rvalue, format);
+
+            if (close) {
+                  buffer += format->spacing.format_parenthesis_open(cpp_langkeyword_parenthesis_close);
+            }
+            return;
+      }
+
+} // namespace luramas::ir::code::emitter::cpp::logical

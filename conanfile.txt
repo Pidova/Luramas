@@ -1,0 +1,13 @@
+[requires]
+boost/1.86.0
+capstone/5.0.1
+hunspell/1.7.2
+frozen/1.2.0
+rapidjson/cci.20230929
+gmp/6.3.0
+mpfr/4.2.1
+cli11/2.6.2
+
+[generators]
+CMakeDeps
+CMakeToolchain

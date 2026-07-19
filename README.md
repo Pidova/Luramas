@@ -12,13 +12,13 @@ By separating target-specific parsing from their core semantics, the framework a
 
 To maintain clarity, everything is separated from one another. **If you are new to Luramas, please visit the links below**:
 
-* **[Getting Started & Introduction](https://pidova.github.io/Luramas-Docs/docs/intro)** – High-level architectural overviews, system design, and step-by-step guides for writing custom lifters.
+* **[Getting Started & Introduction](https://pidova.github.io/Luramas-Docs/docs/intro)** - High-level architectural overviews, system design, and step-by-step guides for writing custom lifters.
 
 ## Roadmap
 
 To track feature releases, target support expansions, and optimization milestones, visit our roadmap:
 
-* **[Development Roadmap](https://pidova.github.io/Luramas-Docs/docs/roadmap)** – Real-time tracking of active milestones, upcoming optimization passes, and expanding lifter support.
+* **[Development Roadmap](https://pidova.github.io/Luramas-Docs/docs/roadmap)** - Real-time tracking of active milestones, upcoming optimization passes, and expanding lifter support.
 
 ## Pipeline
 
@@ -35,23 +35,17 @@ flowchart LR
         --> G["High-Level Source Code"]
 ```
 
-## Configuring Luramas
+## Building and Configuring Luramas
 
 Each Luramas build requires a target configuration to define the architecture-specific behavior and supported features.
 
-Detailed configuration instructions can be found in the [Configuration Guide](https://pidova.github.io/Luramas-Docs/docs/configuring).
+Detailed building and configuration instructions can be found here: [Building](https://pidova.github.io/Luramas-Docs/docs/Framework/building).
 
 ## Scripts
 
 Luramas includes helper scripts for automating common redundant tasks.
 
-These scripts are used for things like:
-
-- Parsing XML definitions for intrinsics and architecture data
-- Generating editor support files such as Notepad++ UDL syntax highlighting
-
 More information and usage examples can be found in the [Scripts](scripts/) directory.
-
 
 ## Testing
 

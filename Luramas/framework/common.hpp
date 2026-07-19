@@ -1,0 +1,11 @@
+#pragma once
+#include "common\constants.hpp"
+#include "common\debug.hpp"
+#include "common\error.hpp"
+#include "common\filesystem.hpp"
+#include "common\math.hpp"
+#include "common\string.hpp"
+#include "common\types\arith.hpp"
+#include "common\types\generics.hpp"
+#include <frozen\string.h>
+#include <frozen\unordered_map.h>

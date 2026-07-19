@@ -1,0 +1,16 @@
+{
+  "version": 4,
+  "vendor": {
+    "conan": {}
+  },
+  "include": [
+    "out/build/x64-debug/conan/CMakePresets.json"
+  ],
+  "buildPresets": [
+    {
+      "name": "debug-limited",
+      "configurePreset": "conan-debug",
+      "jobs": 8
+    }
+  ]
+}

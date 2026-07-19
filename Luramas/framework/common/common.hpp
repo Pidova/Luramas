@@ -1,0 +1,13 @@
+#pragma once
+#include "constants.hpp"
+#include "containers.hpp"
+#include "debug.hpp"
+#include "error.hpp"
+#include "filesystem.hpp"
+#include "math.hpp"
+#include "psuedo_keywords.hpp"
+#include "recursion.hpp"
+#include "string.hpp"
+#include "tools.hpp"
+#include "types\arith.hpp"
+#include "types\generics.hpp"
