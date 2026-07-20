@@ -6,6 +6,7 @@ These are build-time utilities, not part of the runtime.
 ## Contents
 
 * [`built_in_builder/`](built_in_builder/) - Generates a C++ table mapping x86 instructions (Capstone `x86_insn` IDs) to their semantic *built-ins*, derived from Intel's Intrinsics Guide data.
+* [`x86_emitter/`](x86_emitter/) - Generates C++ emitter data for testing chunks of x86 instructions.
 
 See each subdirectory's `README.md` for details.
 

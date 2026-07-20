@@ -37,10 +37,60 @@ namespace vm {
       }
 
       void VADDSUBPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 63u, SRC1.read(0u, 63u) - SRC2.read(0u, 63u));
+                        DEST.write(64u, 127u, SRC1.read(64u, 127u) + SRC2.read(64u, 127u));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 63u, SRC1.read(0u, 63u) - SRC2.read(0u, 63u));
+                        DEST.write(64u, 127u, SRC1.read(64u, 127u) + SRC2.read(64u, 127u));
+                        DEST.write(128u, 191u, SRC1.read(128u, 191u) - SRC2.read(128u, 191u));
+                        DEST.write(192u, 255u, SRC1.read(192u, 255u) + SRC2.read(192u, 255u));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }  
             return;
       }
 
       void VADDSUBPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+            
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC2.read(0u, 31u));
+                        DEST.write(32u, 63u, SRC1.read(32u, 63u) + SRC2.read(32u, 63u));
+                        DEST.write(64u, 95u, SRC1.read(64u, 95u) - SRC2.read(64u, 95u));
+                        DEST.write(96u, 127u, SRC1.read(96u, 127u) + SRC2.read(96u, 127u));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC2.read(0u, 31u));
+                        DEST.write(32u, 63u, SRC1.read(32u, 63u) + SRC2.read(32u, 63u));
+                        DEST.write(64u, 95u, SRC1.read(64u, 95u) - SRC2.read(64u, 95u));
+                        DEST.write(96u, 127u, SRC1.read(96u, 127u) + SRC2.read(96u, 127u));
+                        DEST.write(128u, 159u, SRC1.read(128u, 159u) - SRC2.read(128u, 159u));
+                        DEST.write(160u, 191u, SRC1.read(160u, 191u) + SRC2.read(160u, 191u));
+                        DEST.write(192u, 223u, SRC1.read(192u, 223u) - SRC2.read(192u, 223u));
+                        DEST.write(224u, 255u, SRC1.read(224u, 255u) + SRC2.read(224u, 255u));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
             return;
       }
 
@@ -117,6 +167,13 @@ namespace vm {
       }
 
       void VBROADCASTF128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto DEST = operands.front();
+            const auto SRC = operands.back();
+            const auto temp = SRC.read(0u, 127u);
+            DEST.write(0u, 127u, temp);
+            DEST.write(128u, 255u, temp);
+            DEST.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
             return;
       }
 

@@ -262,6 +262,27 @@ namespace vm {
       }
 
       void VINSERTI128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+            
+            const auto dest = operands.front();
+            const auto src1 = operands[1u];
+            const auto src2 = operands[2u];
+            const auto imm = operands.back();
+
+            auto temp = src1.read(0u, 255);
+            switch (static_cast<std::uint8_t>(imm.integral & 1u)) {
+                  case 0u: {
+                        temp.write(0u, 127u, src2.read(0u, 127u));
+                        break;
+                  }
+                  case 1u: {
+                        temp.write(128u, 255u, src2.read(0u, 127u));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
+            dest = temp; 
             return;
       }
 

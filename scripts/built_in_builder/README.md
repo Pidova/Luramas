@@ -71,8 +71,6 @@ built_in_builder/
 |- output.cpp             # Output file
 ```
 
----
-
 ## Usage
 
 ### Get the data
