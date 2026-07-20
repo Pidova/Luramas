@@ -20,7 +20,7 @@ namespace luramas::ir::parser {
             }
             return nullptr;
       }
-      luramas_count manager::get_reg() {
+      luramas_register manager::get_reg() {
 
             return this->avaliable_reg++;
       }

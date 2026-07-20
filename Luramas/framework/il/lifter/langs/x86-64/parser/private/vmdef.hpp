@@ -25,7 +25,7 @@
 
 namespace vm {
 
-      using registrar = luramas::il::lifter::builder::registrar<x86_insn, x86_reg, xeflags>;
+      using registrar = luramas::il::lifter::builder::registrar<x86_insn, x86_reg, xeflags, luramas::il::X86::lifter::hardware_constants>;
 }
 
 inline luramas::il::lifter::builder::build::expr klura_internal_read(const vm::registrar &registrar, const char *const g_str) {

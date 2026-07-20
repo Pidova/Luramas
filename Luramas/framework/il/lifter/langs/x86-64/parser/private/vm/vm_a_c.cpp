@@ -315,7 +315,7 @@ namespace vm {
             const auto dest = operands.front();
             const auto src = operands.back();
 
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   MOVSXD(registrar, operands);
             } else {
@@ -598,7 +598,7 @@ namespace vm {
 
       void CALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            build::page_calls(registrar, operands, registrar.suggested_bit_set == 64u ? REG_RSP : registrar.suggested_bit_set == 32u ? REG_ESP
+            build::page_calls(registrar, operands, registrar.hw_constants.suggested_bit_set == 64u ? REG_RSP : registrar.hw_constants.suggested_bit_set == 32u ? REG_ESP
                                                                                                                                      : REG_SP);
             return;
       }
@@ -937,7 +937,7 @@ namespace vm {
 
             const auto dest = operands.front();
             const auto src = operands.back();
-            const auto accumulator = registrar.suggested_bit_set == 64u ? REG_RAX : REG_EAX;
+            const auto accumulator = registrar.hw_constants.suggested_bit_set == 64u ? REG_RAX : REG_EAX;
 
             FZF = 1u;
             kif(accumulator == dest) {
@@ -1190,7 +1190,7 @@ namespace vm {
 
             const auto dest = operands.front();
             const auto src = operands.back();
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
                   dest.write(0u, 63u, LURAMAS_FBUILD_EXTEND_FLOAT(src.read(0u, 31u)));
             } else {
                   dest.write(0u, 31u, LURAMAS_FBUILD_EXTEND_FLOAT(src.read(0u, 31u)));

@@ -244,7 +244,10 @@ std::optional<std::string> luramas::decompile_x86(const std::string &code, std::
             }
       }
 
-      luramas::il::X86::lifter::lift(pinsts, buffer, details, external, luramas::il::X86::lifter::bit_mode::x32);
+      luramas::il::X86::lifter::hardware_constants hw_constants;
+      hw_constants.suggested_bit_set = 32u;
+      hw_constants.MAXVL = 512u;
+      luramas::il::X86::lifter::lift(pinsts, hw_constants, buffer, details, external);
       for (const auto &[insn, n] : inst_freeable) {
             cs_free(insn, n);
       }

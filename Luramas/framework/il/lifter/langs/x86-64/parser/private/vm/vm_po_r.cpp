@@ -356,7 +356,7 @@ namespace vm {
 
             if (!operands.empty()) {
 
-                  build::reg_stack(registrar) += operands.front() + (registrar.suggested_bit_set == 32u ? 4u : 8u);
+                  build::reg_stack(registrar) += operands.front() + (registrar.hw_constants.suggested_bit_set == 32u ? 4u : 8u);
             }
 
             luramas_flag fgoes_to = false;

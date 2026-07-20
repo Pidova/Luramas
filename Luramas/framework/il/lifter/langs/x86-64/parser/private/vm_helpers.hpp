@@ -340,7 +340,7 @@ namespace build {
       }
 
       inline luramas::il::lifter::builder::build::expr reg_stack(const vm::registrar &registrar) {
-            switch (registrar.suggested_bit_set) {
+            switch (registrar.hw_constants.suggested_bit_set) {
                   case 16u: {
                         return REG_SP;
                   }

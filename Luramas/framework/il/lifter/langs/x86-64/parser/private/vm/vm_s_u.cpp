@@ -36,7 +36,7 @@ namespace vm {
             const auto DEST = operands.front();
             const auto COUNT = operands.back();
 
-            const bool is_64bit = (registrar.suggested_bit_set == 64u);
+            const bool is_64bit = (registrar.hw_constants.suggested_bit_set == 64u);
             const auto countMASK = is_64bit ? 0x3F : 0x1F;
 
             auto tempCOUNT = COUNT & countMASK;
@@ -445,7 +445,7 @@ namespace vm {
       void STOSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             REG_AL.write(REG_AL);
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
                   kif(FDF == 0u);
                   {
                         ++REG_RDI;
@@ -472,7 +472,7 @@ namespace vm {
       void STOSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             REG_EAX.write(REG_EAX);
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
                   kif(FDF == 0u);
                   {
                         REG_RDI += 4u;
@@ -499,7 +499,7 @@ namespace vm {
       void STOSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             REG_RAX.write(REG_RAX);
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
                   kif(FDF == 0u);
                   {
                         REG_RDI += 8u;
@@ -528,7 +528,7 @@ namespace vm {
       void STOSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             REG_AX.write(REG_AX);
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
                   kif(FDF == 0u);
                   {
 

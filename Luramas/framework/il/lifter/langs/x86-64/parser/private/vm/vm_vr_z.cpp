@@ -360,7 +360,7 @@ namespace vm {
             REG_ZMM5 = 0u;
             REG_ZMM6 = 0u;
             REG_ZMM7 = 0u;
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   REG_ZMM8 = 0u;
                   REG_ZMM9 = 0u;
@@ -384,7 +384,7 @@ namespace vm {
             REG_ZMM5.fill(128u, 0u);
             REG_ZMM6.fill(128u, 0u);
             REG_ZMM7.fill(128u, 0u);
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   REG_ZMM8.fill(128u, 0u);
                   REG_ZMM9.fill(128u, 0u);
@@ -537,7 +537,7 @@ namespace vm {
 
       void XLATB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            switch (registrar.suggested_bit_set) {
+            switch (registrar.hw_constants.suggested_bit_set) {
                   case 8u:
                   case 16u: {
                         REG_AL = REG_BX[REG_AL];

@@ -6,7 +6,7 @@
 namespace parser {
 
       /* Parses instructions. */
-      void parse_instruction(const luramas::il::helpers::low::disassembly_manager<cs_insn> &dism, const luramas::profile::externals::data<x86_reg> &external, const luramas::il::X86::lifter::bit_mode mode);
+      void parse_instruction(const luramas::il::helpers::low::disassembly_manager<cs_insn> &dism, const luramas::il::X86::lifter::hardware_constants &hw_constants, const luramas::profile::externals::data<x86_reg> &external);
 
 } // namespace parser
 

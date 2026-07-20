@@ -482,7 +482,6 @@ namespace luramas::il::lifter::builder {
             std::shared_ptr<luramas::il::disassembly> make(const luramas::il::arch::data::bin_kinds b);
             void make_else();
             void close_scope(const bool input = false, luramas_address loc = 0u);
-            void make_do();
             expr make_reg(const luramas_register r);
             void make_load(const std::uint64_t flag_id, const expr &reg);
             void make_load(const expr &reg, const std::intptr_t i);
@@ -617,11 +616,11 @@ namespace luramas::il::lifter::builder {
             boost::unordered_flat_map<std::string, luramas_id> globals;
       };
 
-      template <typename inst_T, typename regs_T, typename flags_T>
+      template <typename inst_T, typename regs_T, typename flags_T, typename hardware_cnst_T>
       struct registrar {
 
-            registrar(const inst_T inst, const std::shared_ptr<build> &build, const luramas::profile::externals::data<regs_T> &externals, const std::uint8_t suggested_bit_set, const luramas::profile::inst_bytes &bytes = {})
-                : inst(inst), build(build), suggested_bit_set(suggested_bit_set), bytes(bytes), externals(externals) {
+            registrar(const inst_T inst, const std::shared_ptr<build> &build, const hardware_cnst_T& hw_constants, const luramas::profile::externals::data<regs_T> &externals, const luramas::profile::inst_bytes &bytes = {})
+                : inst(inst), build(build), hw_constants(hw_constants), bytes(bytes), externals(externals) {
                   return;
             }
 
@@ -701,8 +700,8 @@ namespace luramas::il::lifter::builder {
 
             /* Data */
             inst_T inst;
-            std::shared_ptr<build> build = nullptr;
-            std::uint8_t suggested_bit_set = 0u;
+            hardware_cnst_T hw_constants;    /**/
+            std::shared_ptr<build> build = nullptr; /* Linked builder */
             luramas::profile::inst_bytes bytes;
             luramas::profile::real_inst original;
             luramas::profile::externals::data<regs_T> externals;

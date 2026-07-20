@@ -256,9 +256,9 @@ namespace luramas::ir::tools::types {
                   std::shared_ptr<ir::types::object::type> most_frequent = nullptr;
 
                   for (const auto &i : types) {
-                        if (const auto count = std::count_if(types.begin(), types.end(), [&](const auto &x) {
+                        if (const auto count = static_cast<std::size_t>(std::count_if(types.begin(), types.end(), [&](const auto &x) {
                                   return x && i && *x == *i;
-                            });
+                            }));
                             count > max_count) {
                               max_count = count;
                               most_frequent = i;

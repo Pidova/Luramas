@@ -282,7 +282,7 @@ namespace vm {
             const auto src = operands[1u];
             const auto imm = operands.back();
 
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
                   const auto temp = luramas::il::lifter::builder::libraries::structure::concat(f, dest, src) >> (imm * 8u);
                   dest.write(0u, 63u, temp.read(0u, 63));
             } else {
@@ -1021,7 +1021,7 @@ namespace vm {
 
       void MOVSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   kif(FDF == 0u);
                   {
@@ -1053,7 +1053,7 @@ namespace vm {
 
       void MOVSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   kif(FDF == 0u);
                   {
@@ -1093,7 +1093,7 @@ namespace vm {
 
       void MOVSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   kif(FDF == 0u);
                   {
@@ -1139,7 +1139,7 @@ namespace vm {
 
       void MOVSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            if (registrar.suggested_bit_set == 64u) {
+            if (registrar.hw_constants.suggested_bit_set == 64u) {
 
                   kif(FDF == 0u);
                   {
@@ -1353,7 +1353,7 @@ namespace vm {
             const auto src1 = operands[2u];
             const auto src2 = operands.back();
 
-            if (registrar.suggested_bit_set == 32u) {
+            if (registrar.hw_constants.suggested_bit_set == 32u) {
                   src1 = REG_EDX;
                   const auto product = src1 * src2;
                   dest1 = product.read(0, 31);

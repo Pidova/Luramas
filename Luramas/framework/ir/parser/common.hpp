@@ -21,13 +21,15 @@ namespace luramas::ir::parser {
 
             std::shared_ptr<ir_stat::ir_expr> set(const std::string &name, const std::shared_ptr<ir_stat::ir_expr> &expr);
             std::shared_ptr<ir_stat::ir_expr> get(const std::string &name) const;
-            luramas_count get_reg();
+
+            /* Get avaliable register */
+            luramas_register get_reg();
 
             flags flags;
             std::vector<boost::unordered_flat_map<std::string, std::shared_ptr<ir_stat::ir_expr>>> var_scope; /* Variable scope */
 
           private:
-            luramas_count avaliable_reg = 0u;
+            luramas_register avaliable_reg = 0u; 
       };
 
       enum class errors : std::uint8_t {

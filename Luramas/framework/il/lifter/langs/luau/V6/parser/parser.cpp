@@ -912,7 +912,7 @@ namespace luau_v6_parsers {
                   luramas::il::ilang::debug_manager dbg(pm.il);
                   pm.il->debug.emplace(dbg);
             }
-            for (auto i = 0u; i < p->sizelocvars; ++i) {
+            for (auto i = 0; i < p->sizelocvars; ++i) {
                   const auto &dbg = p->locvars[i];
 
                   marked_map.try_emplace(dbg.startpc, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MARK>(pm.il, dbg.startpc));

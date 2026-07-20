@@ -30,7 +30,7 @@ void luramas::il::lifter::lift(const Proto *p, const std::vector<std::shared_ptr
       lua_53_6_parsers::parse_instruction(buffer, dism, stack_top);
 
       /* Parses Kvalues */
-      for (auto i = 0u; i < p->sizek; ++i) {
+      for (auto i = 0; i < p->sizek; ++i) {
 
             const auto kval = p->k[i];
 
@@ -126,7 +126,7 @@ void luramas::il::lifter::lift(const Proto *p, const std::vector<std::shared_ptr
       }
 
       /* Protos */
-      for (auto i = 0u; i < p->sizep; ++i) {
+      for (auto i = 0; i < p->sizep; ++i) {
             buffer->closures.emplace_back(lift_closure(p->p[i]));
       }
 

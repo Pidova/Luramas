@@ -15,12 +15,12 @@
 */
 
 /* Parses instructions. */
-void parser::parse_instruction(const luramas::il::helpers::low::disassembly_manager<cs_insn> &dism, const luramas::profile::externals::data<x86_reg> &external, const luramas::il::X86::lifter::bit_mode mode) {
+void parser::parse_instruction(const luramas::il::helpers::low::disassembly_manager<cs_insn> &dism, const luramas::il::X86::lifter::hardware_constants &hw_constants, const luramas::profile::externals::data<x86_reg> &external) {
 
       bool inited = false;
       luramas_address pc = 0u;
       const auto &il = dism.il;
-      vm::registrar registrar(x86_insn::X86_INS_NOP, nullptr, external, mode == luramas::il::X86::lifter::bit_mode::x64 ? 64u : 32u);
+      vm::registrar registrar(x86_insn::X86_INS_NOP, nullptr, hw_constants, external);
 
       boost::unordered_flat_set<luramas_address> set_pages;
       std::vector<std::vector<std::shared_ptr<luramas::il::disassembly>>> opened_conditions;
@@ -28,7 +28,7 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
       auto build = std::make_shared<luramas::il::lifter::builder::build>();
       build->details = std::move(dism.details);
       build->original_address_data = std::move(dism.original_address_data);
-      build->suggested_bit_set = registrar.suggested_bit_set;
+      build->suggested_bit_set = registrar.hw_constants.suggested_bit_set;
 
       for (auto idx = 0u; idx < dism.data.size(); ++idx) {
 
