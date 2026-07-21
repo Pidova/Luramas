@@ -1134,6 +1134,35 @@ namespace vm {
       }
 
       void VPHADDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 31u, SRC1.read(0u, 31u) + SRC1.read(32u, 63u));
+                        DEST.write(32u, 63u, SRC1.read(64u, 95u) + SRC1.read(96u, 127u));
+                        DEST.write(64u, 95u, SRC2.read(0u, 31u) + SRC2.read(32u, 63u));
+                        DEST.write(96u, 127u, SRC2.read(64u, 95u) + SRC2.read(96u, 127u));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 31u, SRC1.read(0u, 31u) + SRC1.read(32u, 63u));
+                        DEST.write(32u, 63u, SRC1.read(64u, 95u) + SRC1.read(96u, 127u));
+                        DEST.write(64u, 95u, SRC2.read(0u, 31u) + SRC2.read(32u, 63u));
+                        DEST.write(96u, 127u, SRC2.read(64u, 95u) + SRC2.read(96u, 127u));
+                        DEST.write(128u, 159u, SRC1.read(128u, 159u) + SRC1.read(160u, 191u));
+                        DEST.write(160u, 191u, SRC1.read(192u, 223u) + SRC1.read(224u, 255u));
+                        DEST.write(192u, 223u, SRC2.read(128u, 159u) + SRC2.read(160u, 191u));
+                        DEST.write(224u, 255u, SRC2.read(192u, 223u) + SRC2.read(224u, 255u));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
             return;
       }
 
@@ -1174,6 +1203,47 @@ namespace vm {
       }
 
       void VPHADDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+            
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 15u, SRC1.read(0u, 15u) + SRC1.read(16u, 31u));
+                        DEST.write(16u, 31u, SRC1.read(32u, 47u) + SRC1.read(48u, 63u));
+                        DEST.write(32u, 47u, SRC1.read(64u, 79u) + SRC1.read(80u, 95u));
+                        DEST.write(48u, 63u, SRC1.read(96u, 111u) + SRC1.read(112u, 127u));
+                        DEST.write(64u, 79u, SRC2.read(0u, 15u) + SRC2.read(16u, 31u));
+                        DEST.write(80u, 95u, SRC2.read(32u, 47u) + SRC2.read(48u, 63u));
+                        DEST.write(96u, 111u, SRC2.read(64u, 79u) + SRC2.read(80u, 95u));
+                        DEST.write(112u, 127u, SRC2.read(96u, 111u) + SRC2.read(112u, 127u));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 15u, SRC1.read(0u, 15u) + SRC1.read(16u, 31u));
+                        DEST.write(16u, 31u, SRC1.read(32u, 47u) + SRC1.read(48u, 63u));
+                        DEST.write(32u, 47u, SRC1.read(64u, 79u) + SRC1.read(80u, 95u));
+                        DEST.write(48u, 63u, SRC1.read(96u, 111u) + SRC1.read(112u, 127u));
+                        DEST.write(64u, 79u, SRC2.read(0u, 15u) + SRC2.read(16u, 31u));
+                        DEST.write(80u, 95u, SRC2.read(32u, 47u) + SRC2.read(48u, 63u));
+                        DEST.write(96u, 111u, SRC2.read(64u, 79u) + SRC2.read(80u, 95u));
+                        DEST.write(112u, 127u, SRC2.read(96u, 111u) + SRC2.read(112u, 127u));
+                        DEST.write(128u, 143u, SRC1.read(128u, 143u) + SRC1.read(144u, 159u));
+                        DEST.write(144u, 159u, SRC1.read(160u, 175u) + SRC1.read(176u, 191u));
+                        DEST.write(160u, 175u, SRC1.read(192u, 207u) + SRC1.read(208u, 223u));
+                        DEST.write(176u, 191u, SRC1.read(224u, 239u) + SRC1.read(240u, 255u));
+                        DEST.write(192u, 207u, SRC2.read(128u, 143u) + SRC2.read(144u, 159u));
+                        DEST.write(208u, 223u, SRC2.read(160u, 175u) + SRC2.read(176u, 191u));
+                        DEST.write(224u, 239u, SRC2.read(192u, 207u) + SRC2.read(208u, 223u));
+                        DEST.write(240u, 255u, SRC2.read(224u, 239u) + SRC2.read(240u, 255u));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
             return;
       }
 

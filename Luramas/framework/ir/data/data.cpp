@@ -190,18 +190,6 @@ namespace luramas::ir::data {
                   }
             }
       }
-      bool control_flow_dependant(const expr_kinds k) {
-            switch (k) {
-                  case expr_kinds::call:
-                  case expr_kinds::page_function_call: {
-                        return true;
-                  }
-                  default: {
-                        return false;
-                  }
-            }
-      }
-
       bool defines(const keywords k) {
             if (for_loop(k)) {
                   return true;

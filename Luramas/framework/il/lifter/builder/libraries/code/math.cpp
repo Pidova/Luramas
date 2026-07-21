@@ -335,4 +335,26 @@ namespace luramas::il::lifter::builder::libraries::math {
             return result;
       }
 
+      build::expr parity(function_handler def, const build::expr &x) {
+
+            auto t = def.temp();
+            t = 0u;
+            for (auto i = 0u; i < 8u; ++i) {
+                  t = t ^ x.read(i);
+            }
+            return t;
+      }
+
+      build::expr affine_byte(function_handler def, const build::expr &tsrc2qw, const build::expr &src1byte, const build::expr &imm8) {
+
+            auto result = def.temp();
+            result = 0u;
+            for (auto i = 0u; i < 8u; ++i) {
+
+                  const auto bit = parity(def, tsrc2qw.read((7u - i) * 8u, (7u - i) * 8u + 7u) & src1byte) ^ imm8.read(i);
+                  result.write(i, i, bit);
+
+            }
+            return result;
+      }
 } // namespace luramas::il::lifter::builder::libraries::math

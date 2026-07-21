@@ -29,4 +29,6 @@ namespace luramas::il::lifter::builder::libraries::math {
       build::expr ceil(function_handler def, const build::expr &x);
       build::expr truncate(function_handler def, const build::expr &x);
       build::expr round_to_integer(function_handler def, const build::expr &src, const build::expr &round_control);
+      build::expr parity(function_handler def, const build::expr &x);
+      build::expr affine_byte(function_handler def, const build::expr &tsrc2qw, const build::expr &src1byte, const build::expr &imm8);
 } // namespace luramas::il::lifter::builder::libraries::math

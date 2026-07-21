@@ -28,9 +28,6 @@ bool ir_stat::ir_expr::is_volatile() const {
 bool ir_stat::ir_expr::is_closure_sensitive() const {
       return luramas::ir::data::closure_sensitive(this->k);
 }
-bool ir_stat::ir_expr::is_control_flow_dependant() const {
-      return luramas::ir::data::control_flow_dependant(this->k);
-}
 bool ir_stat::ir_expr::is_primitive_kind_dest_violation() const {
       return luramas::ir::data::primitive_expr_kind_dest_violation(this->k);
 }

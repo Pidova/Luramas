@@ -417,6 +417,23 @@ namespace vm {
       }
 
       void GF2P8AFFINEQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto SRCDEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto IMM8 = operands.back();
+
+            function_handler f(registrar.build);
+            for (auto j = 0u; j < 2u; ++j) {
+
+                  const auto qword_offset = j * 64u;
+                  const auto tsrc1_qw = SRC1.read(qword_offset, qword_offset + 63u);
+                  for (auto b = 0u; b < 8u; ++b) {
+
+                        const auto byte_low = qword_offset + (b * 8u);
+                        const auto byte_high = byte_low + 7u;
+                        SRCDEST.write(byte_low, byte_high, luramas::il::lifter::builder::libraries::math::affine_byte(f, tsrc1_qw, SRCDEST.read(byte_low, byte_high), IMM8));
+                  }
+            }
             return;
       }
 

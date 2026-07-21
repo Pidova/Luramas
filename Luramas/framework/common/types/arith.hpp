@@ -16,12 +16,13 @@
 
 #define MAX_BIT_WIDTH 1024u
 
-using luramas_int_base = std::intptr_t;                                                                                                                                                                         /* Basic base */
-using luramas_int_pbase = double;                                                                                                                                                                               /* precision base */
+using luramas_int_base = std::intptr_t;                                                                                                                                                                  /* Basic base */
+using luramas_int_pbase = double;                                                                                                                                                                     /* Precision base */
 using luramas_int_xbase = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<MAX_BIT_WIDTH, MAX_BIT_WIDTH, boost::multiprecision::signed_magnitude, boost::multiprecision::unchecked, void>>; /* Extended base */
 using luramas_int_xpbase = boost::multiprecision::mpfr_float;                                                                                                                                                   /* Extra percision base */
 using luramas_int_range = std::pair<luramas_int_base, luramas_int_base>;                                                                                                                                        /* Range [start, end) */
 
+/* Integer wrapper to support dynamic high bitwidth and precision */
 struct luramas_int {
 
       constexpr luramas_int() noexcept
@@ -104,7 +105,6 @@ struct luramas_int {
       luramas_int &operator=(const std::string &s);
       luramas_int &operator=(const luramas_int_pbase p);
       luramas_int &operator=(const luramas_int_xbase &b);
-      //  luramas_int &operator=(const luramas_int_xpbase &p);
 
       /* Arith */
       luramas_int operator+(const luramas_int &i) const;
@@ -277,11 +277,14 @@ struct luramas_int {
       /* Misc */
       std::size_t size() const;                                               /* Size */
       std::size_t max_size() const;                                           /* Max b size */
+
       bool precise() const;                                                   /* Is percise? */
       bool negative() const;                                                  /* Is negative? */
+
       std::uint16_t bit_width() const;                                        /* Bit width of base */
       std::uint16_t count_leading_ones() const;                               /* Count leading ones */
       std::uint16_t count_trailing_zeros() const;                             /* Count trailing zeros */
+
       luramas_int read(const luramas_int &min, const luramas_int &max) const; /* Read bits [min, max]; index starts 0 */
       std::pair<std::uint16_t, std::uint16_t> first_trailing_ones() const;
       luramas_int sign_extend(const std::uint16_t s) const;
@@ -298,9 +301,9 @@ struct luramas_int {
       void deserialize(std::istream &is);
 
     private:
-      bool precision = false;
+      bool precision = false; /* Uses precision? */
       union {
-            luramas_int_xbase b;
-            double p;
+            luramas_int_xbase b; /* Basic base */
+            double p;            /* Precision base */
       };
 };

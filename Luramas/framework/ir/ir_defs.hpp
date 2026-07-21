@@ -7,7 +7,7 @@
 
 struct ir_stat : std::enable_shared_from_this<ir_stat> {
 
-      using space = std::vector<std::shared_ptr<ir_stat>>;
+      using space = std::vector<std::shared_ptr<ir_stat>>; /* Vector of stats */
 
       /*   
         IR EXPRESSION:
@@ -15,7 +15,7 @@ struct ir_stat : std::enable_shared_from_this<ir_stat> {
       */
       struct ir_expr : std::enable_shared_from_this<ir_expr> {
 
-            using space = std::vector<std::shared_ptr<ir_expr>>;
+            using space = std::vector<std::shared_ptr<ir_expr>>; /* Vector of exprs */
 
             /* Flags */
             luramas::ir::flags::ir_expr flags; /* IR flags */
@@ -50,9 +50,9 @@ struct ir_stat : std::enable_shared_from_this<ir_stat> {
             space captures;                                                                      /* Captured data for calls  */
             std::vector<std::pair<std::shared_ptr<ir_expr>, std::shared_ptr<ir_expr>>> tmembers; /* Table members of the object */
 
-            std::shared_ptr<ir_stat> transform() const;
-            void clone(std::shared_ptr<ir_expr> &expr, const bool deep = true, const bool regs = true) const;
-            std::shared_ptr<ir_expr> clone(const bool deep = true, const bool regs = true) const;
+            std::shared_ptr<ir_stat> transform() const; /* Transform expr into stat, returns nullptr if it can't */
+            void clone(std::shared_ptr<ir_expr> &expr, const bool deep = true, const bool regs = true) const; /* Clone expr into a buffer */
+            std::shared_ptr<ir_expr> clone(const bool deep = true, const bool regs = true) const;  /* Clone expr as the result */
 
             /* Emitters */
             void emit_upvalue(const luramas_register r, const luramas_vregister vreg);
@@ -121,33 +121,32 @@ struct ir_stat : std::enable_shared_from_this<ir_stat> {
             }
             template <expr_reg_kinds rk>
             bool is_rk() const {
-                  return this->rk == rk;
+                 return this->rk == rk;
             }
 
             /* Is data */
-            bool is_register_reference() const;
-            bool is_name_qualifier() const;
-            bool is_reg(const luramas_register r) const;
-            bool is_flag(const luramas_int &r) const;
-            bool is_paging() const;
-            bool is_primitive() const;
-            bool is_mutable_basic_tk() const;
-            bool is_volatile() const;
-            bool is_closure_sensitive() const;
-            bool is_control_flow_dependant() const;
-            bool is_primitive_kind_dest_violation() const;
-            bool is_mutable_tk() const;
-            bool is_global_tk() const;
-            bool is_integral() const;
-            bool is_integral(const luramas_int &n) const;
-            bool is_unsafe_k() const;
-            bool is_unsafe() const;
-            bool is_flag() const;
-            bool is_precise() const;
-            bool is_concatable_tk() const;
-            bool is_complex_k() const;
-            bool is_complex_tk() const;
-            bool implicit() const;
+            bool is_register_reference() const;          /* Kind can reference registers? */
+            bool is_name_qualifier() const;              /* Uses any sort of naming? */
+            bool is_reg(const luramas_register r) const; /* Is register? */
+            bool is_flag(const luramas_int &r) const;    /* Is flag? */
+            bool is_paging() const;                      /* Is paging kind? */
+            bool is_primitive() const;                   /* Is primitive kind? */
+            bool is_mutable_basic_tk() const;            /* Type kind can be mutated by other instructions? */
+            bool is_volatile() const;                    /* Unsafe or can cause undeterministic results? */
+            bool is_closure_sensitive() const;           /* Can be effected by closure? */
+            bool is_primitive_kind_dest_violation() const; /* Is primitive expr kind in violation if a dest? */
+            bool is_mutable_tk() const; /* Is type kind mutable? */
+            bool is_global_tk() const;                     /* Is type kind a global? */
+            bool is_integral() const;   /* Is type kind an integer? */
+            bool is_integral(const luramas_int &n) const; /* Is type kind an integer and int == n? */
+            bool is_unsafe_k() const;                     /* Is kind unsafe? */
+            bool is_unsafe() const; /* Is expr unsafe? */
+            bool is_flag() const; /* Is expr flag? */
+            bool is_precise() const; /* Does int have precision? */
+            bool is_concatable_tk() const; /* Is type kind concatable? */
+            bool is_complex_k() const;     /* Can kind produce a result? */
+            bool is_complex_tk() const;    /* Can type kind produce a result? */
+            bool implicit() const;         /* Can expr produce implicit results? */
 
             /* Misc */
             void clear();
@@ -578,9 +577,6 @@ namespace luramas::ir {
 
             /* Expression can be mutated by other calls etc? */
             bool unsafe(const expr_kinds k);
-
-            /* Do other parts of the control flow depend on it? */
-            bool control_flow_dependant(const expr_kinds k);
 
             /* Expression is volatile? */
             bool volatile_(const expr_kinds k);

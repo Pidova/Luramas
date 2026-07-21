@@ -87,6 +87,8 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
             const auto c2 = tools::make(build, xeflags::C2);
             const auto c3 = tools::make(build, xeflags::C3);
             if (!inited) {
+                  
+                  /* Init Flags */
                   registrar.setf<xeflags::AF>(af);
                   registrar.setf<xeflags::CF>(cf);
                   registrar.setf<xeflags::SF>(sf);
@@ -109,8 +111,15 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
                   registrar.setf<xeflags::C1>(c1);
                   registrar.setf<xeflags::C2>(c2);
                   registrar.setf<xeflags::C3>(c3);
-                  for (auto r = X86_REG_INVALID + 1u; r <= X86_REG_BND3; ++r) {
-                        registrar.setr(static_cast<x86_reg>(r), tools::make(build, static_cast<x86_reg>(r)));
+                 
+                  /* Init registers */
+                  {
+                        constexpr auto START = static_cast<std::size_t>(X86_REG_INVALID) + 1u;
+                        constexpr auto END = static_cast<std::size_t>(X86_REG_BND3);
+                        constexpr auto COUNT = END - START + 1u;
+                        [&]<std::size_t... Is>(std::index_sequence<Is...>) {
+                              (registrar.setr<static_cast<x86_reg>(START + Is)>(tools::make(build, static_cast<x86_reg>(START + Is))), ...);
+                        }(std::make_index_sequence<COUNT>{});
                   }
                   registrar.zero_flags();
                   inited = true;
@@ -126,7 +135,6 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
                   set_pages.insert(*it);
                   registrar.build->make_page(*it);
             }
-            std::cout << "0x" << std::hex << vinst.main.pc << ": " << d.mnemonic << " " << d.op_str << "\n";
 
             /* Set data (Can not be optable because some stuff may need too resolved dynamically) */
             const auto operands = tools::common::canonicalize_insert(vinst.main, build, d.detail->x86, tools::flags(d.id == x86_insn::X86_INS_LEA, kinds::unsign(static_cast<x86_insn>(d.id))));
@@ -134,7 +142,7 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
             if (!vm::parse(registrar, operands)) {
 
                   if (const auto bint = simd::get(registrar.inst); !bint.empty()) {
-                        build->make_built_in(bint, operands, luramas::il::lifter::builder::build::flag_vector({af, cf, sf, zf, pf, of, tf, itf, df, nf, rf, c0, c1, c2, c3}));
+                        build->make_built_in(bint, operands, {af, cf, sf, zf, pf, of, tf, itf, df, nf, rf, c0, c1, c2, c3});
                   }
             }
             if (dism.il->flags.fannotate_instructions) {

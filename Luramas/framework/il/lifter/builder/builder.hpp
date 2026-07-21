@@ -9,8 +9,6 @@
 */
 namespace luramas::il::lifter::builder {
 
-      static constexpr auto max_flags = 100u;
-
       struct reg {
 
             reg(const luramas_register r = 0u,
@@ -26,10 +24,13 @@ namespace luramas::il::lifter::builder {
             bool cast = true;            /* Casted? */
       };
 
+      /* Expr flags */
       struct expr_flags {
             luramas_flag fvirtualized = false; /* Is virtualized */
             luramas_flag fglobal_wild = false; /* Is a global wild card? */
       };
+
+      /* Expr type kind */
       enum class expr_tkind : std::uint8_t {
             nothing,  /* Nothing */
             integral, /* Integral */
@@ -40,6 +41,8 @@ namespace luramas::il::lifter::builder {
             stack,    /* Stack */
             value     /* Double */
       };
+
+      /* Types of error an expr can throw */
       enum class expr_error : std::uint8_t {
             nothing,       /* No error */
             bits_mismatch, /* Mismatch bit size */
@@ -229,7 +232,7 @@ namespace luramas::il::lifter::builder {
                   /* Memory */
                   expr memread(const luramas_bitwidth bits) const;
 
-                  /* R/W bit in range i.e [0, 7] */
+                  /* R/W bit in range [min, max] */
                   expr read(const expr &min, const expr &max) const;
                   expr read(const expr &bit_index) const;
                   expr read(const luramas_bitwidth bit_index) const;
@@ -274,7 +277,6 @@ namespace luramas::il::lifter::builder {
                   expr_flags f;                         /* Flags */
                   expr_error err = expr_error::nothing; /* Any errors thrown? */
             };
-            using flag_vector = boost::fixed_vector<expr, max_flags>;
 
             /* Make opcode */
             template <arch::opcodes op>
@@ -456,6 +458,9 @@ namespace luramas::il::lifter::builder {
             void page_retn(const luramas_register ret_reg, const luramas_address loc);
             void page_call(const profile::module_id mid, const luramas_address loc, const expr &r, const std::intptr_t v);
             void page_jump(const profile::module_id mid, const luramas_address loc);
+            void page_return();
+            void close_page();
+            bool is_page_loc(const profile::module_id mid, const profile::address addr) const;
 
             void make_goto(const profile::module_id mid, const luramas_address loc);
             void make_non_direct_goto(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
@@ -496,11 +501,12 @@ namespace luramas::il::lifter::builder {
             void make_call(const std::string &func, const std::vector<expr> &args, const std::vector<expr> &results = std::vector<expr>());
             void make_call(const std::string &func, const expr &result);
             expr make_standard_call(const builtin::func &default_func, const std::vector<std::pair<types::native::compiler::object, build::expr>> &sources, const std::vector<std::pair<types::native::compiler::object, build::expr>> &dests);
-            expr make_built_in(const builtin::inst &data, const std::vector<build::expr> &operands, const flag_vector &flags);
+            expr make_built_in(const builtin::inst &data, const std::vector<build::expr> &operands, const std::vector<build::expr> &flags);
             void make_lura_built_in(const builtins::data::func &f, const std::vector<expr> &args, const std::vector<expr> &results = std::vector<expr>());
             void set_internal_global(const std::string &str, const expr &reg);
             void load_internal_global(const std::string &str, const expr &reg);
 
+            /* Set internal global table, returns ID relating to global */
             luramas_id set_global(const std::string &global);
 
             void insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v);
@@ -513,91 +519,26 @@ namespace luramas::il::lifter::builder {
             void violation(const expr &l) const;
             void precomputed();
 
-            /* Bit */
+            /* Bit [min, max] */
             expr make_bitread(const expr &value, const expr &min, const expr &max);
             expr make_bitwrite(const expr &dest, const expr &src, const expr &min, const expr &max);
 
-            void make_push(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID) {
-                  auto temp = this->make_temp(e);
-                  this->make<arch::opcodes::OP_STACKPUSH>(ID, temp.r.r);
-                  return;
-            }
-            void make_pop(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID) {
-                  auto temp = this->make_temp(e);
-                  this->make<arch::opcodes::OP_STACKPOP>(ID, temp.r.r);
-                  return;
-            }
-            void make_pop(const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID) {
-                  this->make<arch::opcodes::OP_POPTOPSTACK>(ID);
-                  return;
-            }
-            void make_page(const std::intptr_t ID) {
-                  this->opended_pages.emplace_back(ID);
-                  this->make<arch::opcodes::OP_STARTPAGEFUNC>(ID);
-                  return;
-            }
-            void page_return() {
-                  this->make<arch::opcodes::OP_PRETURN>();
-                  return;
-            }
-            void clear() {
-                  *this = build();
-                  return;
-            }
-            void close_page() {
-                  if (this->opended_pages.empty()) {
-                        luramas::error::error("No opened pages to close");
-                  }
-                  this->make<arch::opcodes::OP_ENDPAGEFUNC>(this->opended_pages.back());
-                  this->opended_pages.pop_back();
-                  return;
-            }
-            void reinit(const luramas_address pc, const luramas_address idx, const luramas_register temp, const std::shared_ptr<luramas::il::ilang> &il, const std::shared_ptr<luramas::il::disassembly> &current) {
-                  this->idx = idx;
-                  this->pc = pc;
-                  this->il = il;
-                  this->current = current;
-                  this->temp = temp;
-                  this->constant.clear();
-                  this->labels.clear();
-                  return;
-            }
+            /* Stack */
+            void make_push(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);
+            void make_pop(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);
+            void make_pop(const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);
+            void make_page(const std::intptr_t ID);
+
+            /* Clears builder */
+            void clear();
+            void reinit(const luramas_address pc, const luramas_address idx, const luramas_register temp, const std::shared_ptr<luramas::il::ilang> &il, const std::shared_ptr<luramas::il::disassembly> &current);
 
             template <arch::opcodes op>
             void mut(const std::int64_t A = 0ll, const std::int64_t B = 0ll, const std::int64_t C = 0ll, const std::int64_t D = 0ll, const std::int64_t E = 0ll) {
                   luramas::il::emitter::emit_opcode<op>(this->il, this->pc, this->current, A, B, C, D, E);
                   return;
             }
-            void cmp(const expr &e, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID) {
-                  build::expr rv;
-                  switch (e.tk) {
-                        case expr_tkind::flag: {
-                              rv.emit(e.b, e.b->get_temp());
-                              rv.b->make<arch::opcodes::OP_FLAGREAD>(e.r.r, e.integral);
-                              rv.cast(1u, true);
-                              break;
-                        }
-                        case expr_tkind::integral: {
-                              auto temp = e.b->get_temp();
-                              e.b->make<arch::opcodes::OP_LOADINT>(temp.r, e.integral);
-                              rv.emit(e.b, temp);
-                              break;
-                        }
-                        default: {
-                              rv.emit(e);
-                              break;
-                        }
-                  }
-                  this->make<arch::opcodes::OP_SEGREGATE>(segregation);
-                  this->make<arch::opcodes::OP_CMPS>(rv.r.r);
-                  return;
-            }
-            bool is_page_loc(const profile::module_id mid, const profile::address addr) const {
-                  if (const auto it = this->details.find(mid); it != this->details.end()) {
-                        return it->second.pages.contains(addr);
-                  }
-                  return false;
-            }
+            void cmp(const expr &e, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
 
             boost::unordered_flat_map<luramas_register, luramas_register_contents> constant;
             luramas_address idx = 0u;
@@ -609,11 +550,11 @@ namespace luramas::il::lifter::builder {
             std::uint8_t suggested_bit_set = 0u;
 
           private:
-            luramas_register temp = 0u;
-            std::vector<std::intptr_t> opended_pages;
-            std::vector<std::shared_ptr<luramas::il::disassembly>> opened_conditions;
-            boost::unordered_flat_map<luramas_address, std::shared_ptr<luramas::il::disassembly>> labels;
-            boost::unordered_flat_map<std::string, luramas_id> globals;
+            luramas_register temp = 0u;                                                                   /* Current avaliable register */
+            std::vector<std::intptr_t> opended_pages; /* Current unclosed pages */
+            std::vector<std::shared_ptr<luramas::il::disassembly>> opened_conditions;                     /* Current unclosed conditions */
+            boost::unordered_flat_map<luramas_address, std::shared_ptr<luramas::il::disassembly>> labels; /* Label map, Curr Address -> Any existing label */
+            boost::unordered_flat_map<std::string, luramas_id> globals; /* Global table maps STR -> Global ID */
       };
 
       template <typename inst_T, typename regs_T, typename flags_T, typename hardware_cnst_T>
@@ -630,39 +571,38 @@ namespace luramas::il::lifter::builder {
                   return;
             }
 
-            /* Get */
+            /* Get register */
             template <regs_T r>
             inline build::expr getr() const {
                   return this->regs.at(static_cast<std::size_t>(r));
             }
+            /* Get flag */
             template <flags_T r>
             inline build::expr getf() const {
                   return this->flags.at(static_cast<std::size_t>(r));
             }
 
-            /* Set */
+            /* Set register to expr */
             template <regs_T r>
             inline constexpr void setr(const build::expr &expr) {
                   this->regs.try_emplace(static_cast<std::size_t>(r), expr);
                   return;
             }
+            /* Set flag to expr */
             template <flags_T r>
             inline constexpr void setf(const build::expr &expr) {
                   this->flags.try_emplace(static_cast<std::size_t>(r), expr);
                   return;
             }
-            inline constexpr void setr(const regs_T r, const build::expr &expr) {
-                  this->regs.try_emplace(static_cast<std::size_t>(r), expr);
-                  return;
-            }
 
-            /* Zero out */
+            /* Zero registers */
             inline void zero_regs() {
                   for (auto &[t, expr] : this->regs) {
                         expr = 0u;
                   }
                   return;
             }
+            /* Zero flags */
             inline void zero_flags() {
                   for (auto &[t, expr] : this->flags) {
                         expr = 0u;
@@ -699,14 +639,14 @@ namespace luramas::il::lifter::builder {
             }
 
             /* Data */
-            inst_T inst;
-            hardware_cnst_T hw_constants;    /**/
+            inst_T inst;                            /* Current instruction handler */
+            hardware_cnst_T hw_constants;           /* User input hard-ware constants */
             std::shared_ptr<build> build = nullptr; /* Linked builder */
-            luramas::profile::inst_bytes bytes;
+            luramas::profile::inst_bytes bytes; 
             luramas::profile::real_inst original;
             luramas::profile::externals::data<regs_T> externals;
-            boost::unordered_flat_map<std::size_t, build::expr> regs;
-            boost::unordered_flat_map<std::size_t, build::expr> flags;
+            boost::unordered_flat_map<std::size_t, build::expr> regs; /* Map of regs, register -> EXPR */
+            boost::unordered_flat_map<std::size_t, build::expr> flags;/* Map of flags, register -> EXPR */
       };
 
       template <std::size_t N, typename... EXPS>

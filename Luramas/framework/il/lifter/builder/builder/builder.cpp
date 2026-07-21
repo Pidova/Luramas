@@ -1,4 +1,5 @@
 #include "../builder.hpp"
+#include <algorithm>
 #include <ranges>
 
 namespace luramas::il::lifter::builder {
@@ -178,7 +179,7 @@ namespace luramas::il::lifter::builder {
             this->make_call(func, args, result);
             return temp;
       }
-      build::expr build::make_built_in(const builtin::inst &data, const std::vector<build::expr> &operands, const flag_vector &flags) {
+      build::expr build::make_built_in(const builtin::inst &data, const std::vector<build::expr> &operands, const std::vector<build::expr> &flags) {
 
             expr result;
 
@@ -194,7 +195,7 @@ namespace luramas::il::lifter::builder {
                   /* Check definition */
                   bool pass = true;
                   for (const auto &j : std::ranges::join_view(std::array{i.dests, i.source})) {
-                        if (j.flag > -1 && !flags.contains_idx(j.flag)) {
+                        if (j.flag > -1 && j.flag >= flags.size()) {
                               pass = false;
                               break;
                         }
@@ -321,6 +322,83 @@ namespace luramas::il::lifter::builder {
             const auto [rdest, rsrc, rmin, rmax] = guaranteed_regs(shared_from_this(), dest, src, min, max);
             this->make<luramas::il::arch::opcodes::OP_BITWRITEA>(rdest.r.r, rsrc.r.r, rmin.r.r, rmax.r.r);
             return rdest;
+      }
+
+      void build::make_push(const expr &e, const std::uint32_t ID) {
+            auto temp = this->make_temp(e);
+            this->make<arch::opcodes::OP_STACKPUSH>(ID, temp.r.r);
+            return;
+      }
+      void build::make_pop(const expr &e, const std::uint32_t ID) {
+            auto temp = this->make_temp(e);
+            this->make<arch::opcodes::OP_STACKPOP>(ID, temp.r.r);
+            return;
+      }
+      void build::make_pop(const std::uint32_t ID) {
+            this->make<arch::opcodes::OP_POPTOPSTACK>(ID);
+            return;
+      }
+      void build::make_page(const std::intptr_t ID) {
+            this->opended_pages.emplace_back(ID);
+            this->make<arch::opcodes::OP_STARTPAGEFUNC>(ID);
+            return;
+      }
+      void build::page_return() {
+            this->make<arch::opcodes::OP_PRETURN>();
+            return;
+      }
+      void build::clear() {
+            *this = build();
+            return;
+      }
+      void build::close_page() {
+            if (this->opended_pages.empty()) {
+                  luramas::error::error("No opened pages to close");
+            }
+            this->make<arch::opcodes::OP_ENDPAGEFUNC>(this->opended_pages.back());
+            this->opended_pages.pop_back();
+            return;
+      }
+      void build::reinit(const luramas_address pc, const luramas_address idx, const luramas_register temp, const std::shared_ptr<luramas::il::ilang> &il, const std::shared_ptr<luramas::il::disassembly> &current) {
+            this->idx = idx;
+            this->pc = pc;
+            this->il = il;
+            this->current = current;
+            this->temp = temp;
+            this->constant.clear();
+            this->labels.clear();
+            return;
+      }
+
+      void build::cmp(const expr &e, const std::uintptr_t segregation) {
+            build::expr rv;
+            switch (e.tk) {
+                  case expr_tkind::flag: {
+                        rv.emit(e.b, e.b->get_temp());
+                        rv.b->make<arch::opcodes::OP_FLAGREAD>(e.r.r, e.integral);
+                        rv.cast(1u, true);
+                        break;
+                  }
+                  case expr_tkind::integral: {
+                        auto temp = e.b->get_temp();
+                        e.b->make<arch::opcodes::OP_LOADINT>(temp.r, e.integral);
+                        rv.emit(e.b, temp);
+                        break;
+                  }
+                  default: {
+                        rv.emit(e);
+                        break;
+                  }
+            }
+            this->make<arch::opcodes::OP_SEGREGATE>(segregation);
+            this->make<arch::opcodes::OP_CMPS>(rv.r.r);
+            return;
+      }
+      bool build::is_page_loc(const profile::module_id mid, const profile::address addr) const {
+            if (const auto it = this->details.find(mid); it != this->details.end()) {
+                  return it->second.pages.contains(addr);
+            }
+            return false;
       }
 
       std::shared_ptr<disassembly> build::find_original_map(const profile::module_id mid, const luramas_address loc) {
