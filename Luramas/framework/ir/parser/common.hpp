@@ -29,7 +29,7 @@ namespace luramas::ir::parser {
             std::vector<boost::unordered_flat_map<std::string, std::shared_ptr<ir_stat::ir_expr>>> var_scope; /* Variable scope */
 
           private:
-            luramas_register avaliable_reg = 0u; 
+            luramas_register avaliable_reg = 0u;
       };
 
       enum class errors : std::uint8_t {

@@ -203,7 +203,8 @@ namespace luramas::il::lifter::builder::libraries::math {
             y = x - 1u;
             prev = 0u;
 
-            kwhile(abs(def, y - prev) > 1) {
+            kwhile(abs(def, y - prev) > 1);
+            {
                   prev = y;
                   const auto e = pow(def, build::expr(x.b, 2718281828), y);
                   y -= (e - x) / e;
@@ -353,7 +354,6 @@ namespace luramas::il::lifter::builder::libraries::math {
 
                   const auto bit = parity(def, tsrc2qw.read((7u - i) * 8u, (7u - i) * 8u + 7u) & src1byte) ^ imm8.read(i);
                   result.write(i, i, bit);
-
             }
             return result;
       }

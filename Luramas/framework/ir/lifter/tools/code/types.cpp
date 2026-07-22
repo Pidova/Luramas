@@ -4,6 +4,30 @@
 
 namespace luramas::ir::tools::types {
 
+      void extraction::emit(const luramas_register reg) {
+            this->t = extraction_kind::reg;
+            this->reg = reg;
+            return;
+      }
+      void extraction::emit(const std::shared_ptr<ir::types::object::type> &type) {
+            this->t = extraction_kind::type;
+            this->type = type;
+            return;
+      }
+      bool extraction::basic() const {
+            return this->t == extraction_kind::type && this->type && this->type->basic();
+      }
+      bool extraction::empty() const {
+            return this->t == extraction_kind::none;
+      }
+      extraction::operator bool() const {
+            return !this->empty();
+      }
+      void extraction::clear() {
+            *this = extraction(nullptr);
+            return;
+      }
+
       extraction extract_expr_type(const std::shared_ptr<ir_stat::ir_expr> &expr) {
 
             extraction result(expr);

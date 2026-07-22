@@ -1,13 +1,13 @@
 #pragma once
 #define BOOST_MP_CPP_INT_LITERALS_HPP
 #if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4146 4244 4267)
+#pragma warning(push)
+#pragma warning(disable : 4146 4244 4267)
 #endif
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/multiprecision/mpfr.hpp>
 #if defined(_MSC_VER)
-#  pragma warning(pop)
+#pragma warning(pop)
 #endif
 #include <cstdint>
 #include <istream>
@@ -16,8 +16,8 @@
 
 #define MAX_BIT_WIDTH 1024u
 
-using luramas_int_base = std::intptr_t;                                                                                                                                                                  /* Basic base */
-using luramas_int_pbase = double;                                                                                                                                                                     /* Precision base */
+using luramas_int_base = std::intptr_t;                                                                                                                                                                         /* Basic base */
+using luramas_int_pbase = double;                                                                                                                                                                               /* Precision base */
 using luramas_int_xbase = boost::multiprecision::number<boost::multiprecision::cpp_int_backend<MAX_BIT_WIDTH, MAX_BIT_WIDTH, boost::multiprecision::signed_magnitude, boost::multiprecision::unchecked, void>>; /* Extended base */
 using luramas_int_xpbase = boost::multiprecision::mpfr_float;                                                                                                                                                   /* Extra percision base */
 using luramas_int_range = std::pair<luramas_int_base, luramas_int_base>;                                                                                                                                        /* Range [start, end) */
@@ -33,7 +33,7 @@ struct luramas_int {
       luramas_int(const std::string &s);
 
       /* Signed */
-      constexpr luramas_int(const std::int8_t v) noexcept 
+      constexpr luramas_int(const std::int8_t v) noexcept
           : b(static_cast<luramas_int_base>(v)) {
       }
       constexpr luramas_int(const std::int16_t v) noexcept
@@ -275,15 +275,15 @@ struct luramas_int {
       bool is_max_integral() const;
 
       /* Misc */
-      std::size_t size() const;                                               /* Size */
-      std::size_t max_size() const;                                           /* Max b size */
+      std::size_t size() const;     /* Size */
+      std::size_t max_size() const; /* Max b size */
 
-      bool precise() const;                                                   /* Is percise? */
-      bool negative() const;                                                  /* Is negative? */
+      bool precise() const;  /* Is percise? */
+      bool negative() const; /* Is negative? */
 
-      std::uint16_t bit_width() const;                                        /* Bit width of base */
-      std::uint16_t count_leading_ones() const;                               /* Count leading ones */
-      std::uint16_t count_trailing_zeros() const;                             /* Count trailing zeros */
+      std::uint16_t bit_width() const;            /* Bit width of base */
+      std::uint16_t count_leading_ones() const;   /* Count leading ones */
+      std::uint16_t count_trailing_zeros() const; /* Count trailing zeros */
 
       luramas_int read(const luramas_int &min, const luramas_int &max) const; /* Read bits [min, max]; index starts 0 */
       std::pair<std::uint16_t, std::uint16_t> first_trailing_ones() const;

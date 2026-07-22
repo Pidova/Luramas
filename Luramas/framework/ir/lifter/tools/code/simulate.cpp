@@ -3,13 +3,6 @@
 
 namespace luramas::ir::tools::simulate {
 
-      std::vector<loop_threading_results> loop_threading(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address target) {
-
-            std::vector<loop_threading_results> result;
-
-            return result;
-      }
-
       basic_block_results basic_block(luramas::ir::passes::pass_manager &pm, const boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> &input, const luramas_blockrange &range, const std::uint32_t limit, const bool undefine_zero, const bool include_order_of_operations) {
 
             basic_block_results result;

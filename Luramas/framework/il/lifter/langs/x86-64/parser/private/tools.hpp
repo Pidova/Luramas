@@ -17,167 +17,61 @@
 
 namespace tools {
 
+      /* Inserted IL results from instruction */
       struct canonicalize_to_reg_results {
-            bool mem = false;
-            luramas_register reg = 0u;
-            luramas_int_base integral = 0;
+            bool mem = false;              /* Does the register contain an memory read? */
+            luramas_register reg = 0u;     /* Containing register */
+            luramas_int_base integral = 0; /* Immidiate contaned in register */
       };
+
+      /* Instruction flags */
       struct flags {
-            bool effective = false;
-            bool unsign = false;
+            bool effective = false; /* Instruction interprate memory reads as effective */
+            bool unsign = false;    /* Force register type to be unsigned? */
       };
 
       /* Computes operands to target register if possible or single register if it is (Does not emit write) */
-      inline canonicalize_to_reg_results canonicalize_to_reg(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas::profile::inst &inst, const cs_x86_op &op, const flags f = flags()) {
+      canonicalize_to_reg_results canonicalize_to_reg(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas::profile::inst &inst, const cs_x86_op &op, const flags &f = flags());
 
-            canonicalize_to_reg_results result;
-            switch (op.type) {
-                  case x86_op_type::X86_OP_IMM: {
-                        const auto t = build->make_temp();
-                        build->make_load(t, op.imm);
-                        result.reg = t.r.r;
-                        result.integral = op.imm;
-                        break;
-                  }
-                  case x86_op_type::X86_OP_REG: {
-                        result.reg = highest_reg(op.reg);
-                        break;
-                  }
-                  case x86_op_type::X86_OP_MEM: {
+      /* Given structure x86 registers in capstone gets amount and + 1*/
+      luramas_register highest(const x86_reg r);
 
-                        bool assigned = false;
-                        bool has_sib = false;
-                        auto tsib = build->make_temp();
-                        if (op.mem.index != x86_reg::X86_REG_INVALID) {
+      /* Wrap register in expr */
+      luramas::il::lifter::builder::build::expr make(const std::shared_ptr<luramas::il::lifter::builder::build> &b, const x86_reg r);
 
-                              /* 
-                                   TEMP = CAST(INDEX)
-                                   TEMP = TEMP * SCALE
-                              */
-                              tsib = build->make_reg(highest_reg(op.mem.index));
-                              tsib.cast(reg_bits(op.mem.index));
-                              tsib *= op.mem.scale;
-                              has_sib = true;
-                              assigned = true;
-                        }
-
-                        auto tres = build->make_temp();
-                        if (op.mem.base != x86_reg::X86_REG_INVALID) {
-
-                              switch (op.mem.base) {
-                                    case x86_reg::X86_REG_IP:
-                                    case x86_reg::X86_REG_RIP:
-                                    case x86_reg::X86_REG_EIP: {
-                                          tres = build->make_temp();
-                                          tres = inst.pc + inst.len();
-                                          break;
-                                    }
-                                    default: {
-                                          tres = build->make_reg(highest_reg(op.mem.base));
-                                          break;
-                                    }
-                              }
-
-                              /*  TEMP(+has_sib) = CAST(BASE) */
-                              tres.cast(reg_bits(op.mem.base));
-
-                              if (has_sib) {
-                                    /*  TEMP = TEMP(+has_sib) + SIB(TEMP) */
-                                    tres += tsib;
-                              }
-                              assigned = true;
-                        }
-
-                        if (assigned) {
-                              tres += op.mem.disp;
-                        } else {
-                              tres = op.mem.disp;
-                        }
-                        result.mem = !f.effective;
-                        result.reg = tres.r.r;
-                        break;
-                  }
-                  default: {
-                        break;
-                  }
-            }
-            return result;
-      }
-
-      inline luramas_register highest(const x86_reg r) {
-            return highest_reg(r);
-      }
-      inline luramas::il::lifter::builder::build::expr make(const std::shared_ptr<luramas::il::lifter::builder::build> &b, const x86_reg r) {
-            luramas::il::lifter::builder::build::expr result(b, luramas::il::lifter::builder::reg(highest(r), reg_bits(r)));
-            return result;
-      }
-      inline luramas::il::lifter::builder::build::expr make(const std::shared_ptr<luramas::il::lifter::builder::build> &b, const xeflags f) {
-            luramas::il::lifter::builder::build::expr result;
-            result.emit_flag(b, static_cast<std::intptr_t>(f));
-            return result;
-      }
+      /* Wrap flag in expr */
+      luramas::il::lifter::builder::build::expr make(const std::shared_ptr<luramas::il::lifter::builder::build> &b, const xeflags f);
 
       namespace common {
 
-            inline std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const luramas::profile::inst &inst, const std::shared_ptr<luramas::il::lifter::builder::build> &build, const cs_x86 &dis, const flags f = flags()) {
-
-                  std::vector<luramas::il::lifter::builder::build::expr> result;
-                  for (auto i = 0u; i < dis.op_count; ++i) {
-
-                        luramas::il::lifter::builder::build::expr expr;
-                        const auto res = tools::canonicalize_to_reg(build, inst, dis.operands[i], f);
-                        const auto reg = luramas::il::lifter::builder::reg(res.reg, dis.operands[i].size * 8u, f.unsign);
-                        if (res.mem) {
-                              expr.emit_mem(build, reg);
-                        } else {
-                              expr.emit(build, reg);
-                              if (res.integral) {
-                                    build->constant[res.reg] = luramas_register_contents(inst.lid, res.integral);
-                              }
-                        }
-                        result.emplace_back(expr);
-                  }
-                  return result;
-            }
+            /* Lowers each of the instruction's operands into an IL expression, returning them in operand order */
+            std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const luramas::profile::inst &inst, const std::shared_ptr<luramas::il::lifter::builder::build> &build, const cs_x86 &dis, const flags &f = flags());
       } // namespace common
 
       namespace generate {
 
-            inline void explicit_cast(std::shared_ptr<luramas::il::disassembly> &buffer, const std::shared_ptr<luramas::il::ilang> &il, const x86_reg reg, const luramas_address loc, const bool unsign = false) {
+            /* Appends a BITCAST of reg to its widest enclosing register, at reg's own bit width, into buffer. */
+            void explicit_cast(std::shared_ptr<luramas::il::disassembly> &buffer, const std::shared_ptr<luramas::il::ilang> &il, const x86_reg reg, const luramas_address loc, const bool unsign = false);
 
-                  luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_BITCAST>(il, loc, buffer, highest(reg), highest(reg), reg_bits(reg), 0u, unsign);
-                  return;
-            }
-            inline std::shared_ptr<luramas::il::disassembly> explicit_cast(const std::shared_ptr<luramas::il::ilang> &il, const x86_reg reg, const luramas_address loc, const bool unsign = false) {
+            /* Same as explicit cast except it emits it as a result not a buffer */
+            std::shared_ptr<luramas::il::disassembly> explicit_cast(const std::shared_ptr<luramas::il::ilang> &il, const x86_reg reg, const luramas_address loc, const bool unsign = false);
 
-                  auto result = std::make_shared<luramas::il::disassembly>();
-                  explicit_cast(result, il, reg, loc, unsign);
-                  return result;
-            }
-            inline std::shared_ptr<luramas::il::disassembly> cast(const std::shared_ptr<luramas::il::ilang> &il, const luramas_register reg, const luramas_bitwidth bits, const luramas_address loc, const bool unsign = false) {
-
-                  auto result = std::make_shared<luramas::il::disassembly>();
-                  luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_BITCAST>(il, loc, result, reg, reg, bits, 0u, unsign);
-                  return result;
-            }
+            /* Returns a new disassembly buffer holding a BITCAST of reg to the given bits width. */
+            std::shared_ptr<luramas::il::disassembly> cast(const std::shared_ptr<luramas::il::ilang> &il, const luramas_register reg, const luramas_bitwidth bits, const luramas_address loc, const bool unsign = false);
       } // namespace generate
 
       namespace eflags {
 
             struct flag_data {
 
-                  x86_insn inst = x86_insn::X86_INS_NOP;
+                  x86_insn inst = x86_insn::X86_INS_NOP; /* From instruction */
 
-                  luramas::il::lifter::builder::build::expr l;      /*  L-Value */
+                  luramas::il::lifter::builder::build::expr l;      /* L-Value */
                   luramas::il::lifter::builder::build::expr result; /* Resulting Value */
                   luramas::il::lifter::builder::build::expr r;      /* R-Value */
-
-                  void emit_result(const luramas::il::lifter::builder::build::expr &expr) {
-                        this->result = expr;
-                        return;
-                  }
             };
 
+            /* Mutates flag based on how instructions mutate them */
             template <xeflags... F>
             inline void mutate(const vm::registrar &registrar, const flag_data &d) {
 

@@ -551,16 +551,16 @@ namespace luramas::il::lifter::builder {
 
           private:
             luramas_register temp = 0u;                                                                   /* Current avaliable register */
-            std::vector<std::intptr_t> opended_pages; /* Current unclosed pages */
+            std::vector<std::intptr_t> opended_pages;                                                     /* Current unclosed pages */
             std::vector<std::shared_ptr<luramas::il::disassembly>> opened_conditions;                     /* Current unclosed conditions */
             boost::unordered_flat_map<luramas_address, std::shared_ptr<luramas::il::disassembly>> labels; /* Label map, Curr Address -> Any existing label */
-            boost::unordered_flat_map<std::string, luramas_id> globals; /* Global table maps STR -> Global ID */
+            boost::unordered_flat_map<std::string, luramas_id> globals;                                   /* Global table maps STR -> Global ID */
       };
 
       template <typename inst_T, typename regs_T, typename flags_T, typename hardware_cnst_T>
       struct registrar {
 
-            registrar(const inst_T inst, const std::shared_ptr<build> &build, const hardware_cnst_T& hw_constants, const luramas::profile::externals::data<regs_T> &externals, const luramas::profile::inst_bytes &bytes = {})
+            registrar(const inst_T inst, const std::shared_ptr<build> &build, const hardware_cnst_T &hw_constants, const luramas::profile::externals::data<regs_T> &externals, const luramas::profile::inst_bytes &bytes = {})
                 : inst(inst), build(build), hw_constants(hw_constants), bytes(bytes), externals(externals) {
                   return;
             }
@@ -642,11 +642,11 @@ namespace luramas::il::lifter::builder {
             inst_T inst;                            /* Current instruction handler */
             hardware_cnst_T hw_constants;           /* User input hard-ware constants */
             std::shared_ptr<build> build = nullptr; /* Linked builder */
-            luramas::profile::inst_bytes bytes; 
+            luramas::profile::inst_bytes bytes;
             luramas::profile::real_inst original;
             luramas::profile::externals::data<regs_T> externals;
-            boost::unordered_flat_map<std::size_t, build::expr> regs; /* Map of regs, register -> EXPR */
-            boost::unordered_flat_map<std::size_t, build::expr> flags;/* Map of flags, register -> EXPR */
+            boost::unordered_flat_map<std::size_t, build::expr> regs;  /* Map of regs, register -> EXPR */
+            boost::unordered_flat_map<std::size_t, build::expr> flags; /* Map of flags, register -> EXPR */
       };
 
       template <std::size_t N, typename... EXPS>

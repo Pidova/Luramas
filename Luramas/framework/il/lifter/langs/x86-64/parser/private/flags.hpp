@@ -1,8 +1,8 @@
 #pragma once
 #ifdef LURAMAS_TARGET_X86
-
 #include <cstdint>
 
+/* X86 flags */
 enum class xeflags : std::uint32_t {
       AF = 1u << 0,   /* Auxiliary Flag */
       CF = 1u << 1,   /* Carry Flag */
@@ -27,8 +27,9 @@ enum class xeflags : std::uint32_t {
       C2 = 1u << 20,  /* Control Flag 2 */
       C3 = 1u << 21,  /* Control Flag 3 */
 };
-#define getflag(f) static_cast<std::uint32_t>(xeflags::f)
+#define getflag(f) static_cast<std::uint32_t>(xeflags::f) /* Get flag as u32 */
 
+/* Helper for packing flags */
 inline constexpr xeflags operator|(const xeflags lhs, const xeflags rhs) {
       return static_cast<xeflags>(static_cast<std::uint32_t>(lhs) | static_cast<std::uint32_t>(rhs));
 }

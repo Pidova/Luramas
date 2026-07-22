@@ -599,7 +599,7 @@ namespace vm {
       void CALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             build::page_calls(registrar, operands, registrar.hw_constants.suggested_bit_set == 64u ? REG_RSP : registrar.hw_constants.suggested_bit_set == 32u ? REG_ESP
-                                                                                                                                     : REG_SP);
+                                                                                                                                                               : REG_SP);
             return;
       }
 

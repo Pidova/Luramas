@@ -489,6 +489,105 @@ namespace luramas::ir {
                   return luramas_riter(this->range());
             }
 
+            void pass_manager::reset() {
+                  this->label_padding = 0u;
+                  this->mutate = false;
+                  this->marked = false;
+                  this->removals.clear();
+                  this->insertions.clear();
+                  this->mutations.clear();
+                  this->front.clear();
+                  this->back.clear();
+                  this->processed.values.clear();
+                  this->processed.parent_loops.clear();
+                  return;
+            }
+
+            void pass_manager::commit(const luramas_flag fignore_ecc, const char *const last_pass) {
+                  if (!this->removals.empty() || !this->insertions.empty() || !this->front.empty() || !this->back.empty()) {
+                        this->mutated = std::move(this->front);
+                        this->mutated.reserve(this->mutated.size() + this->ir.data.size() + this->insertions.size() * 2u);
+                        for (const auto &i : this->ir.data) {
+                              if (!this->is_removed(i) && !i->is_k<keywords::nothing>()) {
+                                    this->mutated.emplace_back(i);
+                              }
+                              if (const auto it = this->insertions.find(i); it != this->insertions.end()) {
+                                    this->mutated.reserve(this->mutated.size() + it->second.size());
+                                    this->mutated.insert(this->mutated.end(), std::make_move_iterator(it->second.begin()), std::make_move_iterator(it->second.end()));
+                              }
+                        }
+                        this->mutated.reserve(this->mutated.size() + this->back.size());
+                        this->mutated.insert(this->mutated.end(), this->back.begin(), this->back.end());
+                        this->ir.data.reserve(this->mutated.size());
+                        this->ir.data = this->mutated;
+                  }
+#ifdef DEBUG
+                  //this->dump("OPT", true);
+                  //std::cin.get();
+#endif
+                  this->reset();
+                  this->update(!fignore_ecc, last_pass);
+                  for (const auto &i : this->mutated) {
+                        if (i->flags.fimmutable) {
+                              this->mutations.insert(i);
+                        }
+                  }
+                  return;
+            }
+
+            void pass_manager::validate() {
+                  boost::unordered_flat_set<luramas_address> labels;
+                  boost::unordered_flat_set<luramas_address> jlabels;
+                  for (const auto &i : this->ir.data) {
+                        if (i->is_goto_label()) {
+                              jlabels.insert(i->jlabel);
+                        }
+                        if (i->is_k<keywords::label>()) {
+                              labels.insert(i->label);
+                        }
+                  }
+                  for (const auto &i : jlabels) {
+                        if (!labels.contains(i)) {
+                              luramas::error::error("Undeclared goto found");
+                        }
+                  }
+                  return;
+            }
+
+            void pass_manager::repair() {
+                  std::size_t stack = 0u;
+                  for (const auto &p : this->ir.data) {
+                        switch (p->k) {
+                              case keywords::condition: {
+                                    if (p->c == condition_kind::if_) {
+                                          ++stack;
+                                    }
+                                    break;
+                              }
+                              case keywords::forloop_generic:
+                              case keywords::forloop_numeric:
+                              case keywords::repeat:
+                              case keywords::while_: {
+                                    ++stack;
+                                    break;
+                              }
+                              case keywords::end:
+                              case keywords::until: {
+                                    if (!stack) {
+                                          this->remove(p);
+                                    } else if (!this->is_removed(p)) {
+                                          --stack;
+                                    }
+                                    break;
+                              }
+                              default: {
+                                    break;
+                              }
+                        }
+                  }
+                  return;
+            }
+
             void pass_manager::update(const luramas_flag fallow_ecc, const char *const last_pass) {
 
                   this->processed.clear();

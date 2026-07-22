@@ -4,6 +4,7 @@
 #include "../../../../builder/builder.hpp"
 #include "../parser.hpp"
 #include "flags.hpp"
+#include "generated/intel_msrs.hpp"
 #include "vmdef.hpp"
 
 /*

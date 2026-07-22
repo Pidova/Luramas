@@ -1,23 +1,14 @@
-﻿Language: Cpp
-BasedOnStyle: LLVM
-ColumnLimit: 0
-IndentWidth: 6
-TabWidth: 6
-UseTab: Never
-AccessModifierOffset: -6
-ConstructorInitializerIndentWidth: 6
-ContinuationIndentWidth: 6
-IndentCaseLabels: true
-BreakBeforeBraces: Attach
-PointerAlignment: Right
-ReferenceAlignment: Pointer
-AllowShortBlocksOnASingleLine: Never
-AllowShortFunctionsOnASingleLine: Empty
-AllowShortLambdasOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: false
-KeepEmptyLinesAtTheStartOfBlocks: true
-SortIncludes: false
-FixNamespaceComments: false
+﻿---
+AlignAfterOpenBracket: DontAlign
+AlignTrailingComments: 'true'
+AllowAllParametersOfDeclarationOnNextLine: 'true'
+AllowShortFunctionsOnASingleLine: None
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+ColumnLimit: '0'
+IndentCaseLabels: 'true'
+IndentWidth: '6'
 NamespaceIndentation: All
+ReflowComments: 'false'
+IndentPPDirectives: None
+...

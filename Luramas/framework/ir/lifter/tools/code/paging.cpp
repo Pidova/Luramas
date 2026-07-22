@@ -4,6 +4,19 @@
 
 namespace luramas::ir::tools::paging {
 
+      bool details::page::is_recoverable() const {
+            return !this->references.empty() && this->fhas_start;
+      }
+      luramas_blockrange details::page::code_range(const ir_stat::space &p) const {
+            if (this->fvalid) {
+                  auto result = this->range;
+                  result.first += tools::stat::is_definition(p[++result.first]);
+                  --result.second;
+                  return result;
+            }
+            return this->range;
+      }
+
       std::optional<luramas_id> details::get_page(const luramas_address &loc, const std::shared_ptr<ir_stat::ir_expr> &parent_closure_expr) const {
 
             luramas_id result = 0u;

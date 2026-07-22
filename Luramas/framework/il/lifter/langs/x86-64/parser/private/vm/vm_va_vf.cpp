@@ -58,12 +58,12 @@ namespace vm {
                   default: {
                         break;
                   }
-            }  
+            }
             return;
       }
 
       void VADDSUBPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            
+
             const auto DEST = operands.front();
             const auto SRC1 = operands[1u];
             const auto SRC2 = operands.back();

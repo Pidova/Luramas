@@ -8,13 +8,12 @@ luramas_address se_ir::avaliable_page(const ir_stat::space &data) {
 
       while (!spaces.empty()) {
 
-            auto curr = spaces.back();
+            const auto curr = spaces.back();
             spaces.pop_back();
             for (const auto &i : curr) {
 
                   if (i->is_k<keywords::page_function_start>() && i->r) {
-                        const auto &n = i->r->extract_integral_base();
-                        if (n && result < static_cast<luramas_address>(n)) {
+                        if (const auto &n = i->r->extract_integral_base(); n && result < static_cast<luramas_address>(n)) {
                               result = static_cast<luramas_address>(n);
                         }
                   }

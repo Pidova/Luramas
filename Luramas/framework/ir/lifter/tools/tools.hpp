@@ -4,11 +4,12 @@
 
 namespace luramas::ir::tools {
 
+      /* Contain address with expr or just address */
       struct addr_expr {
 
-            luramas_flag stat = false;
-            luramas_address n = 0u;
-            std::shared_ptr<ir_stat::ir_expr> e = nullptr;
+            luramas_flag stat = false;                     /* Is stat? */
+            luramas_address n = 0u;                        /* Address */
+            std::shared_ptr<ir_stat::ir_expr> e = nullptr; /* Expr */
 
             addr_expr() = default;
             addr_expr(const luramas_address n)
@@ -61,9 +62,6 @@ namespace luramas::ir::tools {
 
       /* Back track endings */
       luramas_address backtrack(luramas::ir::passes::pass_manager &pm, const luramas_address scope_end_stat, bool &valid, const luramas_address break_label = 0u);
-
-      /* Extract valid block with start and end for range */
-      bool valid_block_extract(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address end, luramas_address &result, bool &stack_valid);
 
       /* Condition has else? */
       bool condition_has_else(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address end);
@@ -297,18 +295,18 @@ namespace luramas::ir::tools {
 
             /* Does block have any branch violations? */
             enum class block_violation_exceptions : std::uint8_t {
-                  invalid,
-                  invalid_end,
-                  invalid_until,
-                  invalid_scope_start,
-                  invalid_unfinished_conditions,
-                  invalid_else_conditional,
-                  invalid_goto,
-                  invalid_implicit,
-                  invalid_page_start,
-                  invalid_page_end,
-                  invalid_unfinished_page,
-                  hit_closing_on
+                  invalid,                       /* Generic invalid block exception; also raised when the start/end range is malformed for the given direction */
+                  invalid_end,                   /* Orphaned end or end that should not be there */
+                  invalid_until,                 /* Orphaned until or until that should not be there */
+                  invalid_scope_start,           /* Scope-opening statement with no matching closer in range (backwards traversal encountered an opener with an empty stack) */
+                  invalid_unfinished_conditions, /* Range ended while one or more scopes were still open */
+                  invalid_else_conditional,      /* else/elseif found at the outermost level, with no if scope open to attach to */
+                  invalid_goto,                  /* goto found at the outermost level while finclude_gotos is set */
+                  invalid_implicit,              /* Implicit flow interrupt found at the outermost level while finclude_implicit is set */
+                  invalid_page_start,            /* Page function start for an id whose start was already seen (duplicate opening) */
+                  invalid_page_end,              /* Page function end for an id whose end was already seen (duplicate closing) */
+                  invalid_unfinished_page,       /* Page id in range missing either its start or its end by the time the range was exhausted */
+                  hit_closing_on                 /* Traversal reached the flags.close_on statement at the outermost level before finishing */
             };
             struct block_violation_results {
 
@@ -316,6 +314,7 @@ namespace luramas::ir::tools {
                   luramas_address ending_loc = 0u;                                         /* Ending violation */
                   bool valid = true;                                                       /* No violations? */
 
+                  /* Flag exception */
                   template <block_violation_exceptions reason>
                   inline void make_exception(const luramas_address ending_loc) {
                         this->valid = false;
@@ -378,8 +377,10 @@ namespace luramas::ir::tools {
 
             /* Get safe end of block */
             luramas_address safe_block_end(luramas::ir::passes::pass_manager &pm, const luramas_address start, const std::shared_ptr<ir_stat> &close_on = nullptr);
+
             /* Get safe end of block */
             luramas_address safe_block_end(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address end, const std::shared_ptr<ir_stat> &close_on = nullptr);
+
             /* Is the rest of the code safe? */
             bool is_rest_safe_block_end(luramas::ir::passes::pass_manager &pm, const luramas_address start);
 
@@ -465,17 +466,6 @@ namespace luramas::ir::tools {
             /* Is there a label in scope of start? */
             bool safe_label(luramas::ir::passes::pass_manager &pm, const luramas_address start, const std::shared_ptr<ir_stat> &label);
 
-            template <tkind k>
-            bool tk(const ir_stat::ir_expr::space &v) {
-
-                  for (const auto &i : v) {
-                        if (i->is_tk<k>()) {
-                              return true;
-                        }
-                  }
-                  return false;
-            }
-
             /* Is call back? */
             bool is(const ir_stat::ir_expr::space &v, const data::cb_tkind &cb);
             bool is(const ir_stat::ir_expr::space &v, const data::cb_kinds &cb);
@@ -485,11 +475,14 @@ namespace luramas::ir::tools {
 
       namespace types {
 
+            /* Kind or extraction */
             enum class extraction_kind : std::uint8_t {
                   none, /* Nothing */
                   reg,  /* Register */
                   type  /* Type object */
             };
+
+            /* Extract type, reg, or expr */
             struct extraction {
 
                   extraction_kind t = extraction_kind::none;               /* Extraction type */
@@ -501,31 +494,14 @@ namespace luramas::ir::tools {
                       : expr(expr) {
                   }
 
-                  void emit(const luramas_register reg) {
-                        this->t = extraction_kind::reg;
-                        this->reg = reg;
-                        return;
-                  }
-                  void emit(const std::shared_ptr<ir::types::object::type> &type) {
-                        this->t = extraction_kind::type;
-                        this->type = type;
-                        return;
-                  }
-                  bool basic() const {
-                        return this->t == extraction_kind::type && this->type && this->type->basic();
-                  }
-                  bool empty() const {
-                        return this->t == extraction_kind::none;
-                  }
-                  operator bool() const {
-                        return !this->empty();
-                  }
-                  void clear() {
-                        *this = extraction(nullptr);
-                        return;
-                  }
+                  void emit(const luramas_register reg);                           /* Emit register */
+                  void emit(const std::shared_ptr<ir::types::object::type> &type); /* Emit type */
+                  bool basic() const;                                              /* Is type and type is basic? */
+                  bool empty() const;                                              /* Empty? */
+                  operator bool() const;                                           /* Not empty? */
+                  void clear();                                                    /* Clear */
             };
-            using extraction_result = std::vector<extraction>;
+            using extraction_result = std::vector<extraction>; /* Vector of extractions */
 
             /* Extract expr type */
             extraction extract_expr_type(const std::shared_ptr<ir_stat::ir_expr> &expr);
@@ -706,26 +682,6 @@ namespace luramas::ir::tools {
 
             /* Count references to label loc */
             luramas_count refs(luramas::ir::passes::pass_manager &pm, const luramas_address label_loc);
-
-            template <tkind k>
-            inline luramas_count tk(const ir_stat::ir_expr::space &v) {
-
-                  luramas_count n = 0u;
-                  for (const auto &i : v) {
-                        n += i->template is_tk<k>();
-                  }
-                  return n;
-            }
-
-            template <keywords k>
-            inline luramas_count keyword(const ir_stat::ir_expr::space &v) {
-
-                  luramas_count n = 0u;
-                  for (const auto &i : v) {
-                        n += i->template is_k<k>();
-                  }
-                  return n;
-            }
       } // namespace count
 
       namespace mutations {
@@ -749,26 +705,6 @@ namespace luramas::ir::tools {
 
       namespace simulate {
 
-            /* 
-                Will leverage basic loops:
-                    while (true) do
-                        ...
-                        break;
-                    end
-                to reach a target if possible
-            */
-            struct loop_threading_results {
-
-                  bool inserted = false;
-                  luramas_address inserted_loc = 0u;
-                  luramas_address exiting_loc = 0u;
-
-                  keywords k = keywords::nothing;
-                  luramas_address current_loc = 0u;
-                  luramas_address implicitly_goto = 0u;
-            };
-            std::vector<loop_threading_results> loop_threading(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address target);
-
             /* Only simulates blocks given inputs, does not include stack or memory. (only tracks registers) */
             enum class basic_block_exit_reason : std::uint8_t {
                   none,
@@ -779,7 +715,7 @@ namespace luramas::ir::tools {
 
                   basic_block_exit_reason reason = basic_block_exit_reason::none;
                   luramas_address exit_loc = 0u;
-                  boost::unordered_flat_map<luramas_address, std::size_t> hit_count;
+                  boost::unordered_flat_map<luramas_address, luramas_count> hit_count;
                   std::optional<luramas_addresses> order_of_operations;
 
                   template <basic_block_exit_reason reason>
@@ -830,7 +766,7 @@ namespace luramas::ir::tools {
 
             namespace strings {
 
-                  /*  */
+                  /* Compute concats */
                   bool flatten_concat(std::shared_ptr<ir_stat::ir_expr> &expr);
             } // namespace strings
 
@@ -1092,22 +1028,11 @@ namespace luramas::ir::tools {
                         std::shared_ptr<ir_stat> definition = nullptr;                                                   /* Page definition */
 
                         /* Should and can the page be recovered? */
-                        inline bool is_recoverable() const {
-                              return !this->references.empty() && this->fhas_start;
-                        }
+                        bool is_recoverable() const;
 
                         /* Real inst range (Not including start and end headers) */
-                        inline luramas_blockrange code_range(const ir_stat::space &p) const {
-                              if (this->fvalid) {
-                                    auto result = this->range;
-                                    result.first += tools::stat::is_definition(p[++result.first]);
-                                    --result.second;
-                                    return result;
-                              }
-                              return this->range;
-                        }
+                        luramas_blockrange code_range(const ir_stat::space &p) const;
                   };
-                  boost::unordered_flat_map<std::shared_ptr<ir_stat::ir_expr>, boost::unordered_flat_map<luramas_id, page>> pages; /* Nested pages by closure (0u will always be current closure, decending order from 0u) */
 
                   /* Get page from loc and current parent closure expr */
                   std::optional<luramas_id> get_page(const luramas_address &loc, const std::shared_ptr<ir_stat::ir_expr> &parent_closure_expr = nullptr) const;
@@ -1117,11 +1042,14 @@ namespace luramas::ir::tools {
 
                   /* Index a pagye from ID */
                   std::optional<std::pair<std::shared_ptr<ir_stat::ir_expr>, details::page>> index_page(const luramas_id id) const;
+
+                  boost::unordered_flat_map<std::shared_ptr<ir_stat::ir_expr>, boost::unordered_flat_map<luramas_id, page>> pages; /* Nested pages by closure (0u will always be current closure, decending order from 0u) */
             };
 
             /* Generated page details, should be called with main closure to encapsulate all details. */
             details gen_details(passes::pass_manager &pm, const bool deep = false);
 
+            /* Kinds of promotions */
             enum class promotion_kind : std::uint8_t {
                   none,          /* No information to gather about the page (Page may be deleted) */
                   page_label,    /* Convert page to Label */

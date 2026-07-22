@@ -147,28 +147,6 @@ namespace luramas::ir::tools {
             return result + (++pm.label_padding);
       }
 
-      bool valid_block_extract(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address end, luramas_address &result, bool &stack_valid) {
-
-            if (start >= end) {
-                  return false;
-            }
-
-            const auto stack = stack_validate(pm, start, end);
-            result = stack.closing_index;
-            switch (stack.reason) {
-                  case cond_stack_reason::closing:
-                  case cond_stack_reason::termination: {
-                        stack_valid = true;
-                        break;
-                  }
-                  default: {
-                        stack_valid = false;
-                        break;
-                  }
-            }
-            return (stack.valid || stack_valid) && result > start;
-      }
-
       bool condition_has_else(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address end) {
 
             if (start >= end || !tools::stat::branch::is_cond(pm[start])) {

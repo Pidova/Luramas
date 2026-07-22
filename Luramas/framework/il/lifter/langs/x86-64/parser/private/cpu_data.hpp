@@ -233,11 +233,11 @@ namespace internal {
 #define F_COMMON xeflags::OF, xeflags::SF, xeflags::ZF, xeflags::AF, xeflags::CF, xeflags::PF
 #define F_COMMON_NO_CF xeflags::OF, xeflags::SF, xeflags::ZF, xeflags::AF, xeflags::PF
 
-[[maybe_unused]] static constexpr auto EXTENSION_XMM = 128u; /* Bitwidth of XMMs */
-[[maybe_unused]] static constexpr auto EXTENSION_YMM = 256u; /* Bitwidth of YMMs */
-[[maybe_unused]] static constexpr auto EXTENSION_ZMM = 512u; /* Bitwidth of ZMMs */
-[[maybe_unused]] static constexpr auto EXTENSION_ZMM16 = 512u; /* Bitwidth of ZMM16s */
+[[maybe_unused]] static constexpr auto EXTENSION_XMM = 128u;    /* Bitwidth of XMMs */
+[[maybe_unused]] static constexpr auto EXTENSION_YMM = 256u;    /* Bitwidth of YMMs */
+[[maybe_unused]] static constexpr auto EXTENSION_ZMM = 512u;    /* Bitwidth of ZMMs */
+[[maybe_unused]] static constexpr auto EXTENSION_ZMM16 = 512u;  /* Bitwidth of ZMM16s */
 [[maybe_unused]] static constexpr auto EXTENSION_ZMM32 = 1024u; /* Bitwidth of ZMM32s */
-[[maybe_unused]] static constexpr auto EXTENSION_MMX = 64u; /* Bitwidth of MMX */
+[[maybe_unused]] static constexpr auto EXTENSION_MMX = 64u;     /* Bitwidth of MMX */
 
 #endif

@@ -97,7 +97,7 @@ namespace vm {
       }
 
       void VHADDPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            
+
             const auto DEST = operands.front();
             const auto SRC1 = operands[1u];
             const auto SRC2 = operands.back();
@@ -172,7 +172,7 @@ namespace vm {
                         break;
                   }
                   case 256u: {
-  
+
                         DEST.write(0u, 63u, SRC1.read(0u, 63u) - SRC1.read(64u, 127u));
                         DEST.write(64u, 127u, SRC2.read(0u, 63u) - SRC2.read(64u, 127u));
                         DEST.write(128u, 191u, SRC1.read(128u, 191u) - SRC1.read(192u, 255u));
@@ -182,7 +182,7 @@ namespace vm {
                   default: {
                         break;
                   }
-            }  
+            }
             return;
       }
 
@@ -262,7 +262,7 @@ namespace vm {
       }
 
       void VINSERTI128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            
+
             const auto dest = operands.front();
             const auto src1 = operands[1u];
             const auto src2 = operands[2u];
@@ -282,7 +282,7 @@ namespace vm {
                         break;
                   }
             }
-            dest = temp; 
+            dest = temp;
             return;
       }
 
@@ -790,10 +790,32 @@ namespace vm {
       }
 
       void VPBROADCASTMB2Q(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto dest = operands.front();
+            const auto src = operands.back();
+
+            const auto vl = dest.bits();
+            const auto kl = vl / 64u;
+
+            for (auto j = 0u; j < kl; ++j) {
+                  const auto i = j * 64u;
+                  dest.write(i, i + 63u, luramas::il::lifter::builder::libraries::structure::zero_extend(src.read(0u, 7u), 64u));
+            }
             return;
       }
 
       void VPBROADCASTMW2D(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto dest = operands.front();
+            const auto src = operands.back();
+
+            const auto vl = dest.bits();
+            const auto kl = vl / 32u;
+
+            for (auto j = 0u; j < kl; ++j) {
+                  const auto i = j * 32u;
+                  dest.write(i, i + 31u, luramas::il::lifter::builder::libraries::structure::zero_extend(src.read(0u, 15u), 32u));
+            }
             return;
       }
 
@@ -1167,6 +1189,49 @@ namespace vm {
       }
 
       void VPHADDSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+            function_handler f(registrar.build);
+
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(16u, 31u) + SRC1.read(0u, 15u)));
+                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(48u, 63u) + SRC1.read(32u, 47u)));
+                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(80u, 95u) + SRC1.read(64u, 79u)));
+                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(112u, 127u) + SRC1.read(96u, 111u)));
+                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(16u, 31u) + SRC2.read(0u, 15u)));
+                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(48u, 63u) + SRC2.read(32u, 47u)));
+                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(80u, 95u) + SRC2.read(64u, 79u)));
+                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(112u, 127u) + SRC2.read(96u, 111u)));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(16u, 31u) + SRC1.read(0u, 15u)));
+                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(48u, 63u) + SRC1.read(32u, 47u)));
+                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(80u, 95u) + SRC1.read(64u, 79u)));
+                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(112u, 127u) + SRC1.read(96u, 111u)));
+                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(16u, 31u) + SRC2.read(0u, 15u)));
+                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(48u, 63u) + SRC2.read(32u, 47u)));
+                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(80u, 95u) + SRC2.read(64u, 79u)));
+                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(112u, 127u) + SRC2.read(96u, 111u)));
+                        DEST.write(128u, 143u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(144u, 159u) + SRC1.read(128u, 143u)));
+                        DEST.write(144u, 159u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(176u, 191u) + SRC1.read(160u, 175u)));
+                        DEST.write(160u, 175u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(208u, 223u) + SRC1.read(192u, 207u)));
+                        DEST.write(176u, 191u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(240u, 255u) + SRC1.read(224u, 239u)));
+                        DEST.write(192u, 207u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(144u, 159u) + SRC2.read(128u, 143u)));
+                        DEST.write(208u, 223u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(176u, 191u) + SRC2.read(160u, 175u)));
+                        DEST.write(224u, 239u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(208u, 223u) + SRC2.read(192u, 207u)));
+                        DEST.write(240u, 255u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(240u, 255u) + SRC2.read(224u, 239u)));
+                        DEST.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
             return;
       }
 
@@ -1203,7 +1268,7 @@ namespace vm {
       }
 
       void VPHADDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            
+
             const auto DEST = operands.front();
             const auto SRC1 = operands[1u];
             const auto SRC2 = operands.back();
@@ -1254,6 +1319,7 @@ namespace vm {
       }
 
       void VPHSUBBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
             return;
       }
 
@@ -1262,10 +1328,82 @@ namespace vm {
       }
 
       void VPHSUBD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC1.read(32u, 63u));
+                        DEST.write(32u, 63u, SRC1.read(64u, 95u) - SRC1.read(96u, 127u));
+                        DEST.write(64u, 95u, SRC2.read(0u, 31u) - SRC2.read(32u, 63u));
+                        DEST.write(96u, 127u, SRC2.read(64u, 95u) - SRC2.read(96u, 127u));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC1.read(32u, 63u));
+                        DEST.write(32u, 63u, SRC1.read(64u, 95u) - SRC1.read(96u, 127u));
+                        DEST.write(64u, 95u, SRC2.read(0u, 31u) - SRC2.read(32u, 63u));
+                        DEST.write(96u, 127u, SRC2.read(64u, 95u) - SRC2.read(96u, 127u));
+                        DEST.write(128u, 159u, SRC1.read(128u, 159u) - SRC1.read(160u, 191u));
+                        DEST.write(160u, 191u, SRC1.read(192u, 223u) - SRC1.read(224u, 255u));
+                        DEST.write(192u, 223u, SRC2.read(128u, 159u) - SRC2.read(160u, 191u));
+                        DEST.write(224u, 255u, SRC2.read(192u, 223u) - SRC2.read(224u, 255u));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
             return;
       }
 
       void VPHSUBSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto DEST = operands.front();
+            const auto SRC1 = operands[1u];
+            const auto SRC2 = operands.back();
+            function_handler f(registrar.build);
+
+            switch (DEST.bits()) {
+                  case 128u: {
+                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(0u, 15u) - SRC1.read(16u, 31u)));
+                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(32u, 47u) - SRC1.read(48u, 63u)));
+                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(64u, 79u) - SRC1.read(80u, 95u)));
+                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(96u, 111u) - SRC1.read(112u, 127u)));
+                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(0u, 15u) - SRC2.read(16u, 31u)));
+                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(32u, 47u) - SRC2.read(48u, 63u)));
+                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(64u, 79u) - SRC2.read(80u, 95u)));
+                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(96u, 111u) - SRC2.read(112u, 127u)));
+                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  case 256u: {
+                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(0u, 15u) - SRC1.read(16u, 31u)));
+                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(32u, 47u) - SRC1.read(48u, 63u)));
+                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(64u, 79u) - SRC1.read(80u, 95u)));
+                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(96u, 111u) - SRC1.read(112u, 127u)));
+                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(0u, 15u) - SRC2.read(16u, 31u)));
+                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(32u, 47u) - SRC2.read(48u, 63u)));
+                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(64u, 79u) - SRC2.read(80u, 95u)));
+                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(96u, 111u) - SRC2.read(112u, 127u)));
+                        DEST.write(128u, 143u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(128u, 143u) - SRC1.read(144u, 159u)));
+                        DEST.write(144u, 159u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(160u, 175u) - SRC1.read(176u, 191u)));
+                        DEST.write(160u, 175u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(192u, 207u) - SRC1.read(208u, 223u)));
+                        DEST.write(176u, 191u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(224u, 239u) - SRC1.read(240u, 255u)));
+                        DEST.write(192u, 207u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(128u, 143u) - SRC2.read(144u, 159u)));
+                        DEST.write(208u, 223u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(160u, 175u) - SRC2.read(176u, 191u)));
+                        DEST.write(224u, 239u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(192u, 207u) - SRC2.read(208u, 223u)));
+                        DEST.write(240u, 255u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(224u, 239u) - SRC2.read(240u, 255u)));
+                        DEST.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
             return;
       }
 

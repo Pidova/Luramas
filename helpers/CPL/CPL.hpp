@@ -1,4 +1,3 @@
-#include "helpers.hpp"
 #include "builtins\CONTROL_FLOW.hpp"
 #include "builtins\CPU.hpp"
 #include "builtins\DESCRIPTOR.hpp"
@@ -15,5 +14,4 @@
 #include "builtins\THREAD.hpp"
 #include "builtins\TIMER.hpp"
 #include "builtins\VM.hpp"
-
-
+#include "helpers.hpp"

@@ -87,7 +87,7 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
             const auto c2 = tools::make(build, xeflags::C2);
             const auto c3 = tools::make(build, xeflags::C3);
             if (!inited) {
-                  
+
                   /* Init Flags */
                   registrar.setf<xeflags::AF>(af);
                   registrar.setf<xeflags::CF>(cf);
@@ -111,7 +111,7 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
                   registrar.setf<xeflags::C1>(c1);
                   registrar.setf<xeflags::C2>(c2);
                   registrar.setf<xeflags::C3>(c3);
-                 
+
                   /* Init registers */
                   {
                         constexpr auto START = static_cast<std::size_t>(X86_REG_INVALID) + 1u;
