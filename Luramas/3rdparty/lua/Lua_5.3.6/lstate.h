@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lstate.h,v 2.133.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Global State
@@ -231,5 +233,7 @@ LUAI_FUNC void luaE_freethread(lua_State *L, lua_State *L1);
 LUAI_FUNC CallInfo *luaE_extendCI(lua_State *L);
 LUAI_FUNC void luaE_freeCI(lua_State *L);
 LUAI_FUNC void luaE_shrinkCI(lua_State *L);
+
+#endif
 
 #endif

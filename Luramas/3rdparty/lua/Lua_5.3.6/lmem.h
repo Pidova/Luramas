@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lmem.h,v 1.43.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Interface to Memory Manager
@@ -60,5 +62,7 @@ LUAI_FUNC l_noret luaM_toobig(lua_State *L);
 /* not to be called directly */
 LUAI_FUNC void *luaM_realloc_(lua_State *L, void *block, size_t oldsize, size_t size);
 LUAI_FUNC void *luaM_growaux_(lua_State *L, void *block, int *size, size_t size_elem, int limit, const char *what);
+
+#endif
 
 #endif

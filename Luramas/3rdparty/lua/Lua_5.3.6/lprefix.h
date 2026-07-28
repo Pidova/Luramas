@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lprefix.h,v 1.2.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Definitions for Lua code that must come before any other header file
@@ -38,5 +40,7 @@
 #endif
 
 #endif /* } */
+
+#endif
 
 #endif

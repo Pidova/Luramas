@@ -2,7 +2,7 @@
 #include "../ir.hpp"
 #include "definitions.hpp"
 
-namespace generation {
+namespace luramas::ir::generation {
 
       namespace cfg {
 
@@ -13,6 +13,7 @@ namespace generation {
                   then, /* Then node */
                   fall  /* Fall to node */
             };
+            /* Kind of edges */
             enum class edge_kind : std::uint8_t {
                   none, /* Nothing */
                   jump, /* Jump to node */
@@ -41,9 +42,9 @@ namespace generation {
                   void emit(const luramas_address entry, const luramas_address ending = 0u, const luramas_blockrange range = {0u, 0u});
 
                   /* Get successors */
-                  boost::fixed_vector<std::pair<edge_kind, std::shared_ptr<block>>, 3u> get_successors() const;
-                  boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3u> get_successors_bk() const;
-                  boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3u> get_block_successors() const;
+                  boost::fixed_vector<std::pair<edge_kind, std::shared_ptr<block>>, 3u> get_successors() const;     /* Get successors with edge kinds */
+                  boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3u> get_successors_bk() const; /* Get successors with block kinds */
+                  boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3u> get_block_successors() const;    /* Get block successors */
 
                   edge_kind dominant_successor_edge(const std::shared_ptr<block> &target) const;
                   luramas_address get_end() const;
@@ -62,6 +63,7 @@ namespace generation {
                   boost::unordered_flat_set<luramas_address> interacted_nodes;                                                       /* Nodes hit */
                   boost::unordered_flat_map<std::shared_ptr<block>, boost::unordered_flat_set<std::shared_ptr<block>>> predecessors; /* Predecessors for blocks */
 
+                  /* Visits all blocks with an edge kind targeting it */
                   template <edge_kind k>
                   boost::unordered_flat_set<std::shared_ptr<block>> visit_edges() const {
                         boost::unordered_flat_set<std::shared_ptr<block>> result;
@@ -72,7 +74,11 @@ namespace generation {
                         }
                         return result;
                   }
+
+                  /* Visit block given address */
                   std::shared_ptr<block> visit(const luramas_address n) const;
+
+                  /* Returns the index of the last element in the first contiguous sequence of the specified scope ID, or 0 if no such bounded sequence is found */
                   std::size_t contiguous_firstlast_scopeid(const std::size_t n) const;
 
                   /* Returns the first block that contains the most scope id for a given address range */
@@ -112,8 +118,9 @@ namespace generation {
 
       namespace ssa {
 
-            static constexpr auto UNKNOWN_SSA_VERSION = 0u;
+            static constexpr auto UNKNOWN_SSA_VERSION = 0u; /* Placeholder SSA verision or an unknown version */
 
+            /* Type of SSA assignment */
             enum class assignment_kind : std::uint8_t {
                   phi,   /* PHI */
                   single /* Single SSA */
@@ -204,4 +211,4 @@ namespace generation {
             fssa generate(se_ir &ir, const boost::unordered_flat_map<std::shared_ptr<ir_stat>, luramas::ir::definitions::exprs> &exprs);
       } // namespace flag_ssa
 
-} // namespace generation
+} // namespace luramas::ir::generation

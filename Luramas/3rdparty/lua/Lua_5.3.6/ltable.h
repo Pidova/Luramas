@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ltable.h,v 2.23.1.2 2018/05/24 19:39:05 roberto Exp $
 ** Lua tables (hash)
@@ -51,6 +53,8 @@ LUAI_FUNC lua_Unsigned luaH_getn(Table *t);
 #if defined(LUA_DEBUG)
 LUAI_FUNC Node *luaH_mainposition(const Table *t, const TValue *key);
 LUAI_FUNC int luaH_isdummy(const Table *t);
+#endif
+
 #endif
 
 #endif

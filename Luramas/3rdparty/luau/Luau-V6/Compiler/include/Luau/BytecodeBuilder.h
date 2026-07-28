@@ -1,9 +1,11 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/Ast/include/Luau/StringUtils.h"
-#include "Luau-V6/Common/include/Luau/Bytecode.h"
-#include "Luau-V6/Common/include/Luau/DenseHash.h"
+#include "../../../Ast/include/Luau/StringUtils.h"
+#include "../../../Common/include/Luau/Bytecode.h"
+#include "../../../Common/include/Luau/DenseHash.h"
 
 #include <string>
 
@@ -302,3 +304,5 @@ namespace Luau {
       };
 
 } // namespace Luau
+
+#endif

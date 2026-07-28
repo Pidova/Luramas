@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lvm.c,v 2.268.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Lua virtual machine
@@ -1347,3 +1349,5 @@ newframe:                           /* reentry point when frame changes (call/re
 }
 
 /* }================================================================== */
+
+#endif

@@ -1,7 +1,9 @@
-// This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
-#include "Luau-V6/Compiler/include/luacode.h"
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
 
-#include "Luau-V6/Compiler/include/Luau/Compiler.h"
+// This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
+#include "../include/luacode.h"
+
+#include "../include/Luau/Compiler.h"
 
 #include <string.h>
 
@@ -25,3 +27,5 @@ char *luau_compile(const char *source, size_t size, lua_CompileOptions *options,
       *outsize = result.size();
       return copy;
 }
+
+#endif

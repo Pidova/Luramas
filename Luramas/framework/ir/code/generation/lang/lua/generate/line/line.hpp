@@ -21,4 +21,15 @@ namespace luramas::ir::code::emitter::lua::line {
             return;
       }
 
+      /* Emits pre data flags */
+      inline void emit_pre_flags(std::string &buffer, const keywords k, const ir::flags::ir_stat &stat_flags, const std::shared_ptr<luramas::ir::data::format::format> &format) {
+
+            return;
+      }
+
+      /* Emits post data flags */
+      inline void emit_post_flags(std::string &buffer, const keywords k, const ir::flags::ir_stat &stat_flags, const std::shared_ptr<luramas::ir::data::format::format> &format) {
+
+            return;
+      }
 } // namespace luramas::ir::code::emitter::lua::line

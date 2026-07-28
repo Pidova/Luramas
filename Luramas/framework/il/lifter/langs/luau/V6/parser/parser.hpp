@@ -8,19 +8,19 @@
 namespace luau_v6_parsers {
 
       /* Parse compare instruction. */
-      void parse_compares(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
+      void compares(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
 
       /* Parses debug information to debug manager */
-      void parse_debug(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm, Proto *p);
+      void debug(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm, Proto *p);
 
       /* Inits parser, does not remove or add any new instructions, everything is alligned. */
-      void parse_instructions(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
+      void instructions(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
 
       /* Parse jumps */
-      void parse_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
+      void jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
 
       /* Parse boolean jumps */
-      void parse_boolean_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
+      void boolean_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm);
 
 } // namespace luau_v6_parsers
 

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
@@ -18,3 +20,5 @@ LUAI_FUNC void luaF_freeclosure(lua_State *L, Closure *c, struct lua_Page *page)
 LUAI_FUNC void luaF_freeupval(lua_State *L, UpVal *uv, struct lua_Page *page);
 LUAI_FUNC const LocVar *luaF_getlocal(const Proto *func, int local_number, int pc);
 LUAI_FUNC const LocVar *luaF_findlocal(const Proto *func, int local_reg, int pc);
+
+#endif

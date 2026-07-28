@@ -102,6 +102,18 @@ namespace luramas::ir::tools::compute::stats {
                         }
                         break;
                   }
+                  case keywords::table_assign: {
+
+                        /* Broken table assign to normal assign */
+                        if (!tools::exprs::values::is_idx(p->l)) {
+                              p->k = keywords::assignment;
+                              if (mutate_pm) {
+                                    pm.mut(LURAMAS_DEBUG_LINE);
+                              }
+                              return true;
+                        }
+                        break;
+                  }
                   case keywords::condition_goto: {
 
                         if (const auto cond = tools::compute::exprs::simplify_condition(pm, p->l, p->b, expr_logical::nothing, p->r, mutate_pm, tmap); cond) {

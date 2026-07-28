@@ -1,6 +1,6 @@
 #include "../ssa_builder.hpp"
 
-namespace luramas::ssa_builder::tools {
+namespace luramas::ir::ssa_builder::tools {
 
       void global_version(std::vector<ssa_node> &buffer) {
 
@@ -49,4 +49,4 @@ namespace luramas::ssa_builder::tools {
                   }
             }
       }
-} // namespace luramas::ssa_builder::tools
+} // namespace luramas::ir::ssa_builder::tools

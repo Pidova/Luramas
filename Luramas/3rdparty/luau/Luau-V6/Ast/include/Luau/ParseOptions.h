@@ -1,8 +1,10 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/Ast/include/Luau/Ast.h"
-#include "Luau-V6/Common/include/Luau/DenseHash.h"
+#include "../../../Common/include/Luau/DenseHash.h"
+#include "Ast.h"
 
 #include <vector>
 
@@ -27,3 +29,5 @@ namespace Luau {
       };
 
 } // namespace Luau
+
+#endif

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lobject.c,v 2.113.1.1 2017/04/19 17:29:57 roberto Exp $
 ** Some generic functions over Lua objects
@@ -787,3 +789,5 @@ void luaO_chunkid(char *out, const char *source, size_t bufflen) {
             memcpy(out, POS, (LL(POS) + 1) * sizeof(char));
       }
 }
+
+#endif

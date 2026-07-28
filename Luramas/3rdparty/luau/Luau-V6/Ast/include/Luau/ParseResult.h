@@ -1,10 +1,12 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/Ast/include/Luau/Lexer.h"
-#include "Luau-V6/Ast/include/Luau/Location.h"
-#include "Luau-V6/Ast/include/Luau/StringUtils.h"
-#include "Luau-V6/Common/include/Luau/Common.h"
+#include "../../../Common/include/Luau/Common.h"
+#include "Lexer.h"
+#include "Location.h"
+#include "StringUtils.h"
 
 namespace Luau {
 
@@ -63,3 +65,5 @@ namespace Luau {
       static constexpr const char *kParseNameError = "%error-id%";
 
 } // namespace Luau
+
+#endif

@@ -1,8 +1,10 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #include "Builtins.h"
 
-#include "Luau-V6/Common/include/Luau/Bytecode.h"
-#include "Luau-V6/Compiler/include/Luau/Compiler.h"
+#include "../../Common/include/Luau/Bytecode.h"
+#include "../include/Luau/Compiler.h"
 
 namespace Luau {
       namespace Compile {
@@ -436,3 +438,5 @@ namespace Luau {
 
       } // namespace Compile
 } // namespace Luau
+
+#endif

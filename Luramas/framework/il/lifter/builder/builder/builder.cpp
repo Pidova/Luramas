@@ -161,7 +161,7 @@ namespace luramas::il::lifter::builder {
             return;
       }
       build::expr build::make_standard_call(const builtin::func &default_func, const std::vector<std::pair<types::native::compiler::object, build::expr>> &sources, const std::vector<std::pair<types::native::compiler::object, build::expr>> &dests) {
-            auto func = default_func.name;
+            const auto func = default_func.name;
             std::vector<expr> args;
             for (const auto &[def, expr] : sources) {
                   args.emplace_back(expr);
@@ -325,12 +325,12 @@ namespace luramas::il::lifter::builder {
       }
 
       void build::make_push(const expr &e, const std::uint32_t ID) {
-            auto temp = this->make_temp(e);
+            const auto temp = this->make_temp(e);
             this->make<arch::opcodes::OP_STACKPUSH>(ID, temp.r.r);
             return;
       }
       void build::make_pop(const expr &e, const std::uint32_t ID) {
-            auto temp = this->make_temp(e);
+            const auto temp = this->make_temp(e);
             this->make<arch::opcodes::OP_STACKPOP>(ID, temp.r.r);
             return;
       }
@@ -424,7 +424,7 @@ namespace luramas::il::lifter::builder {
             if (!this->find_original_map(mid, loc)) {
                   luramas::error::error("Unmapped Page");
             }
-            auto reg = this->make_temp(r);
+            const auto reg = this->make_temp(r);
             this->set_flag<arch::data::flags::funknown_paging>();
             this->make<arch::opcodes::OP_PCALL>(loc, reg.r.r, v);
             return;
@@ -436,7 +436,8 @@ namespace luramas::il::lifter::builder {
       }
       void build::make_non_direct_goto(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation) {
 
-            auto v = this->make_temp(value).r.r;
+            const auto v = this->make_temp(value).r.r;
+
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
             this->make<arch::opcodes::OP_CMPN>(v, loc);
@@ -457,7 +458,7 @@ namespace luramas::il::lifter::builder {
       }
       void build::non_direct_page_call(const expr &value, const profile::module_id mid, const luramas_address loc, const expr &r, const std::intptr_t val, const std::uintptr_t segregation) {
 
-            auto v = this->make_temp(value).r.r;
+            const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
@@ -471,7 +472,7 @@ namespace luramas::il::lifter::builder {
       }
       void build::non_direct_page_jmp(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation) {
 
-            auto v = this->make_temp(value).r.r;
+            const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
@@ -486,6 +487,7 @@ namespace luramas::il::lifter::builder {
       void build::external_page_call(const std::string &name, const std::vector<expr> &args, const std::vector<expr> &results) {
 
             const auto calle = expr(shared_from_this(), this->get_temp());
+
             this->make_global(calle, name);
             format_call_args(shared_from_this(), args);
             this->set_flag<arch::data::flags::fexternal_page_goto>();
@@ -495,7 +497,7 @@ namespace luramas::il::lifter::builder {
       }
       void build::non_direct_external_page_call(const expr &value, const luramas_address loc, const std::string &name, const std::vector<expr> &args, const std::vector<expr> &results, const std::uintptr_t segregation) {
 
-            auto v = this->make_temp(value).r.r;
+            const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
@@ -516,7 +518,7 @@ namespace luramas::il::lifter::builder {
       }
       void build::non_direct_external_page_jmp(const expr &value, const luramas_address loc, const std::uintptr_t segregation) {
 
-            auto v = this->make_temp(value).r.r;
+            const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);

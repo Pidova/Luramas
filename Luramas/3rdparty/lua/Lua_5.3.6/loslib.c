@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: loslib.c,v 1.65.1.1 2017/04/19 17:29:57 roberto Exp $
 ** Standard Operating System library
@@ -381,3 +383,5 @@ LUAMOD_API int luaopen_os(lua_State *L) {
       luaL_newlib(L, syslib);
       return 1;
 }
+
+#endif

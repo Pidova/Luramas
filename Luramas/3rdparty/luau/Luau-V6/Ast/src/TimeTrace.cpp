@@ -1,7 +1,9 @@
-// This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
-#include "Luau-V6/Ast/include/Luau/TimeTrace.h"
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
 
-#include "Luau-V6/Ast/include/Luau/StringUtils.h"
+// This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
+#include "../include/Luau/TimeTrace.h"
+
+#include "../include/Luau/StringUtils.h"
 
 #include <algorithm>
 #include <mutex>
@@ -240,5 +242,7 @@ namespace Luau {
             }
       } // namespace TimeTrace
 } // namespace Luau
+
+#endif
 
 #endif

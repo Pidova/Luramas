@@ -1,7 +1,9 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/Ast/include/Luau/Location.h"
+#include "Location.h"
 
 #include <functional>
 #include <iterator>
@@ -1332,3 +1334,4 @@ namespace std {
       };
 
 } // namespace std
+#endif

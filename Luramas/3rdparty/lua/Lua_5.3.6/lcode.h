@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lcode.h,v 1.64.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Code generator for Lua
@@ -94,5 +96,7 @@ LUAI_FUNC void luaK_prefix(FuncState *fs, UnOpr op, expdesc *v, int line);
 LUAI_FUNC void luaK_infix(FuncState *fs, BinOpr op, expdesc *v);
 LUAI_FUNC void luaK_posfix(FuncState *fs, BinOpr op, expdesc *v1, expdesc *v2, int line);
 LUAI_FUNC void luaK_setlist(FuncState *fs, int base, int nelems, int tostore);
+
+#endif
 
 #endif

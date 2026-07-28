@@ -20,6 +20,12 @@ using luramas_length = std::size_t;      /* Length */
 using luramas_flag = bool;               /* Flag */
 using luramas_bitwidth = std::uint16_t;  /* Bit width */
 
+/* Ranges */
+template <typename T>
+using luramas_irange = std::pair<T, T>; /* Inclusive range of types [start, end] */
+template <typename T>
+using luramas_erange = std::pair<T, T>; /* Exclusive range of types (start, end) */
+
 /* Objects */
 using luramas_blockrange = std::pair<luramas_address, luramas_address>;                                /* Range [start, end) */
 using luramas_oblockrange = std::pair<std::optional<luramas_address>, std::optional<luramas_address>>; /* Optional blockrange  */

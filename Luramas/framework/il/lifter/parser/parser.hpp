@@ -6,7 +6,7 @@
 namespace luramas::il::lifter::parser {
 
       /* 
-         Parse data from original bytecode to IL. (Init should map directly to original) 
+         Parse data from original bytecode to IL. (Initial pass should map directly to original for jumps, Later passes can mutate this) 
       */
       template <typename T /* Original disassembly vector i.e. disassembly. */>
       class parser_manager {
@@ -32,15 +32,16 @@ namespace luramas::il::lifter::parser {
                   return;
             }
 
-            /* Call callbacks */
-            template <bool clear = true /* Clears callback vector after use.*/>
-            void run() {
+            /* See if idx is contained in dism */
+            bool contains(const std::size_t idx) const {
+                  return this->dism.size() > idx;
+            }
 
-                  /* Call callbacks */
+            /* Call callbacks */
+            void run() {
                   for (const auto &callback : this->parse_callbacks) {
                         callback(*this);
                   }
-
                   this->il->commit_dis();
                   return;
             }
@@ -49,7 +50,7 @@ namespace luramas::il::lifter::parser {
             std::shared_ptr<luramas::il::ilang> il = nullptr; /* IL buffer */
 
           private:
-            std::vector<parse_callback> parse_callbacks;
+            std::vector<parse_callback> parse_callbacks; /* Callbacks for parsers */
       };
 
 } // namespace luramas::il::lifter::parser

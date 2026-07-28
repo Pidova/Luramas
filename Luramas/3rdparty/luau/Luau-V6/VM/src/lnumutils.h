@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
@@ -63,3 +65,5 @@ LUAU_FASTMATH_END
 LUAI_FUNC char *luai_num2str(char *buf, double n);
 
 #define luai_str2num(s, p) strtod((s), (p))
+
+#endif

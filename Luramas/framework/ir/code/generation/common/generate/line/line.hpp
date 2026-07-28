@@ -90,6 +90,10 @@ namespace luramas::ir::code::emitter::common::line {
                         luau::line::emit_pre_flags(buffer, k, stat_flags, format);
                         break;
                   }
+                  case syntax::emitter_syntax::lua: {
+                        lua::line::emit_pre_flags(buffer, k, stat_flags, format);
+                        break;
+                  }
                   default: {
                         luramas::error::error_stat_syn_emit("Line break");
                   }
@@ -107,6 +111,10 @@ namespace luramas::ir::code::emitter::common::line {
                   }
                   case syntax::emitter_syntax::luau: {
                         luau::line::emit_post_flags(buffer, k, stat_flags, format);
+                        break;
+                  }
+                  case syntax::emitter_syntax::lua: {
+                        lua::line::emit_post_flags(buffer, k, stat_flags, format);
                         break;
                   }
                   default: {

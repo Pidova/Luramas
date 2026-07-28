@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lmem.c,v 1.91.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Interface to Memory Manager
@@ -86,3 +88,5 @@ void *luaM_realloc_(lua_State *L, void *block, size_t osize, size_t nsize) {
       g->GCdebt = (g->GCdebt + nsize) - realosize;
       return newblock;
 }
+
+#endif

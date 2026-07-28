@@ -1,8 +1,10 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/VM/include/luaconf.h"
+#include "../include/luaconf.h"
 #include "ldebug.h"
 #include "lobject.h"
 #include "lstate.h"
@@ -53,3 +55,5 @@ LUAI_FUNC void luaD_checkCstack(lua_State *L);
 
 LUAI_FUNC l_noret luaD_throw(lua_State *L, int errcode);
 LUAI_FUNC int luaD_rawrunprotected(lua_State *L, Pfunc f, void *ud);
+
+#endif

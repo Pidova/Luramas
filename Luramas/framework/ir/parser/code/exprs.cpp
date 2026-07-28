@@ -221,7 +221,7 @@ namespace luramas::ir::parser::exprs {
                         switch (b.fexpecting_keyword) {
                               case expr_kinds::ternary: {
 
-                                    //if (!b.extra) {
+                                    //if (pm.env_flags.fallow_ternaries && !b.extra) {
                                     //      b.extra = tools::exprs::generate::ternary(tools::)
                                     //}
                                     break;

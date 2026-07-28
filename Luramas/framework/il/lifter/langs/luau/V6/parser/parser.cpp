@@ -55,7 +55,7 @@ luramas::il::arch::data::kval_kinds kv(lua_Type t) {
 
 namespace luau_v6_parsers {
 
-      void parse_instructions(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
+      void instructions(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
             luramas_address pc = 0u;
             luramas_register override_top = 0u;
@@ -376,7 +376,7 @@ namespace luau_v6_parsers {
                                           break;
                                     }
                               }
-                              if (jb == nullptr) {
+                              if (!jb) {
                                     luramas::error::error("Could not find forgprep jumpback.");
                               }
                               op = luramas::il::arch::opcodes::OP_INITFORLOOPSPECIAL;
@@ -387,13 +387,12 @@ namespace luau_v6_parsers {
                               std::shared_ptr<luau_v6_disassembler::operand> amount = nullptr;
                               const auto target = i->addr + i->operands.back()->jmp + 1u;
                               for (auto x = idx; x < pm.dism.size(); ++x) {
-                                    const auto &xi = pm.dism[x];
-                                    if (xi->addr == target) {
+                                    if (const auto &xi = pm.dism[x]; xi->addr == target) {
                                           amount = luau_v6_disassembler::make_operand::make_operand_val(xi->operands.back()->val);
                                           break;
                                     }
                               }
-                              if (amount == nullptr) {
+                              if (!amount) {
                                     luramas::error::error("Could not find forgloop jumpback.");
                               }
                               op = luramas::il::arch::opcodes::OP_INITFORLOOPG;
@@ -408,12 +407,12 @@ namespace luau_v6_parsers {
                         }
                         case LuauOpcode::LOP_FORGLOOP: {
                               op = luramas::il::arch::opcodes::OP_FORLOOPG;
-                              sorted_operands = {i->operands.front(), i->operands.back(), i->operands[1]};
+                              sorted_operands = {i->operands.front(), i->operands.back(), i->operands[1u]};
                               break;
                         }
                         case LuauOpcode::LOP_GETIMPORT: {
                               op = luramas::il::arch::opcodes::OP_GETTABUPVALUE;
-                              sorted_operands = {i->operands.front(), i->operands[1]};
+                              sorted_operands = {i->operands.front(), i->operands[1u]};
                               break;
                         }
                         case LuauOpcode::LOP_JUMPBACK: {
@@ -581,7 +580,7 @@ namespace luau_v6_parsers {
             return;
       };
 
-      void parse_compares(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
+      void compares(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
             for (auto i = 0u; i < pm.dism.size(); ++i) {
 
@@ -876,7 +875,7 @@ namespace luau_v6_parsers {
             return;
       }
 
-      void parse_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
+      void jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
             for (const auto &i : pm.il->dis) {
                   for (const auto &o : i->operands) {
@@ -889,7 +888,7 @@ namespace luau_v6_parsers {
             return;
       }
 
-      void parse_boolean_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
+      void boolean_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
             for (auto i = 0u; i < pm.dism.size(); ++i) {
 
@@ -905,7 +904,7 @@ namespace luau_v6_parsers {
             return;
       }
 
-      void parse_debug(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm, Proto *p) {
+      void debug(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm, Proto *p) {
 
             boost::unordered_flat_map<luramas_address, std::shared_ptr<luramas::il::disassembly>> marked_map;
             if (!pm.il->debug.has_value()) {

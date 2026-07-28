@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #include "lbuffer.h"
 
@@ -20,3 +22,5 @@ Buffer *luaB_newbuffer(lua_State *L, size_t s) {
 void luaB_freebuffer(lua_State *L, Buffer *b, lua_Page *page) {
       luaM_freegco(L, b, sizebuffer(b->len), b->memcat, page);
 }
+
+#endif

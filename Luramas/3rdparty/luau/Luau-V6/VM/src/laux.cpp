@@ -1,6 +1,8 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
-#include "Luau-V6/VM/include/lualib.h"
+#include "../include/lualib.h"
 
 #include "lapi.h"
 #include "lgc.h"
@@ -504,3 +506,5 @@ const char *luaL_tolstring(lua_State *L, int idx, size_t *len) {
       }
       return lua_tolstring(L, -1, len);
 }
+
+#endif

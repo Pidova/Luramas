@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: llex.c,v 2.96.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Lexical Analyzer
@@ -581,3 +583,5 @@ int luaX_lookahead(LexState *ls) {
       ls->lookahead.token = llex(ls, &ls->lookahead.seminfo);
       return ls->lookahead.token;
 }
+
+#endif

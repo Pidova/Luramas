@@ -67,7 +67,9 @@ namespace luramas::ir::passes::setups {
                   pm.add(passes::label_flatten, single, "Label flatten");
                   pm.add(passes::branch_redirection, f, "Branch redirection");
                   pm.add(passes::unreachable_code_elimination, single, "Unreachable code");
-                  //     pm.add(passes::block_merger, single, "Block Merger");
+                  if (pm.env_flags.fenable_block_merging) {
+                        pm.add(passes::block_merger, single, "Block Merger");
+                  }
                   pm.run();
                   pm.clear();
 
@@ -102,7 +104,9 @@ namespace luramas::ir::passes::setups {
 
                   /* Normal */
                   pm.add(passes::label_flatten, "Label flatten");
-                  // pm.add(passes::block_merger, f, "Block Merger");
+                  if (pm.env_flags.fenable_block_merging) {
+                        pm.add(passes::block_merger, f, "Block Merger");
+                  }
                   pm.add(passes::unreachable_code_elimination, single, "Unreachable code");
                   pm.add(passes::branch_redirection, f, "Branch redirection");
                   pm.add(passes::constant_propagation, f, "Constant propagation");
@@ -214,7 +218,9 @@ namespace luramas::ir::passes::setups {
                   pm.env_flags.fallow_advance_constant_prop = true;
 
                   /* Finalization */
-                  // pm.add(passes::agressive_thread_out, f, "Agressive thread out");
+                  if (pm.env_flags.fenable_aggresive_threadout) {
+                        pm.add(passes::agressive_thread_out, f, "Agressive thread out");
+                  }
                   pm.add(passes::constant_fold, cf, "Constant fold");
                   pm.add(passes::expression_canonicalization_elimination, f, "Expression Canonicalization");
                   pm.add(passes::branch_optimization, f, "Branch Optimization");

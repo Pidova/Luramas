@@ -145,6 +145,8 @@ void parser::parse_instruction(const luramas::il::helpers::low::disassembly_mana
                         build->make_built_in(bint, operands, {af, cf, sf, zf, pf, of, tf, itf, df, nf, rf, c0, c1, c2, c3});
                   }
             }
+
+            /* Annotate instructions */
             if (dism.il->flags.fannotate_instructions) {
                   build->make<luramas::il::arch::opcodes::OP_ANNOTATE_PREV>(dism.il->make_kvalue<luramas::il::arch::data::kval_kinds::string>(d.mnemonic + std::string("   ") + d.op_str));
             }

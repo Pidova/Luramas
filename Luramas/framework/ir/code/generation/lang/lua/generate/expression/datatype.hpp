@@ -31,13 +31,16 @@ namespace luramas::ir::code::emitter::lua::datatype {
       inline void emit_string(std::string &buffer, std::string data, const std::shared_ptr<luramas::ir::data::format::format> &format) {
 
             /* Fix string */
-            if (data.back() != lua_langkeyword_string_end) {
-                  data += lua_langkeyword_string_end;
+            if (!data.empty()) {
+                  if (data.back() != lua_langkeyword_string_end) {
+                        data += lua_langkeyword_string_end;
+                  }
+                  if (data.front() != lua_langkeyword_string_start) {
+                        data = lua_langkeyword_string_start + data;
+                  }
+            } else {
+                  data += lua_langkeyword_string_end + lua_langkeyword_string_start;
             }
-            if (data.front() != lua_langkeyword_string_start) {
-                  data = lua_langkeyword_string_start + data;
-            }
-
             buffer += data;
             return;
       }

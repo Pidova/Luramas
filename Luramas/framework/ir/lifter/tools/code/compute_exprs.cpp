@@ -98,6 +98,30 @@ namespace luramas::ir::tools::compute::exprs {
                         }
                         break;
                   }
+                  case expr_kinds::idx: {
+
+                        /* Implicit table */
+                        if (e->l->flags.fimplicit_table && e->l && e->r && e->r->is_name_qualifier()) {
+
+                              if (pm.env_flags.options.oresolve_global_qualifier) {
+                                    if (const auto s = pm.env_flags.options.oresolve_global_qualifier(e->r); s) {
+                                          e->r->emit_global(*s);
+                                          e = e->r;
+                                          if (mutate_pm) {
+                                                pm.mut(LURAMAS_DEBUG_LINE);
+                                          }
+                                          return true;
+                                    }
+                              } else {
+                                    e = e->r;
+                                    if (mutate_pm) {
+                                          pm.mut(LURAMAS_DEBUG_LINE);
+                                    }
+                                    return true;
+                              }
+                        }
+                        break;
+                  }
                   case expr_kinds::ternary: {
 
                         /* Comparative true or false */
@@ -119,8 +143,8 @@ namespace luramas::ir::tools::compute::exprs {
                         if (const auto cond = tools::compute::exprs::simplify_condition(pm, e->l, e->b, e->e, e->r, mutate_pm, tmap); cond) {
                               e->l = cond->l;
                               e->b = cond->b;
-                              e->e = cond->e;
                               e->r = cond->r;
+                              e->e = cond->e;
                               return true;
                         }
 
@@ -269,7 +293,7 @@ namespace luramas::ir::tools::compute::exprs {
                         /* INTEGRAL ARITH INTEGRAL */
                         if (e->l && e->r) {
 
-                              if (e->l->is_integral() && e->r->is_integral()) {
+                              if (e->l->is_integral() && e->r->is_integral() && !e->l->n.is_nan() && !e->r->n.is_nan()) {
 
                                     if (!safety::arith::is_safe(pm, e)) {
                                           return false;
@@ -651,7 +675,7 @@ namespace luramas::ir::tools::compute::exprs {
                   return tools::exprs::generate::cond(l->l, luramas::il::arch::data::bin_kindflip(l->b), l->r);
             }
 
-            /* ((??))*/
+            /* ((??)) */
             if (b == luramas::il::arch::data::bin_kinds::et_ && !r && l->b == luramas::il::arch::data::bin_kinds::et_ && !l->r) {
 
                   if (mutate_pm) {
@@ -660,6 +684,17 @@ namespace luramas::ir::tools::compute::exprs {
                   return tools::exprs::generate::cond(l->l, b, r);
             }
 
+            /* not (CMP and/or CMP) */
+            if (luramas::il::arch::data::is_kinds::not_k(b) && tools::exprs::values::is_logical(l) && tools::exprs::values::is_basic_condition(l->l) && tools::exprs::values::is_basic_condition(l->r)) {
+
+                  l->l->b = luramas::il::arch::data::bin_kindflip(l->l->b);
+                  l->r->b = luramas::il::arch::data::bin_kindflip(l->r->b);
+                  if (mutate_pm) {
+                        pm.mut(LURAMAS_DEBUG_LINE);
+                  }
+                  return l->e == expr_logical::and_ ? tools::exprs::generate::cond(tools::exprs::generate::logical<expr_logical::and_>(l->l, l->r), il::arch::data::bin_kinds::et_)
+                                                    : tools::exprs::generate::cond(tools::exprs::generate::logical<expr_logical::or_>(l->l, l->r), il::arch::data::bin_kinds::et_);
+            }
             if (r) {
 
                   /* (? - ?) == 0 */
@@ -683,7 +718,7 @@ namespace luramas::ir::tools::compute::exprs {
                         }
                   }
 
-                  /* (? ?? ?) or (? ?? ?)  *AND* ? == ?*/
+                  /* (? ?? ?) or (? ?? ?)  *AND* ? == ? */
                   if (e == expr_logical::or_ && tools::exprs::branch::same_logical_operands(l, r)) {
 
                         /* (? < ?) or (? == ?) */

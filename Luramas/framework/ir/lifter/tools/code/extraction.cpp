@@ -49,6 +49,28 @@ namespace luramas::ir::tools::extract {
             return nullptr;
       }
 
+      ir_stat::ir_expr::space decompose_logical(const std::shared_ptr<ir_stat::ir_expr> &expr) {
+
+            ir_stat::ir_expr::space result;
+            if (!tools::exprs::values::is_logical(expr)) {
+                  return result;
+            }
+
+            ir_stat::ir_expr::space work_list = {expr};
+            do {
+
+                  const auto curr = work_list.back();
+                  work_list.pop_back();
+
+                  if (tools::exprs::values::is_logical(curr)) {
+                        work_list.insert(work_list.end(), {curr->l, curr->r});
+                        continue;
+                  }
+                  result.emplace_back(curr);
+            } while (!work_list.empty());
+            return result;
+      }
+
       luramas_addresses cond_conditions(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
             luramas_addresses result;

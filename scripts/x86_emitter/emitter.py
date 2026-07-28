@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from capstone import *
 from capstone.x86 import *
 import struct

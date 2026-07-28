@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
@@ -48,3 +50,5 @@ struct lua_CompileOptions {
 
 // compile source to bytecode; when source compilation fails, the resulting bytecode contains the encoded error. use free() to destroy
 LUACODE_API char *luau_compile(const char *source, size_t size, lua_CompileOptions *options, size_t *outsize);
+
+#endif

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ldump.c,v 2.37.1.1 2017/04/19 17:20:42 roberto Exp $
 ** save precompiled Lua chunks
@@ -193,3 +195,5 @@ int luaU_dump(lua_State *L, const Proto *f, lua_Writer w, void *data, int strip)
       DumpFunction(f, NULL, &D);
       return D.status;
 }
+
+#endif

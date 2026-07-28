@@ -9,8 +9,7 @@ one-line description as a trailing comment so nothing is lost against the source
 ## Limitations
 
 > This is designed to only parse the linear text of the "Register Address:" MSR tables. Registers described purely
-> in prose, or in tables using a different layout, are not extracted. A handful of descriptions may come through
-> truncated where a row's column layout differs from the common cases.
+> in prose, or in tables using a different layout, are not extracted. A handful of descriptions may come through truncated.
 
 ## Overview
 
@@ -20,7 +19,7 @@ Given a PDF, the script will:
 - Walk the text and locate every `Register Address: <hex>H, <dec>` block.
 - Pull the `IA32_*` / `MSR_*` identifier and its hex address from each block, removing duplicates repeats across page breaks.
 - Generate one-line description, handling both column shapes (description before or after the `(R/W)` access marker) and emitting no comment when the row has none.
-- Emit one `static constexpr auto` line per MSR, wrapped in the `LURAMAS_TARGET_X86` guard and `msrs::intel` namespace.
+- Emit one `static constexpr auto` line per MSR, wrapped in the `LURAMAS_TARGET_X86` guard and `msrs::intel` namespace possibly family if duplicates.
 
 ## Example
 

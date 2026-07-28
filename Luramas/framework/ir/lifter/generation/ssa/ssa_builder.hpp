@@ -4,7 +4,7 @@
 #include "../cfg/iterate.hpp"
 #include "../cfg/sort.hpp"
 
-namespace luramas::ssa_builder {
+namespace luramas::ir::ssa_builder {
 
       enum class kind : std::uint8_t {
             scalar, /* Singles */
@@ -40,4 +40,4 @@ namespace luramas::ssa_builder {
 
             void global_version(std::vector<ssa_node> &buffer);
       }
-} // namespace luramas::ssa_builder
+} // namespace luramas::ir::ssa_builder

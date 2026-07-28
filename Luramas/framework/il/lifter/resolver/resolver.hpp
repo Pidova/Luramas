@@ -4,6 +4,9 @@
 
 namespace luramas::il::lifter::resolver {
 
+      /*
+        Passes after parser to fix up instruction.
+      */
       template <typename T /* Original datastruct pointer i.e. Python not Python* for template. */>
       class resolver_manager {
 
@@ -26,8 +29,6 @@ namespace luramas::il::lifter::resolver {
 
             /* Call callbacks */
             void run() {
-
-                  /* Call operand callbacks */
                   for (const auto &callback : this->resolver_callbacks) {
                         callback(*this);
                   }
@@ -35,8 +36,8 @@ namespace luramas::il::lifter::resolver {
                   return;
             }
 
-            std::shared_ptr<luramas::il::ilang> il = nullptr;
-            T ptr;
+            std::shared_ptr<luramas::il::ilang> il = nullptr; /* Linked IL */
+            T ptr;                                            /* Container for extra data */
 
           private:
             std::vector<resolver_callback> resolver_callbacks; /* Resolver callbacks */

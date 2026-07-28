@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lapi.c,v 2.259.1.2 2017/12/06 18:35:12 roberto Exp $
 ** Lua API
@@ -1216,3 +1218,5 @@ LUA_API void lua_upvaluejoin(lua_State *L, int fidx1, int n1, int fidx2, int n2)
             (*up1)->u.open.touched = 1;
       luaC_upvalbarrier(L, *up1);
 }
+
+#endif

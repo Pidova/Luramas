@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ldo.c,v 2.157.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Stack and Call structure of Lua
@@ -762,3 +764,5 @@ int luaD_protectedparser(lua_State *L, ZIO *z, const char *name, const char *mod
       L->nny--;
       return status;
 }
+
+#endif

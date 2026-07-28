@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lauxlib.c,v 1.289.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Auxiliary functions for building Lua libraries
@@ -964,3 +966,5 @@ LUALIB_API void luaL_checkversion_(lua_State *L, lua_Number ver, size_t sz) {
       else if (*v != ver)
             luaL_error(L, "version mismatch: app. needs %f, Lua core provides %f", (LUAI_UACNUMBER)ver, (LUAI_UACNUMBER)*v);
 }
+
+#endif

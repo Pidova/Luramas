@@ -32,7 +32,7 @@ namespace luau_v6_disassembler {
                   double integer;             /* Integer */
             };
             std::uint32_t code = 0;                     /* Raw code value */
-            luramas_address ref_addr = 0u;              /* reference address */
+            luramas_address ref_addr = 0u;              /* Reference address (Calculated as Jmp + Addr + 1) */
             std::string k_value = "";                   /* Seperate value to represent as a string and idx. Will also serve as import str. */
             lua_Type k_value_type = lua_Type::LUA_TNIL; /* If operand references kvalue index this will be its type. */
       };
@@ -59,11 +59,9 @@ namespace luau_v6_disassembler {
             std::string disassemble() {
 
                   std::string result = std::to_string(this->addr) + " " + this->data;
-
                   if (include_hint) {
                         result += " " + std::string(this->hint);
                   }
-
                   return result;
             }
       };

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lstrlib.c,v 1.254.1.1 2017/04/19 17:29:57 roberto Exp $
 ** Standard library for string operations and pattern-matching
@@ -1599,3 +1601,5 @@ LUAMOD_API int luaopen_string(lua_State *L) {
       createmetatable(L);
       return 1;
 }
+
+#endif

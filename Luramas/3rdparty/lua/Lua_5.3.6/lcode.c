@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lcode.c,v 2.112.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Code generator for Lua
@@ -1191,3 +1193,5 @@ void luaK_setlist(FuncState *fs, int base, int nelems, int tostore) {
             luaX_syntaxerror(fs->ls, "constructor too long");
       fs->freereg = base + 1; /* free registers with list values */
 }
+
+#endif

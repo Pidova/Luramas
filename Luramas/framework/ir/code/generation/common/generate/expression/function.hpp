@@ -11,6 +11,10 @@ namespace luramas::ir::code::emitter::common::function {
                         luau::function::emit_global_function(buffer, name, params, data, format);
                         break;
                   }
+                  case syntax::emitter_syntax::lua: {
+                        lua::function::emit_global_function(buffer, name, params, data, format);
+                        break;
+                  }
                   default: {
                         luramas::error::error_expr_syn_emit("Global function");
                   }
@@ -23,6 +27,10 @@ namespace luramas::ir::code::emitter::common::function {
             switch (syn) {
                   case syntax::emitter_syntax::luau: {
                         luau::function::emit_global_function_end(buffer, format);
+                        break;
+                  }
+                  case syntax::emitter_syntax::lua: {
+                        lua::function::emit_global_function_end(buffer, format);
                         break;
                   }
                   default: {
@@ -39,6 +47,10 @@ namespace luramas::ir::code::emitter::common::function {
                         luau::function::emit_local_function(buffer, name, params, data, format);
                         break;
                   }
+                  case syntax::emitter_syntax::lua: {
+                        lua::function::emit_local_function(buffer, name, params, data, format);
+                        break;
+                  }
                   default: {
                         luramas::error::error_expr_syn_emit("Local function");
                   }
@@ -51,6 +63,10 @@ namespace luramas::ir::code::emitter::common::function {
             switch (syn) {
                   case syntax::emitter_syntax::luau: {
                         luau::function::emit_local_function_end(buffer, format);
+                        break;
+                  }
+                  case syntax::emitter_syntax::lua: {
+                        lua::function::emit_local_function_end(buffer, format);
                         break;
                   }
                   default: {
@@ -67,6 +83,10 @@ namespace luramas::ir::code::emitter::common::function {
                         luau::function::emit_anonymous_function(buffer, params, data, format);
                         break;
                   }
+                  case syntax::emitter_syntax::lua: {
+                        lua::function::emit_anonymous_function(buffer, params, data, format);
+                        break;
+                  }
                   default: {
                         luramas::error::error_expr_syn_emit("Anonymous function");
                   }
@@ -79,6 +99,10 @@ namespace luramas::ir::code::emitter::common::function {
             switch (syn) {
                   case syntax::emitter_syntax::luau: {
                         luau::function::emit_anonymous_function_end(buffer, format);
+                        break;
+                  }
+                  case syntax::emitter_syntax::lua: {
+                        lua::function::emit_anonymous_function_end(buffer, format);
                         break;
                   }
                   default: {

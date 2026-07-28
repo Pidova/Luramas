@@ -13,7 +13,7 @@ struct condition {
       }
 };
 
-namespace generation::cfg {
+namespace luramas::ir::generation::cfg {
 
       /* Blocks */
       void block::emit(const std::shared_ptr<block> &jump, const std::shared_ptr<block> &then, const std::shared_ptr<block> &fall) {
@@ -735,4 +735,4 @@ namespace generation::cfg {
             }
             return result;
       }
-} // namespace generation::cfg
+} // namespace luramas::ir::generation::cfg

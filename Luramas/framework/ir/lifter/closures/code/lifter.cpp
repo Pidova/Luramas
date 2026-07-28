@@ -69,11 +69,13 @@ namespace luramas::ir::closures::lifter {
                         case luramas::il::arch::operand::operand_kind::kval:
                         case luramas::il::arch::operand::operand_kind::kval_string: {
                               auto k = b->k_value;
+                              auto ksan = k;
+                              luramas_str_sanitize(ksan);
                               if (sanitize) {
-                                    luramas_str_sanitize(k);
+                                    k = ksan;
                               }
                               if (n->lex->kind == luramas::il::lexer::inst_kinds::get_global || n->lex->kind == luramas::il::lexer::inst_kinds::set_global) {
-                                    expr->emit_global(k);
+                                    expr->emit_global(ksan);
                               } else {
                                     switch (b->k_value_kind) {
                                           case luramas::il::arch::data::kval_kinds::none: {
@@ -81,24 +83,24 @@ namespace luramas::ir::closures::lifter {
                                                 break;
                                           }
                                           case luramas::il::arch::data::kval_kinds::boolean: {
-                                                expr->emit_boolean(!k.empty() && (k.front() == 'T' || k.front() == 't'));
+                                                expr->emit_boolean(!ksan.empty() && (ksan.front() == 'T' || ksan.front() == 't'));
                                                 break;
                                           }
                                           case luramas::il::arch::data::kval_kinds::integer: {
-                                                expr->emit_int(std::stod(k));
+                                                expr->emit_int(std::stod(ksan));
                                                 break;
                                           }
                                           case luramas::il::arch::data::kval_kinds::string: {
-                                                expr->emit_str(k);
+                                                expr->emit_str(ksan);
                                                 break;
                                           }
                                           default: {
                                                 if (luramas_str_qoutes(k)) {
-                                                      expr->emit_str(k);
+                                                      expr->emit_str(ksan);
                                                 } else if (luramas_str_number(k)) {
-                                                      expr->emit_int(std::stoll(k));
+                                                      expr->emit_int(std::stoll(ksan));
                                                 } else if (luramas_str_decimal(k)) {
-                                                      expr->emit_int(std::stod(k));
+                                                      expr->emit_int(std::stod(ksan));
                                                 } else {
                                                       expr->emit_kvalue(k);
                                                 }
@@ -513,9 +515,13 @@ namespace luramas::ir::closures::lifter {
                         }
                         case luramas::il::lexer::inst_kinds::branch_condition: {
 
+                              const auto it = cmp_flag.find(segregated);
+                              if (it == cmp_flag.end()) {
+                                    luramas::error::error("Branch does not have a compare");
+                              }
                               const auto c = std::make_shared<ir_stat>();
                               const auto jmp_loc = i->lex->jump() + 1u;
-                              c->emit_cond_goto(cmp_flag[segregated].first, i->lex->disassembly->bin_kind, jmp_loc, cmp_flag[segregated].second);
+                              c->emit_cond_goto(it->second.first, i->lex->disassembly->bin_kind, jmp_loc, it->second.second);
                               code.emplace_back(c);
                               break;
                         }
@@ -567,11 +573,15 @@ namespace luramas::ir::closures::lifter {
 
                               auto c = std::make_shared<ir_stat>();
                               const auto id = i->lex->operand_kind<luramas::il::lexer::operand_kinds::upvalue>().front()->dis.upvalue_idx;
+                              const auto it = upvalues->upvalues.find(id);
+                              if (it == upvalues->upvalues.end()) {
+                                    i->error("Could not find upvalue");
+                              }
                               if (i->lex->has_operand_kind<luramas::il::lexer::operand_kinds::source>()) {
-                                    c->emit_assignment(upvalues->upvalues[id], getr(sources.back()));
+                                    c->emit_assignment(it->second, getr(sources.back()));
                                     c->flags.fvolatile = true;
                               } else {
-                                    c->emit_assignment(getr(dests.back()), upvalues->upvalues[id]);
+                                    c->emit_assignment(getr(dests.back()), it->second);
                               }
                               code.emplace_back(c);
                               break;

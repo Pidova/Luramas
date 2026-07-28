@@ -44,18 +44,39 @@ luramas_int::luramas_int(const std::string &s) {
 }
 
 luramas_int &luramas_int::operator=(const luramas_int &i) {
-      this->precision = i.precision;
-      this->b = i.b;
-      this->p = i.p;
+      if (this == &i) {
+            return *this;
+      }
+      if (this->precision && i.precision) {
+            this->p = i.p;
+      } else if (!this->precision && !i.precision) {
+            this->b = i.b;
+      } else if (this->precision && !i.precision) {
+            new (&this->b) luramas_int_xbase(i.b);
+            this->precision = false;
+      } else {
+            this->b.~luramas_int_xbase();
+            this->p = i.p;
+            this->precision = true;
+      }
       return *this;
 }
-luramas_int &luramas_int::operator=(luramas_int &&i) {
+luramas_int &luramas_int::operator=(luramas_int &&i) noexcept {
+      if (this == &i) {
+            return *this;
+      }
+      if (!this->precision) {
+            this->b.~luramas_int_xbase();
+      }
       this->precision = i.precision;
-      this->b = i.b;
-      this->p = i.p;
+      if (this->precision) {
+            this->p = i.p;
+      } else {
+            new (&this->b) luramas_int_xbase(std::move(i.b));
+            i.b.~luramas_int_xbase();
+      }
       i.precision = false;
-      i.b = 0;
-      i.p = 0;
+      new (&i.b) luramas_int_xbase(0);
       return *this;
 }
 luramas_int &luramas_int::operator=(const luramas_int_base b) {
@@ -286,6 +307,9 @@ bool luramas_int::precise() const {
 }
 bool luramas_int::negative() const {
       return this->precise() ? this->p < 0.0 : this->b < 0;
+}
+bool luramas_int::is_nan() const {
+      return this->precision && std::isnan(this->p);
 }
 std::uint16_t luramas_int::bit_width() const {
       if (this->precise()) {

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lctype.c,v 1.12.1.1 2017/04/19 17:20:42 roberto Exp $
 ** 'ctype' functions for Lua
@@ -276,3 +278,5 @@ LUAI_DDEF const lu_byte luai_ctype_[UCHAR_MAX + 2] = {
 };
 
 #endif /* } */
+
+#endif

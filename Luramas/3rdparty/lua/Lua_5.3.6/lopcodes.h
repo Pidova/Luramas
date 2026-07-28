@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lopcodes.h,v 1.149.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Opcodes for Lua virtual machine
@@ -272,5 +274,7 @@ LUAI_DDEC const char *const luaP_opnames[NUM_OPCODES + 1]; /* opcode names */
 
 /* number of list items to accumulate before a SETLIST instruction */
 #define LFIELDS_PER_FLUSH 50
+
+#endif
 
 #endif

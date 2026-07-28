@@ -26,11 +26,16 @@ if(CMAKE_GENERATOR MATCHES "Ninja")
 endif()
 
 # Targets
+# X86
 option(LURAMAS_TARGET_X86  "Enable x86-64 assembly lifters and disassemblers" ON)
+# Lua
 option(LURAMAS_TARGET_LUA  "Enable Lua lifters and disassemblers"             ON)
+option(LURAMAS_TARGET_VERSION_53 "Target Lua 5.3.x bytecode"  ON)
+# LuaU
 option(LURAMAS_TARGET_LUAU "Enable Luau lifters and disassemblers"            ON)
-option(LURAMAS_TARGET_VERSION_536 "Target Lua 5.3.6 bytecode"  ON)
-option(LURAMAS_TARGET_VERSION_6   "Target Luau version 6 bytecode" ON)
+option(LURAMAS_TARGET_VERSION_6  "Target Luau version 6 bytecode" ON)
+option(LURAMAS_TARGET_VERSION_12 "Target Luau version 12 bytecode" ON)
+
 # Other
 option(LURAMAS_ECC     "Enable internal error correction checks" OFF)
 option(LURAMAS_PROFILE "Enable time checks on passes"            OFF)
@@ -41,11 +46,11 @@ option(LURAMAS_DEBUG_ERROR_CLIPBOARD "Copy dumped data to clipboard"       OFF)
 option(LURAMAS_TARGET_BIGDATA        "Dump big data into LURAMAS_GLOBAL_PDUMP" OFF)
 
 # Gather all source file groups
-file(GLOB_RECURSE EXAMPLE_FILES
-    "examples/*.hpp" 
-    "examples/*.cpp" 
-    "examples/*.h" 
-    "examples/*.c")
+file(GLOB_RECURSE CLI_FILES
+    "CLI/*.hpp" 
+    "CLI/*.cpp" 
+    "CLI/*.h" 
+    "CLI/*.c")
 file(GLOB_RECURSE SOURCE_FILES
     "Luramas/framework/*.hpp" 
     "Luramas/framework/*.cpp" 
@@ -70,14 +75,18 @@ set_source_files_properties(
         ${LUA_FILES} ${LUAU_FILES}
         PROPERTIES COMPILE_OPTIONS "${THIRDPARTY_NO_WARN}")
 
-add_executable(Luramas ${SOURCE_FILES} ${LUA_FILES} ${LUAU_FILES} ${SHARED_FILES} ${EXAMPLE_FILES})
+add_executable(Luramas ${SOURCE_FILES} ${LUA_FILES} ${LUAU_FILES} ${SHARED_FILES} ${CLI_FILES})
 
 target_compile_definitions(Luramas PRIVATE
+		# X86
         $<$<BOOL:${LURAMAS_TARGET_X86}>:LURAMAS_TARGET_X86>
+		# Lua
         $<$<BOOL:${LURAMAS_TARGET_LUA}>:LURAMAS_TARGET_LUA>
+		$<$<BOOL:${LURAMAS_TARGET_VERSION_53}>:LURAMAS_TARGET_VERSION_53>
+		# LuaU
         $<$<BOOL:${LURAMAS_TARGET_LUAU}>:LURAMAS_TARGET_LUAU>
-        $<$<BOOL:${LURAMAS_TARGET_VERSION_536}>:LURAMAS_TARGET_VERSION_536>
         $<$<BOOL:${LURAMAS_TARGET_VERSION_6}>:LURAMAS_TARGET_VERSION_6>
+		$<$<BOOL:${LURAMAS_TARGET_VERSION_12}>:LURAMAS_TARGET_VERSION_12>
 
         $<$<BOOL:${LURAMAS_ECC}>:LURAMAS_ECC>
         $<$<BOOL:${LURAMAS_PROFILE}>:LURAMAS_PROFILE>

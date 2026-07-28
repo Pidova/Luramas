@@ -1,8 +1,10 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/VM/include/lua.h"
+#include "../include/lua.h"
 
 struct lua_Page;
 union GCObject;
@@ -31,3 +33,5 @@ LUAI_FUNC lua_Page *luaM_getnextpage(lua_Page *page);
 
 LUAI_FUNC void luaM_visitpage(lua_Page *page, void *context, bool (*visitor)(void *context, lua_Page *page, GCObject *gco));
 LUAI_FUNC void luaM_visitgco(lua_State *L, void *context, bool (*visitor)(void *context, lua_Page *page, GCObject *gco));
+
+#endif

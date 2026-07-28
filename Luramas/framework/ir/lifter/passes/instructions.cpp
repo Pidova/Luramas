@@ -163,6 +163,7 @@ namespace luramas::ir::passes {
 
                               if (p->l && ssa.nodes[p].l.assigns.size() == 1u) {
 
+                                    /* Get assignment blocks */
                                     const auto assignment_blocks = tools::ssa::extract::block_assignment(pm, ssa, blocks, target, tools::ssa::extract::hit_type::first);
                                     if (assignment_blocks.size() != blocks.size()) {
                                           break;
@@ -173,6 +174,7 @@ namespace luramas::ir::passes {
                                           break;
                                     }
 
+                                    /* Get primitive assignment if any */
                                     luramas_address primitive_assignment = 0u;
                                     for (const auto &[asign, range] : assignment_blocks) {
                                           if (const auto &p = pm[asign]; p->is_assignment() && p->r && p->r->is_primitive() && pm.is_safe(p)) {
@@ -180,19 +182,21 @@ namespace luramas::ir::passes {
                                                 break;
                                           }
                                     }
+
+                                    /* See if dominant above blocks reg is getting used? */
+                                    if (const auto rev = tools::accumulate::reverse_dominant(pm, i - 1u); std::any_of(rev.begin(), rev.end(), [&](const auto &a) {
+                                              const auto it = inserted.find(a);
+                                              return (it != inserted.end() && it->second.contains(target)) || ssa.nodes[pm[a]].l.refrence_regs.contains(target) || ssa.nodes[pm[a]].r.refrence_regs.contains(target);
+                                        })) {
+                                          break;
+                                    }
+
+                                    /* Dominate primitive assignment */
                                     if (primitive_assignment) {
 
-                                          pm.move_front(assignment_blocks.front().second.first, pm[primitive_assignment]);
+                                          pm.insert_front(assignment_blocks.front().second.first, pm[primitive_assignment]->clone());
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     } else {
-
-                                          /* See if dominant above blocks reg is getting used? */
-                                          if (const auto rev = tools::accumulate::reverse_dominant(pm, i - 1u); std::any_of(rev.begin(), rev.end(), [&](const auto &a) {
-                                                    const auto it = inserted.find(a);
-                                                    return (it != inserted.end() && it->second.contains(target)) || ssa.nodes[pm[a]].l.refrence_regs.contains(target) || ssa.nodes[pm[a]].r.refrence_regs.contains(target);
-                                              })) {
-                                                break;
-                                          }
 
                                           const auto loc = assignment_blocks.front().second.first;
                                           pm.insert_front(loc, tools::stat::generate::flags::immutable::set(tools::stat::generate::assignment(p->l, tools::exprs::generate::none_object()), true));

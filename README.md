@@ -60,6 +60,6 @@ The **test-scripts/** directory contains sample scripts used for validating the 
 
 ## Examples
 
-Example projects demonstrating Luramas usage, supported targets, and framework integration can be found in the [Examples](examples/) directory.
+Example projects demonstrating Luramas usage, supported targets, and framework integration can be found in the [CLI](CLI/) directory.
 
 Prebuilt CLI releases and usage instructions are available on the [Releases](../../releases) page.

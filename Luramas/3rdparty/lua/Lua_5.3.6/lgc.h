@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lgc.h,v 2.91.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Garbage Collector
@@ -133,5 +135,7 @@ LUAI_FUNC void luaC_barrierback_(lua_State *L, Table *o);
 LUAI_FUNC void luaC_upvalbarrier_(lua_State *L, UpVal *uv);
 LUAI_FUNC void luaC_checkfinalizer(lua_State *L, GCObject *o, Table *mt);
 LUAI_FUNC void luaC_upvdeccount(lua_State *L, UpVal *uv);
+
+#endif
 
 #endif

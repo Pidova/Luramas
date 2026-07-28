@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
@@ -11,3 +13,5 @@
 
 LUAI_FUNC Buffer *luaB_newbuffer(lua_State *L, size_t s);
 LUAI_FUNC void luaB_freebuffer(lua_State *L, Buffer *u, struct lua_Page *page);
+
+#endif

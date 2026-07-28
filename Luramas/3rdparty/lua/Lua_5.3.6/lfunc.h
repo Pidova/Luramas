@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lfunc.h,v 2.15.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Auxiliary functions to manipulate prototypes and closures
@@ -49,5 +51,7 @@ LUAI_FUNC UpVal *luaF_findupval(lua_State *L, StkId level);
 LUAI_FUNC void luaF_close(lua_State *L, StkId level);
 LUAI_FUNC void luaF_freeproto(lua_State *L, Proto *f);
 LUAI_FUNC const char *luaF_getlocalname(const Proto *func, int local_number, int pc);
+
+#endif
 
 #endif

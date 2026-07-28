@@ -1,7 +1,9 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #include "ValueTracking.h"
 
-#include "Luau-V6/Ast/include/Luau/Lexer.h"
+#include "../../Ast/include/Luau/Lexer.h"
 
 namespace Luau {
       namespace Compile {
@@ -83,3 +85,5 @@ namespace Luau {
 
       } // namespace Compile
 } // namespace Luau
+
+#endif

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../generate.hpp"
 #include "../supported.hpp"
 

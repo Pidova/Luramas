@@ -99,7 +99,7 @@ struct luramas_int {
 
       /* Assign */
       luramas_int &operator=(const luramas_int &i);
-      luramas_int &operator=(luramas_int &&i);
+      luramas_int &operator=(luramas_int &&i) noexcept;
       luramas_int &operator=(const luramas_int_base b);
       luramas_int &operator=(const std::uintptr_t b);
       luramas_int &operator=(const std::string &s);
@@ -280,6 +280,7 @@ struct luramas_int {
 
       bool precise() const;  /* Is percise? */
       bool negative() const; /* Is negative? */
+      bool is_nan() const;   /* Is NaN? */
 
       std::uint16_t bit_width() const;            /* Bit width of base */
       std::uint16_t count_leading_ones() const;   /* Count leading ones */

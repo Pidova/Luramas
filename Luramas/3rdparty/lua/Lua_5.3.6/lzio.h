@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lzio.h,v 1.31.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Buffered streams
@@ -52,5 +54,7 @@ struct Zio {
 };
 
 LUAI_FUNC int luaZ_fill(ZIO *z);
+
+#endif
 
 #endif

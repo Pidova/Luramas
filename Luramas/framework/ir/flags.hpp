@@ -26,11 +26,12 @@ namespace luramas::ir::flags {
             luramas_flag fpage_referenced_out_scope = false;                                           /* Is page referenced out of scope? */
             luramas_flag foptional = false;                                                            /* Is expr optional? */
             luramas_flag fglobal_library_linked = false;                                               /* If true the global library pointer will be in EV as a library member pointer. */
+            luramas_flag fimplicit_table = false;                                                      /* Any indexes to the expr will be assumed its from the environment IR and omit the table but will check oresolve_global_qualifier from env if avaliable, returns string will continue (Only transform into global if oresolve_global_qualifier). */
 
             inline constexpr bool compare(const ir_expr &other) const {
 
-                  return std::tie(this->fvirtualized, this->fsynthetic, this->fimplicit_type, this->fcapture_kind, this->funsigned, this->fvcall, this->fdeadset, this->fconstant, this->fproduct_mulret, this->fcaptured, this->fbuiltin, this->fnative_global, this->flegacy_page, this->fglobal_wild, this->fsafe, this->fglobal_user_defined, this->fcall_internal_intrinsic, this->fexternal_page_goto, this->fpage_referenced_out_scope, this->foptional, this->fglobal_library_linked) ==
-                         std::tie(other.fvirtualized, other.fsynthetic, other.fimplicit_type, other.fcapture_kind, other.funsigned, other.fvcall, other.fdeadset, other.fconstant, other.fproduct_mulret, other.fcaptured, other.fbuiltin, other.fnative_global, other.flegacy_page, other.fglobal_wild, other.fsafe, other.fglobal_user_defined, other.fcall_internal_intrinsic, other.fexternal_page_goto, other.fpage_referenced_out_scope, other.foptional, other.fglobal_library_linked);
+                  return std::tie(this->fvirtualized, this->fsynthetic, this->fimplicit_type, this->fcapture_kind, this->funsigned, this->fvcall, this->fdeadset, this->fconstant, this->fproduct_mulret, this->fcaptured, this->fbuiltin, this->fnative_global, this->flegacy_page, this->fglobal_wild, this->fsafe, this->fglobal_user_defined, this->fcall_internal_intrinsic, this->fexternal_page_goto, this->fpage_referenced_out_scope, this->foptional, this->fglobal_library_linked, this->fimplicit_table) ==
+                         std::tie(other.fvirtualized, other.fsynthetic, other.fimplicit_type, other.fcapture_kind, other.funsigned, other.fvcall, other.fdeadset, other.fconstant, other.fproduct_mulret, other.fcaptured, other.fbuiltin, other.fnative_global, other.flegacy_page, other.fglobal_wild, other.fsafe, other.fglobal_user_defined, other.fcall_internal_intrinsic, other.fexternal_page_goto, other.fpage_referenced_out_scope, other.foptional, other.fglobal_library_linked, other.fimplicit_table);
             }
             inline constexpr bool operator==(const ir_expr &other) const {
                   return this->compare(other);
@@ -62,6 +63,7 @@ namespace luramas::ir::flags {
                   result |= (static_cast<std::uint32_t>(this->fpage_referenced_out_scope) << shift++);
                   result |= (static_cast<std::uint32_t>(this->foptional) << shift++);
                   result |= (static_cast<std::uint32_t>(this->fglobal_library_linked) << shift++);
+                  result |= (static_cast<std::uint32_t>(this->fimplicit_table) << shift++);
                   return result;
             }
             inline constexpr void unpack(const std::uint32_t packed) {
@@ -86,6 +88,7 @@ namespace luramas::ir::flags {
                   this->fpage_referenced_out_scope = (packed >> shift++) & 1;
                   this->foptional = (packed >> shift++) & 1;
                   this->fglobal_library_linked = (packed >> shift++) & 1;
+                  this->fimplicit_table = (packed >> shift++) & 1;
                   return;
             }
             inline constexpr void clone(const ir_expr &other) {
@@ -109,6 +112,7 @@ namespace luramas::ir::flags {
                   this->fpage_referenced_out_scope = other.fpage_referenced_out_scope;
                   this->foptional = other.foptional;
                   this->fglobal_library_linked = other.fglobal_library_linked;
+                  this->fimplicit_table = other.fimplicit_table;
                   return;
             }
             inline constexpr void clear() {

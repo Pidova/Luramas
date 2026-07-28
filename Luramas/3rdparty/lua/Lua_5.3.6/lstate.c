@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lstate.c,v 2.133.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Global State
@@ -325,3 +327,5 @@ LUA_API void lua_close(lua_State *L) {
       lua_lock(L);
       cloir_state(L);
 }
+
+#endif

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ltablib.c,v 1.93.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Library for Table Manipulation
@@ -415,3 +417,5 @@ LUAMOD_API int luaopen_table(lua_State *L) {
 #endif
       return 1;
 }
+
+#endif

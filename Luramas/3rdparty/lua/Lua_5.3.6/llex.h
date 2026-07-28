@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: llex.h,v 1.79.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Lexical Analyzer
@@ -101,5 +103,7 @@ LUAI_FUNC void luaX_next(LexState *ls);
 LUAI_FUNC int luaX_lookahead(LexState *ls);
 LUAI_FUNC l_noret luaX_syntaxerror(LexState *ls, const char *s);
 LUAI_FUNC const char *luaX_token2str(LexState *ls, int token);
+
+#endif
 
 #endif

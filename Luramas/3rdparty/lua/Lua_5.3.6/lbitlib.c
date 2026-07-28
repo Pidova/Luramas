@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lbitlib.c,v 1.30.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Standard library for bitwise operations
@@ -205,3 +207,5 @@ LUAMOD_API int luaopen_bit32(lua_State *L) {
 }
 
 #endif /* } */
+
+#endif

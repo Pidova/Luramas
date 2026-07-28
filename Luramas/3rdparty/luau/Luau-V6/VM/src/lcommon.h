@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
@@ -5,9 +7,9 @@
 #include <limits.h>
 #include <stdint.h>
 
-#include "Luau-V6/VM/include/luaconf.h"
+#include "../include/luaconf.h"
 
-#include "Luau-V6/Common/include/Luau/Common.h"
+#include "../../Common/include/Luau/Common.h"
 
 typedef LUAI_USER_ALIGNMENT_T L_Umaxalign;
 
@@ -45,4 +47,6 @@ typedef uint32_t Instruction;
 #define condhardmemtests(x, l) (HARDMEMTESTS >= l ? (x) : (void)0)
 #else
 #define condhardmemtests(x, l) ((void)0)
+#endif
+
 #endif

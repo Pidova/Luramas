@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lparser.h,v 1.76.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Lua Parser
@@ -118,5 +120,7 @@ typedef struct FuncState {
 } FuncState;
 
 LUAI_FUNC LClosure *luaY_parser(lua_State *L, ZIO *z, Mbuffer *buff, Dyndata *dyd, const char *name, int firstchar);
+
+#endif
 
 #endif

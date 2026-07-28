@@ -151,7 +151,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                               const auto &[n1, n2, n3, n4, n5, n6] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u]);
 
-                              if (tools::stat::assignment::is_single_assignment_rvalue(n1) && tools::stat::branch::is_if_cond(n2) && pm.processed.jlabels_refs[p->jlabel].size() <= 1u) {
+                              if (pm.env_flags.fallow_ternaries && tools::stat::assignment::is_single_assignment_rvalue(n1) && tools::stat::branch::is_if_cond(n2) && pm.processed.jlabels_refs[p->jlabel].size() <= 1u) {
 
                                     /*
                                         if (??) then goto l end [1 REF]
@@ -755,7 +755,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /end/
                                     /l:/  
                               */
-                              if (tools::stat::assignment::same_single_assignment(p, n3) && tools::stat::assignment::same_single_assignment(p, n6) &&
+                              if (pm.env_flags.fallow_ternaries && tools::stat::assignment::same_single_assignment(p, n3) && tools::stat::assignment::same_single_assignment(p, n6) &&
                                   tools::stat::branch::is_if_end_singlecmp(n1, n7, p->l) && tools::stat::branch::is_if_end(n2, n5) && tools::stat::branch::is_goto_label(n4, n8) &&
                                   pm.safe(p, n1, n2, n3, n4, n5, n6, n7, n8)) {
 
@@ -775,7 +775,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                         ? = ?; [EQUALITY IN CMP AND TRUE IS LOGICAL ELSE TERNARY]
                                     /end/
                               */
-                              if (tools::stat::branch::is_if_end(prev, next) && tools::stat::assignment::is_single_assignment_rvalue(p) && pm.safe(p, next, prev)) {
+                              if (pm.env_flags.fallow_ternaries && tools::stat::branch::is_if_end(prev, next) && tools::stat::assignment::is_single_assignment_rvalue(p) && pm.safe(p, next, prev)) {
 
                                     p->r = (tools::stat::branch::equality(prev) && p->r->bv) ? tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::mutate::cmp_extract(prev), p->l)
                                                                                              : tools::exprs::generate::ternary(prev->l, prev->r, prev->b, p->r, p->l);
@@ -853,7 +853,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                  if (y) then _GOTO(??) end
                                  ::l::
                               */
-                              if (prev->is_k<keywords::condition_goto>() && tools::stat::branch::is_cond_goto_label(cond, p)) {
+                              if (prev->is_k<keywords::condition_goto>() && tools::stat::branch::is_cond_goto_label(cond, p) && pm.safe(prev, cond, p)) {
                                     prev->append_cond<expr_logical::and_, true>(cond->l, cond->b, cond->r);
                                     pm.remove(cond);
                                     pm.mut(LURAMAS_DEBUG_LINE);
@@ -966,7 +966,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                        /r = ?/
                                     /end/                    
                                */
-                              if (pm.is_safe(p, n1, n2) && tools::stat::branch::is_if_end(p, n2) && tools::stat::assignment::same_single_reg_assignment(p1, n1) && !tools::stat::branch::is_contains_compare_reg(p, p1->l->reg)) {
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2) && tools::stat::branch::is_if_end(p, n2) && tools::stat::assignment::same_single_reg_assignment(p1, n1) && !tools::stat::branch::is_contains_compare_reg(p, p1->l->reg)) {
 
                                     n1->r = tools::exprs::generate::ternary(p->l, p->r, p->b, n1->r, n1->l);
                                     pm.set_safe(p, n1, n2);
@@ -985,7 +985,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                    /end/
                                    /return {ONE MEMBER};/
                               */
-                              if (tools::stat::branch::is_if_end(p, n2) && tools::stat::is_return(n1) && tools::stat::is_return(n3) && n1->members.size() == 1u && n3->members.size() == 1u && pm.safe(p, n1, n2, n3)) {
+                              if (pm.env_flags.fallow_ternaries && tools::stat::branch::is_if_end(p, n2) && tools::stat::is_return(n1) && tools::stat::is_return(n3) && n1->members.size() == 1u && n3->members.size() == 1u && pm.safe(p, n1, n2, n3)) {
 
                                     n3->members.front() = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->members.front(), n3->members.front());
                                     pm.remove(p, n1, n2);
@@ -1058,7 +1058,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                        \r = ??\
                                     \end\
                               */
-                              if (pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::assignment::same_single_assignment(n1, n3, false) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::assignment::same_single_assignment(n1, n3, false) &&
                                   tools::stat::branch::is_else_cond(n2)) {
 
                                     n1->r = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->r, n3->r);
@@ -1068,13 +1068,35 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
 
                               /*
+                                    if (?? [DECOMPOSED LOGICAL CONTAINS ONLY CONDITIONS]) then
+                                       \r = false\true\
+                                    \else\  
+                                       \r = false\true\
+                                    \end\
+                                    r != r (EACH REG MUST BE DIFF)
+                              */
+                              if (pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::branch::is_if_cond_logical(p) && tools::stat::assignment::same_single_assignment(n1, n3, false) &&
+                                  tools::stat::branch::is_else_cond(n2) && tools::exprs::values::is_boolean(n1->r, n3->r, false)) {
+
+                                    if (const auto decomposed = tools::extract::decompose_logical(p->l); std::all_of(decomposed.begin(), decomposed.end(), [](const auto &I) {
+                                              return tools::exprs::values::is_condition(I, false);
+                                        })) {
+
+                                          n1->r = tools::exprs::generate::cond(p->l, n1->r->bv ? p->b : il::arch::data::bin_kindflip(p->b), p->r);
+                                          pm.set_safe(n1);
+                                          pm.remove(p, n2, n3, n4);
+                                          pm.mut(LURAMAS_DEBUG_LINE);
+                                    }
+                              }
+
+                              /*
                                     if (??) then
                                        /??({SINGLE PARAM});/
                                     /else/
                                        /??({SINGLE PARAM});/
                                     /end/
                               */
-                              if (pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::common::same_call_function_arg_count(n1, n3, static_cast<std::size_t>(1u)) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::common::same_call_function_arg_count(n1, n3, static_cast<std::size_t>(1u)) &&
                                   tools::stat::branch::is_else_cond(n2)) {
 
                                     n1->members.front() = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->members.front(), n3->members.front());
@@ -1151,7 +1173,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                   /l: OR goto l;/
                               */
                               const auto &n5_executable = tools::visitors::next_safe_executable_stat(pm, i + 5u);
-                              if (pm.is_safe(p, n1, n2, n3, n4) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) &&
                                   tools::stat::branch::is_if_end(p, n3) && tools::stat::assignment::same_single_assignment(n1, n4) &&
                                   (tools::stat::branch::is_goto_label(n2, n5_executable) || tools::stat::branch::same_goto(n2, n5_executable))) {
 
@@ -1272,7 +1294,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /??({SINGLE PARAM});/
                                     /SAME INTERRUPT/
                               */
-                              if (pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n3) && tools::stat::common::same_call_function_arg_count(n1, n4, static_cast<std::size_t>(1u)) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n3) && tools::stat::common::same_call_function_arg_count(n1, n4, static_cast<std::size_t>(1u)) &&
                                   tools::stat::common::same_interrupts(n2, n5)) {
 
                                     n1->members.front() = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->members.front(), n4->members.front());
@@ -1289,7 +1311,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /r = ??;/
                                     /SAME INTERRUPT;/
                               */
-                              if (pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n3) && tools::stat::assignment::same_single_assignment(n1, n4, false) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n3) && tools::stat::assignment::same_single_assignment(n1, n4, false) &&
                                   tools::stat::common::same_interrupts(n2, n5)) {
 
                                     n1->r = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->r, n4->r);
@@ -1486,7 +1508,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /end/
                                     /::l::/
                               */
-                              if (pm.is_safe(p, p1, n1, n2, n3, n4, n5, n6, n7) && tools::stat::branch::is_if_end(n1, n4) && tools::stat::branch::is_if_end(p, n6) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, p1, n1, n2, n3, n4, n5, n6, n7) && tools::stat::branch::is_if_end(n1, n4) && tools::stat::branch::is_if_end(p, n6) &&
                                   tools::stat::assignment::same_single_assignment(p1, n2) && tools::stat::assignment::same_single_assignment(p1, n5) && tools::stat::branch::is_goto_label(n3, n7)) {
 
                                     p1->r = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(n1), n2->r, n5->r), p1->r);

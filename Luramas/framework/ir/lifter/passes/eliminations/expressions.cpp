@@ -83,7 +83,6 @@ namespace luramas::ir::passes {
             const auto parent_pages = tools::paging::parent_pages(pm);
             boost::unordered_flat_map<luramas_id, tools::paging::return_data> retn_cache;
 
-            //std::cout << tools::debug::graph(pm) << std::endl;
             auto ssa = generation::ssa::generate(pm.ir, generation::ssa::ssa_flags({.finclude_captures = true, .finclude_references = pm.env_flags.fhas_references}), pm.processed.values);
             for (const auto &i : pm.iter()) {
 
@@ -151,45 +150,59 @@ namespace luramas::ir::passes {
                   if (rssa.l.regs.size() != 1u) {
 
                         /* Members */
-                        for (auto it = p->members.end(); it != p->members.begin();) {
+                        while (!p->members.empty()) {
 
-                              --it;
-                              if (const auto &expr = *it; tools::exprs::values::is_reg(expr)) {
+                              const auto &expr = p->members.back();
+                              if (!tools::exprs::values::is_reg(expr)) {
+                                    break; /* Not a register unsafe */
+                              }
 
-                                    if (const auto it = rssa.l.assigns.find(expr->reg); it != rssa.l.assigns.end()) {
-                                          if (const auto ssa_reg = *it->second.second.begin(); ssa.defs[ssa_reg].second.second.first.empty()) {
-                                                p->members.pop_back();
-                                          } else {
-                                                break;
-                                          }
+                              if (const auto it = rssa.l.assigns.find(expr->reg); it != rssa.l.assigns.end()) {
+                                    if (const auto ssa_reg = *it->second.second.begin(); ssa.defs[ssa_reg].second.second.first.empty()) {
+                                          p->members.pop_back();
                                     } else {
-                                          break; /* Unexpected ignore it, let other passes handle it */
+                                          break;
                                     }
+                              } else {
+                                    break; /* Unexpected ignore it, let other passes handle it */
                               }
                         }
                         continue;
-                  } else if (!rssa.l.regs.empty()) {
+                  } else if (rssa.l.regs.size() == 1u) {
 
                         const auto reg = *rssa.l.regs.begin();
-                        if (pm.is_safe(p) && !p->r->contains_volatile() && ssa.defs[*rssa.l.assigns[reg].second.begin()].second.second.first.empty()) {
+                        if (pm.is_safe(p) && ssa.defs[*rssa.l.assigns[reg].second.begin()].second.second.first.empty()) {
 
                               if (const auto dom = tools::ssa::extract::dominant_define(pm, ssa, i, reg); dom && *pm[*dom] == *p && !tools::mutates(pm, p->r, *dom, i)) {
 
                                     pm.remove(p);
+                                    if (p->r->contains_volatile()) {
+                                          pm.insert(p, p->r->transform());
+                                    }
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               } else if (!tools::ssa::extract::next_assignment_inscope_assignment(pm, ssa, i, reg)) {
 
                                     pm.remove(p);
+                                    if (p->r->contains_volatile()) {
+                                          pm.insert(p, p->r->transform());
+                                    }
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               } else if (!dom) {
 
                                     if (tools::ssa::extract::next_assignment_same_scope_assignment(pm, ssa, i, reg)) {
+
                                           pm.remove(p);
+                                          if (p->r->contains_volatile()) {
+                                                pm.insert(p, p->r->transform());
+                                          }
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                               } else if (dom && *dom != i) {
 
                                     pm.remove(p);
+                                    if (p->r->contains_volatile()) {
+                                          pm.insert(p, p->r->transform());
+                                    }
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
                         }

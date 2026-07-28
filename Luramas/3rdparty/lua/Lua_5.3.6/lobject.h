@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lobject.h,v 2.117.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Type definitions for Lua objects
@@ -560,5 +562,7 @@ LUAI_FUNC void luaO_tostring(lua_State *L, StkId obj);
 LUAI_FUNC const char *luaO_pushvfstring(lua_State *L, const char *fmt, va_list argp);
 LUAI_FUNC const char *luaO_pushfstring(lua_State *L, const char *fmt, ...);
 LUAI_FUNC void luaO_chunkid(char *out, const char *source, size_t len);
+
+#endif
 
 #endif

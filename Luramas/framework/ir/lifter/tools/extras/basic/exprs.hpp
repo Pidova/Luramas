@@ -101,6 +101,10 @@ namespace luramas::ir::tools::exprs {
             inline bool is_boolean(const std::shared_ptr<ir_stat::ir_expr> &l, const bool b) {
                   return is_boolean(l) && l->bv == b;
             }
+            /* BOOLEAN? */
+            inline bool is_boolean(const std::shared_ptr<ir_stat::ir_expr> &l, const std::shared_ptr<ir_stat::ir_expr> &r, const bool same_bools = true) {
+                  return is_boolean(l) && is_boolean(r) && (!same_bools || l->bv == r->bv);
+            }
             /* BIT READ? */
             inline bool is_bitread(const std::shared_ptr<ir_stat::ir_expr> &bitread) {
                   return bitread && bitread->is_k<expr_kinds::bitread>();
@@ -209,6 +213,10 @@ namespace luramas::ir::tools::exprs {
             /* FLAG? */
             inline bool is_flag(const std::shared_ptr<ir_stat::ir_expr> &flag) {
                   return flag && flag->is_k<expr_kinds::flag>();
+            }
+            /* IDX? */
+            inline bool is_idx(const std::shared_ptr<ir_stat::ir_expr> &idx) {
+                  return idx && idx->is_k<expr_kinds::idx>();
             }
             /* SELF REFERENTIAL ARITH REGISTER? (x ? (x ? ??))*/
             inline bool is_self_referential_arith_register(const std::shared_ptr<ir_stat::ir_expr> &stat) {

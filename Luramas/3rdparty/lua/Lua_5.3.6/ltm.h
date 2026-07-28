@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ltm.h,v 2.22.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Tag methods
@@ -60,5 +62,7 @@ LUAI_FUNC void luaT_callTM(lua_State *L, const TValue *f, const TValue *p1, cons
 LUAI_FUNC int luaT_callbinTM(lua_State *L, const TValue *p1, const TValue *p2, StkId res, TMS event);
 LUAI_FUNC void luaT_trybinTM(lua_State *L, const TValue *p1, const TValue *p2, StkId res, TMS event);
 LUAI_FUNC int luaT_callorderTM(lua_State *L, const TValue *p1, const TValue *p2, TMS event);
+
+#endif
 
 #endif

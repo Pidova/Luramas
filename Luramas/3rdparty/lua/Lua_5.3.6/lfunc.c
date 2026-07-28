@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lfunc.c,v 2.45.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Auxiliary functions to manipulate prototypes and closures
@@ -140,3 +142,5 @@ const char *luaF_getlocalname(const Proto *f, int local_number, int pc) {
       }
       return NULL; /* not found */
 }
+
+#endif

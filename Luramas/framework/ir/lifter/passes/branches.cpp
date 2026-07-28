@@ -275,7 +275,7 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                     /.../
                                     /::label_20:: [SAME SCOPE AS THIS]/
                               */
-                              if (pm.valid_next<1u>(i) && pm.is_safe(p)) {
+                              if (pm.valid_next<2u>(i) && pm.is_safe(p)) {
                                     if (const auto &next = pm[i + 1u]; tools::stat::is_return(next)) {
 
                                           const auto end = i + 2u;

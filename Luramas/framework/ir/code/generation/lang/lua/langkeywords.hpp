@@ -138,18 +138,12 @@
 #define lua_langkeyword_list_lvalue ","
 
 /* function */
-#define lua_langkeyword_function_global "function"
-#define lua_langkeyword_function_global_scope_begin ""
-#define lua_langkeyword_function_global_scope_end "end"
-
-#define lua_langkeyword_function_scope_variable "local"
-#define lua_langkeyword_function_scope_datatype "function"
-#define lua_langkeyword_function_scope_begin ""
-#define lua_langkeyword_function_scope_end "end"
-
+#define lua_langkeyword_function_delimeter ","
+#define lua_langkeyword_function "function"
 #define lua_langkeyword_function_anonymous "(function"
-#define lua_langkeyword_function_args_parenthesis_open "("
-#define lua_langkeyword_function_args_parenthesis_close ")"
+#define lua_langkeyword_function_anonymous_end "end)"
+#define lua_langkeyword_function_params_parenthesis_open "("
+#define lua_langkeyword_function_params_parenthesis_close ")"
 
 /* Variable datatype */
 #define lua_langkeyword_dynamic_datatype "local"

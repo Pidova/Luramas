@@ -666,7 +666,7 @@ namespace luramas::ir::tools::combine {
                   if (pm.env_flags.fprimitive_object) {
 
                         /* BOOLEAN ?? INTEGRAL */
-                        if (expr->l->is_tk<tkind::boolean>() && expr->r->is_integral()) {
+                        if (expr->l->is_tk<tkind::boolean>() && expr->r->is_integral() && !expr->r->n.is_nan()) {
                               const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(luramas_int(expr->l->bv), expr->r->n, expr->b);
                               expr->l->clear();
                               expr->l->emit_boolean(bv);
@@ -674,7 +674,7 @@ namespace luramas::ir::tools::combine {
                         }
 
                         /* INTEGRAL ?? BOOLEAN */
-                        if (expr->l->is_integral() && expr->r->is_tk<tkind::boolean>()) {
+                        if (expr->l->is_integral() && expr->r->is_tk<tkind::boolean>() && !expr->l->n.is_nan()) {
                               const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(expr->l->n, luramas_int(expr->r->bv), expr->b);
                               expr->l->clear();
                               expr->l->emit_boolean(bv);
@@ -691,7 +691,7 @@ namespace luramas::ir::tools::combine {
                   }
 
                   /* INTEGRAL ?? INTEGRAL */
-                  if (expr->l->is_integral() && expr->r->is_integral()) {
+                  if (expr->l->is_integral() && expr->r->is_integral() && !expr->l->n.is_nan() && !expr->r->n.is_nan()) {
                         const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(expr->l->n, expr->r->n, expr->b);
                         expr->l->clear();
                         expr->l->emit_boolean(bv);

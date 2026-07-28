@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lzio.c,v 1.37.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Buffered streams
@@ -61,3 +63,5 @@ size_t luaZ_read(ZIO *z, void *b, size_t n) {
       }
       return 0;
 }
+
+#endif

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lmathlib.c,v 1.119.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Standard mathematical library
@@ -382,3 +384,5 @@ LUAMOD_API int luaopen_math(lua_State *L) {
       lua_setfield(L, -2, "mininteger");
       return 1;
 }
+
+#endif

@@ -446,6 +446,11 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     for (const auto &m : e->members) {
                                           args.emplace_back(expr(m, indent, false));
                                     }
+                                    if (!e->l->is_register_reference() && !e->l->is_tk_register_reference()) {
+                                          std::string buffer("");
+                                          ir::code::emitter::common::line::emit_parenthesize(syn, buffer, retn, format);
+                                          retn = buffer;
+                                    }
                                     ir::code::emitter::common::call::emit_call(syn, retn, l, args, format);
                                     break;
                               }
@@ -774,6 +779,11 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                           members.emplace_back(expr(m, indent, true));
                                     }
                               }
+                              if (!c->l->is_register_reference() && !c->l->is_tk_register_reference()) {
+                                    std::string buffer("");
+                                    ir::code::emitter::common::line::emit_parenthesize(syn, buffer, call, format);
+                                    call = buffer;
+                              }
                               ir::code::emitter::common::call::emit_call(syn, result, call, members, format);
                               break;
                         }
@@ -929,7 +939,10 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     }
                               }
                               if (c->flags.fdefine) {
-                                    ir::code::emitter::common::assignment::initial_assignment(syn, result, vars, {expr(c->r, indent, true)}, c->l->flags.fconstant, format);
+                                    ir::code::emitter::common::assignment::initial_assignment(syn, result, vars, {expr(c->r, indent, true)}, c->l ? c->l->flags.fconstant : std::all_of(c->members.begin(), c->members.end(), [](const auto &member) {
+                                          return member && member->flags.fconstant;
+                                    }),
+                                        format);
                               } else {
                                     ir::code::emitter::common::assignment::assignment(syn, result, vars, {expr(c->r, indent, true)}, format);
                               }

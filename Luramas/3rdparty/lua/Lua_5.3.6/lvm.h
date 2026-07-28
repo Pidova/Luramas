@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lvm.h,v 2.41.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Lua virtual machine
@@ -105,5 +107,7 @@ LUAI_FUNC lua_Integer luaV_div(lua_State *L, lua_Integer x, lua_Integer y);
 LUAI_FUNC lua_Integer luaV_mod(lua_State *L, lua_Integer x, lua_Integer y);
 LUAI_FUNC lua_Integer luaV_shiftl(lua_Integer x, lua_Integer y);
 LUAI_FUNC void luaV_objlen(lua_State *L, StkId ra, const TValue *rb);
+
+#endif
 
 #endif

@@ -1,8 +1,10 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
 
-#include "Luau-V6/VM/include/lua.h"
+#include "../include/lua.h"
 #include "lcommon.h"
 
 /*
@@ -485,3 +487,5 @@ LUAI_FUNC int luaO_str2d(const char *s, double *result);
 LUAI_FUNC const char *luaO_pushvfstring(lua_State *L, const char *fmt, va_list argp);
 LUAI_FUNC const char *luaO_pushfstring(lua_State *L, const char *fmt, ...);
 LUAI_FUNC const char *luaO_chunkid(char *buf, size_t buflen, const char *source, size_t srclen);
+
+#endif

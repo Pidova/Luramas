@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lcorolib.c,v 1.10.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Coroutine Library
@@ -149,3 +151,5 @@ LUAMOD_API int luaopen_coroutine(lua_State *L) {
       luaL_newlib(L, co_funcs);
       return 1;
 }
+
+#endif

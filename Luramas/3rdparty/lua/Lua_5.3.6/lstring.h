@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lstring.h,v 1.61.1.1 2017/04/19 17:20:42 roberto Exp $
 ** String table (keep all strings handled by Lua)
@@ -39,5 +41,7 @@ LUAI_FUNC Udata *luaS_newudata(lua_State *L, size_t s);
 LUAI_FUNC TString *luaS_newlstr(lua_State *L, const char *str, size_t l);
 LUAI_FUNC TString *luaS_new(lua_State *L, const char *str);
 LUAI_FUNC TString *luaS_createlngstrobj(lua_State *L, size_t l);
+
+#endif
 
 #endif

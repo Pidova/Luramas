@@ -596,7 +596,9 @@ namespace luramas::il::arch {
 
       } // namespace operand
 
-      /* Opcode Legend (Opcode, Hint, Operands):
+      /*
+      
+      Opcode Legend (Opcode, Hint, Operands):
                 Register: "r??"
                 Kvalue: "??"
                 Integer(Double): "??"
@@ -619,7 +621,7 @@ namespace luramas::il::arch {
             OP_LOADINT,    /* Loads a integer to the destination register | * Dest(Register), * Source(Integer) */
             OP_LOADNONE,   /* Loads a None to the destination register | * Dest(Register) */
             OP_LOADKVAL,   /* Loads a kvalue to the destination register | * Dest(Register), * Source(Kvalue) */
-            OP_LOADGLOBAL, /* Loads a global to the destination register | * Dest(Register), * Source(GlobalID) */
+            OP_LOADGLOBAL, /* Loads a global to the destination register | * Dest(Register), * Source(GlobalID/Kvalue ID) */
 
             OP_GETTABUPVALUE, /* Loads a kvalue from structure to the destination register | * Dest(Register), * Source(Kvalue) */
             OP_SETGLOBAL,     /* Set global | * Source(Register), * Dest(GlobalID) */
@@ -677,10 +679,10 @@ namespace luramas::il::arch {
             OP_PLUS,   /* +   */
             OP_REF,    /* &   */
 
-            /* C function and closure call | * Dest(Register), * Arguement count(Val), * Return count(Val) */
+            /* C function and closure call | * Dest(Register), * Arguement count (for [0, VAL) let i; DEST_REG + i + 1u)(Val), * Return count(for [0, VAL) let i; DEST_REG + i + 1u)(Val) */
             OP_CCALL,
 
-            /* Virtual function call (clears virtual function arguement stack once executed) | * Dest(Register), * Virtual function(ID) * Arguement count(Val), * Return count(Val) */
+            /* Virtual function call (clears virtual function arguement stack once executed) | * Dest(Register), * Virtual function(ID) * Arguement count(for [0, VAL) let i; DEST_REG + i + 1u)(Val), * Return count(for [0, VAL] let i; DEST_REG + i + 1u)(Val) */
             OP_VCALL,
 
             /* Pushes arguement to virtual function stack | * Dest(Register) */
@@ -689,10 +691,10 @@ namespace luramas::il::arch {
             /* Loads function in table to a register | * Dest(Register), * Source(Register), * Kvalue(Kvalue) */
             OP_SELF,
 
-            /* Return from a function | * Start register(Register), * Return count(Val) */
+            /* Return from a function | * Start register(Register), * Return count(for [0, VAL) let i; DEST_REG + i)(Val) */
             OP_RETURN,
 
-            /* String concatation | * Dest(Register), * Start register(Val), * End register(Val) */
+            /* String concatation | * Dest(Register), * Start register(Val), * End register(Val) [start, end] */
             OP_CONCAT,
 
             /* Jump to a address | * Target(Jump) */
@@ -733,7 +735,7 @@ namespace luramas::il::arch {
             OP_GETUPVALUE, /* Get Upvalue | * Dest(Register), * Upvalue ID(UpvalueID) */
 
             OP_DESTROYUPVALUES,  /* Destroy all upvalues with target. */
-            OP_DESTROYUPVALUESA, /* Destroy upvalues with target | * Start(Register) */
+            OP_DESTROYUPVALUESA, /* Destroy upvalues with target (Start <= STACK REGS) destroy upvalues | * Start(Register) */
 
             OP_ADDUPVALUE, /* Sets upvalue for prev closure instruction(Follows closure instruction) | * Type(UpvalueKind), * Source(Register)   */
 
@@ -1063,167 +1065,167 @@ namespace luramas::il::arch {
       /* IL operand encodings */
       static constexpr optable_encoding opencodings[] = {
 
-          {opcodes::OP_NOP, {}}, /* 00 */
+          {opcodes::OP_NOP, {}},
 
-          {opcodes::OP_LOADBOOL, {operand::operand_encoding::reg, operand::operand_encoding::boolean}},  /* 01 */
-          {opcodes::OP_LOADINT, {operand::operand_encoding::reg, operand::operand_encoding::integer}},   /* 02 */
-          {opcodes::OP_LOADNONE, {operand::operand_encoding::reg}},                                      /* 03 */
-          {opcodes::OP_LOADKVAL, {operand::operand_encoding::reg, operand::operand_encoding::idx}},      /* 04 */
-          {opcodes::OP_LOADGLOBAL, {operand::operand_encoding::reg, operand::operand_encoding::idx}},    /* 05 */
-          {opcodes::OP_GETTABUPVALUE, {operand::operand_encoding::reg, operand::operand_encoding::idx}}, /* 07 */
+          {opcodes::OP_LOADBOOL, {operand::operand_encoding::reg, operand::operand_encoding::boolean}},
+          {opcodes::OP_LOADINT, {operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_LOADNONE, {operand::operand_encoding::reg}},
+          {opcodes::OP_LOADKVAL, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_LOADGLOBAL, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_GETTABUPVALUE, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
 
-          {opcodes::OP_SETGLOBAL, {operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 08 */
+          {opcodes::OP_SETGLOBAL, {operand::operand_encoding::reg, operand::operand_encoding::value}},
 
-          {opcodes::OP_MOVE, {operand::operand_encoding::reg, operand::operand_encoding::reg}}, /* 0B */
+          {opcodes::OP_MOVE, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
 
-          {opcodes::OP_ADD, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 0C */
-          {opcodes::OP_SUB, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 0D */
-          {opcodes::OP_MUL, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 0E */
-          {opcodes::OP_DIV, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 0F */
-          {opcodes::OP_MOD, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 10 */
-          {opcodes::OP_POW, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 11 */
-          {opcodes::OP_AND, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 12 */
-          {opcodes::OP_XOR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 13 */
-          {opcodes::OP_SHL, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 14 */
-          {opcodes::OP_SHR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 15 */
-          {opcodes::OP_IDIV, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}}, /* 16 */
-          {opcodes::OP_OR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},   /* 17 */
+          {opcodes::OP_ADD, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_SUB, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_MUL, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_DIV, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_MOD, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_POW, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_AND, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_XOR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_SHL, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_SHR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_IDIV, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_OR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
 
-          {opcodes::OP_ADDK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 18 */
-          {opcodes::OP_SUBK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 19 */
-          {opcodes::OP_MULK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 1A */
-          {opcodes::OP_DIVK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 1B */
-          {opcodes::OP_MODK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 1C */
-          {opcodes::OP_POWK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 1D */
-          {opcodes::OP_ANDK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 1E */
-          {opcodes::OP_XORK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 1F */
-          {opcodes::OP_SHLK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 20 */
-          {opcodes::OP_SHRK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},  /* 21 */
-          {opcodes::OP_IDIVK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}}, /* 22 */
-          {opcodes::OP_ORK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},   /* 23 */
+          {opcodes::OP_ADDK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_SUBK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_MULK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_DIVK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_MODK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_POWK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_ANDK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_XORK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_SHLK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_SHRK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_IDIVK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_ORK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
 
-          {opcodes::OP_ADDN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 24 */
-          {opcodes::OP_SUBN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 25 */
-          {opcodes::OP_MULN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 26 */
-          {opcodes::OP_DIVN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 27 */
-          {opcodes::OP_MODN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 28 */
-          {opcodes::OP_POWN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 29 */
-          {opcodes::OP_ANDN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 2A */
-          {opcodes::OP_XORN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 2B */
-          {opcodes::OP_SHLN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 2C */
-          {opcodes::OP_SHRN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},  /* 2D */
-          {opcodes::OP_IDIVN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}}, /* 2E */
-          {opcodes::OP_ORN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},   /* 2F */
+          {opcodes::OP_ADDN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_SUBN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_MULN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_DIVN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_MODN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_POWN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_ANDN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_XORN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_SHLN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_SHRN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_IDIVN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_ORN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::integer}},
 
-          {opcodes::OP_LEN, {operand::operand_encoding::reg, operand::operand_encoding::reg}},    /* 30 */
-          {opcodes::OP_NOT, {operand::operand_encoding::reg, operand::operand_encoding::reg}},    /* 31 */
-          {opcodes::OP_MINUS, {operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 32 */
-          {opcodes::OP_BITNOT, {operand::operand_encoding::reg, operand::operand_encoding::reg}}, /* 33 */
-          {opcodes::OP_PLUS, {operand::operand_encoding::reg, operand::operand_encoding::reg}},   /* 34 */
-          {opcodes::OP_REF, {operand::operand_encoding::reg, operand::operand_encoding::reg}},    /* 34 */
+          {opcodes::OP_LEN, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_NOT, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_MINUS, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_BITNOT, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_PLUS, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_REF, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
 
-          {opcodes::OP_CCALL, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}},                                   /* 35 */
-          {opcodes::OP_VCALL, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value, operand::operand_encoding::value}}, /* 36 */
+          {opcodes::OP_CCALL, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}},
+          {opcodes::OP_VCALL, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value, operand::operand_encoding::value}},
 
-          {opcodes::OP_VPUSH, {operand::operand_encoding::reg}}, /* 37 */
+          {opcodes::OP_VPUSH, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_SELF, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}}, /* 38 */
-          {opcodes::OP_RETURN, {operand::operand_encoding::reg, operand::operand_encoding::value}},                             /* 39 */
+          {opcodes::OP_SELF, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_RETURN, {operand::operand_encoding::reg, operand::operand_encoding::value}},
 
-          {opcodes::OP_CONCAT, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}}, /* 3A */
+          {opcodes::OP_CONCAT, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}},
 
-          {opcodes::OP_JUMP, {operand::operand_encoding::jmp}}, /* 3B */
+          {opcodes::OP_JUMP, {operand::operand_encoding::jmp}},
 
-          {opcodes::OP_CMP, {operand::operand_encoding::reg, operand::operand_encoding::reg}},      /* 3D */
-          {opcodes::OP_CMPK, {operand::operand_encoding::reg, operand::operand_encoding::idx}},     /* 3E */
-          {opcodes::OP_CMPN, {operand::operand_encoding::reg, operand::operand_encoding::integer}}, /* 3F */
-          {opcodes::OP_CMPB, {operand::operand_encoding::reg, operand::operand_encoding::boolean}}, /* 3F */
-          {opcodes::OP_CMPNONE, {operand::operand_encoding::reg}},                                  /* 40 */
+          {opcodes::OP_CMP, {operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_CMPK, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_CMPN, {operand::operand_encoding::reg, operand::operand_encoding::integer}},
+          {opcodes::OP_CMPB, {operand::operand_encoding::reg, operand::operand_encoding::boolean}},
+          {opcodes::OP_CMPNONE, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_CMPS, {operand::operand_encoding::reg}},      /* 41 */
-          {opcodes::OP_CMPSK, {operand::operand_encoding::idx}},     /* 42 */
-          {opcodes::OP_CMPSN, {operand::operand_encoding::integer}}, /* 43 */
-          {opcodes::OP_CMPSNONE, {}},                                /* 44 */
+          {opcodes::OP_CMPS, {operand::operand_encoding::reg}},
+          {opcodes::OP_CMPSK, {operand::operand_encoding::idx}},
+          {opcodes::OP_CMPSN, {operand::operand_encoding::integer}},
+          {opcodes::OP_CMPSNONE, {}},
 
-          {opcodes::OP_JUMPIF, {operand::operand_encoding::jmp}},    /* 45 */
-          {opcodes::OP_JUMPIFNOT, {operand::operand_encoding::jmp}}, /* 46 */
+          {opcodes::OP_JUMPIF, {operand::operand_encoding::jmp}},
+          {opcodes::OP_JUMPIFNOT, {operand::operand_encoding::jmp}},
 
-          {opcodes::OP_JUMPIFEQUAL, {operand::operand_encoding::jmp}},        /* 47 */
-          {opcodes::OP_JUMPIFNOTEQUAL, {operand::operand_encoding::jmp}},     /* 48 */
-          {opcodes::OP_JUMPIFLESS, {operand::operand_encoding::jmp}},         /* 49 */
-          {opcodes::OP_JUMPIFLESSEQUAL, {operand::operand_encoding::jmp}},    /* 4A */
-          {opcodes::OP_JUMPIFGREATER, {operand::operand_encoding::jmp}},      /* 4B */
-          {opcodes::OP_JUMPIFGREATEREQUAL, {operand::operand_encoding::jmp}}, /* 4C */
+          {opcodes::OP_JUMPIFEQUAL, {operand::operand_encoding::jmp}},
+          {opcodes::OP_JUMPIFNOTEQUAL, {operand::operand_encoding::jmp}},
+          {opcodes::OP_JUMPIFLESS, {operand::operand_encoding::jmp}},
+          {opcodes::OP_JUMPIFLESSEQUAL, {operand::operand_encoding::jmp}},
+          {opcodes::OP_JUMPIFGREATER, {operand::operand_encoding::jmp}},
+          {opcodes::OP_JUMPIFGREATEREQUAL, {operand::operand_encoding::jmp}},
 
-          {opcodes::OP_SETIF, {operand::operand_encoding::reg}},    /* 4D */
-          {opcodes::OP_SETIFNOT, {operand::operand_encoding::reg}}, /* 4E */
+          {opcodes::OP_SETIF, {operand::operand_encoding::reg}},
+          {opcodes::OP_SETIFNOT, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_SETIFEQUAL, {operand::operand_encoding::reg}},        /* 4F */
-          {opcodes::OP_SETIFNOTEQUAL, {operand::operand_encoding::reg}},     /* 50 */
-          {opcodes::OP_SETIFLESS, {operand::operand_encoding::reg}},         /* 51 */
-          {opcodes::OP_SETIFLESSEQUAL, {operand::operand_encoding::reg}},    /* 52 */
-          {opcodes::OP_SETIFGREATER, {operand::operand_encoding::reg}},      /* 53 */
-          {opcodes::OP_SETIFGREATEREQUAL, {operand::operand_encoding::reg}}, /* 54 */
+          {opcodes::OP_SETIFEQUAL, {operand::operand_encoding::reg}},
+          {opcodes::OP_SETIFNOTEQUAL, {operand::operand_encoding::reg}},
+          {opcodes::OP_SETIFLESS, {operand::operand_encoding::reg}},
+          {opcodes::OP_SETIFLESSEQUAL, {operand::operand_encoding::reg}},
+          {opcodes::OP_SETIFGREATER, {operand::operand_encoding::reg}},
+          {opcodes::OP_SETIFGREATEREQUAL, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_SETUPVALUE, {operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 55 */
-          {opcodes::OP_GETUPVALUE, {operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 56 */
+          {opcodes::OP_SETUPVALUE, {operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_GETUPVALUE, {operand::operand_encoding::reg, operand::operand_encoding::value}},
 
-          {opcodes::OP_DESTROYUPVALUES, {}},                                /* 57 */
-          {opcodes::OP_DESTROYUPVALUESA, {operand::operand_encoding::reg}}, /* 58 */
+          {opcodes::OP_DESTROYUPVALUES, {}},
+          {opcodes::OP_DESTROYUPVALUESA, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_ADDUPVALUE, {operand::operand_encoding::value, operand::operand_encoding::reg}}, /* 59 */
+          {opcodes::OP_ADDUPVALUE, {operand::operand_encoding::value, operand::operand_encoding::reg}},
 
-          {opcodes::OP_INIT, {}},                                                                                                                                                                          /* 5A */
-          {opcodes::OP_BITCAST, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value, operand::operand_encoding::boolean}}, /* 5A */
+          {opcodes::OP_INIT, {}},
+          {opcodes::OP_BITCAST, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value, operand::operand_encoding::boolean}},
 
-          {opcodes::OP_GETVARIADIC, {operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 5B */
+          {opcodes::OP_GETVARIADIC, {operand::operand_encoding::reg, operand::operand_encoding::value}},
 
-          {opcodes::OP_SETTABLE, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}}, /* 5C */
-          {opcodes::OP_GETTABLE, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}}, /* 5D */
+          {opcodes::OP_SETTABLE, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_GETTABLE, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
 
-          {opcodes::OP_SETTABLEN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 5E */
-          {opcodes::OP_GETTABLEN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 5F */
+          {opcodes::OP_SETTABLEN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_GETTABLEN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}},
 
-          {opcodes::OP_SETTABLEK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}}, /* 60 */
-          {opcodes::OP_GETTABLEK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}}, /* 61 */
+          {opcodes::OP_SETTABLEK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
+          {opcodes::OP_GETTABLEK, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
 
-          {opcodes::OP_INITFORLOOPN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::jmp}},       /* 62 */
-          {opcodes::OP_INITFORLOOPG, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::jmp}},                                     /* 63 */
-          {opcodes::OP_INITFORLOOPSPECIAL, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::jmp}}, /* 64 */
+          {opcodes::OP_INITFORLOOPN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::jmp}},
+          {opcodes::OP_INITFORLOOPG, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::jmp}},
+          {opcodes::OP_INITFORLOOPSPECIAL, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::jmp}},
 
-          {opcodes::OP_NEWCLOSURE, {operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 65 */
-          {opcodes::OP_REFCLOSURE, {operand::operand_encoding::reg, operand::operand_encoding::idx}},   /* 66 */
+          {opcodes::OP_NEWCLOSURE, {operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_REFCLOSURE, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
 
-          {opcodes::OP_NEWTABLE, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}}, /* 67 */
-          {opcodes::OP_REFTABLE, {operand::operand_encoding::reg, operand::operand_encoding::idx}},                                     /* 68 */
+          {opcodes::OP_NEWTABLE, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}},
+          {opcodes::OP_REFTABLE, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
 
-          {opcodes::OP_NEWTABLEA, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}}, /* 69 */
-          {opcodes::OP_REFTABLEA, {operand::operand_encoding::reg, operand::operand_encoding::idx}},                                     /* 6A */
+          {opcodes::OP_NEWTABLEA, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}},
+          {opcodes::OP_REFTABLEA, {operand::operand_encoding::reg, operand::operand_encoding::idx}},
 
-          {opcodes::OP_SETLIST, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}}, /* 6B */
+          {opcodes::OP_SETLIST, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value}},
 
-          {opcodes::OP_FORLOOPG, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::jmp}},                               /* 6C */
-          {opcodes::OP_FORLOOPN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::jmp}}, /* 6D */
+          {opcodes::OP_FORLOOPG, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::jmp}},
+          {opcodes::OP_FORLOOPN, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::jmp}},
 
-          {opcodes::OP_POPTOP, {}},                               /* 6E */
-          {opcodes::OP_POPARG, {operand::operand_encoding::reg}}, /* 6F */
+          {opcodes::OP_POPTOP, {}},
+          {opcodes::OP_POPARG, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_MEMSET, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}},  /* 6F */
-          {opcodes::OP_MEMREAD, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}}, /* 6F */
+          {opcodes::OP_MEMSET, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_MEMREAD, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::value}},
 
-          {opcodes::OP_SETFLAG, {operand::operand_encoding::value}}, /* 6F */
+          {opcodes::OP_SETFLAG, {operand::operand_encoding::value}},
 
-          {opcodes::OP_SALLOC, {operand::operand_encoding::reg, operand::operand_encoding::value}},    /* 6F */
-          {opcodes::OP_GETSTACK, {operand::operand_encoding::reg, operand::operand_encoding::value}},  /* 6F */
-          {opcodes::OP_SETSTACK, {operand::operand_encoding::reg, operand::operand_encoding::value}},  /* 6F */
-          {opcodes::OP_STACKPUSH, {operand::operand_encoding::value, operand::operand_encoding::reg}}, /* 6F */
-          {opcodes::OP_STACKPOP, {operand::operand_encoding::value, operand::operand_encoding::reg}},  /* 6F */
-          {opcodes::OP_POPTOPSTACK, {operand::operand_encoding::reg}},                                 /* 6F */
+          {opcodes::OP_SALLOC, {operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_GETSTACK, {operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_SETSTACK, {operand::operand_encoding::reg, operand::operand_encoding::value}},
+          {opcodes::OP_STACKPUSH, {operand::operand_encoding::value, operand::operand_encoding::reg}},
+          {opcodes::OP_STACKPOP, {operand::operand_encoding::value, operand::operand_encoding::reg}},
+          {opcodes::OP_POPTOPSTACK, {operand::operand_encoding::reg}},
 
-          {opcodes::OP_CLOGIC_AND, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}}, /* 6F */
-          {opcodes::OP_CLOGIC_OR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},  /* 6F */
+          {opcodes::OP_CLOGIC_AND, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
+          {opcodes::OP_CLOGIC_OR, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::reg}},
 
-          {opcodes::OP_PEND, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value, operand::operand_encoding::value}}, /* 6F */
+          {opcodes::OP_PEND, {operand::operand_encoding::reg, operand::operand_encoding::value, operand::operand_encoding::value, operand::operand_encoding::value}},
           {opcodes::OP_MARK, {}},
           {opcodes::OP_MOBJ_CAST, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},
           {opcodes::OP_NCTOR_MOBJ, {operand::operand_encoding::reg, operand::operand_encoding::reg, operand::operand_encoding::idx}},

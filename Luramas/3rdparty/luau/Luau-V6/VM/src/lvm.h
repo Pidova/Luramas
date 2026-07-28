@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #pragma once
@@ -35,3 +37,5 @@ LUAI_FUNC void luau_execute(lua_State *L);
 LUAI_FUNC int luau_precall(lua_State *L, struct lua_TValue *func, int nresults);
 LUAI_FUNC void luau_poscall(lua_State *L, StkId first);
 LUAI_FUNC void luau_callhook(lua_State *L, lua_Hook hook, void *userdata);
+
+#endif

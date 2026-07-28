@@ -13,6 +13,14 @@ namespace luramas::error {
             bool err = false;      /* Errored? */
             std::string what = ""; /* What string */
 
+            constexpr handler() = default;
+            constexpr handler(err_code ec, const std::string &what)
+                : ec(std::move(ec)), err(true), what(std::move(what)) {
+            }
+            constexpr explicit handler(err_code ec)
+                : ec(std::move(ec)), err(true) {
+            }
+
             constexpr void emit(const err_code ec, const std::string &what) {
                   this->err = true;
                   this->ec = ec;
@@ -24,7 +32,27 @@ namespace luramas::error {
             }
       };
 
-      /* Contains result with any errors that may be thrown */
+      /* Link structure where error could have occured with handler */
+      template <typename where, typename err_code>
+      struct linked {
+            where w;             /* Structure that couldve contained the error */
+            handler<err_code> h; /* Handler */
+
+            constexpr linked() = default;
+            constexpr linked(const where &w, const handler<err_code> &h)
+                : w(w), h(h) {
+            }
+
+            constexpr operator bool() const {
+                  return this->h;
+            }
+            constexpr void emit(const handler<err_code> &h) {
+                  this->h = h;
+                  return;
+            }
+      };
+
+      /* Contains result/linked pair with any errors that may be thrown */
       template <typename data, typename err_code>
       struct result {
 

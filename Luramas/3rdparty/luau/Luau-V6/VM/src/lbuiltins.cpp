@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 // This code is based on Lua 5.x implementation licensed under MIT License; see lua_LICENSE.txt for details
 #include "lbuiltins.h"
@@ -1435,3 +1437,5 @@ const luau_FastFunction luauF_table[256] = {
 
 #undef MISSING8
 };
+
+#endif

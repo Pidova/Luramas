@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lbaselib.c,v 1.314.1.1 2017/04/19 17:39:34 roberto Exp $
 ** Basic library
@@ -458,3 +460,5 @@ LUAMOD_API int luaopen_base(lua_State *L) {
       lua_setfield(L, -2, "_VERSION");
       return 1;
 }
+
+#endif

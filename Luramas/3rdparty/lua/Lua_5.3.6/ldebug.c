@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ldebug.c,v 2.121.1.2 2017/07/10 17:21:50 roberto Exp $
 ** Debug Interface
@@ -673,3 +675,5 @@ void luaG_traceexec(lua_State *L) {
             luaD_throw(L, LUA_YIELD);
       }
 }
+
+#endif

@@ -31,11 +31,15 @@ namespace luramas::ir::code::emitter::luau::datatype {
       inline void emit_string(std::string &buffer, std::string data, const std::shared_ptr<luramas::ir::data::format::format> &format) {
 
             /* Fix string */
-            if (data.back() != luau_langkeyword_string_end) {
-                  data += luau_langkeyword_string_end;
-            }
-            if (data.front() != luau_langkeyword_string_start) {
-                  data = luau_langkeyword_string_start + data;
+            if (!data.empty()) {
+                  if (data.back() != luau_langkeyword_string_end) {
+                        data += luau_langkeyword_string_end;
+                  }
+                  if (data.front() != luau_langkeyword_string_start) {
+                        data = luau_langkeyword_string_start + data;
+                  }
+            } else {
+                  data += luau_langkeyword_string_end + luau_langkeyword_string_start;
             }
             buffer += data;
             return;

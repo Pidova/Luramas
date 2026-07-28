@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ldo.h,v 2.29.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Stack and Call structure of Lua
@@ -50,5 +52,7 @@ LUAI_FUNC void luaD_inctop(lua_State *L);
 
 LUAI_FUNC l_noret luaD_throw(lua_State *L, int errcode);
 LUAI_FUNC int luaD_rawrunprotected(lua_State *L, Pfunc f, void *ud);
+
+#endif
 
 #endif

@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lauxlib.h,v 1.131.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Auxiliary functions for building Lua libraries
@@ -227,5 +229,7 @@ LUALIB_API void(luaL_openlib)(lua_State *L, const char *libname, const luaL_Reg 
 
 #endif
 /* }============================================================ */
+
+#endif
 
 #endif

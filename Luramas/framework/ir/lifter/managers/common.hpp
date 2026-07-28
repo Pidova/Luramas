@@ -12,12 +12,16 @@ namespace luramas::ir::managers {
       namespace upvalues {
 
             struct manager {
-                  boost::unordered_flat_map<std::size_t, std::shared_ptr<ir_stat::ir_expr>> upvalues;
-                  boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> pre_defined;
-                  boost::unordered_flat_map<luramas_register, luramas_register> defined_upvs;
+                  boost::unordered_flat_map<std::size_t, std::shared_ptr<ir_stat::ir_expr>> upvalues;         /* Upvalues by index */
+                  boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> pre_defined; /* Upvalues by pre-defined registers */
+                  boost::unordered_flat_map<luramas_register, luramas_register> defined_upvs;                 /* Register defined in that closure -> Register defined in parent closure */
 
+                  /* Define upvalue by its target register reference */
                   void define(const luramas_register reg, const std::shared_ptr<ir_stat::ir_expr> &e);
+
+                  /* Define upvalue by index of it */
                   void define_upvalue(const std::size_t idx, const std::shared_ptr<ir_stat::ir_expr> &e);
+
                   void init();
                   bool inited() const;
 

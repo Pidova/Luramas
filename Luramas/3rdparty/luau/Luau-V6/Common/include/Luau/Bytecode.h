@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #pragma once
 
@@ -620,3 +622,5 @@ enum LuauProtoFlag
     // used to tag main proto for modules that have at least one function with native attribute
     LPF_NATIVE_FUNCTION = 1 << 2,
 };
+
+#endif

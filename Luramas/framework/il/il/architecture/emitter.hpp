@@ -4,7 +4,7 @@
 
 namespace luramas::il::emitter {
 
-      /* Emits operand kind to IL disassembly. */
+      /* Emits operand kind to IL disassembly. Note. Jump Emissions are by offset, full address is calculated */
       inline void emit_operand_kind(const std::shared_ptr<luramas::il::ilang> &il, const luramas::il::arch::operand::operand_kind kind, const luramas_address addr, const std::shared_ptr<luramas::il::arch::operand::operand> &operand, const std::int64_t U) {
 
             operand->type = kind;
@@ -27,12 +27,12 @@ namespace luramas::il::emitter {
                   }
                   case luramas::il::arch::operand::operand_kind::kval:
                   case luramas::il::arch::operand::operand_kind::kval_string: {
-                        if (U < 0 || static_cast<std::size_t>(U) > il->kval.size()) {
+                        if (U < 0 || static_cast<std::size_t>(U) >= il->kval.size()) {
                               luramas::error::error("Invalid KVALUE Index");
                         }
                         operand->dis.kvalue_idx = (U && static_cast<std::size_t>(U) == il->kval.size()) ? static_cast<std::intptr_t>(il->kval.size() - 1u) : static_cast<std::intptr_t>(U);
                         const auto &kvalue = il->kval.at(operand->dis.kvalue_idx);
-                        operand->k_value = kvalue->str();
+                        operand->k_value = '\"' + kvalue->str() + '\"';
                         operand->k_value_kind = kvalue->type;
                         break;
                   }
@@ -71,7 +71,7 @@ namespace luramas::il::emitter {
             return;
       }
 
-      /* Emits opcode to IL buffer. */
+      /* Emits opcode to IL buffer. Note. Jump Emissions are by offset, full address is calculated  */
       template <luramas::il::arch::opcodes op>
       inline void emit_opcode(const std::shared_ptr<luramas::il::ilang> &il, const luramas_address addr, std::shared_ptr<luramas::il::disassembly> &buffer, const std::int64_t A = 0ll, const std::int64_t B = 0ll, const std::int64_t C = 0ll, const std::int64_t D = 0ll, const std::int64_t E = 0ll, const std::int64_t F = 0ll, const std::int64_t G = 0ll) {
 
@@ -80,6 +80,7 @@ namespace luramas::il::emitter {
 
             const auto opdata = luramas::il::arch::opkinds[std::uint8_t(op)];
 
+            buffer->operands.clear();
             for (const auto &enc : opdata.kinds) {
                   auto ptr = std::make_shared<luramas::il::arch::operand::operand>();
                   emit_operand_kind(il, enc, addr, ptr, enc_stack[idx++]);
@@ -91,6 +92,7 @@ namespace luramas::il::emitter {
             return;
       }
 
+      /* Emits opcode as ptr. Note. Jump Emissions are by offset, full address is calculated  */
       template <luramas::il::arch::opcodes op>
       inline std::shared_ptr<luramas::il::disassembly> generate_opcode(const std::shared_ptr<luramas::il::ilang> &il, const luramas_address addr, const std::int64_t A = 0ll, const std::int64_t B = 0ll, const std::int64_t C = 0ll, const std::int64_t D = 0ll, const std::int64_t E = 0ll, const std::int64_t F = 0ll, const std::int64_t G = 0ll) {
             auto ptr = std::make_shared<luramas::il::disassembly>();

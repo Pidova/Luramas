@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: ldebug.h,v 2.14.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Auxiliary functions from Debug Interface module
@@ -24,5 +26,7 @@ LUAI_FUNC l_noret luaG_runerror(lua_State *L, const char *fmt, ...);
 LUAI_FUNC const char *luaG_addinfo(lua_State *L, const char *msg, TString *src, int line);
 LUAI_FUNC l_noret luaG_errormsg(lua_State *L);
 LUAI_FUNC void luaG_traceexec(lua_State *L);
+
+#endif
 
 #endif

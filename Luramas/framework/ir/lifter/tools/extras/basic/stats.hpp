@@ -325,6 +325,10 @@ namespace luramas::ir::tools::stat {
             inline bool is_if_cond(const std::shared_ptr<ir_stat> &if_stat) {
                   return is_if_cond(if_stat) && if_stat->b == b;
             }
+            /* IF ( (.. and/or ..)  ET ) */
+            inline bool is_if_cond_logical(const std::shared_ptr<ir_stat> &if_stat) {
+                  return (is_if_cond<il::arch::data::bin_kinds::et_>(if_stat) || is_if_cond<il::arch::data::bin_kinds::nt_>(if_stat)) && exprs::values::is_logical(if_stat->l);
+            }
             /* IF (? ?? ?) */
             template <il::arch::data::bin_kinds b = il::arch::data::bin_kinds::et_>
             inline bool is_if_cond(const std::shared_ptr<ir_stat> &if_stat, const std::shared_ptr<ir_stat::ir_expr> &l, const std::shared_ptr<ir_stat::ir_expr> &r) {
@@ -1609,7 +1613,7 @@ namespace luramas::ir::tools::stat {
             }
             /* SAME INTERRUPTS? */
             inline bool same_interrupts(const std::shared_ptr<ir_stat> &l, const std::shared_ptr<ir_stat> &r) {
-                  return l && r && l->is_flow_interrupt() && r->is_flow_interrupt() && same_stats(l, r, false);
+                  return l && r && l->is_flow_interrupt() && r->is_flow_interrupt() && same_stats(l, r, false, true);
             }
 
             /* Clone stat if allowed */

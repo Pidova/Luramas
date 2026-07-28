@@ -31,11 +31,15 @@ namespace luramas::ir::code::emitter::cpp::datatype {
       inline void emit_string(std::string &buffer, std::string data, const std::shared_ptr<luramas::ir::data::format::format> &format) {
 
             /* Fix string */
-            if (data.back() != cpp_langkeyword_string_end) {
-                  data += cpp_langkeyword_string_end;
-            }
-            if (data.front() != cpp_langkeyword_string_start) {
-                  data = cpp_langkeyword_string_start + data;
+            if (!data.empty()) {
+                  if (data.back() != cpp_langkeyword_string_end) {
+                        data += cpp_langkeyword_string_end;
+                  }
+                  if (data.front() != cpp_langkeyword_string_start) {
+                        data = cpp_langkeyword_string_start + data;
+                  }
+            } else {
+                  data += cpp_langkeyword_string_end + cpp_langkeyword_string_start;
             }
             buffer += data;
             return;

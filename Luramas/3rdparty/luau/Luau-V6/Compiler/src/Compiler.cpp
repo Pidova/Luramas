@@ -1,10 +1,12 @@
-// This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
-#include "Luau-V6/Compiler/include/Luau/Compiler.h"
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
 
-#include "Luau-V6/Ast/include/Luau/Parser.h"
-#include "Luau-V6/Ast/include/Luau/TimeTrace.h"
-#include "Luau-V6/Common/include/Luau/Common.h"
-#include "Luau-V6/Compiler/include/Luau/BytecodeBuilder.h"
+// This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
+#include "../include/Luau/Compiler.h"
+
+#include "../../Ast/include/Luau/Parser.h"
+#include "../../Ast/include/Luau/TimeTrace.h"
+#include "../../Common/include/Luau/Common.h"
+#include "../include/Luau/BytecodeBuilder.h"
 
 #include "Builtins.h"
 #include "ConstantFolding.h"
@@ -3751,3 +3753,5 @@ namespace Luau {
       }
 
 } // namespace Luau
+
+#endif

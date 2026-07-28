@@ -551,6 +551,9 @@ namespace luramas::ir::tools {
             /* Extracts base expr from expr (if not will return nullptr) */
             std::shared_ptr<ir_stat::ir_expr> base_expr(const std::shared_ptr<ir_stat::ir_expr> &expr);
 
+            /* Extracts all sides of a logical and if there is sub logicals in a logical extract sides like (a and b or c) = {a, b, c} */
+            ir_stat::ir_expr::space decompose_logical(const std::shared_ptr<ir_stat::ir_expr> &expr);
+
             /* Extracts all conditions for condition */
             luramas_addresses cond_conditions(luramas::ir::passes::pass_manager &pm, const luramas_address start);
 

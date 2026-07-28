@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lualib.h,v 1.45.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Lua standard libraries
@@ -49,6 +51,8 @@ LUALIB_API void(luaL_openlibs)(lua_State *L);
 
 #if !defined(lua_assert)
 #define lua_assert(x) ((void)0)
+#endif
+
 #endif
 
 #endif

@@ -1,4 +1,5 @@
-﻿# Download https://www.intel.com/content/dam/develop/public/us/en/include/intrinsics-guide/data-3-6-9.xml
+﻿#!/usr/bin/env python3
+# Download https://www.intel.com/content/dam/develop/public/us/en/include/intrinsics-guide/data-3-6-9.xml
 import xmltodict
 import json
 import re

@@ -1,7 +1,7 @@
 #include "../ssa_builder.hpp"
 //#define LURAMAS_DEBUG_SSA_STEPS 1
 
-namespace luramas::ssa_builder {
+namespace luramas::ir::ssa_builder {
 
       ssa_rv_reg::operator bool() const {
             return this->fvalid;
@@ -714,4 +714,4 @@ namespace luramas::ssa_builder {
             return result;
       }
 
-} // namespace luramas::ssa_builder
+} // namespace luramas::ir::ssa_builder

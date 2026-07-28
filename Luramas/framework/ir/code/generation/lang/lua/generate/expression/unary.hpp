@@ -7,6 +7,7 @@ namespace luramas::ir::code::emitter::lua::unary {
       inline void emit_unary(std::string &buffer, const luramas::il::arch::data::bin_kinds unary, const std::shared_ptr<luramas::ir::data::format::format> &format) {
 
             switch (unary) {
+                  case luramas::il::arch::data::bin_kinds::nt_:
                   case luramas::il::arch::data::bin_kinds::not_: {
                         buffer = format->spacing.format_unary_not(lua_langkeyword_not) + buffer;
                         break;

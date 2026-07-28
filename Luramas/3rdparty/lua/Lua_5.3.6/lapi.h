@@ -1,3 +1,5 @@
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+
 /*
 ** $Id: lapi.h,v 2.9.1.1 2017/04/19 17:20:42 roberto Exp $
 ** Auxiliary functions from Lua API
@@ -23,5 +25,7 @@
       }
 
 #define api_checknelems(L, n) api_check(L, (n) < (L->top - L->ci->func), "not enough elements in the stack")
+
+#endif
 
 #endif

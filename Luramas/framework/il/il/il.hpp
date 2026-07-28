@@ -1,9 +1,9 @@
 #pragma once
-
 #include "../../builtins.hpp"
 #include "../../common/common.hpp"
 #include "../../misc/types.hpp"
 #include "architecture/architecture.hpp"
+#include "architecture\disassembly.hpp"
 #include "tools/disassembler.hpp"
 #include <algorithm>
 #include <boost/unordered/unordered_flat_map.hpp>
@@ -20,150 +20,12 @@
 
 namespace luramas::il {
 
-      /* Virtual instruction */
+      /* Virtual instruction, instruction that can emit multiple instructions or do something very specific that has no direct translation */
       struct vinst {
             profile::inst main;
             profile::real_inst rinst;
             luramas_flag fstart_cmp_bytes = false;
             luramas_flag fend_cmp_bytes = false;
-      };
-
-      /* IL disassembly */
-      struct disassembly {
-
-            luramas_address addr = 0u;                                                  /* Address  */
-            arch::opcodes op = arch::opcodes::OP_NOP;                                   /* Opcode */
-            arch::data::bin_kinds bin_kind = arch::data::bin_kinds::nothing;            /* Binary kind */
-            std::vector<std::shared_ptr<luramas::il::arch::operand::operand>> operands; /* Operands */
-            std::vector<std::shared_ptr<disassembly>> xrefs;                            /* Cross references */
-            std::shared_ptr<disassembly> ref = nullptr;                                 /* reference to the disassembly which one of the operands reference i.e. jump/memory reference. */
-
-            /* Returns disassembly of IL instruction. */
-            template <bool include_hint = false /* Includes mnemonic hint */,
-                bool case_mnemonic = true /* Uppercase mnemonic? */,
-                bool include_address = true /* Includes address */,
-                bool include_mnemonic = true /* Includes mnemonic */,
-                bool include_operands = true /* Includes mnemonic */>
-            std::string disassemble(const char *const comment = NULL) {
-
-                  std::string result = "";
-
-                  /* Address */
-                  if (include_address) {
-                        result += std::to_string(this->addr) + " ";
-                  }
-
-                  /* Mnemonic */
-                  if (include_mnemonic) {
-                        std::string mnemonic = luramas::il::disassembler::mnemonic_string(this->op); /* Mnemonic string */
-
-                        /* Uppercase? */
-                        if (case_mnemonic) {
-                              std::ranges::transform(mnemonic, mnemonic.begin(), [](const char c) { return std::toupper(c); });
-                        }
-
-                        /* Append */
-                        result += mnemonic + " ";
-                  }
-
-                  /* Operands */
-                  if (include_operands) {
-                        const auto op_count = this->operands.size();
-                        for (auto i = 0u; i < op_count; ++i) {
-                              result += luramas::il::disassembler::operand_string(this->operands[i]);
-                              result += ((i + 1u) == op_count) ? " " : ", ";
-                        }
-                  }
-
-                  /* Comment */
-                  if (comment != NULL) {
-                        result += std::string("; ") + comment;
-                  }
-
-                  /* Hint */
-                  if (include_hint) {
-                        result += ((comment == NULL) ? std::string("; ") : std::string("  ")) + luramas::il::disassembler::mnemonic_hint_string(this->op);
-                  }
-
-                  return result;
-            }
-
-#if defined(_WIN32) || defined(_WIN64)
-
-#include "../../color.hpp"
-
-            /* Prints disassembly in color of IL instruction. */
-            template <bool include_hint = false /* Includes mnemonic hint */,
-                bool case_mnemonic = true /* Uppercase mnemonic? */,
-                bool include_address = true /* Includes address */,
-                bool include_mnemonic = true /* Includes mnemonic */,
-                bool include_operands = true /* Includes mnemonic */>
-            void dump(const char *const comment = NULL) {
-
-                  /* Address */
-                  if constexpr (include_address) {
-                        luramas_color_print(luramas_color_fontcolor_green, luramas_color_background_black, std::string(std::to_string(this->addr) + " ").c_str());
-                  }
-
-                  /* Mnemonic */
-                  if constexpr (include_mnemonic) {
-
-                        std::string mnemonic = luramas::il::disassembler::mnemonic_string(this->op);
-                        if (case_mnemonic) {
-                              std::ranges::transform(mnemonic, mnemonic.begin(), [](const char c) { return std::toupper(c); });
-                        }
-
-                        luramas_color_print(luramas_color_fontcolor_brightblue, luramas_color_background_black, std::string(mnemonic + " ").c_str());
-                  }
-
-                  /* Operands */
-                  if constexpr (include_operands) {
-                        const auto op_count = this->operands.size();
-                        for (auto i = 0u; i < op_count; ++i) {
-                              luramas_color_print(luramas_color_fontcolor_yellow, luramas_color_background_black, luramas::il::disassembler::operand_string(this->operands[i]).c_str());
-                              luramas_color_print(luramas_color_fontcolor_nothing, luramas_color_background_nothing, ((i + 1u) == op_count) ? " " : ", ");
-                        }
-                  }
-
-                  /* Comment */
-                  if (comment != NULL) {
-                        luramas_color_print(luramas_color_fontcolor_magenta, luramas_color_background_black, std::string(std::string("; ") + comment).c_str());
-                  }
-
-                  /* Hint */
-                  if constexpr (include_hint) {
-                        luramas_color_print(luramas_color_fontcolor_magenta, luramas_color_background_black, std::string(((comment == NULL) ? std::string("; ") : std::string("  ")) + luramas::il::disassembler::mnemonic_hint_string(this->op)).c_str());
-                  }
-
-                  /* Line end */
-                  if constexpr (include_address || include_mnemonic || include_operands || include_hint || comment != NULL) {
-                        luramas_color_print(luramas_color_fontcolor_nothing, luramas_color_background_nothing, "\n");
-                  }
-
-                  return;
-            }
-
-#endif
-            void clear() {
-                  *this = disassembly();
-                  return;
-            }
-      };
-
-      /* IL validation error */
-      struct commit_error {
-
-            /* Throw error */
-            void commit(const std::shared_ptr<disassembly> &il, const char *error) {
-                  this->il = il;
-                  this->error = error;
-                  this->is_error = true;
-                  return;
-            }
-
-            std::shared_ptr<disassembly> il;
-            const char *error = NULL;
-            bool is_error = false;
       };
 
       /* Programs memory */
@@ -172,14 +34,16 @@ namespace luramas::il {
             std::vector<std::uint8_t> memory;
       };
 
-      struct flags {
-            luramas_flag fannotate_instructions = false; /* At the end of lifting instruction make annotative string for it */
-      };
-
-      /* IL class */
+      /* IL manager */
       class ilang {
 
           public:
+            /* IL processing flags */
+            struct flags {
+                  luramas_flag fannotate_instructions = false; /* At the end of lifting instruction make annotative string for it */
+            };
+
+            /* Manager with a reference to the IL context */
             class debug_manager {
 
                 public:
@@ -194,37 +58,20 @@ namespace luramas::il {
                       : linked(il) {
                   }
 
-                  inline const char *const get(const luramas_register reg, luramas_address loc) const {
-                        if (this->defined.empty()) {
-                              return nullptr;
-                        }
-                        ++loc;
-                        auto it = this->defined.find(reg);
-                        if (it != this->defined.end()) {
-                              for (const auto &[block, str] : it->second) {
-                                    if (loc >= block.first->addr && loc <= block.second->addr) {
-                                          return str.c_str();
-                                    }
-                              }
-                        }
-                        return nullptr;
-                  }
-                  inline void add(const luramas_register reg, const std::shared_ptr<disassembly> &start, const std::shared_ptr<disassembly> &end, const std::string &name) {
+                  /* Gets the variable name associated with a register at a specific address location */
+                  const char *const get(const luramas_register reg, luramas_address loc) const;
 
-                        auto [it, inserted] = this->defined.try_emplace(reg, std::vector<std::pair<std::pair<std::shared_ptr<disassembly>, std::shared_ptr<disassembly>>, std::string>>({std::make_pair(std::make_pair(start, end), name)}));
-                        if (!inserted) {
-                              for (auto &[block, str] : it->second) {
-                                    if (start == block.first) {
-                                          return;
-                                    }
-                              }
-                              it->second.emplace_back(std::make_pair(start, end), name);
-                        }
-                        return;
-                  }
+                  /* Registers a variable name for a specified register over instruction scope: [start, end] */
+                  void add(const luramas_register reg, const std::shared_ptr<disassembly> &start, const std::shared_ptr<disassembly> &end, const std::string &name);
 
-                  std::shared_ptr<luramas::il::ilang> linked = nullptr;
-                  boost::unordered_flat_map<luramas_register, std::vector<std::pair<std::pair<std::shared_ptr<disassembly>, std::shared_ptr<disassembly>>, std::string>>> defined;
+                  std::shared_ptr<luramas::il::ilang> linked = nullptr; /* Parent ILang */
+                private:
+                  /* Context of regions strings */
+                  struct context {
+                        luramas_irange<std::shared_ptr<disassembly>> range; /* Range [start, end] */
+                        std::string name = "";                              /* Register name */
+                  };
+                  boost::unordered_flat_map<luramas_register, std::vector<context>> defined; /* Register ranges [start, end] and name */
             };
 
             struct kvalue {
@@ -275,66 +122,7 @@ namespace luramas::il {
                   } string;
 
                   /* Kvalue string */
-                  std::string str() {
-
-                        std::string result("");
-
-                        switch (this->type) {
-                              case arch::data::kval_kinds::vector: {
-                                    result = "VECTOR { ";
-                                    for (const auto &i : this->vector.vector) {
-                                          result += std::to_string(i) + " ";
-                                    }
-                                    result = "}";
-                                    break;
-                              }
-                              case arch::data::kval_kinds::none: {
-                                    result = "none";
-                                    break;
-                              }
-                              case arch::data::kval_kinds::boolean: {
-                                    result = (this->boolean.b) ? "true" : "false";
-                                    break;
-                              }
-                              case arch::data::kval_kinds::integer: {
-                                    result = this->integer.str;
-                                    break;
-                              }
-                              case arch::data::kval_kinds::string: {
-                                    result = "\"" + this->string.str + "\"";
-                                    break;
-                              }
-                              case arch::data::kval_kinds::userdata: {
-                                    result = this->userdata.str;
-                                    break;
-                              }
-                              case arch::data::kval_kinds::table: {
-                                    result = "node_" + std::to_string(this->table.node_size) + ", array_" + std::to_string(this->table.array_size);
-                                    break;
-                              }
-                              case arch::data::kval_kinds::function: {
-                                    result = this->function.str;
-                                    break;
-                              }
-                              case arch::data::kval_kinds::closure: {
-                                    result = "closure_" + std::to_string(this->closure.id);
-                                    break;
-                              }
-                              case arch::data::kval_kinds::thread: {
-                                    result = this->thread.str;
-                                    break;
-                              }
-                              case arch::data::kval_kinds::upvalue: {
-                                    result = this->upvalue.str;
-                                    break;
-                              }
-                              default: {
-                                    luramas::error::error("Unkown IL kvalue type.");
-                              }
-                        }
-
-                        return result;
-                  }
+                  std::string str() const;
             };
 
             flags flags;                                               /* IL flags */
@@ -344,7 +132,7 @@ namespace luramas::il {
             std::vector<std::shared_ptr<luramas::il::ilang>> closures; /* IL Closures */
 
             template <arch::data::kval_kinds k>
-            std::size_t make_kvalue(const std::string &str) {
+            luramas_index make_kvalue(const std::string &str) {
 
                   for (auto i = 0u; i < this->kval.size(); ++i) {
                         const auto &kv = this->kval[i];
@@ -372,7 +160,7 @@ namespace luramas::il {
                   return this->kval.size() - 1u;
             }
             template <arch::data::kval_kinds k>
-            std::size_t make_kvalue(const double v) {
+            luramas_index make_kvalue(const double v) {
 
                   for (auto i = 0u; i < this->kval.size(); ++i) {
                         const auto &kv = this->kval[i];
@@ -397,203 +185,55 @@ namespace luramas::il {
             }
 
             /* Validates, corrects, and then commits uncommited disassembly. */
-            void commit_dis(std::vector<std::shared_ptr<disassembly>> *il = nullptr, const bool resolve = true /* Resolve?? */) {
-
-                  if (il) {
-                        this->dis = std::move(*il);
-                  }
-
-                  /* Validate */
-                  this->validate(this->validate_operands());
-                  this->resolve_xrefs();
-
-                  luramas_address addr = 0u;
-                  if (!this->front.empty() || !this->back.empty() || !this->ignore.empty() || !this->insertions.empty()) {
-                        auto mutated = std::move(this->front);
-                        mutated.reserve(mutated.size() + this->dis.size() + this->insertions.size() * 2u);
-                        for (const auto &i : this->dis) {
-                              if (!this->ignore.contains(i) && i) {
-                                    mutated.emplace_back(i);
-                                    for (const auto &operand : i->operands) {
-                                          if (operand->type == arch::operand::operand_kind::reg) {
-                                                if (const auto reg = operand->dis.reg; reg > this->temp_reg) {
-                                                      this->temp_reg = reg;
-                                                }
-                                          }
-                                    }
-                              }
-                              if (const auto it = this->insertions.find(i); it != this->insertions.end()) {
-                                    mutated.reserve(mutated.size() + it->second.size());
-                                    mutated.insert(mutated.end(), std::make_move_iterator(it->second.begin()), std::make_move_iterator(it->second.end()));
-                              }
-                        }
-                        mutated.reserve(mutated.size() + this->back.size());
-                        mutated.insert(mutated.end(), this->back.begin(), this->back.end());
-                        this->dis = std::move(mutated);
-                  }
-
-                  if (resolve) {
-                        this->resolve_addresses();
-                        this->resolve_jumps();
-                  }
-                  if (this->dis_map.empty()) {
-                        for (const auto &i : this->dis) {
-                              this->dis_map.try_emplace(i->addr, i);
-                        }
-                  }
-                  for (const auto &i : this->dis) {
-                        i->addr = addr++;
-                  }
-
-                  ++this->temp_reg;
-                  this->back.clear();
-                  this->front.clear();
-                  this->ignore.clear();
-                  this->insertions.clear();
-                  return;
-            }
+            void commit_dis(std::vector<std::shared_ptr<disassembly>> *il = nullptr, const bool resolve = true /* Resolve?? */);
 
             /* Emplaces disassembly back to IL. */
-            inline void insert_front(const std::shared_ptr<disassembly> &d) {
-                  this->front.emplace_back(d);
-                  return;
-            }
-            inline void insert_back(const std::shared_ptr<disassembly> &d) {
-                  this->back.emplace_back(d);
-                  return;
-            }
-            inline void insert(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v) {
-                  if (where && v) {
-                        auto [it, inserted] = this->insertions.try_emplace(where, std::vector<std::shared_ptr<disassembly>>({v}));
-                        if (!inserted) {
-                              it->second.emplace_back(v);
-                        }
-                  }
-                  return;
-            }
-            inline void insert_front(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v) {
-                  if (where && v) {
-                        luramas_address idx = 0u;
-                        for (auto i = 0u; i < this->dis.size(); ++i) {
-                              if (this->dis[i] == where) {
-                                    if (i) {
-                                          --i;
-                                    }
-                                    idx = i;
-                                    break;
-                              }
-                        }
-                        if (idx) {
-                              this->insert(this->dis[idx], v);
-                        } else {
-                              this->insert_front(v);
-                        }
-                  }
-                  return;
-            }
-            inline void insert(const luramas_address where, const std::shared_ptr<disassembly> &v) {
-                  if (!this->valid(where)) {
-                        luramas::error::error("Invalid index");
-                  }
-                  this->insert(this->dis[where], v);
-                  return;
-            }
-            inline void insert_front(luramas_address where, const std::shared_ptr<disassembly> &v) {
-                  if (!v) {
-                        return;
-                  }
-                  if (!where) {
-                        this->insert_front(v);
-                  } else {
-                        if (where) {
-                              --where;
-                        }
-                        if (!this->valid(where)) {
-                              luramas::error::error("Invalid index");
-                        }
-                        this->insert(this->dis[where], v);
-                  }
-                  return;
-            }
-            inline void insert_front(luramas_address where, const std::vector<std::shared_ptr<disassembly>> &v) {
-                  for (const auto &i : v) {
-                        this->insert_front(where, i);
-                  }
-                  return;
-            }
-            inline void insert_original_unsafe(const luramas_address where, const std::shared_ptr<disassembly> &v) {
-                  if (auto i = this->dis_map.find(where); i != this->dis_map.end()) {
-                        this->insert(i->second, v);
-                  } else {
-                        auto n = this->dis.size();
-                        if (n) {
-                              --n;
-                        }
-                        if (n) {
-                              --n;
-                        }
-                        this->insert(this->dis[n], v);
-                  }
-                  return;
-            }
-            template <bool safe = false /* If its pending will just become NOP*/>
-            inline void remove(const std::shared_ptr<disassembly> &dis) {
-                  if (dis && dis->op == il::arch::opcodes::OP_PEND) {
-                        dis->op = il::arch::opcodes::OP_NOP;
-                  } else {
-                        this->ignore.insert(dis);
-                  }
-                  return;
-            }
-            inline bool valid(const std::size_t idx) const {
-                  return idx < this->dis.size();
-            }
-            inline bool is_remove(const std::shared_ptr<luramas::il::disassembly> &disassembly) const {
-                  return this->ignore.contains(disassembly);
-            }
+            void insert_front(const std::shared_ptr<disassembly> &d);
+            void insert_back(const std::shared_ptr<disassembly> &d);
+            void insert(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v);
+            void insert_front(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v);
+            void insert(const luramas_address where, const std::shared_ptr<disassembly> &v);
+            void insert_front(luramas_address where, const std::shared_ptr<disassembly> &v);
+            void insert_front(luramas_address where, const std::vector<std::shared_ptr<disassembly>> &v);
+            void insert_original_unsafe(const luramas_address where, const std::shared_ptr<disassembly> &v);
+            void remove(const std::shared_ptr<disassembly> &dis);
+
+            /* Index is contained in IL */
+            bool valid(const std::size_t idx) const;
+
+            /* Disassembly has been removed? */
+            bool is_remove(const std::shared_ptr<luramas::il::disassembly> &disassembly) const;
 
             /* Visits addr of Original IL disassembly. */
-            std::shared_ptr<disassembly> visit(const luramas_address addr) {
-                  return this->dis_map[addr];
-            }
+            std::shared_ptr<disassembly> visit(const luramas_address addr);
 
             /* Visits instructions that references addr. */
-            std::vector<std::shared_ptr<disassembly>> visit_ref(const luramas_address addr) const {
+            std::vector<std::shared_ptr<disassembly>> visit_ref(const luramas_address addr) const;
 
-                  std::vector<std::shared_ptr<disassembly>> result;
-
-                  for (const auto &i : this->dis) {
-                        if (i->ref && i->ref->addr == addr) {
-                              result.emplace_back(i);
-                        }
-                  }
-                  return result;
-            }
             /* Validate IL makes sures there is no error in IL disassembly, returns error if any. */
-            luramas::il::commit_error validate() {
+            errors::error validate();
 
-                  auto valid = this->validate_operands();
-                  if (valid.is_error) {
-                        return valid;
-                  }
-                  return luramas::il::commit_error();
-            }
+            /* Returns an available temporary register */
+            luramas_register get_temp_reg();
 
-            luramas_register temp_reg = 0u; /* Temporary register */
+            /* Resets temp temporary register */
+            void reset_temp_reg();
+
+            boost::unordered_flat_map<std::shared_ptr<disassembly>, std::vector<std::shared_ptr<disassembly>>> insertions; /* Data to inserts, public to allow jump passes to properly link */
+            luramas_register ctemp_reg = 0u;                                                                               /* Current temporary register */
 
           private:
+            luramas_register temp_reg = 0u;                                                   /* Original temporary register */
             boost::unordered_flat_map<luramas_address, std::shared_ptr<disassembly>> dis_map; /* Original ADDR map of dism -> IL (Maps diretly to how the original dism is) */
-
-            std::vector<std::shared_ptr<disassembly>> front;                                                               /* Data to insert in the front */
-            std::vector<std::shared_ptr<disassembly>> back;                                                                /* Data to insert in the back */
-            boost::unordered_flat_set<std::shared_ptr<disassembly>> ignore;                                                /* Data to ignore */
-            boost::unordered_flat_map<std::shared_ptr<disassembly>, std::vector<std::shared_ptr<disassembly>>> insertions; /* Data to inserts */
+            std::vector<std::shared_ptr<disassembly>> front;                                  /* Data to insert in the front */
+            std::vector<std::shared_ptr<disassembly>> back;                                   /* Data to insert in the back */
+            boost::unordered_flat_set<std::shared_ptr<disassembly>> ignore;                   /* Data to ignore */
 
             /* Throws error if IL is not valid. */
-            void validate(const luramas::il::commit_error &valid);
+            void validate(const errors::error &valid);
 
             /* Validates operands for IL. */
-            commit_error validate_operands();
+            errors::error validate_operands();
 
             /* Resolves mutated or missing addresses. */
             void resolve_addresses();
@@ -609,6 +249,7 @@ namespace luramas::il {
 
             namespace low {
 
+                  /* Operand type kind */
                   enum class operand_kinds : std::uint8_t {
                         reg,           /* Source register operand */
                         dest,          /* Destination */
@@ -621,6 +262,7 @@ namespace luramas::il {
                         flag           /* Flag */
                   };
 
+                  /* Operand */
                   struct operand {
 
                         operand_kinds kind = operand_kinds::reg; /* Operand encoding type */
