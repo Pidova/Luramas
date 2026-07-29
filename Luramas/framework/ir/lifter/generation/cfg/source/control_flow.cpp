@@ -485,7 +485,7 @@ namespace luramas::ir::generation::cfg {
                                                                   if (it != blocks.end()) {
                                                                         block->then = it->second;
                                                                   }
-                                                                  if (it = blocks.find(end_labels[ir.data[i - 1u]->end_label].ending_loc); it != blocks.end()) {
+                                                                  if (it = blocks.find(end_labels[ir.data[i - 1u]->end_label].ending_loc + 1u); it != blocks.end()) {
                                                                         block->jump = it->second;
                                                                   }
                                                                   break;
@@ -616,23 +616,23 @@ namespace luramas::ir::generation::cfg {
                   }
             }
 
-            //for (const auto &o : result.blocks) {
-            //      LURAMAS_PRINTF("\nBLOCK: %p %zu %zu\n", (void *)o.get(), o->get_front(), o->get_end());
-            //      for (auto s = o->get_front(); s < o->get_end(); ++s) {
-            //            LURAMAS_PRINTF("  %s (%lld)\n", ir.data[s]->str().c_str(), ir.data[s]->underlying_jump);
-            //      }
-            //      if (o->fall) {
-            //            LURAMAS_PRINTF("FALL %p%s\n", (void *)o->fall.get(), o->fallk == edge_kind::back ? " BACK " : "");
-            //      }
-            //      if (o->jump) {
-            //            LURAMAS_PRINTF("JUMP %p%s\n", (void *)o->jump.get(), o->jumpk == edge_kind::back ? " BACK " : "");
-            //      }
-            //      if (o->then) {
-            //            LURAMAS_PRINTF("THEN %p%s\n", (void *)o->then.get(), o->thenk == edge_kind::back ? " BACK " : "");
-            //      }
-            //      LURAMAS_PRINTF("-----------------------------------------------------\n");
-            //}
-            // std::cin.get();
+            //  for (const auto &o : result.blocks) {
+            //        LURAMAS_PRINTF("\nBLOCK: %p %zu %zu\n", (void *)o.get(), o->get_front(), o->get_end());
+            //        for (auto s = o->get_front(); s < o->get_end(); ++s) {
+            //              LURAMAS_PRINTF("  %s (%lld)\n", ir.data[s]->str().c_str(), ir.data[s]->underlying_jump);
+            //        }
+            //        if (o->fall) {
+            //              LURAMAS_PRINTF("FALL %p%s\n", (void *)o->fall.get(), o->fallk == edge_kind::back ? " BACK " : "");
+            //        }
+            //        if (o->jump) {
+            //              LURAMAS_PRINTF("JUMP %p%s\n", (void *)o->jump.get(), o->jumpk == edge_kind::back ? " BACK " : "");
+            //        }
+            //        if (o->then) {
+            //              LURAMAS_PRINTF("THEN %p%s\n", (void *)o->then.get(), o->thenk == edge_kind::back ? " BACK " : "");
+            //        }
+            //        LURAMAS_PRINTF("-----------------------------------------------------\n");
+            //  }
+            //   std::cin.get();
             // for (auto idx = 0u; idx < ir.data.size(); ++idx) {
             //       LURAMAS_PRINTF("%s%s\n", (!result.interacted_nodes.contains(idx) ? "[E] " : ""), ir.data[idx]->str().c_str());
             // }

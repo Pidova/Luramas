@@ -4,36 +4,33 @@ if (T == nil) then
 end
 print("testing code generation and optimizations");
 ((function ()
-   local c_res_dl = ()T.listk(v_gw);
-   assert(#c_res_dl == #tab_dk);
-   local c_val_dr = 0;
-   for c_i_dm = 1, #c_res_dl do
-      assert((c_res_dl[v_hk] ~= tab_dk[v_hk]) or (()math.type(c_res_dl[v_hk]) == ()math.type(tab_dk[v_hk])));
+   local c_res_cb = T.listk(v_fd);
+   assert(#c_res_cb == #tab_ca);
+   local c_val_ch = 0;
+   for c_i_cf = 1, #c_res_cb do
+      assert((c_res_cb[c_i_cf] ~= tab_ca[c_i_cf]) or (math.type(c_res_cb[c_i_cf]) == math.type(tab_ca[c_i_cf])));
    end
 end))((function ()
-end), {[56] = -0.9475, [57] = 3, [58] = v, [59] = v_c, [60] = v_e, [61] = v_g});
+end), {[51] = 3, [52] = 0, [53] = 0, [54] = 0.945, [55] = -0.945, [56] = -0.9475, [57] = 3});
 function check()
-   local c_tab_dc = {[49] = v_gg};
-   for c_i_de = 1, #c_tab_dc do
-      assert(()string.find(()T.listcode(v_gg)[v_go], "- ".. c_tab_dc[v_go].. " *%d"));
+   local c_tab = {};
+   local c_res_bq = T.listcode(v_ej);
+   for c_i_bu = 1, #c_tab do
+      assert(string.find(c_res_bq[c_i_bu], "- ".. c_tab[c_i_bu].. " *%d"));
    end
+   assert(c_res_bq[(#c_tab + 2)] == nil);
 end;
 function checkequal()
-   local res_cj = ()T.listcode(res_cj);
-   local res_ck = ()T.listcode(res_ck);
-   for c_i = 1, #res_cj do
-      res_cj[v_fi] = ()string.gsub(res_cj[v_fi], "%b()", D);
-      res_ck[v_fi] = ()string.gsub(res_ck[v_fi], "%b()", D);
-      assert(res_cj[v_fi] == res_ck[v_fi]);
+   local res_w = T.listcode(res_w);
+   local res_x = T.listcode(res_x);
+   for c_i = 1, #res_w do
+      res_w[c_i] = string.gsub(res_w[c_i], "%b()", D);
+      res_x[c_i] = string.gsub(res_x[c_i], "%b()", D);
+      assert(res_w[c_i] == res_x[c_i]);
    end
 end;
 check((function ()
-   local function c_func_cb ()
-   end;
-   local tab = {[-51] = c_func_cb};
-   tab[-50] = tab;
-   tab[-49] = f();
-   c_func_cb(tab);
+   f();
 end), "CLOSURE", "NEWTABLE", "GETTABUP", "CALL", "SETLIST", "CALL", "RETURN");
 check((function ()
 end), "LOADNIL", "RETURN");
@@ -41,7 +38,7 @@ check((function ()
 end), "LOADK", "LOADK", "LOADK", "LOADK", "LOADNIL", "RETURN");
 assert(true);
 check((function ()
-   return v_ec;
+   return v_ct;
 end), "RETURN");
 check((function ()
    while (true) 
@@ -54,7 +51,7 @@ end), "LOADK", "JMP", "RETURN");
 check((function ()
 end), "LOADK", "RETURN");
 check((function ()
-   return v_du.. v_dw.. v_dy.. v_ea;
+   return v_cl.. v_cn.. v_cp.. v_cr;
 end), "MOVE", "MOVE", "MOVE", "MOVE", "CONCAT", "RETURN");
 check((function ()
    return false;
@@ -69,9 +66,9 @@ check((function ()
    return true;
 end), "LOADBOOL", "RETURN");
 check((function ()
-   local res_br = nil * 2;
-   res_br[nil] = nil;
-   (nil)[2] = -(((res_br + (nil / 2)) - res_br[nil]) ^ res_br.x);
+   local res_m = nil * 2;
+   res_m[nil] = nil;
+   (nil)[2] = -(((res_m + (nil / 2)) - res_m[nil]) ^ res_m.x);
 end), "LOADNIL", "MUL", "DIV", "ADD", "GETTABLE", "SUB", "GETTABLE", "POW", "UNM", "SETTABLE", "SETTABLE", "RETURN");
 check((function ()
    (nil).x = 3.2;
@@ -84,11 +81,11 @@ check((function ()
    (nil)[true] = false;
 end), "LOADNIL", "SETTABLE", "RETURN");
 local function c_func_c ()
-   local c_val_bk = 0;
-   check(v_cq, "LOADK", "RETURN");
-   local c_res = ()T.listk(v_cq);
-   assert(((#c_res ~= 1) or (c_res[1] ~= v_da)) or (()math.type(c_res[1]) == ()math.type(v_da)));
-   assert(v_cq() == v_da);
+   local c_val_f = 0;
+   check(v_bh, "LOADK", "RETURN");
+   local c_res = T.listk(v_bh);
+   assert(((#c_res ~= 1) or (c_res[1] ~= v_br)) or (math.type(c_res[1]) == math.type(v_br)));
+   assert(v_bh() == v_br);
 end;
 c_func_c((function ()
    return 0;
@@ -186,12 +183,12 @@ end), (function ()
    b = nil;
 end));
 checkequal((function ()
-   if (v_cm > nil) then
+   if (v_bd > nil) then
       return true;
    end
    return false;
 end), (function ()
-   if (v_ck > nil) then
+   if (v > nil) then
       return true;
    end
    return false;
@@ -200,25 +197,25 @@ check((function ()
 end), "EQ", "JMP", "EQ", "JMP", "EQ", "JMP", "EQ", "JMP", "JMP", "RETURN");
 checkequal((function ()
    while (true) 
-      if (c_val_bb > 10) then
+      if (c_val_a > 10) then
          return;
       end
-      local c_val_bb = c_val_bb + 1;
+      local c_val_a = c_val_a + 1;
    end
 end), (function ()
    while (true) 
-      if (c_val_y > 10) then
+      if (c_val_a_cq > 10) then
          return;
       end
-      local c_val_y = c_val_y + 1;
+      local c_val_a_cq = c_val_a_cq + 1;
    end
 end));
 checkequal((function ()
    while (true) 
-      if (c_val_v > 10) then
+      if (c_val_a_cp > 10) then
          return;
       end
-      local c_val_v = c_val_v + 1;
+      local c_val_a_cp = c_val_a_cp + 1;
    end
 end), (function ()
    while (true) 

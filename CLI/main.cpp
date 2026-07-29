@@ -152,22 +152,25 @@ int main(int argc, char **argv) {
       luramas_flag all_tests = false;                /* Run all tests */
 
       /* Options */
-      // app.set_help_flag("-h,--help,?", "Print help message and exit");
-      // app.add_option("-i,--input", input, "Input bytecode/source file")->required();
-      // app.add_option("-t,--target", target, "Target architecture / VM version")->default_val("x86")->transform(CLI::IsMember({"luau-v6", "x86", "lua-536"}));
-      // app.add_flag("-b,--bytecode", is_bytecode, "Treat the input file as bytecode (defaults to source code)");
-      // const auto test_opt = app.add_option("-test", test_dir, "Run tests from root test directory")->check(CLI::ExistingDirectory);
-      // app.add_flag("-all-tests", all_tests, "Run test suite across ALL supported target versions");
-      // CLI11_PARSE(app, argc, argv);
-      //
-      // if (test_opt) {
+      app.set_help_flag("-h,--help,?", "Print help message and exit");
+      app.add_option("-i,--input", input, "Input bytecode/source file")->required();
+      app.add_option("-t,--target", target, "Target architecture / VM version")->default_val("x86")->transform(CLI::IsMember({"luau-v6", "x86", "lua-536"}));
+      app.add_flag("-b,--bytecode", is_bytecode, "Treat the input file as bytecode (defaults to source code)");
+      const auto test_opt = app.add_option("-test", test_dir, "Run tests from root test directory")->check(CLI::ExistingDirectory);
+      app.add_flag("-all-tests", all_tests, "Run test suite across ALL supported target versions");
+      CLI11_PARSE(app, argc, argv);
 
-      auto format = std::make_shared<luramas::ir::data::format::format>();
+      if (test_opt) {
 
-#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
-      decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::LUA_V53, luramas::tests::scripts_directory::LUA_EXTENSION);
+            auto format = std::make_shared<luramas::ir::data::format::format>();
+
+#if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
+            decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::LUA_V53, luramas::tests::scripts_directory::LUA_EXTENSION);
 #endif
-      //  }
+#if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
+            decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUAU_V6, luramas::supported_targets_str::LUAU_V6, luramas::tests::scripts_directory::LUAU_EXTENSION);
+#endif
+      }
       if (!input.empty()) {
 
             const auto code = read_file(input);

@@ -87,7 +87,7 @@ namespace luramas::ir::passes {
                                       = ??
                                     No Lvalues
                               */
-                              if (p->l == nullptr && p->members.empty()) {
+                              if (!p->l && p->members.empty()) {
                                     pm.remove(p);
                                     pm.mut(LURAMAS_DEBUG_LINE);
                                     break;

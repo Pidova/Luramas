@@ -120,9 +120,9 @@ namespace lua_53_parsers {
                               }
                               op = luramas::il::arch::opcodes::OP_SETLIST;
                               sorted_operands = {i->operands.front(),
-                                  lua_53_disassembler::make_operand::reg(i->operands.front()->reg + b),
-                                  i->operands[1],
-                                  lua_53_disassembler::make_operand::val((c - 1u) * LFIELDS_PER_FLUSH + b)};
+                                  lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 1u),
+                                  lua_53_disassembler::make_operand::val(b + 1u),
+                                  lua_53_disassembler::make_operand::val((c - 1u) * LFIELDS_PER_FLUSH + 1u)};
                               break;
                         }
                         case OpCode::OP_ADD: {
@@ -255,23 +255,13 @@ namespace lua_53_parsers {
                               sorted_operands = i->operands;
                               break;
                         }
-                        case OpCode::OP_FORPREP: {
-                              const auto index = lua_53_disassembler::make_operand::reg(i->operands.front()->reg);
-                              const auto limit = lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 1u);
-                              const auto step = lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 2u);
-                              op = luramas::il::arch::opcodes::OP_INITFORLOOPN;
-                              sorted_operands = {index, limit, step, i->operands.back()};
-                              break;
-                        }
                         case OpCode::OP_FORLOOP: {
-                              const auto index = lua_53_disassembler::make_operand::reg(i->operands.front()->reg);
-                              const auto limit = lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 1u);
-                              const auto step = lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 2u);
+                              const auto r = i->operands.front()->reg;
+                              const auto limit = lua_53_disassembler::make_operand::reg(r + 1u);
+                              const auto step = lua_53_disassembler::make_operand::reg(r + 2u);
+                              const auto index = lua_53_disassembler::make_operand::reg(r + 3u);
                               op = luramas::il::arch::opcodes::OP_FORLOOPN;
                               sorted_operands = {index, limit, step, i->operands.back()};
-                              break;
-                        }
-                        case OpCode::OP_TFORCALL: {
                               break;
                         }
                         case OpCode::OP_TFORLOOP: {
@@ -296,6 +286,8 @@ namespace lua_53_parsers {
                               sorted_operands = {i->operands.front(), i->operands.back()};
                               break;
                         }
+                        case OpCode::OP_FORPREP:
+                        case OpCode::OP_TFORCALL:
                         case OpCode::OP_EXTRAARG: {
                               break;
                         }
@@ -408,11 +400,72 @@ namespace lua_53_parsers {
 
       void pending(luramas::il::lifter::parser::parser_manager<std::shared_ptr<lua_53_disassembler::disassembly>> &pm) {
 
+            boost::unordered_flat_map<std::shared_ptr<lua_53_disassembler::disassembly>, std::shared_ptr<luramas::il::disassembly>> tforcall_to_init;
+
+            /* Go through for inits */
             for (auto i = 0u; i < pm.il->dis.size(); ++i) {
 
                   auto &dis = pm.il->dis[i];
                   const auto &org = pm.dism[i];
                   const auto addr = org->addr;
+                  pm.il->reset_temp_reg();
+
+                  /* Add loop inits */
+                  switch (dis->op) {
+                        case luramas::il::arch::opcodes::OP_FORLOOPN: {
+                              const auto base = org->operands.front()->reg;
+                              const auto start = dis->operands.front()->dis.reg;
+                              const auto max = dis->operands[1u]->dis.reg;
+                              const auto inc = dis->operands[2u]->dis.reg;
+                              const auto jmp = dis->operands.back()->dis.jmp;
+                              const auto loc = org->operands.back()->ref_addr;
+                              pm.il->insert_front(loc, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MOVE>(pm.il, loc, start, base));
+                              const auto init = luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_INITFORLOOPN>(pm.il, loc, start, max, inc, jmp);
+                              pm.il->insert_front(loc, init);
+                              tforcall_to_init[org] = init;
+
+                              /* Force linkage */
+                              init->ref = dis;
+                              dis->ref = init;
+                              break;
+                        }
+                        case luramas::il::arch::opcodes::OP_FORLOOPG: {
+                              const auto start = dis->operands.front()->dis.reg;
+                              const auto c = dis->operands[1u]->dis.reg;
+                              const auto jmp = dis->operands.back()->dis.jmp;
+                              const auto loc = org->operands.back()->ref_addr;
+                              const auto init = luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_INITFORLOOPG>(pm.il, loc, start, c, jmp);
+                              pm.il->insert(loc, init);
+
+                              /* Get tforcall */
+                              std::shared_ptr<lua_53_disassembler::disassembly> call = nullptr;
+                              for (auto x = i; x-- > 0u;) {
+                                    if (pm.dism[x]->op == OpCode::OP_TFORCALL) {
+                                          call = pm.dism[x];
+                                          break;
+                                    }
+                              }
+                              tforcall_to_init[call] = init;
+
+                              /* Force linkage */
+                              init->ref = dis;
+                              dis->ref = init;
+                              break;
+                        }
+                        default: {
+                              break;
+                        }
+                  }
+            }
+
+            /* Pending */
+            for (auto i = 0u; i < pm.il->dis.size(); ++i) {
+
+                  auto &dis = pm.il->dis[i];
+                  const auto &org = pm.dism[i];
+                  const auto addr = org->addr;
+
+                  /* Now parse pendings */
                   if (dis->op != luramas::il::arch::opcodes::OP_PEND) {
                         continue;
                   }
@@ -544,7 +597,14 @@ namespace lua_53_parsers {
                               if (a) {
                                     pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_DESTROYUPVALUESA>(pm.il, addr, a - 1));
                               }
-                              pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMP>(pm.il, addr, bx + 1));
+                              const auto jmp = luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMP>(pm.il, addr, bx + 1);
+
+                              /* Change if jump goes to tfor */
+                              const auto &loc = pm.dism[jmp->operands.back()->ref_addr];
+                              if (const auto it = tforcall_to_init.find(loc); it != tforcall_to_init.end()) {
+                                    jmp->ref = it->second;
+                              }
+                              pm.il->insert(addr, jmp);
                               break;
                         }
                         case OpCode::OP_EQ:
@@ -635,7 +695,7 @@ namespace lua_53_parsers {
             /* Set ref to disassembly instructions */
             for (const auto &i : pm.il->dis) {
                   for (const auto &o : i->operands) {
-                        if (o->type == luramas::il::arch::operand::operand_kind::jmp) {
+                        if (!i->ref && o->type == luramas::il::arch::operand::operand_kind::jmp) {
                               i->ref = pm.il->visit(o->ref_addr);
                               break;
                         }
@@ -646,7 +706,7 @@ namespace lua_53_parsers {
             for (const auto &[i, v] : pm.il->insertions) {
                   for (const auto &d : v) {
                         for (const auto &o : d->operands) {
-                              if (o->type == luramas::il::arch::operand::operand_kind::jmp) {
+                              if (!d->ref && o->type == luramas::il::arch::operand::operand_kind::jmp) {
                                     d->ref = pm.il->visit(o->ref_addr);
                                     break;
                               }

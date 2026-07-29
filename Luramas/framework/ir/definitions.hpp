@@ -81,7 +81,7 @@ namespace luramas::ir {
       enum class keywords : std::uint8_t {
             nothing,               /* Nothing */
             forloop_generic,       /* Definined ranged loop i.e for i, v in {} */
-            forloop_numeric,       /* Definined numeric loop i.e for i = 0, 10, 1 (init, limit, step) */
+            forloop_numeric,       /* Definined numeric loop i.e for i = 0, 10, 1 (init, limit, step): for lba = l; lba <= r; lba += v do  */
             call,                  /* Call, Return is internal (L is call, Members is args)  */
             assignment,            /* Assignment (L (if mulret will be members), R) */
             retn,                  /* Return (members); page return locs(smembers, INTEGRALS ONLY); If linked regs flag is set Args field are by {register, Index in members of return(N)} it represents. Return internally managed unless pages which its return is mapped, does not mutate stack; L value contains read location. */
@@ -89,8 +89,8 @@ namespace luramas::ir {
             condition_goto,        /* Condition goto */
             goto_label,            /* Goto label */
             end,                   /* End of condition */
-            table_assign,          /* Table assignment: (l->l[l->r])(IDX) = r */
-            table_setlist,         /* Set multiple data in table */
+            table_assign,          /* Table assignment: (l->l[l->r])(l)(IDX) = r */
+            table_setlist,         /* Set multiple data in table: append_to_table(l[dest], table_index[start], { tmembers }) */
             break_,                /* Break out of loop */
             continue_,             /* Continue in loop */
             repeat,                /* Repeat loop */
@@ -98,7 +98,7 @@ namespace luramas::ir {
             while_,                /* While loop */
             label,                 /* Label */
             definition,            /* Parameter definition (ALWAYS THE START OF EVERY CLOSURE OR PAGE) args, upvalues, members (IDs for flags), meta (Cast definitions for args, does not garunteed each one exists, CAN CONTAIN NULLPTRS AS NOCAST), smembers (Return cast alligned i.e. uint8_t(nil)), r(controller) */
-            for_loop_init,         /* Init loop (NEED IT FOR EVERY LOOP) */
+            for_loop_init,         /* Init loop (NEED IT AFTER EVERY FOR LOOP) */
             memoryset,             /* Memory set, l(target), r(source), v(offset), set_bits(extra_bits) */
             switch_,               /* Switch */
             switch_case,           /* Switch case */

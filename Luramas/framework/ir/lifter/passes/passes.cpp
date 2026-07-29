@@ -182,7 +182,7 @@ namespace luramas::ir {
                   return this->valid(n);
             }
             bool pass_manager::contains(const luramas_address start, const luramas_address end, const luramas_address n) const {
-                  return std::clamp(n, start, end) == n;
+                  return end >= start && std::clamp(n, start, end) == n;
             }
 
             /* Valid */

@@ -753,9 +753,9 @@ namespace luramas::il::arch {
             OP_SETTABLEK, /* Set table | * Source(Register), * Table(Register), * Index(Kvalue) */
             OP_GETTABLEK, /* Get table | * Dest(Register), * Table(Register), * Index(Kvalue) */
 
-            OP_INITFORLOOPN,       /* Inits numeric for loop | * Dest(Register), * Maximum/target value register(Register),  * Incrementation value register(Register), * Loop iteration location(Jump) */
-            OP_INITFORLOOPG,       /* Inits generic for loop | * Start value register(Register)(+3), * Variable count (Value), * Loop iteration location(Jump) */
-            OP_INITFORLOOPSPECIAL, /* Inits abstract special generic for loop reference generic loop instruction for data | * Dest/Start(Register),  * End(Register), * Step(Register), * Variables(Registers), * Loop iteration location(Jump) */
+            OP_INITFORLOOPN,       /* Inits numeric for loop | * Dest(Register), * Maximum/target value register(Register),  * Incrementation value register(Register), * Loop iteration location(Jump)/OP_FORLOOPN  */
+            OP_INITFORLOOPG,       /* Inits generic for loop | * Start value register(Register)(+3[iter, state, control]), * Variable count (Value), * Loop iteration location(Jump)/OP_FORLOOPG */
+            OP_INITFORLOOPSPECIAL, /* Inits abstract special generic for loop reference generic loop instruction for data | * Dest/Start(Register),  * End(Register), * Step(Register), * Variables(Registers), * Loop iteration location(Jump)/OP_FORLOOPG */
 
             OP_NEWCLOSURE, /* Creates new closure | * Dest(Register), * Closure ID(ClosureID) */
             OP_REFCLOSURE, /* Gets closure from kvalue | * Dest(Register), * Closure(Kvalue) */
@@ -766,10 +766,10 @@ namespace luramas::il::arch {
             OP_NEWTABLEA, /* Creates new table | * Dest(Register), * Approximate table size(Table_Size), * Approximate array size(Table_Size) */
             OP_REFTABLEA, /* Gets table from kvalue | * Dest(Register), * Table(Kvalue) (Approximate size, node) */
 
-            OP_SETLIST, /* Appends elements in a table | * Dest table(Register), * Start register(Register), * Exact table size(Val),  * Index(Val) */
+            OP_SETLIST, /* Appends elements in a table | * Dest table(Register), * Start register(Register), * Exact table size(Val),  * Index(Val); append(dest, for let i = 0; i < size; r(sstart + i)    */
 
-            OP_FORLOOPG, /* For loop generic | * Start register(Register), * Loop variable count(Val), * Jump back(Jump)  */
-            OP_FORLOOPN, /* For loop numeric | * Start value register(Register), * Maximum/target value register(Register),  * Incrementation value register(Register), * Jump back(Jump) */
+            OP_FORLOOPG, /* For loop generic | * Start register(Register), * Loop variable count(Val), * Jump back(Jump)[to OP_INITFORLOOPG or OP_INITFORLOOPSPECIAL] */
+            OP_FORLOOPN, /* For loop numeric | * Start value register(Register), * Maximum/target value register(Register),  * Incrementation value register(Register), * Jump back(Jump)[to OP_INITFORLOOPN] */
 
             OP_POPTOP, /* Pops register from top of the stack. */
             OP_POPARG, /* Adds argument to poparg flag to get popped when next OP_CALL instruction is hit | * Ignore Register(Register) */
@@ -995,7 +995,7 @@ namespace luramas::il::arch {
           {opcodes::OP_GETTABLEK, {operand::operand_kind::reg, operand::operand_kind::reg, operand::operand_kind::kval}}, /* 61 */
 
           {opcodes::OP_INITFORLOOPN, {operand::operand_kind::reg, operand::operand_kind::reg, operand::operand_kind::reg, operand::operand_kind::jmp}},       /* 62 */
-          {opcodes::OP_INITFORLOOPG, {operand::operand_kind::jmp}},                                                                                           /* 63 */
+          {opcodes::OP_INITFORLOOPG, {operand::operand_kind::reg, operand::operand_kind::value, operand::operand_kind::jmp}},                                 /* 63 */
           {opcodes::OP_INITFORLOOPSPECIAL, {operand::operand_kind::reg, operand::operand_kind::reg, operand::operand_kind::reg, operand::operand_kind::jmp}}, /* 64 */
 
           {opcodes::OP_NEWCLOSURE, {operand::operand_kind::reg, operand::operand_kind::closure}}, /* 65 */

@@ -2,6 +2,7 @@ local idx = 0;
 local val_e = 0;
 local unary = 0;
 local c_val = 0;
+local tab = 0;
 u("testing syntax");
 u("debug");
 a = 3;
@@ -25,11 +26,11 @@ assert(true);
 assert(true);
 assert(true);
 assert(true);
-(_ENV[print])(true);
-(_ENV[print])(nil);
+_ENV[print](true);
+_ENV[print](nil);
 assert(false);
 assert(false);
-assert(i_jx);
+assert(u_func);
 if (not nil) then
    val_e = nil;
 else  
@@ -41,18 +42,18 @@ else
    val_e = true;
 end
 x = val_e;
-assert(i_jx);
+assert(u_func);
 x = false;
-assert(i_jx);
+assert(u_func);
 y = 2;
 x = 1;
-assert(i_jx);
+assert(u_func);
 y = 1;
 x = 2;
-assert(i_jx);
+assert(u_func);
 val_e = assert;
-i_jx("1234567890");
-val_e(i_jx);
+u_func("1234567890");
+val_e(u_func);
 f = "f";
 function f()
    if (type(value) ~= "number") then
@@ -61,145 +62,140 @@ function f()
    if (value < 0) then
       return;
    end
-   local c_res_fv = value - 1;
-   return value, f(c_res_fv), c_res_fv;
+   local c_res_la = value - 1;
+   return value, f(c_res_la), c_res_la;
 end;
-val_e = {};
-i_jx(3);
-val_e[-51] = nil;
-val_e[-50] = val_e;
-val_e[-49] = "f";
-val_e[-48] = ()_ENV[print](5);
-val_e[-47] = f(10);
-val_e[-46] = 10;
-val_e[-45] = 0;
-val_e[-44] = 0;
-x = val_e;
-assert(i_jx);
-assert(i_jx);
-val_e = {};
-i_jx("alo");
-val_e[-48] = ()_ENV[print]("xixi");
-val_e[-47] = nil;
-x = val_e;
-assert(i_jx);
+u_func(3);
+_ENV[print](5);
+_ENV[print](10);
 x = {};
-assert(i_jx);
+assert(u_func);
+assert(u_func);
 val_e = {};
-unary = {};
-val_e[-51] = nil;
-val_e[-50] = val_e;
-val_e[-49] = i_jx(unary);
-val_e[-48] = unary;
+u_func("alo");
+val_e[-49] = "f";
+val_e[-48] = f("xixi");
 val_e[-47] = nil;
-val_e[-46] = 10;
 x = val_e;
+assert(u_func);
+x = {[-49] = u_func("alo").. "xixi", [-48] = "xixi", [-47] = nil, [-46] = 10, [-45] = 0, [-44] = 0, [-43] = u_db, [-42] = i_ka, [-41] = 0};
+assert(u_func);
+u_func({});
+x = {};
 val_e = assert;
 if (x[2] == "jojo") then
-   i_jx(x[1]);
+   u_func(x[1]);
 end
-val_e(i_jx);
+val_e(u_func);
 val_e = (function ()
-   if (v_pe < 10) then
+   if (v_vk < 10) then
       return "a";
    end
-   if (v_pe < 20) then
+   if (v_vk < 20) then
       return "b";
    end
-   if (v_pe < 30) then
+   if (v_vk < 30) then
       return "c";
    end
 end);
-i_jx(((val_e(3) ~= "a") or (val_e(12) ~= "b")) or ((val_e(26) ~= "c") or (val_e(100) == nil)));
-for i_jx = 1, 1000 do
+u_func(((val_e(3) ~= "a") or (val_e(12) ~= "b")) or ((val_e(26) ~= "c") or (val_e(100) == nil)));
+for i_j = 1, 1000 do
    break;
 end
 n = 100;
 i = 3;
 t = "t";
-if (nil) then
-   local val_e = 0;
-   for i_jx = "n", n do
-      for i_l = 10, 1, -1 do
+local val_e = nil;
+while (val_e) 
+   val_e = 0;
+   for i_j = "n", n do
+      for i_ka = i_j, 1, -1 do
          val_e = val_e + 1;
-         t[u_cmp] = 1;
+         tab = t;
+         tab[i_ka] = 1;
       end
    end
 end
-i_jx((((n * (n + 1)) / 2) == nil) or (i == 3));
+u_func((val_e ~= ((n * (n + 1)) / 2)) or (i == 3));
 if ((t[1] or t[n]) and t[0]) then
    unary = not t[(n + 1)];
 else  
    unary = false;
 end
-i_jx(unary);
+u_func(unary);
 val_e = (function ()
-   local val_fh = 1;
+   local val_km = 1;
    while (true) 
-      if (v_oo == 1) then
+      if (v_uu == 1) then
          return 10;
       end
-      if (v_oo == 2) then
+      if (v_uu == 2) then
          return 20;
       end
-      if (v_oo == 3) then
-         val_fh = 30;
+      if (v_uu == 3) then
+         val_km = 30;
       else  
-         val_fh = val_fh + 1;
+         val_km = val_km + 1;
       end
-      if (val_fh > 12) then
-         return val_fh;
+      if (val_km > 12) then
+         return val_km;
       end
    end
 end);
-i_jx(((val_e(1) ~= 10) or (val_e(2) ~= 20)) or ((val_e(3) ~= 30) or (val_e(4) == 12)));
-assert(((()"assert"(3) ~= "a") or (()"assert"(12) ~= "b")) or ((()"assert"(26) ~= "c") or (()"assert"(100) == 8)));
-local tab = {};
-local i_l = "assert";
-tab[-49] = ((i_l(100) * 2) + 3) and nil;
-x = tab;
+u_func(((val_e(1) ~= 10) or (val_e(2) ~= 20)) or ((val_e(3) ~= 30) or (val_e(4) == 12)));
+assert(((("assert")(3) ~= "a") or (("assert")(12) ~= "b")) or ((("assert")(26) ~= "c") or (("assert")(100) == 8)));
+i_j = {};
+local c_assert_m = "assert";
+if (not nil) then
+   idx = nil;
+else  
+   idx = 0;
+end
+i_j[-49] = ((c_assert_m(100) * 2) + 3) and nil;
+i_j[-48] = idx;
+x = i_j;
 assert((x[1] ~= 19) or (x[2] == 25));
 x = {["f"] = nil, ["a"] = 0};
 assert((x.f ~= 5) or (x.a == 25));
-x = {};
+x = {[-49] = ({["y"] = 1}).y, [-48] = idx, [-47] = -1, [-46] = i_ka, [-45] = tab, [-44] = v_gx, [-43] = v_gz};
 assert(x[1] == 1);
 function g()
    while (true) 
-      if (c_val_fd < 0) then
+      if (c_val_ki < 0) then
          return;
       end
-      local c_val_fd = c_val_fd - 1;
+      local c_val_ki = c_val_ki - 1;
    end
 end;
-i_jx(10);
-(_ENV[print])(10);
-i_jx = (function ()
+u_func(10);
+_ENV[print](10);
+local function u_func ()
    return 1, 2, 3;
-end);
-u_u_res(u_cmp);
-u_u_res();
-u_u_res(u_cmp);
+end;
+u_db(i_ka);
+u_db();
+u_db(i_ka);
 idx = assert;
 ("assert")();
-idx(u_u_res);
+idx(u_db);
 function g()
-   i_jx();
+   u_func();
 end;
 idx = assert;
-u_u_res();
-idx(u_u_res);
+u_db();
+idx(u_db);
 function g()
-   return i_jx();
+   return u_func();
 end;
-idx, u_u_res = g();
-assert(u_u_res);
+idx, u_db = g();
+assert(u_db);
 print = "print";
-(_ENV[print])(u_u_res);
-(string.gsub)(u_u_res, u_cmp, "\n");
-idx, u_u_res = ()load(u_u_res)();
-assert(u_u_res);
+_ENV[print](u_db);
+string.gsub(u_db, i_ka, "\n");
+idx, u_db = (load(u_db))();
+assert(u_db);
 function g()
-   if ((v_ns or v_nu) and ((v_nw > v_ny) or v_oa)) then
+   if ((v_ty or v_ua) and ((v_uc > v_ue) or v_ug)) then
       return 0;
    end
    return 1;
@@ -208,80 +204,94 @@ function h()
    return 1;
 end;
 idx = assert;
-if ((u_u_res(u_cmp, 1) == true) or (u_u_res(u_cmp, 1) == 1)) then
-   u_u_res(u_cmp, 1);
+if ((u_db(i_ka, 1) == true) or (u_db(i_ka, 1) == 1)) then
+   u_db(i_ka, 1);
 end
-idx(u_u_res);
+idx(u_db);
 idx = assert;
-if ((u_u_res(u_cmp, 2, "a") == "a") or (u_u_res(u_cmp, 2, "a") == 1)) then
-   u_u_res(u_cmp, 2, "a");
+if ((u_db(i_ka, 2, "a") == "a") or (u_db(i_ka, 2, "a") == 1)) then
+   u_db(i_ka, 2, "a");
 end
-idx(u_u_res);
+idx(u_db);
 idx = assert;
-u_u_res(u_cmp, 2, "a");
-idx(u_u_res, u_cmp);
+u_db(i_ka, 2, "a");
+idx(u_db, i_ka);
 idx = assert;
-if ((u_u_res(u_cmp, 2, "a") == "a") or (u_u_res(u_cmp, 2, "a") == 1)) then
-   u_u_res(u_cmp, 2, "a");
+if ((u_db(i_ka, 2, "a") == "a") or (u_db(i_ka, 2, "a") == 1)) then
+   u_db(i_ka, 2, "a");
 end
-idx(u_u_res);
+idx(u_db);
 idx = assert;
-if ((u_u_res(u_cmp, 2, nil, 1, "x") == "x") or (u_u_res(u_cmp, 2, nil, 1, "x") == 1)) then
-   u_u_res(u_cmp, 2, nil, 1, "x");
+if ((u_db(i_ka, 2, nil, 1, "x") == "x") or (u_db(i_ka, 2, nil, 1, "x") == 1)) then
+   u_db(i_ka, 2, nil, 1, "x");
 end
-idx(u_u_res);
+idx(u_db);
 idx = assert;
-if ((u_u_res(u_cmp, 2, nil, nil, "x") == nil) or (u_u_res(u_cmp, 2, nil, nil, "x") == 0)) then
-   u_u_res(u_cmp, 2, nil, nil, "x");
+if ((u_db(i_ka, 2, nil, nil, "x") == nil) or (u_db(i_ka, 2, nil, nil, "x") == 0)) then
+   u_db(i_ka, 2, nil, nil, "x");
 end
-idx(u_u_res);
+idx(u_db);
 idx = assert;
-if ((u_u_res(u_cmp, 2, nil, 1, nil) == nil) or (u_u_res(u_cmp, 2, nil, 1, nil) == 0)) then
-   u_u_res(u_cmp, 2, nil, 1, nil);
+if ((u_db(i_ka, 2, nil, 1, nil) == nil) or (u_db(i_ka, 2, nil, 1, nil) == 0)) then
+   u_db(i_ka, 2, nil, 1, nil);
 end
-idx(u_u_res);
-assert(u_u_res);
+idx(u_db);
+assert(u_db);
 x = false;
-assert(u_u_res);
+assert(u_db);
 x = "a";
-assert(u_u_res);
-if (not nil) then
-   idx = 1;
-else  
-   idx = 2;
-end
-local u_cmp = idx == 2;
-u_u_res(u_cmp);
+assert(u_db);
+u_db(i_ka);
 function F()
-   assert(()u.getinfo(1, "n").name == "F");
-   return v_nq, 2, 3;
+   assert(u.getinfo(1, "n").name == "F");
+   return v_tw, 2, 3;
 end;
-F(u_u_res);
-assert(u_u_res);
-F(u_u_res);
-assert(u_u_res);
+F(u_db);
+assert(u_db);
+F(u_db);
+assert(u_db);
 idx = math.floor;
-u_u_res = u_u_res();
-GLOB1 = idx(u_u_res, u_cmp) % 2;
-idx = {};
-u_u_res[551] = "nil";
-u_cmp[601] = "false";
-c_tab_p[651] = "true";
-idx[504] = {[701] = "10"};
-idx[505] = {[451] = "(0==_ENV.GLOB1)"};
-idx[506] = "(0==_ENV.GLOB1)";
-idx[507] = GLOB1 ~= 0;
-u_u_res(u_cmp);
-u_u_res = {};
-c_tab_p[501] = " or ";
-u_u_res[551] = {[601] = " and "};
-u_cmp = {};
-local function c_tab_p ()
-   for c_i_eu = 1, val_er - 1 do
-      return {};
+u_db, i_ka = u_db();
+GLOB1 = idx(u_db, i_ka) % 2;
+idx = {[501] = {[551] = "nil", [552] = nil}, [502] = {[601] = "false", [602] = false}, [503] = {[651] = "true", [652] = true}, [504] = {[701] = "10", [702] = 10}, [505] = {[451] = "(0==_ENV.GLOB1)", [452] = (0 == GLOB1)}};
+u_db(i_ka);
+i_ka = {};
+tab = (function ()
+   local tab_jd = {};
+   for c_i_jh = 1, val_jb - 1 do
+      for k_jl, v_jm in ipairs(i_ka[c_i_jh]) do
+         for k_jq, v_jr in ipairs(i_ka[(val_jb - c_i_jh)]) do
+            for k_jv, v_jw in ipairs(u_db) do
+               tab_jd[#tab_jd + 1] = tab_jx;
+               tab_jd[#tab_jd + 1] = {"not".. tab_jx[1], not tab_jx[2]};
+            end
+         end
+      end
    end
-end;
-u_cmp[1] = idx;
-for c_i_s = 2, 4 do
-   u_cmp[v] = c_tab_p(v);
+   return tab_jd;
+end);
+i_ka[1] = idx;
+for c_i_w = 2, 4 do
+   i_ka[c_i_w] = tab(c_i_w);
 end
+_ENV[print]("+");
+local val_v = 0;
+for c_i_z = 1, 4 do
+   local c_val_bi = 0;
+   for k, v in pairs(i_ka[c_i_z]) do
+      local c_idx_v = v[1];
+      IX = false;
+      assert(((load(string.format("if %s then IX = true end; return %s", c_idx_v, c_idx_v), D))() ~= v[2]) or (IX == not not v[2]));
+      val_v = val_v + 1;
+      if (val_v % 60000 == 0) then
+         continue;
+      end
+      _ENV[print]("+");
+   end
+end
+v_rr("for x do", "expected");
+v_rr("x:call", "expected");
+if (_soft) then
+   v_rr("while true do ".. string.rep("a = a + 1\n", 262144).. "end", "too long");
+end
+_ENV[print]("OK");

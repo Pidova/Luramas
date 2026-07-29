@@ -257,8 +257,7 @@ namespace luramas::ir::passes {
                                           auto clonable = propagation_targets.size() > 1u;
                                           if (past.first->r->is_primitive()) {
 
-                                                if (std::none_of(propagation_targets.begin(), propagation_targets.end(), [&](const auto &stat) { return pm.is_removed(stat); }) &&
-                                                    !std::any_of(propagation_targets.begin(), propagation_targets.end(), [&](const auto &stat) { return stat->propagate_violates(r); })) {
+                                                if (std::none_of(propagation_targets.begin(), propagation_targets.end(), [&](const auto &stat) { return pm.is_removed(stat) || stat->propagate_violates(r); })) {
                                                       for (const auto &stat : propagation_targets) {
                                                             stat->propagate(r, t, clonable);
                                                       }

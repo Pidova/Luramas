@@ -8,24 +8,37 @@ prog = "$\n\nlocal a,b\n\nb = {$1$\n  b30009 = 65534,\n  b30010 = 65535,\n  b300
 local function u_func ()
    return "-";
 end;
-F = {[-48] = (function ()
-   for c_i_c = 30026, 50009 do
-      local c_io_jz = "io";
-      (_ENV[c_io_jz].write)("b", val_g, " = ", c_io_jz(val_g), ((val_g - 30026) / 2) + 15013, ",\n");
+F = {[-49] = (function ()
+   for c_i_bf = 10, 50009 do
+      local c_io_kz = "io";
+      _ENV[c_io_kz].write("a", c_i_bf, " = ", c_io_kz(c_i_bf), ((c_i_bf - 10) / 2) + 5, ",\n");
+   end
+end), [-48] = (function ()
+   for c_i_x = 30026, 50009 do
+      local c_io_kr = "io";
+      _ENV[c_io_kr].write("b", c_i_x, " = ", c_io_kr(c_i_x), ((c_i_x - 30026) / 2) + 15013, ",\n");
    end
 end), [-47] = (function ()
    for c_i = 10, 50009 do
-      local c_io_jy = "io";
-      (_ENV[c_io_jy].write)("\a", val, "\, ", c_io_jy(val), ((val - 10) / 2) + 5, ",\n");
+      local c_io_kj = "io";
+      _ENV[c_io_kj].write("\a", c_i, "\, ", c_io_kj(c_i), ((c_i - 10) / 2) + 5, ",\n");
    end
 end)};
-file = ()os.tmpname();
+file = os.tmpname();
 file_jx = "file";
-(io.output)(_ENV[file_jx]);
-(io.close)();
+io.output(_ENV[file_jx]);
+file_jx = "prog";
+for v in string.gmatch(_ENV[file_jx], "$([^$]+)") do
+   local c_res_h = _ENV[file_jx](v);
+   if (not c_res_h) then
+      io.write(v);
+      continue;
+   end
+   F[c_res_h]();
+end
+io.close();
 result = dofile(file);
 local c_glb = file;
-assert(()os.remove(c_glb), c_glb);
-file_jx = "print";
-(_ENV[file_jx])("OK");
+assert(os.remove(c_glb), c_glb);
+_ENV[file_jx]("OK");
 return result;

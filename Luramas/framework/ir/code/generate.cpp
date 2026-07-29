@@ -446,10 +446,10 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     for (const auto &m : e->members) {
                                           args.emplace_back(expr(m, indent, false));
                                     }
-                                    if (!e->l->is_register_reference() && !e->l->is_tk_register_reference()) {
+                                    if (!e->l->is_register_reference() && !e->l->is_tk_register_reference() && !e->l->is_k<expr_kinds::idx>() && !e->l->is_k<expr_kinds::self>()) {
                                           std::string buffer("");
-                                          ir::code::emitter::common::line::emit_parenthesize(syn, buffer, retn, format);
-                                          retn = buffer;
+                                          ir::code::emitter::common::line::emit_parenthesize(syn, buffer, l, format);
+                                          l = buffer;
                                     }
                                     ir::code::emitter::common::call::emit_call(syn, retn, l, args, format);
                                     break;
@@ -779,7 +779,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                           members.emplace_back(expr(m, indent, true));
                                     }
                               }
-                              if (!c->l->is_register_reference() && !c->l->is_tk_register_reference()) {
+                              if (!c->l->is_register_reference() && !c->l->is_tk_register_reference() && !c->l->is_k<expr_kinds::idx>() && !c->l->is_k<expr_kinds::self>()) {
                                     std::string buffer("");
                                     ir::code::emitter::common::line::emit_parenthesize(syn, buffer, call, format);
                                     call = buffer;

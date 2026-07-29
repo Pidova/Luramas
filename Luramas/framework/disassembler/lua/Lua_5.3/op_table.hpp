@@ -93,7 +93,7 @@ namespace op_table {
 
           {OpCode::OP_TFORLOOP, {op_table::operands::A, op_table::operands::sBx}, {op_table::type::reg, op_table::type::jmp}},
 
-          {OpCode::OP_SETLIST, {op_table::operands::A, op_table::operands::B, op_table::operands::C}, {op_table::type::reg, op_table::type::val_multret, op_table::type::val_multret}},
+          {OpCode::OP_SETLIST, {op_table::operands::A, op_table::operands::B, op_table::operands::C}, {op_table::type::dest, op_table::type::val_multret, op_table::type::val_multret}},
 
           {OpCode::OP_CLOSURE, {op_table::operands::A, op_table::operands::Bx}, {op_table::type::reg, op_table::type::val}},
           {OpCode::OP_VARARG, {op_table::operands::A, op_table::operands::B}, {op_table::type::reg, op_table::type::val_multret}},
