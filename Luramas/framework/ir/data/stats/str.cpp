@@ -10,6 +10,9 @@ namespace luramas::ir {
             if (this->flags.fsynthetic) {
                   result += "[SYNTHETIC] ";
             }
+            if (this->flags.fpage_keyword) {
+                  result += "[PK] ";
+            }
             if (this->flags.fdefine) {
                   result += "local ";
             }

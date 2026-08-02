@@ -4,6 +4,9 @@
 
 namespace luramas::il::lifter::builder {
 
+      /* Takes a variadic list of arguments and returns a std::tuple where every item is guaranteed to be a register; 
+      if an input is not already a register (like an immediate value), it allocates a new temporary register from the builder, assigns the value to it, 
+      applies a default size cast if it mssing one, and returns that temporary instead. */
       template <typename... T>
       inline auto guaranteed_regs(const std::shared_ptr<build> &b, const T &...args) {
             return std::make_tuple(
@@ -20,15 +23,24 @@ namespace luramas::il::lifter::builder {
                 }(args))...);
       }
 
-      void build::make_goto(const std::uintptr_t ID) {
-            const auto it = this->labels.find(ID);
-            if (it == this->labels.end()) {
-                  luramas::error::error("Label not found");
+      void format_call_args(const std::shared_ptr<build> &builder, const std::vector<build::expr> &args) {
+            for (const auto &i : args) {
+                  if (!i.empty()) {
+                        build::expr(builder, builder->get_temp()) = i;
+                  }
             }
-            this->gen<arch::opcodes::OP_JUMP>(this->pc)->ref = it->second;
             return;
       }
-      void build::make_label(const std::uintptr_t ID) {
+      void format_call_returns(const std::shared_ptr<build> &builder, const build::expr &calle, const std::vector<build::expr> &results) {
+            for (auto i = 0u; i < results.size(); ++i) {
+                  if (auto &p = results[i]; !p.empty()) {
+                        p = build::expr(builder, reg(calle.r.r + i));
+                  }
+            }
+            return;
+      }
+
+      void build::make_label(const luramas_raddress ID) {
             this->labels.emplace(ID, this->gen<luramas::il::arch::opcodes::OP_NOP>());
             return;
       }
@@ -130,22 +142,6 @@ namespace luramas::il::lifter::builder {
             auto t = expr(shared_from_this(), this->get_temp());
             t.r.size = size;
             return t;
-      }
-      void format_call_args(const std::shared_ptr<build> &builder, const std::vector<build::expr> &args) {
-            for (const auto &i : args) {
-                  if (!i.empty()) {
-                        build::expr(builder, builder->get_temp()) = i;
-                  }
-            }
-            return;
-      }
-      void format_call_returns(const std::shared_ptr<build> &builder, const build::expr &calle, const std::vector<build::expr> &results) {
-            for (auto i = 0u; i < results.size(); ++i) {
-                  if (const auto &p = results[i]; !p.empty()) {
-                        results[i] = build::expr(builder, reg(calle.r.r + i));
-                  }
-            }
-            return;
       }
       void build::make_call(const std::string &func, const std::vector<expr> &args, const std::vector<expr> &results) {
 
@@ -338,7 +334,7 @@ namespace luramas::il::lifter::builder {
             this->make<arch::opcodes::OP_POPTOPSTACK>(ID);
             return;
       }
-      void build::make_page(const std::intptr_t ID) {
+      void build::make_page(const luramas_raddress ID) {
             this->opended_pages.emplace_back(ID);
             this->make<arch::opcodes::OP_STARTPAGEFUNC>(ID);
             return;
@@ -394,20 +390,14 @@ namespace luramas::il::lifter::builder {
             this->make<arch::opcodes::OP_CMPS>(rv.r.r);
             return;
       }
-      bool build::is_page_loc(const profile::module_id mid, const profile::address addr) const {
-            if (const auto it = this->details.find(mid); it != this->details.end()) {
-                  return it->second.pages.contains(addr);
-            }
-            return false;
+      bool build::is_page_loc(const luramas_raddress addr) const {
+
+            return this->details.pages.contains(addr);
       }
 
-      std::shared_ptr<disassembly> build::find_original_map(const profile::module_id mid, const luramas_address loc) {
-            const auto og_data = this->original_address_data.find(mid);
-            if (og_data == this->original_address_data.end()) {
-                  luramas::error::error("Module ID does not exist in original address");
-            }
-            const auto ref = og_data->second.find(loc);
-            if (ref == og_data->second.end()) {
+      std::pair<luramas_address, std::shared_ptr<disassembly>> build::find_original_map(const luramas_raddress loc) {
+            const auto ref = this->original_address_data.find(loc);
+            if (ref == this->original_address_data.end()) {
                   luramas::error::error("Reference does not exist");
             }
             return ref->second;
@@ -416,12 +406,12 @@ namespace luramas::il::lifter::builder {
             this->make<arch::opcodes::OP_PRETURN>(0u, 0u, 0u);
             return;
       }
-      void build::page_retn(const luramas_register ret_reg, const luramas_address loc) {
+      void build::page_retn(const luramas_register ret_reg, const luramas_raddress loc) {
             this->make<arch::opcodes::OP_PRETURN>(1u, ret_reg, loc);
             return;
       }
-      void build::page_call(const profile::module_id mid, const luramas_address loc, const expr &r, const std::intptr_t v) {
-            if (!this->find_original_map(mid, loc)) {
+      void build::page_call(const luramas_raddress loc, const expr &r, const std::intptr_t v) {
+            if (!this->find_original_map(loc).second) {
                   luramas::error::error("Unmapped Page");
             }
             const auto reg = this->make_temp(r);
@@ -429,58 +419,59 @@ namespace luramas::il::lifter::builder {
             this->make<arch::opcodes::OP_PCALL>(loc, reg.r.r, v);
             return;
       }
-      void build::make_goto(const profile::module_id mid, const luramas_address loc) {
-            const auto r = this->find_original_map(mid, loc);
+      void build::make_goto(const luramas_raddress loc) {
+            const auto r = this->find_original_map(loc).second;
             this->gen<arch::opcodes::OP_JUMP>(r->addr)->ref = r;
             return;
       }
-      void build::make_non_direct_goto(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation) {
+      void build::make_non_direct_goto(const expr &value, const luramas_raddress loc, const std::uintptr_t segregation) {
 
             const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
-            this->make<arch::opcodes::OP_CMPN>(v, loc);
+            this->make<arch::opcodes::OP_CMPN>(v, this->find_original_map(loc).first);
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make_scope<arch::data::bin_kinds::eq_>(segregation);
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
-            this->make_goto(mid, loc);
+            this->make_goto(loc);
             this->close_scope();
             return;
       }
-      void build::page_jump(const profile::module_id mid, const luramas_address loc) {
-            if (!this->find_original_map(mid, loc)) {
+
+      void build::page_jump(const luramas_raddress loc) {
+            if (!this->find_original_map(loc).second) {
                   luramas::error::error("Unmapped Page");
             }
             this->set_flag<arch::data::flags::funknown_paging>();
             this->make<arch::opcodes::OP_PJUMP>(loc);
             return;
       }
-      void build::non_direct_page_call(const expr &value, const profile::module_id mid, const luramas_address loc, const expr &r, const std::intptr_t val, const std::uintptr_t segregation) {
+      void build::non_direct_page_call(const expr &value, const luramas_raddress loc, const expr &r, const std::intptr_t val, const std::uintptr_t segregation) {
 
             const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
-            this->make<arch::opcodes::OP_CMPN>(v, loc);
+            this->make<arch::opcodes::OP_CMPN>(v, this->find_original_map(loc).first);
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make_scope<arch::data::bin_kinds::eq_>(segregation);
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
-            this->page_call(mid, loc, r, val);
+            this->page_call(loc, r, val);
             this->close_scope();
             return;
       }
-      void build::non_direct_page_jmp(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation) {
+      void build::non_direct_page_jmp(const expr &value, const luramas_raddress loc, const std::uintptr_t segregation) {
 
             const auto v = this->make_temp(value).r.r;
 
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make<arch::opcodes::OP_SEGREGATE>(segregation);
-            this->make<arch::opcodes::OP_CMPN>(v, loc);
+            this->make<arch::opcodes::OP_CMPN>(v, this->find_original_map(loc).first);
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
             this->make_scope<arch::data::bin_kinds::eq_>(segregation);
             this->set_flag<arch::data::flags::fexpanded_non_direct_cft>();
-            this->page_jump(mid, loc);
+            this->page_jump(loc);
             this->close_scope();
             return;
       }

@@ -69,7 +69,13 @@ namespace luramas::ir::passes {
                               continue;
                         }
 
-                        const auto &past = ssa.defs[tssa];
+                        /* Safety check */
+                        const auto dit = ssa.defs.find(tssa);
+                        if (dit == ssa.defs.end()) {
+                              continue;
+                        }
+
+                        const auto &past = dit->second;
                         if (!past.first->is_data_assignment() || past.first->flags.finternal_store || tools::stat::is_definition(p)) {
                               continue;
                         }

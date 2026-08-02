@@ -142,7 +142,8 @@ void decompile_tests(const std::string &test_dir, std::shared_ptr<luramas::ir::d
 
 int main(int argc, char **argv) {
 
-      CLI::App app{"Luramas"};
+      CLI::App app{"Luramas"};                                             /* App name */
+      auto format = std::make_shared<luramas::ir::data::format::format>(); /* Syntax format */
 
       /* CLI options */
       std::string input("");                         /* Input directory */
@@ -150,6 +151,8 @@ int main(int argc, char **argv) {
       std::string test_dir("C:/repo/Luramas/tests"); /* Directory of repo/tests */
       luramas_flag is_bytecode = false;              /* Is input bytecode (Only for input) */
       luramas_flag all_tests = false;                /* Run all tests */
+
+     // decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::X86, luramas::tests::scripts_directory::LUA_EXTENSION);
 
       /* Options */
       app.set_help_flag("-h,--help,?", "Print help message and exit");
@@ -161,8 +164,6 @@ int main(int argc, char **argv) {
       CLI11_PARSE(app, argc, argv);
 
       if (test_opt) {
-
-            auto format = std::make_shared<luramas::ir::data::format::format>();
 
 #if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
             decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::LUA_V53, luramas::tests::scripts_directory::LUA_EXTENSION);
@@ -181,7 +182,6 @@ int main(int argc, char **argv) {
                   return 1;
             }
 
-            auto format = std::make_shared<luramas::ir::data::format::format>();
             std::cout << "Decomp " << *decompile(target, "", format, is_bytecode);
       }
       return 0;

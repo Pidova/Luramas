@@ -31,7 +31,6 @@ namespace luramas::ir::passes {
 
                   const auto fssa_unsafe = fssa.unsafe.contains(ssa);
                   const auto fssa_phi_complex = fssa.phis.contains(ssa);
-                  // &&fssa.used[ssa].first > 1u && tools::stat::future(loc, *fssa.used[ssa].second.begin());
 
                   /* Not valid */
                   if (fssa_phi_complex || fssa_unsafe) {

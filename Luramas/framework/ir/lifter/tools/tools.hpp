@@ -1035,6 +1035,9 @@ namespace luramas::ir::tools {
 
                         /* Real inst range (Not including start and end headers) */
                         luramas_blockrange code_range(const ir_stat::space &p) const;
+
+                        /* Count total number of references */
+                        luramas_count count_references() const;
                   };
 
                   /* Get page from loc and current parent closure expr */

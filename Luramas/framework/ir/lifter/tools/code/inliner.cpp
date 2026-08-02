@@ -20,7 +20,7 @@ namespace luramas::ir::tools::inliner {
 
             bool can_inline(luramas::ir::passes::pass_manager &pm, const std::vector<std::optional<luramas_address>> &parent_pages, const tools::paging::details::page &page, const luramas_count max_references) {
 
-                  if (!page.definition || !page.fvalid || pm[page.range.first]->flags.fpage_main || page.references.size() != 1u || (*page.references.begin()).second.size() > max_references) {
+                  if (!page.definition || !page.fvalid || pm[page.range.first]->flags.fpage_main || page.count_references() != 1u || (*page.references.begin()).second.size() > max_references) {
                         return false;
                   }
 

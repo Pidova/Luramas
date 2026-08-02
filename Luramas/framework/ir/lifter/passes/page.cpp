@@ -399,11 +399,12 @@ namespace luramas::ir::passes {
 
                                           if (const auto page_opt = pages.index_page(p->n.extract_base()); page_opt) {
 
-                                                if (const auto page = *page_opt; page.second.fhas_start && page.second.range.first && page.second.references.size() == 1u) {
+                                                if (const auto page = *page_opt; page.second.fhas_start && page.second.range.first && page.second.count_references() == 1u) {
 
                                                       auto &env = page.first ? page.first->closure : pm.ir.data;
                                                       const auto &def = env[page.second.range.first + 1u];
-                                                      if (auto &prev = env[page.second.range.first - 1u]; tools::stat::is_page_function_call(prev) && tools::stat::is_definition(def) && def->flags.flink_regs) {
+                                                      if (auto &prev = env[page.second.range.first - 1u];
+                                                          tools::stat::is_page_function_call(prev) && tools::stat::is_definition(def) && def->flags.flink_regs) {
 
                                                             /* Result Indexes */
                                                             i->flags.flink_regs = true;
@@ -544,13 +545,13 @@ namespace luramas::ir::passes {
                         }
 
                         /* Insert */
-                        const auto &[where, stat] = std::tie(pm[*end], pm[page.range.second - 1u]);
+                        const auto &where = pm[*end];
                         if (page.fvalid) {
 
-                              if (!pm.safe(where, stat)) {
+                              if (!pm.safe(where, pm[page.range.second - 1u])) {
                                     continue;
                               }
-                              pm.move(where, stat);
+                              pm.move(where, pm[page.range.second - 1u]);
                         } else {
 
                               if (!pm.safe(where)) {

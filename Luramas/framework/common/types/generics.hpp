@@ -18,8 +18,7 @@ enum LURAMAS_IR_DIRECTION_KINDS : std::uint8_t {
 
 /* Track register contents */
 struct luramas_register_contents {
-      std::uintptr_t id = 0u;    /* Register ID */
-      luramas_int_base data = 0; /* Data */
+      luramas_int_base data = 0; /* Constant */
 };
 
 /* Track register data  */

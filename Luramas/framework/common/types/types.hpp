@@ -7,6 +7,7 @@
 
 /* Verbose definitions */
 using luramas_address = std::uint64_t;   /* Address */
+using luramas_raddress = std::uint64_t;  /* Real Address (PC relative to other PCs, defined as per instruction per address use a real PC depending on time of execution) */
 using luramas_vaddress = std::int64_t;   /* Virtual address */
 using luramas_register = std::uint16_t;  /* Register */
 using luramas_vregister = std::int16_t;  /* Virtual register */

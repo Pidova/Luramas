@@ -45,6 +45,7 @@ namespace lua_53_disassembler {
             std::vector<std::shared_ptr<operand>> operands; /* Instruction Operands */
             std::vector<std::uint8_t> bytes;                /* Instruction bytes */
             Proto *p = nullptr;                             /* Linked proto */
+
             /* Returns disassembly string. */
             template <bool include_hint = false>
             std::string disassemble() {

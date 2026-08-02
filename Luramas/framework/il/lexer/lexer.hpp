@@ -64,10 +64,10 @@ namespace luramas::il::lexer {
             /* Kind is guaranteed to be a statement */
             bool kind_stat() const;
 
-            bool jumps() const;
-            luramas_address jump() const;
-            bool jump_forward() const;
-            bool jump_backwards() const;
+            bool jumps() const;           /* Does instruction jump at all? */
+            luramas_address jump() const; /* Jump address */
+            bool jump_forward() const;    /* Does instruction jump forward? */
+            bool jump_backwards() const;  /* Does instruction jump backwards? */
 
             /* Returns if given kind exists. */
             template <luramas::il::lexer::operand_kinds kind>
@@ -92,6 +92,7 @@ namespace luramas::il::lexer {
             }
       };
 
+      /* Lex disassembly to lexeme */
       std::shared_ptr<lexeme> lexer(const std::shared_ptr<luramas::il::disassembly> &disassembly);
 
 } // namespace luramas::il::lexer

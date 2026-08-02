@@ -25,6 +25,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               */
                               if (prev->is_k<keywords::condition>() && tools::stat::branch::is_jlabel_target(pm[pm.processed.end_labels[prev->end_label].second + 1u], p) && pm.safe(p, prev)) {
 
+                                    tools::stat::mutate::flip_cmp(p);
                                     prev->append_cond<expr_logical::and_>(p->l, p->b, p->r);
                                     pm.remove(p);
                                     pm.mut(LURAMAS_DEBUG_LINE);
@@ -59,6 +60,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     const auto end_label = pm.processed.end_labels[next->end_label].second;
                                     if (tools::stat::future(i, end_label) && pm.valid_next<1u>(end_label) && tools::stat::branch::is_cond_goto_label(p, tools::visitors::next_safe_executable_stat(pm, end_label + 1u)) && pm.safe(p, next)) {
 
+                                          tools::stat::mutate::flip_cmp(p);
                                           next->append_cond<expr_logical::and_, true>(p->l, p->b, p->r);
                                           pm.remove(p);
                                           pm.mut(LURAMAS_DEBUG_LINE);
@@ -265,11 +267,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                                                   for (auto e = 1u; e != disp; ++e) {
                                                                         const auto &assign = pm[e + i];
                                                                         if (tools::stat::assignment::is_single_assignment(assign)) {
-                                                                              if (compiled_cmp == nullptr) {
-                                                                                    compiled_cmp = assign->r;
-                                                                              } else {
-                                                                                    compiled_cmp = tools::exprs::generate::logical<expr_logical::and_>(compiled_cmp, assign->r);
-                                                                              }
+                                                                              compiled_cmp = !compiled_cmp ? assign->r : tools::exprs::generate::logical<expr_logical::and_>(compiled_cmp, assign->r);
                                                                         }
                                                                   }
                                                                   if (compiled_cmp) {

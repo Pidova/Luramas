@@ -4,7 +4,6 @@
 
 namespace luramas::types {
 
-      /* Underlying type */
       bool underlying_type::compare(const std::uint16_t memsize) const {
             return this->is<read_type::bytes>() && this->storage_size == memsize;
       }
@@ -17,6 +16,7 @@ namespace luramas::types {
       bool underlying_type::compare(const underlying_type &other) const {
             return std::tie(this->unsign, this->read, this->precision, this->storage_size) == std::tie(other.unsign, other.read, other.precision, other.storage_size);
       }
+
       void underlying_type::dominant(const underlying_type &other, const signess dom) {
             if (this->storage_size < other.storage_size) {
                   this->storage_size = other.storage_size;
@@ -37,6 +37,7 @@ namespace luramas::types {
             result.dominant(other);
             return result;
       }
+
       luramas_bitwidth underlying_type::bits() const {
             return this->read == read_type::bits ? this->storage_size : this->storage_size * 8u;
       }

@@ -2,8 +2,7 @@
 
 namespace tools {
 
-      /* Computes operands to target register if possible or single register if it is (Does not emit write) */
-      canonicalize_to_reg_results canonicalize_to_reg(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas::profile::inst &inst, const cs_x86_op &op, const flags &f) {
+      canonicalize_to_reg_results canonicalize_to_reg(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas_address pc, const luramas_length inst_len, const cs_x86_op &op, const flags &f) {
 
             canonicalize_to_reg_results result;
             switch (op.type) {
@@ -44,7 +43,7 @@ namespace tools {
                                     case x86_reg::X86_REG_RIP:
                                     case x86_reg::X86_REG_EIP: {
                                           tres = build->make_temp();
-                                          tres = inst.pc + inst.len();
+                                          tres = pc + inst_len;
                                           break;
                                     }
                                     default: {
@@ -94,20 +93,20 @@ namespace tools {
 
       namespace common {
 
-            std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const luramas::profile::inst &inst, const std::shared_ptr<luramas::il::lifter::builder::build> &build, const cs_x86 &dis, const flags &f) {
+            std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas_address pc, const luramas_length inst_len, const cs_x86 &dis, const flags &f) {
 
                   std::vector<luramas::il::lifter::builder::build::expr> result;
                   for (auto i = 0u; i < dis.op_count; ++i) {
 
                         luramas::il::lifter::builder::build::expr expr;
-                        const auto res = tools::canonicalize_to_reg(build, inst, dis.operands[i], f);
+                        const auto res = tools::canonicalize_to_reg(build, pc, inst_len, dis.operands[i], f);
                         const auto reg = luramas::il::lifter::builder::reg(res.reg, dis.operands[i].size * 8u, f.unsign);
                         if (res.mem) {
                               expr.emit_mem(build, reg);
                         } else {
                               expr.emit(build, reg);
                               if (res.integral) {
-                                    build->constant[res.reg] = luramas_register_contents(inst.lid, res.integral);
+                                    build->constant[res.reg] = luramas_register_contents(res.integral);
                               }
                         }
                         result.emplace_back(expr);

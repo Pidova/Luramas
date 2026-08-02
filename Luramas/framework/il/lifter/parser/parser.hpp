@@ -5,10 +5,8 @@
 
 namespace luramas::il::lifter::parser {
 
-      /* 
-         Parse data from original bytecode to IL. (Initial pass should map directly to original for jumps, Later passes can mutate this) 
-      */
-      template <typename T /* Original disassembly vector i.e. disassembly. */>
+      /* Parse data from original bytecode to IL. (Initial pass should map directly to original for jumps, Later passes can mutate this) */
+      template <typename T /* Original disassembly vector i.e. disassembly */>
       class parser_manager {
 
           public:

@@ -4,19 +4,22 @@
 #include <memory>
 #include <string>
 
-/*
-    Representative types.
-*/
+/* Representative types */
 namespace luramas::types {
 
+      /* Signess of underlying type */
       enum class signess : std::uint8_t {
             sign = 0u,  /* Bit[0] = signess */
             unsign = 1u /* Complete number */
       };
+
+      /* Addressing size */
       enum class read_type : std::uint8_t {
             bits, /* Bits */
             bytes /* Bytes */
       };
+
+      /* Type handler, handles signess, precision, and storage size */
       struct underlying_type {
 
             bool unsign = false;                /* Unsigned */
@@ -25,24 +28,27 @@ namespace luramas::types {
             luramas_bitwidth storage_size = 0u; /* Storage bits size */
 
             /* Compare */
-            bool weak_compare(const underlying_type &other) const;
-            bool compare(const underlying_type &other) const;
-            bool compare(const std::uint16_t memsize) const;
-            bool compare(const luramas_bitwidth bits, const bool unsign) const;
-            void dominant(const underlying_type &other, const signess dom = signess::unsign);
-            underlying_type dominant_t(const underlying_type &other, const signess dom = signess::unsign) const;
-            luramas_bitwidth bits() const;
-            bool empty() const;
+            bool weak_compare(const underlying_type &other) const;              /* Compares just read type and storage size */
+            bool compare(const underlying_type &other) const;                   /* Compare to another underlying type */
+            bool compare(const std::uint16_t memsize) const;                    /* Compare storage sizes */
+            bool compare(const luramas_bitwidth bits, const bool unsign) const; /* Compare with input bits and signess */
+
+            /* Dominant */
+            void dominant(const underlying_type &other, const signess dom = signess::unsign);                    /* Change current type to other compares which fields are dominant */
+            underlying_type dominant_t(const underlying_type &other, const signess dom = signess::unsign) const; /*Change current type given which signess is dominant */
+
+            luramas_bitwidth bits() const; /* Extract bits */
+            bool empty() const;            /* Is type empty? */
 
             /* Min/Max */
-            luramas_int_base bmin() const;
-            luramas_int_base bmax() const;
+            luramas_int_base bmin() const; /* Minumum value type can store */
+            luramas_int_base bmax() const; /* Maximum value type can store */
 
             /* Emit */
-            void emit(const std::uint16_t memsize);
-            void emit(const luramas_bitwidth bits, const bool unsign, const std::uint8_t precision = 0u);
+            void emit(const std::uint16_t memsize);                                                       /* Emit with just storage size */
+            void emit(const luramas_bitwidth bits, const bool unsign, const std::uint8_t precision = 0u); /* Emit with bits, signess, and precision */
 
-            /* Eq */
+            /* Equalities */
             bool operator==(const underlying_type &other) const;
             bool operator!=(const underlying_type &other) const;
             explicit operator bool() const;
@@ -53,15 +59,17 @@ namespace luramas::types {
                   return this->read == t;
             }
 
+            /* Clone */
+            underlying_type clone(underlying_type &other) const; /* Clone type safely */
+            std::shared_ptr<underlying_type> clone() const;      /* Clone type into a shared pointer */
+
             /* Misc */
-            signess signess_t() const;
-            underlying_type clone(underlying_type &other) const;
-            std::shared_ptr<underlying_type> clone() const;
-            std::string str() const;
-            void serialize(std::ostream &os) const;
-            underlying_type load(std::istream &is) const;
-            bool has_native() const;
-            void clear();
+            signess signess_t() const;                    /* Get signess type */
+            std::string str() const;                      /* String representation */
+            void serialize(std::ostream &os) const;       /* Serialize into ostream */
+            underlying_type load(std::istream &is) const; /* Load serialization */
+            bool has_native() const;                      /* Has a bitsize luramas can natively support? */
+            void clear();                                 /* Clear type */
       };
 
       namespace is {
@@ -143,13 +151,14 @@ namespace luramas::types {
                         bool constant_value = false; /* Is the value constant */
                         bool synthetic_type = false; /* Is the type synthetic */
 
-                        std::string str() const;
-                        void clear();
-                        bool empty() const;
+                        std::string str() const; /* String reprentation */
+                        void clear();            /* Clear object */
+                        bool empty() const;      /* Empty out object */
                   };
 
             } // namespace compiler
       } // namespace native
 
+      /* Hash underlying type */
       std::size_t hash_value(const underlying_type &u);
 } // namespace luramas::types

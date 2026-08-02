@@ -25,9 +25,11 @@
 
 namespace vm {
 
-      using registrar = luramas::il::lifter::builder::registrar<x86_insn, x86_reg, xeflags, luramas::il::X86::lifter::hardware_constants>;
-}
+      /* X86 VM registrar */
+      using registrar = luramas::il::lifter::builder::registrar<x86_insn, x86_reg, xeflags, luramas::il::X86::lifter::hardware_constants, luramas::il::X86::lifter::MAX_LEN>;
+} // namespace vm
 
+/* Read internal global registers */
 inline luramas::il::lifter::builder::build::expr klura_internal_read(const vm::registrar &registrar, const char *const g_str) {
       const auto temp = klura_vtemp;
       registrar.build->load_internal_global(g_str, temp);

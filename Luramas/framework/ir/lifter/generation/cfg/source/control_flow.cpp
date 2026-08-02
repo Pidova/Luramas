@@ -587,26 +587,32 @@ namespace luramas::ir::generation::cfg {
                         if (b == b->jump) {
                               b->jumpk = edge_kind::back;
                         }
-                        if (b->jump) {
+                        if (b->jump && b->jump->get_front() < ir.data.size()) {
                               result.predecessors[b->jump].insert(b);
                               if (b->entry > b->jump->entry) {
                                     b->jumpk = edge_kind::back;
                               }
                               block_stack.emplace_back(b->jump);
+                        } else {
+                              b->jump = nullptr;
                         }
-                        if (b->then) {
+                        if (b->then && b->then->get_front() < ir.data.size()) {
                               result.predecessors[b->then].insert(b);
                               if (b->entry > b->then->entry) {
                                     b->thenk = edge_kind::back;
                               }
                               block_stack.emplace_back(b->then);
+                        } else {
+                              b->then = nullptr;
                         }
-                        if (b->fall) {
+                        if (b->fall && b->fall->get_front() < ir.data.size()) {
                               result.predecessors[b->fall].insert(b);
                               if (b->entry > b->fall->entry) {
                                     b->fallk = edge_kind::back;
                               }
                               block_stack.emplace_back(b->fall);
+                        } else {
+                              b->fall = nullptr;
                         }
                         for (auto i = b->get_front(); i < b->get_end(); ++i) {
                               result.interacted_nodes.insert(i);

@@ -16,6 +16,13 @@ namespace luramas::ir::tools::paging {
             }
             return this->range;
       }
+      luramas_count details::page::count_references() const {
+            luramas_count result = 0u;
+            for (const auto &[_, i] : this->references) {
+                  result += i.size();
+            }
+            return result;
+      }
 
       std::optional<luramas_id> details::get_page(const luramas_address &loc, const std::shared_ptr<ir_stat::ir_expr> &parent_closure_expr) const {
 
@@ -55,10 +62,8 @@ namespace luramas::ir::tools::paging {
       std::optional<std::pair<std::shared_ptr<ir_stat::ir_expr>, details::page>> details::index_page(const luramas_id id) const {
 
             for (const auto &[expr, data] : this->pages) {
-                  for (const auto &[pid, page] : data) {
-                        if (pid == id) {
-                              return std::make_pair(expr, page);
-                        }
+                  if (const auto it = data.find(id); it != data.end()) {
+                        return std::make_pair(expr, it->second);
                   }
             }
             return std::nullopt;

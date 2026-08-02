@@ -2,22 +2,18 @@
 #ifdef LURAMAS_TARGET_X86
 
 #include "../../../il/il.hpp"
-#include <capstone/capstone.h>
+#include "defs.hpp"
 
 namespace luramas::il::X86::lifter {
 
-      enum class bit_mode : std::uint8_t {
-            x32 = 32u,
-            x64 = 64u
-      };
-
+      /* Hardware constants CPU use */
       struct hardware_constants {
-            std::uint8_t suggested_bit_set = 0u;
-            std::uint16_t MAXVL = 0u;
+            std::uint8_t suggested_bit_set = 0u; /* Max arch bitset supported by CPU */
+            std::uint16_t MAXVL = 0u;            /* Max vector length */
       };
 
-      /* Lifts x86 disassembly to IL disassembly. */
-      void lift(const std::vector<std::pair<luramas::il::vinst, cs_insn>> &insts, const hardware_constants &hw_constants, std::shared_ptr<luramas::il::ilang> &buffer, const boost::unordered_flat_map<profile::module_id, profile::analyze::details> &details, const profile::externals::data<x86_reg> &external);
+      /* Lifts x86 disassembly to IL disassembly */
+      void lift(std::shared_ptr<ilang> &buffer, const std::vector<vinst_cs> &insts, const hardware_constants &hw_constants, const profile::externals::data<x86_reg> &externals, const profile::details &details);
 
 } // namespace luramas::il::X86::lifter
 

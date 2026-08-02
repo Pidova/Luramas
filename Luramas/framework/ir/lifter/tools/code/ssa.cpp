@@ -131,7 +131,6 @@ namespace luramas::ir::tools::ssa {
                         for (const auto &r : targets) {
                               hit_map.try_emplace(r, false);
                         }
-
                         for (auto i = range.first; i < range.second; ++i) {
 
                               for (const auto &[reg, ssa_data] : ssa.nodes[pm[i]].l.assigns) {
@@ -142,7 +141,6 @@ namespace luramas::ir::tools::ssa {
                                     if (type == hit_type::dominant && hit_map[reg]) {
                                           result.pop_back();
                                     }
-
                                     hit_map[reg] = true;
                                     result.emplace_back(i, range);
                               }

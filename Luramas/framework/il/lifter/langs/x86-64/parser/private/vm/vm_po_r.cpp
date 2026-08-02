@@ -360,10 +360,13 @@ namespace vm {
             }
 
             luramas_flag fgoes_to = false;
-            for (const auto &inst : registrar.get_details()) {
-                  if (inst.goes_to()) {
+            if (registrar.v_inst.edges) {
+                  for (const auto &[roa, kind] : *registrar.v_inst.edges) {
+                        if (kind != luramas::profile::inst_kind::return_to || !roa.freal_pc) {
+                              continue;
+                        }
                         fgoes_to = true;
-                        registrar.build->page_retn(build::reg_stack(registrar).r.r, inst.loc);
+                        registrar.build->page_retn(build::reg_stack(registrar).r.r, roa.real_pc);
                   }
             }
             if (!fgoes_to) {

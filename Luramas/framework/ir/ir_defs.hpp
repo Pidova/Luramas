@@ -3,7 +3,6 @@
 #include "code/types/types.hpp"
 #include "definitions.hpp"
 #include "flags.hpp"
-#include "warnings.hpp"
 
 namespace luramas::ir {
 
@@ -698,8 +697,8 @@ namespace luramas::ir {
 
                   /* Flags */
                   luramas_flag fhas_pages = false;                        /* Has pages? */
-                  luramas_flag fhas_types = false;                        /* Has types? */
-                  luramas_flag fhas_memory = false;                       /* Has Memory? */
+                  luramas_flag fhas_types = false;                        /* Has specific types? */
+                  luramas_flag fhas_memory = false;                       /* Has memory references? */
                   luramas_flag fhas_nan = true;                           /* NaN can be deduced from arithmetics? */
                   luramas_flag fhas_references = false;                   /* Has references? */
                   luramas_flag fallow_definition_flattening = false;      /* Allow variables to be flattened? */

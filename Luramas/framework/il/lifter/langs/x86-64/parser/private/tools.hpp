@@ -31,9 +31,9 @@ namespace tools {
       };
 
       /* Computes operands to target register if possible or single register if it is (Does not emit write) */
-      canonicalize_to_reg_results canonicalize_to_reg(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas::profile::inst &inst, const cs_x86_op &op, const flags &f = flags());
+      canonicalize_to_reg_results canonicalize_to_reg(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas_address pc, const luramas_length inst_len, const cs_x86_op &op, const flags &f = flags());
 
-      /* Given structure x86 registers in capstone gets amount and + 1*/
+      /* Given structure x86 registers in capstone gets amount and + 1 */
       luramas_register highest(const x86_reg r);
 
       /* Wrap register in expr */
@@ -45,7 +45,7 @@ namespace tools {
       namespace common {
 
             /* Lowers each of the instruction's operands into an IL expression, returning them in operand order */
-            std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const luramas::profile::inst &inst, const std::shared_ptr<luramas::il::lifter::builder::build> &build, const cs_x86 &dis, const flags &f = flags());
+            std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas_address pc, const luramas_length inst_len, const cs_x86 &dis, const flags &f = flags());
       } // namespace common
 
       namespace generate {

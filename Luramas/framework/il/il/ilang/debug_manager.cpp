@@ -21,7 +21,7 @@ namespace luramas::il {
 
             auto [it, inserted] = this->defined.try_emplace(reg, std::vector<context>({context(std::make_pair(start, end), name)}));
             if (!inserted) {
-                  for (auto &[block, str] : it->second) {
+                  for (const auto &[block, str] : it->second) {
                         if (start == block.first) {
                               return;
                         }

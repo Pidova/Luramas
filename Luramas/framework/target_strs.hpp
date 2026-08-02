@@ -41,12 +41,27 @@ namespace luramas {
       namespace supported_targets_str {
 
             /* LURAMAS_TARGET_LUA */
+            static constexpr auto LUA_V51 = "Lua-V51"; /* LURAMAS_TARGET_LUA && LURAMAS_TARGET_VERSION_51 */
+            static constexpr auto LUA_V52 = "Lua-V52"; /* LURAMAS_TARGET_LUA && LURAMAS_TARGET_VERSION_52 */
             static constexpr auto LUA_V53 = "Lua-V53"; /* LURAMAS_TARGET_LUA && LURAMAS_TARGET_VERSION_53 */
+            static constexpr auto LUA_V54 = "Lua-V54"; /* LURAMAS_TARGET_LUA && LURAMAS_TARGET_VERSION_54 */
+            static constexpr auto LUA_V55 = "Lua-V55"; /* LURAMAS_TARGET_LUA && LURAMAS_TARGET_VERSION_55 */
 
             /* LURAMAS_TARGET_LUAU */
+            static constexpr auto LUAU_V1 = "LuaU-V1";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_1 */
+            static constexpr auto LUAU_V2 = "LuaU-V2";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_2 */
+            static constexpr auto LUAU_V3 = "LuaU-V3";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_3 */
+            static constexpr auto LUAU_V4 = "LuaU-V4";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_4 */
+            static constexpr auto LUAU_V5 = "LuaU-V5";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_5 */
             static constexpr auto LUAU_V6 = "LuaU-V6";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_6 */
+            static constexpr auto LUAU_V7 = "LuaU-V7";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_7 */
+            static constexpr auto LUAU_V8 = "LuaU-V8";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_8 */
+            static constexpr auto LUAU_V9 = "LuaU-V9";   /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_9 */
+            static constexpr auto LUAU_V10 = "LuaU-V10"; /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_10 */
+            static constexpr auto LUAU_V11 = "LuaU-V11"; /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_11 */
             static constexpr auto LUAU_V12 = "LuaU-V12"; /* LURAMAS_TARGET_LUAU && LURAMAS_TARGET_VERSION_12 */
 
+            /* LURAMAS_TARGET_X86 */
             static constexpr auto X86 = "X86"; /* LURAMAS_TARGET_X86 */
       } // namespace supported_targets_str
 

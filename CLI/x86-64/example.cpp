@@ -1,257 +1,203 @@
 #ifdef LURAMAS_TARGET_X86
-
 #include "example.hpp"
+#include "../../framework/common/debug.hpp"
 #include "../../framework/il/lifter/langs/x86-64/x86-64.hpp"
+
+/* X86 Data */
+static constexpr auto MAX_LEN = luramas::il::X86::lifter::MAX_LEN;                                          /* Maximum X86 instruction length */
+static constexpr auto X64 = cpu_tracer::archs::interpretation_mode::x64;                                    /* X64 bit mode */
+static constexpr auto X32 = cpu_tracer::archs::interpretation_mode::x32;                                    /* X32 bit mode */
+static constexpr auto X16 = cpu_tracer::archs::interpretation_mode::x16;                                    /* X16 bit mode */
+static constexpr auto JUMP = static_cast<cpu_tracer::flag_storage>(luramas::profile::inst_kind::jump_to);   /* Jump to Flag storage */
+static constexpr auto CALL = static_cast<cpu_tracer::flag_storage>(luramas::profile::inst_kind::call_to);   /* Call to Flag storage */
+static constexpr auto RETN = static_cast<cpu_tracer::flag_storage>(luramas::profile::inst_kind::return_to); /* Return to Flag storage */
+
+/* Defs */
+using edges = cpu_tracer::blocks::edges::addr_k_v; /* Addr edges */
+using edges_k = cpu_tracer::blocks::edges::kind;   /* Edges kinds */
 
 std::optional<std::string> luramas::decompile_x86(const std::string &code, std::shared_ptr<luramas::ir::data::format::format> &format, const bool bytecode) {
 
-      auto buffer = std::make_shared<luramas::il::ilang>();
-      boost::unordered_flat_map<luramas::profile::module_id, luramas::profile::inst_result> mid_res;
-      luramas::profile::builder::manager data;
+      static constexpr auto DEFAULT_MODE = X64;
+      luramas::il::X86::lifter::hardware_constants hw_constants;
+      hw_constants.suggested_bit_set = 32u;
+      hw_constants.MAXVL = 512u;
 
-      data.emit({0x89, 0xF8});                                                  /* mov eax, edi */
-      data.emit({0x6B, 0xC0, 0x07});                                            /* imul eax, eax, 7 */
-      data.emit({0x31, 0xF8});                                                  /* xor eax, edi */
-      data.emit({0xA9, 0x01, 0x00, 0x00, 0x00});                                /* test eax, 1 */
-      data.emit({0x74, 0x18}, luramas::profile::inst_kind::jump_to, 1u, true);  /* je 0x103a */
-      data.emit({0x48, 0x8B, 0x4D, 0xF0});                                      /* mov rcx, qword ptr [rbp - 0x10] */
-      data.emit({0xB5, 0x90});                                                  /* mov ch, 0x90 */
-      data.emit({0x48, 0x81, 0xC1, 0x34, 0x12, 0x00, 0x00});                    /* add rcx, 0x1234 */
-      data.emit({0x9F});                                                        /* lahf  */
-      data.emit({0x80, 0xF4, 0x5A});                                            /* xor ah, 0x5a */
-      data.emit({0x9E});                                                        /* sahf  */
-      data.emit({0x48, 0x13, 0x4D, 0xE8});                                      /* adc rcx, qword ptr [rbp - 0x18] */
-      data.emit({0xEB, 0x11}, luramas::profile::inst_kind::jump_to, 2u, false); /* jmp 0x104b */
-      data.emit_label(1u);                                                      /* LABEL */
-      data.emit({0x48, 0x8B, 0x4D, 0xE8});                                      /* mov rcx, qword ptr [rbp - 0x18] */
-      data.emit({0x48, 0xF7, 0xD1});                                            /* not rcx */
-      data.emit({0x48, 0xFF, 0xC1});                                            /* inc rcx */
-      data.emit({0x83, 0xF1, 0xFF});                                            /* xor ecx, 0xffffffff */
-      data.emit({0x48, 0x83, 0xC1, 0x01});                                      /* add rcx, 1 */
-      data.emit_label(2u);                                                      /* LABEL */
-      data.emit({0x4C, 0x8D, 0x45, 0xD8});                                      /* lea r8, [rbp - 0x28] */
-      data.emit({0x49, 0x89, 0x08});                                            /* mov qword ptr [r8], rcx */
-      data.emit({0x41, 0x8B, 0x00});                                            /* mov eax, dword ptr [r8] */
-      data.emit({0x48, 0x98});                                                  /* cdqe  */
-      data.emit({0x41, 0xB9, 0x05, 0x00, 0x00, 0x00});                          /* mov r9d, 5 */
-      data.emit_label(3u);                                                      /* LABEL */
-      data.emit({0x48, 0xC1, 0xC0, 0x05});                                      /* rol rax, 5 */
-      data.emit({0x48, 0x31, 0xC8});                                            /* xor rax, rcx */
-      data.emit({0x48, 0xC1, 0xC8, 0x05});                                      /* ror rax, 5 */
-      data.emit({0x41, 0xFF, 0xC9});                                            /* dec r9d */
-      data.emit({0x75, 0xF0}, luramas::profile::inst_kind::jump_to, 3u, true);  /* jne 0x105d */
-      data.emit({0x83, 0xF8, 0x00});                                            /* cmp eax, 0 */
-      data.emit({0x74, 0x19}, luramas::profile::inst_kind::jump_to, 4u, true);  /* je 0x108b */
-      data.emit({0x83, 0xF8, 0x01});                                            /* cmp eax, 1 */
-      data.emit({0x74, 0x1E}, luramas::profile::inst_kind::jump_to, 5u, true);  /* je 0x1095 */
-      data.emit({0x83, 0xF8, 0x02});                                            /* cmp eax, 2 */
-      data.emit({0x74, 0x23}, luramas::profile::inst_kind::jump_to, 6u, true);  /* je 0x109f */
-      data.emit({0x83, 0xF8, 0x03});                                            /* cmp eax, 3 */
-      data.emit({0x74, 0x29}, luramas::profile::inst_kind::jump_to, 7u, true);  /* je 0x10aa */
-      data.emit({0x48, 0x8B, 0x45, 0xF8});                                      /* mov rax, qword ptr [rbp - 8] */
-      data.emit({0x48, 0x33, 0x45, 0xF0});                                      /* xor rax, qword ptr [rbp - 0x10] */
-      data.emit({0xEB, 0x22}, luramas::profile::inst_kind::jump_to, 8u, false); /* jmp 0x10ad */
-      data.emit_label(4u);                                                      /* LABEL */
-      data.emit({0x48, 0x8B, 0x45, 0xF8});                                      /* mov rax, qword ptr [rbp - 8] */
-      data.emit({0x48, 0x03, 0x45, 0xF0});                                      /* add rax, qword ptr [rbp - 0x10] */
-      data.emit({0xEB, 0x18}, luramas::profile::inst_kind::jump_to, 8u, false); /* jmp 0x10ad */
-      data.emit_label(5u);                                                      /* LABEL */
-      data.emit({0x48, 0x8B, 0x45, 0xF8});                                      /* mov rax, qword ptr [rbp - 8] */
-      data.emit({0x48, 0x2B, 0x45, 0xE8});                                      /* sub rax, qword ptr [rbp - 0x18] */
-      data.emit({0xEB, 0x0E}, luramas::profile::inst_kind::jump_to, 8u, false); /* jmp 0x10ad */
-      data.emit_label(6u);                                                      /* LABEL */
-      data.emit({0x48, 0x8B, 0x45, 0xF0});                                      /* mov rax, qword ptr [rbp - 0x10] */
-      data.emit({0x48, 0x0F, 0xAF, 0x45, 0xE8});                                /* imul rax, qword ptr [rbp - 0x18] */
-      data.emit({0xEB, 0x03}, luramas::profile::inst_kind::jump_to, 8u, false); /* jmp 0x10ad */
-      data.emit_label(7u);                                                      /* LABEL */
-      data.emit({0x48, 0x31, 0xC0});                                            /* xor rax, rax */
-      data.emit_label(8u);                                                      /* LABEL */
-      data.emit({0x48, 0x89, 0xEC});                                            /* mov rsp, rbp */
-      data.emit({0x5D});                                                        /* pop rbp */
-      data.emit({0x48, 0x89, 0x00});
-      data.emit({0xC3}); /* ret  */
+      auto buffer = std::make_shared<luramas::il::ilang>(); /* IL buffer */
 
-      // data.emit({0x55});                                                                               /* push rbp */
-      // data.emit({0x48, 0x89, 0xE5});                                                                   /* mov rbp, rsp */
-      // data.emit({0x48, 0x83, 0xEC, 0x20});                                                             /* sub rsp, 0x20 */
-      // data.emit({0xC7, 0x45, 0xFC, 0x00, 0x00, 0x00, 0x00});                                           /* mov dword ptr [rbp - 4], 0 */
-      // data.emit({0xC7, 0x45, 0xF8, 0x09, 0x00, 0x00, 0x00});                                           /* mov dword ptr [rbp - 8], 9 */
-      // data.emit({0xC7, 0x45, 0xF4, 0x00, 0x00, 0x00, 0x00});                                           /* mov dword ptr [rbp - 0xc], 0 */
-      // data.emit_label(3u);                                                                             /* LABEL */
-      // data.emit({0x81, 0x7D, 0xF4, 0xE8, 0x03, 0x00, 0x00});                                           /* cmp dword ptr [rbp - 0xc], 0x3e8 */
-      // data.emit({0x7D, 0x37}, luramas::profile::inst_kind::jump_to, 1u, true);                         /* jge 0x105d */
-      // data.emit({0x8B, 0x45, 0xF4});                                                                   /* mov eax, dword ptr [rbp - 0xc] */
-      // data.emit({0x89, 0x45, 0xE8});                                                                   /* mov dword ptr [rbp - 0x18], eax */
-      // data.emit({0x8B, 0x45, 0xF4});                                                                   /* mov eax, dword ptr [rbp - 0xc] */
-      // data.emit({0x35, 0xAA, 0x00, 0x00, 0x00});                                                       /* xor eax, 0xaa */
-      // data.emit({0x89, 0x45, 0xEC});                                                                   /* mov dword ptr [rbp - 0x14], eax */
-      // data.emit({0x8B, 0x45, 0xF4});                                                                   /* mov eax, dword ptr [rbp - 0xc] */
-      // data.emit({0x83, 0xC0, 0x03});                                                                   /* add eax, 3 */
-      // data.emit({0x89, 0x45, 0xF0});                                                                   /* mov dword ptr [rbp - 0x10], eax */
-      // data.emit({0x48, 0x8D, 0x7D, 0xF8});                                                             /* lea rdi, [rbp - 8] */
-      // data.emit({0x48, 0x8D, 0x75, 0xE8});                                                             /* lea rsi, [rbp - 0x18] */
-      // data.emit({0xBA, 0x13, 0x00, 0x00, 0x00});                                                       /* mov edx, 0x13 */
-      // data.emit({0xE8, 0x13, 0x00, 0x00, 0x00}, luramas::profile::inst_kind::call_to, 2u);             /* call 0x1065 */
-      // data.emit({0x8B, 0x45, 0xF4});                                                                   /* mov eax, dword ptr [rbp - 0xc] */
-      // data.emit({0x83, 0xC0, 0x01});                                                                   /* add eax, 1 */
-      // data.emit({0x89, 0x45, 0xF4});                                                                   /* mov dword ptr [rbp - 0xc], eax */
-      // data.emit({0xEB, 0xC0}, luramas::profile::inst_kind::jump_to, 3u, false);                        /* jmp 0x101d */
-      // data.emit_label(1u);                                                                             /* LABEL */
-      // data.emit({0x31, 0xC0});                                                                         /* xor eax, eax */
-      // data.emit({0x48, 0x83, 0xC4, 0x20});                                                             /* add rsp, 0x20 */
-      // data.emit({0x5D});                                                                               /* pop rbp */
-      // data.emit({0xC3});                                                                               /* ret  */
-      // data.emit_label(2u);                                                                             /* LABEL */
-      // data.emit({0x55});                                                                               /* push rbp */
-      // data.emit({0x48, 0x89, 0xE5});                                                                   /* mov rbp, rsp */
-      // data.emit({0x48, 0x89, 0x7D, 0xF8});                                                             /* mov qword ptr [rbp - 8], rdi */
-      // data.emit({0x48, 0x89, 0x75, 0xF0});                                                             /* mov qword ptr [rbp - 0x10], rsi */
-      // data.emit({0x89, 0x55, 0xEC});                                                                   /* mov dword ptr [rbp - 0x14], edx */
-      // data.emit({0xC7, 0x45, 0xE8, 0x00, 0x00, 0x00, 0x00});                                           /* mov dword ptr [rbp - 0x18], 0 */
-      // data.emit({0xC7, 0x45, 0xE4, 0x00, 0x00, 0x00, 0x00});                                           /* mov dword ptr [rbp - 0x1c], 0 */
-      // data.emit({0x8B, 0x45, 0xEC});                                                                   /* mov eax, dword ptr [rbp - 0x14] */
-      // data.emit({0x83, 0xF0, 0x5A});                                                                   /* xor eax, 0x5a */
-      // data.emit({0x48, 0x8B, 0x4D, 0xF0});                                                             /* mov rcx, qword ptr [rbp - 0x10] */
-      // data.emit({0x8B, 0x09});                                                                         /* mov ecx, dword ptr [rcx] */
-      // data.emit({0xD1, 0xE1});                                                                         /* shl ecx, 1 */
-      // data.emit({0x01, 0xC8});                                                                         /* add eax, ecx */
-      // data.emit({0x89, 0x45, 0xE0});                                                                   /* mov dword ptr [rbp - 0x20], eax */
-      // data.emit_label(9u);                                                                             /* LABEL */
-      // data.emit({0x83, 0x7D, 0xE4, 0x0A});                                                             /* cmp dword ptr [rbp - 0x1c], 0xa */
-      // data.emit({0x0F, 0x8D, 0x81, 0x00, 0x00, 0x00}, luramas::profile::inst_kind::jump_to, 4u, true); /* jge 0x1120 */
-      // data.emit({0x8B, 0x45, 0xE0});                                                                   /* mov eax, dword ptr [rbp - 0x20] */
-      // data.emit({0x6B, 0x4D, 0xE4, 0x03});                                                             /* imul ecx, dword ptr [rbp - 0x1c], 3 */
-      // data.emit({0x31, 0xC8});                                                                         /* xor eax, ecx */
-      // data.emit({0x89, 0x45, 0xE0});                                                                   /* mov dword ptr [rbp - 0x20], eax */
-      // data.emit({0x8B, 0x45, 0xE0});                                                                   /* mov eax, dword ptr [rbp - 0x20] */
-      // data.emit({0x83, 0xE0, 0x01});                                                                   /* and eax, 1 */
-      // data.emit({0x83, 0xF8, 0x00});                                                                   /* cmp eax, 0 */
-      // data.emit({0x75, 0x1A}, luramas::profile::inst_kind::jump_to, 5u, true);                         /* jne 0x10d0 */
-      // data.emit({0x48, 0x8B, 0x45, 0xF8});                                                             /* mov rax, qword ptr [rbp - 8] */
-      // data.emit({0x48, 0x63, 0x4D, 0xE4});                                                             /* movsxd rcx, dword ptr [rbp - 0x1c] */
-      // data.emit({0x8B, 0x04, 0x88});                                                                   /* mov eax, dword ptr [rax + rcx*4] */
-      // data.emit({0x48, 0x8B, 0x4D, 0xF0});                                                             /* mov rcx, qword ptr [rbp - 0x10] */
-      // data.emit({0x03, 0x41, 0x04});                                                                   /* add eax, dword ptr [rcx + 4] */
-      // data.emit({0x03, 0x45, 0xE8});                                                                   /* add eax, dword ptr [rbp - 0x18] */
-      // data.emit({0x89, 0x45, 0xE8});                                                                   /* mov dword ptr [rbp - 0x18], eax */
-      // data.emit({0xEB, 0x18}, luramas::profile::inst_kind::jump_to, 6u, false);                        /* jmp 0x10e8 */
-      // data.emit_label(5u);                                                                             /* LABEL */
-      // data.emit({0x48, 0x8B, 0x45, 0xF8});                                                             /* mov rax, qword ptr [rbp - 8] */
-      // data.emit({0x48, 0x63, 0x4D, 0xE4});                                                             /* movsxd rcx, dword ptr [rbp - 0x1c] */
-      // data.emit({0x8B, 0x04, 0x88});                                                                   /* mov eax, dword ptr [rax + rcx*4] */
-      // data.emit({0x48, 0x8B, 0x4D, 0xF0});                                                             /* mov rcx, qword ptr [rbp - 0x10] */
-      // data.emit({0x33, 0x41, 0x08});                                                                   /* xor eax, dword ptr [rcx + 8] */
-      // data.emit({0x03, 0x45, 0xE8});                                                                   /* add eax, dword ptr [rbp - 0x18] */
-      // data.emit({0x89, 0x45, 0xE8});                                                                   /* mov dword ptr [rbp - 0x18], eax */
-      // data.emit_label(6u);                                                                             /* LABEL */
-      // data.emit({0x83, 0x7D, 0xE8, 0x64});                                                             /* cmp dword ptr [rbp - 0x18], 0x64 */
-      // data.emit({0x7E, 0x02}, luramas::profile::inst_kind::jump_to, 7u, true);                         /* jle 0x10f0 */
-      // data.emit({0xEB, 0x30}, luramas::profile::inst_kind::jump_to, 4u, false);                        /* jmp 0x1120 */
-      // data.emit_label(7u);                                                                             /* LABEL */
-      // data.emit({0x8B, 0x45, 0xE4});                                                                   /* mov eax, dword ptr [rbp - 0x1c] */
-      // data.emit({0x83, 0xC0, 0x01});                                                                   /* add eax, 1 */
-      // data.emit({0x89, 0x45, 0xE4});                                                                   /* mov dword ptr [rbp - 0x1c], eax */
-      // data.emit({0x8B, 0x45, 0xE4});                                                                   /* mov eax, dword ptr [rbp - 0x1c] */
-      // data.emit({0xB9, 0x03, 0x00, 0x00, 0x00});                                                       /* mov ecx, 3 */
-      // data.emit({0x99});                                                                               /* cdq  */
-      // data.emit({0xF7, 0xF9});                                                                         /* idiv ecx */
-      // data.emit({0x83, 0xFA, 0x00});                                                                   /* cmp edx, 0 */
-      // data.emit({0x75, 0x02}, luramas::profile::inst_kind::jump_to, 8u, true);                         /* jne 0x110b */
-      // data.emit({0xEB, 0x8A}, luramas::profile::inst_kind::jump_to, 9u, false);                        /* jmp 0x1095 */
-      // data.emit_label(8u);                                                                             /* LABEL */
-      // data.emit({0x8B, 0x45, 0xE0});                                                                   /* mov eax, dword ptr [rbp - 0x20] */
-      // data.emit({0xD1, 0xE0});                                                                         /* shl eax, 1 */
-      // data.emit({0x8B, 0x4D, 0xE0});                                                                   /* mov ecx, dword ptr [rbp - 0x20] */
-      // data.emit({0xC1, 0xF9, 0x1F});                                                                   /* sar ecx, 0x1f */
-      // data.emit({0x09, 0xC8});                                                                         /* or eax, ecx */
-      // data.emit({0x89, 0x45, 0xE0});                                                                   /* mov dword ptr [rbp - 0x20], eax */
-      // data.emit({0xE9, 0x75, 0xFF, 0xFF, 0xFF}, luramas::profile::inst_kind::jump_to, 9u, false);      /* jmp 0x1095 */
-      // data.emit_label(4u);                                                                             /* LABEL */
-      // data.emit({0x8B, 0x45, 0xE8});                                                                   /* mov eax, dword ptr [rbp - 0x18] */
-      // data.emit({0xD1, 0xE0});                                                                         /* shl eax, 1 */
-      // data.emit({0x89, 0x45, 0xDC});                                                                   /* mov dword ptr [rbp - 0x24], eax */
-      // data.emit({0x8B, 0x45, 0xDC});                                                                   /* mov eax, dword ptr [rbp - 0x24] */
-      // data.emit({0x2B, 0x45, 0xE8});                                                                   /* sub eax, dword ptr [rbp - 0x18] */
-      // data.emit({0x89, 0x45, 0xDC});                                                                   /* mov dword ptr [rbp - 0x24], eax */
-      // data.emit({0x83, 0x7D, 0xEC, 0x00});                                                             /* cmp dword ptr [rbp - 0x14], 0 */
-      // data.emit({0x7D, 0x0B}, luramas::profile::inst_kind::jump_to, 10u, true);                        /* jge 0x1142 */
-      // data.emit({0x8B, 0x45, 0xDC});                                                                   /* mov eax, dword ptr [rbp - 0x24] */
-      // data.emit({0x35, 0xEF, 0xBE, 0xAD, 0xDE});                                                       /* xor eax, 0xdeadbeef */
-      // data.emit({0x89, 0x45, 0xDC});                                                                   /* mov dword ptr [rbp - 0x24], eax */
-      // data.emit_label(10u);                                                                            /* LABEL */
-      // data.emit({0x8B, 0x45, 0xDC});                                                                   /* mov eax, dword ptr [rbp - 0x24] */
-      // data.emit({0x89, 0x05, 0x00, 0x00, 0x00, 0x00});                                                 /* mov dword ptr [rip], eax */
-      // data.emit({0x8B, 0x45, 0xE8});                                                                   /* mov eax, dword ptr [rbp - 0x18] */
-      // data.emit({0x03, 0x45, 0xE0});                                                                   /* add eax, dword ptr [rbp - 0x20] */
-      // data.emit({0x5D});                                                                               /* pop rbp */
-      // data.emit({0xC3});                                                                               /* ret  */
+      profile::externals::data<x86_reg> externals;                                                               /* Externals */
+      cpu_tracer::blocks::builder::builder<MAX_LEN, DEFAULT_MODE> b;                                             /* Bytecode builder */
+      boost::unordered_flat_set<luramas_address> external_addrs;                                                 /* External addresses */
+      boost::unordered_flat_map<luramas_address, boost::unordered_flat_set<luramas_address>> external_addresses; /* External addresses to compile {realpc -> external addr] */
 
-      data.extract(mid_res);
-
-      const auto gened_details = luramas::profile::analyze::generate_details(mid_res);
-
-      std::vector<std::pair<luramas::il::vinst, cs_insn>> pinsts;
-      std::vector<std::pair<cs_insn *, std::size_t>> inst_freeable;
-
-      csh handle;
-      if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK) {
-            return "";
-      }
-      cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
-
-      const auto target_mid = 1u;
-
-      /* Get smallest */
+      /* Build assembly */
       {
-            const auto &insts = mid_res[target_mid];
-            for (const auto &i : luramas::profile::analyze::order_of_execution_organized(mid_res, target_mid)) {
+            /* Build data */
+            b.emitd({0xB8, 0x05, 0x00, 0x00, 0x00});                                                                      /* mov eax, 0x5 */
+            b.emitd({0xBB, 0x05, 0x00, 0x00, 0x00});                                                                      /* mov ebx, 0x5 */
+            b.emitd({0x39, 0xD8});                                                                                        /* cmp eax, ebx */
+            const auto i_je_10_rpc = b.emitd({0x74, 0x02}, edges{{0x10, edges_k::next}}, JUMP).first;                     /* je label_10 */
+            const auto i_jmp_15_rpc = b.emitd({0xEB, 0x05}, edges{{0x15, edges_k::next}}, JUMP).first;                    /* jmp label_15 */
+            const auto label_10 = *b.emit_label(0x10);                                                                    /* label_10: */
+            const auto i_call_1e_rpc = b.emitd({0xE8, 0x09, 0x00, 0x00, 0x00}, edges{{0x1E, edges_k::next}}, CALL).first; /* call 1e */
+            const auto label_15 = *b.emit_label(0x15);                                                                    /* label_15: */
+            b.emitd({0xB8, 0x01, 0x00, 0x00, 0x00});                                                                      /* mov eax, 0x1 */
+            b.emitd({0x31, 0xDB});                                                                                        /* xor ebx, ebx */
+            b.emitd({0xCD, 0x80});                                                                                        /* int 0x80 */
+            const auto label_1E = *b.emit_label(0x1E);                                                                    /* label_1E: */
+            external_addresses[b.emitd({0xE8, 0x95, 0x99, 0x92, 0x02}, std::nullopt, CALL).first].insert(0x29299b8);      /* call 29299b8 [EXTERNAL] */
+            external_addrs.insert(0x29299b8);                                                                             /* External: 0x29299b8 */
+            const auto i_retn_1e_rpc = b.emitd({0xC3}, edges{{0x1E, edges_k::next}}, RETN).first;                         /* ret */
+            /* Connect Edges */
+            b.connect_edge<edges_k::next>(label_10, i_je_10_rpc);   /* je label_10 -> label_10 */
+            b.connect_edge<edges_k::next>(label_15, i_jmp_15_rpc);  /* jmp label_15 -> label_15 */
+            b.connect_edge<edges_k::next>(label_1E, i_call_1e_rpc); /* call 1e -> label_1E */
+            b.connect_edge<edges_k::next>(label_1E, i_retn_1e_rpc); /* ret -> label_1E */
+      }
 
-                  if (const auto it = insts.map.find(i.loc.second); it != insts.map.end()) {
+      /* Build builder */
+      luramas::profile::raw_data<MAX_LEN> raw_data;                                                          /* Raw cpu tracer data */
+      b.build(raw_data.sdata, raw_data.adata, raw_data.edata);                                               /* Build data */
+      const auto graph = cpu_tracer::blocks::graph::generate_graph<MAX_LEN>(raw_data.adata, raw_data.edata); /* Graphed out builderc */
 
-                        const auto &inst = i.discrepency ? (*it->second.discrepancies)[*i.discrepency] : it->second.first;
+      /* Emit externals */
+      for (const auto &i : external_addrs) {
+            profile::externals::emit(externals, i, {}, {}, "UNK_" + std::to_string(i));
+      }
 
-                        cs_insn *insn;
-                        auto count = cs_disasm(handle, &(*inst.bytes.begin()), inst.bytes.size(), inst.pc, 1, &insn);
-                        if (!count) {
-                              cs_close(&handle);
-                              cs_open(CS_ARCH_X86, CS_MODE_32, &handle);
-                              cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
-                              count = cs_disasm(handle, &(*inst.bytes.begin()), inst.bytes.size(), inst.pc, 1, &insn);
-                              cs_close(&handle);
-                              cs_open(CS_ARCH_X86, CS_MODE_16, &handle);
-                              cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
+      /* Capstone handler */
+      std::vector<std::pair<cs_insn *, std::size_t>> insts; /* Capstone instruction, count */
+      csh x64_handle;                                       /* X64 capstone handle */
+      csh x32_handle;                                       /* X32 capstone handle */
+      csh x16_handle;                                       /* X16 capstone handle */
+
+      /* Init capstone handle */
+      {
+            /* X64 */
+            if (cs_open(CS_ARCH_X86, CS_MODE_64, &x64_handle) != CS_ERR_OK) {
+                  return "";
+            }
+            cs_option(x64_handle, CS_OPT_DETAIL, CS_OPT_ON);
+            /* X32 */
+            if (cs_open(CS_ARCH_X86, CS_MODE_32, &x32_handle) != CS_ERR_OK) {
+                  return "";
+            }
+            cs_option(x32_handle, CS_OPT_DETAIL, CS_OPT_ON);
+            /* X16 */
+            if (cs_open(CS_ARCH_X86, CS_MODE_16, &x16_handle) != CS_ERR_OK) {
+                  return "";
+            }
+            cs_option(x16_handle, CS_OPT_DETAIL, CS_OPT_ON);
+      }
+
+      std::vector<std::pair<luramas::il::vinst<MAX_LEN>, cs_insn>> pinsts; /* Instructions */
+
+      /* Generate instruction pointers */
+      {
+            for (const auto &i : luramas::profile::analyze::linearize(graph)) {
+
+                  csh handle;                  /* Current capstone handle */
+                  const auto &node = graph[i]; /* On node */
+
+                  /* Get capstone handle */
+                  switch (node->interpretation_id) {
+                        case X64: {
+                              handle = x64_handle;
+                              break;
                         }
+                        case X32: {
+                              handle = x32_handle;
+                              break;
+                        }
+                        case X16: {
+                              handle = x16_handle;
+                              break;
+                        }
+                        default: {
+                              switch (DEFAULT_MODE) {
+                                    case X64: {
+                                          handle = x64_handle;
+                                          break;
+                                    }
+                                    case X32: {
+                                          handle = x32_handle;
+                                          break;
+                                    }
+                                    case X16: {
+                                          handle = x16_handle;
+                                          break;
+                                    }
+                                    default: {
+                                          break;
+                                    }
+                              }
+                        }
+                  }
+
+                  /* Disassemble */
+                  for (auto i = 0u; i < node->insts.size(); ++i) {
+
+                        const auto &ninst = node->insts[i];
+
+                        cs_insn *insn; /* Instruction ptr */
+                        const auto count = cs_disasm(handle, &(*ninst.inst.bytes.begin()), ninst.inst.bytes.size(), ninst.inst.pc, 1, &insn);
                         for (auto idx = 0u; idx < count; ++idx) {
-                              pinsts.emplace_back(luramas::il::vinst(inst, it->second, i.fstart_scope, i.fend_scope), insn[idx]);
+
+                              luramas::il::vinst<MAX_LEN> vinst;
+                              vinst.inst = ninst;
+
+                              /* Get Real PC edges */
+                              if (i + 1u == node->insts.size()) {
+                                    if (const auto eit = raw_data.edata.successors.find(ninst.inst.real_pc); eit != raw_data.edata.successors.end()) {
+
+                                          if (!vinst.edges) {
+                                                vinst.edges.emplace();
+                                          }
+                                          auto &v = *vinst.edges;
+                                          for (const auto &ei : eit->second) {
+                                                profile::edge e;
+                                                e.second = luramas::profile::inst_kind(ninst.flags);
+                                                if (ei.kinds[std::uint8_t(cpu_tracer::blocks::edges::kind::signaled)]) {
+                                                      e.second = luramas::profile::inst_kind::signaled_to;
+                                                }
+                                                e.first = luramas::profile::real_or_addr(true, ei.dst_realpc);
+                                                v.emplace_back(e);
+                                          }
+                                    }
+                              }
+
+                              /* Get external edges */
+                              if (const auto exit = external_addresses.find(ninst.inst.real_pc); exit != external_addresses.end()) {
+
+                                    /* Emit externals */
+                                    if (!vinst.edges) {
+                                          vinst.edges.emplace();
+                                    }
+                                    auto &v = *vinst.edges;
+                                    for (const auto &ei : exit->second) {
+                                          v.emplace_back(luramas::profile::real_or_addr(false, ei), luramas::profile::inst_kind(ninst.flags));
+                                    }
+                              }
+                              pinsts.emplace_back(vinst, insn[idx]);
                         }
-                        inst_freeable.emplace_back(insn, count);
-                  } else {
-                        break;
+                        insts.emplace_back(insn, count);
                   }
             }
       }
 
-      boost::unordered_flat_map<profile::module_id, profile::analyze::details> details;
-      details[target_mid] = gened_details;
+      /* Generate page/label data */
+      profile::details details;
+      details.pages = luramas::profile::analyze::generate_pages(raw_data);
 
-      profile::externals::data<x86_reg> external;
-      //profile::externals::emit(external, 0xFFF36090, {}, {}, "UNK_FFF36090");
-      //profile::externals::emit(external, 0xFFF360E0, {}, {}, "UNK_FFF360E0");
-      //profile::externals::emit(external, 0x00004AC0, {}, {}, "UNK_00004AC0");
-      for (const auto &[lid, v] : details[target_mid].externals) {
-            for (const auto &i : v) {
-                  profile::externals::emit(external, i, {x86_reg::X86_REG_RCX, x86_reg::X86_REG_RDX}, {}, "UNK_" + std::to_string(i), lid);
-            }
-      }
+      /* Lift X86 to IL */
+      luramas::il::X86::lifter::lift(buffer, pinsts, hw_constants, externals, details);
 
-      luramas::il::X86::lifter::hardware_constants hw_constants;
-      hw_constants.suggested_bit_set = 32u;
-      hw_constants.MAXVL = 512u;
-      luramas::il::X86::lifter::lift(pinsts, hw_constants, buffer, details, external);
-      for (const auto &[insn, n] : inst_freeable) {
+      /* Free capstone instructions */
+      for (const auto &[insn, n] : insts) {
             cs_free(insn, n);
       }
 
+      /* Generate closure */
       auto closure = luramas::closures::gen_closure(buffer);
       closure->flags.fassociated_args = true;
 
@@ -293,6 +239,8 @@ std::optional<std::string> luramas::decompile_x86(const std::string &code, std::
       };
       format->linebreak.page_function_end_post = 1u;
 
+      std::cout << luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::cpp, luramas::ir::lift(closure, env_flags), format) << std::endl;
+      std::cin.get();
       return luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::cpp, luramas::ir::lift(closure, env_flags), format);
 }
 #endif

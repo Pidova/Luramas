@@ -9,6 +9,7 @@
 */
 namespace luramas::il::lifter::builder {
 
+      /* Register wrapper */
       struct reg {
 
             reg(const luramas_register r = 0u,
@@ -48,6 +49,8 @@ namespace luramas::il::lifter::builder {
             bits_mismatch, /* Mismatch bit size */
             NaN            /* Not a number */
       };
+
+      /* Instruction builder DSL */
       struct build : std::enable_shared_from_this<build> {
 
             build(const luramas_address pc, const luramas_address idx, const luramas_register temp, const std::shared_ptr<luramas::il::ilang> &il, const std::shared_ptr<luramas::il::disassembly> &current)
@@ -55,6 +58,7 @@ namespace luramas::il::lifter::builder {
             }
             build() = default;
 
+            /* Expression DSL for builder */
             struct expr {
 
                   /* Constructor */
@@ -247,7 +251,7 @@ namespace luramas::il::lifter::builder {
 
                   /* Misc */
                   expr fill(const luramas_bitwidth start, const std::intptr_t value) const;
-                  luramas_bitwidth bits() const;
+                  luramas_bitwidth bits() const; /* Get expr bit-width */
                   luramas::types::signess signess() const;
                   luramas::types::underlying_type type() const;
 
@@ -451,21 +455,24 @@ namespace luramas::il::lifter::builder {
                   return;
             }
 
-            std::shared_ptr<disassembly> find_original_map(const profile::module_id mid, const luramas_address loc);
+            /* See if RealPC is in original map, errors if not */
+            std::pair<luramas_address, std::shared_ptr<disassembly>> find_original_map(const luramas_raddress loc);
 
             /* Pages */
-            void page_retn();
-            void page_retn(const luramas_register ret_reg, const luramas_address loc);
-            void page_call(const profile::module_id mid, const luramas_address loc, const expr &r, const std::intptr_t v);
-            void page_jump(const profile::module_id mid, const luramas_address loc);
-            void page_return();
-            void close_page();
-            bool is_page_loc(const profile::module_id mid, const profile::address addr) const;
+            void page_retn();                                                                 /* Make generic page return */
+            void page_retn(const luramas_register ret_reg, const luramas_raddress loc);       /* Make return to page given realPC page ID */
+            void page_call(const luramas_raddress loc, const expr &r, const std::intptr_t v); /* Make call to page ID (Based on real PC) */
+            void page_jump(const luramas_raddress loc);                                       /* Make page jump based on input page ID (Page ID based on realpc) */
+            void page_return();                                                               /* Make generic page return */
+            void close_page();                                                                /* Close current open page on stack */
+            bool is_page_loc(const luramas_raddress addr) const;                              /* Is real PC page loc? */
 
-            void make_goto(const profile::module_id mid, const luramas_address loc);
-            void make_non_direct_goto(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
-            void non_direct_page_call(const expr &value, const profile::module_id mid, const luramas_address loc, const expr &r, const std::intptr_t val, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
-            void non_direct_page_jmp(const expr &value, const profile::module_id mid, const luramas_address loc, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
+            void make_goto(const luramas_raddress loc);                                                                                                                                             /* Make goto to real PC */
+            void make_non_direct_goto(const expr &value, const luramas_raddress loc, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);                                         /* Make a non direct goto using cmp to real PC */
+            void non_direct_page_call(const expr &value, const luramas_raddress loc, const expr &r, const std::intptr_t val, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID); /* Make a non direct call using cmp to a real PC */
+            void non_direct_page_jmp(const expr &value, const luramas_raddress loc, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);                                          /* Make a non direct page jump using cmp to a real PC */
+
+            /* External Pages */
             void external_page_call(const std::string &name, const std::vector<expr> &args, const std::vector<expr> &results);
             void non_direct_external_page_call(const expr &value, const luramas_address loc, const std::string &name, const std::vector<expr> &args, const std::vector<expr> &results, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
             void external_page_jmp(const luramas_address loc);
@@ -482,11 +489,10 @@ namespace luramas::il::lifter::builder {
                   return;
             }
 
-            void make_goto(const std::uintptr_t ID);
-            void make_label(const std::uintptr_t ID);
+            void make_label(const luramas_raddress ID); /* Make label given real PC as ID */
             std::shared_ptr<luramas::il::disassembly> make(const luramas::il::arch::data::bin_kinds b);
-            void make_else();
-            void close_scope(const bool input = false, luramas_address loc = 0u);
+            void make_else();                                                     /* Makes else, returns error if theres no open conditions  */
+            void close_scope(const bool input = false, luramas_address loc = 0u); /* Close current scope, errors if there are no open scopes.  */
             expr make_reg(const luramas_register r);
             void make_load(const std::uint64_t flag_id, const expr &reg);
             void make_load(const expr &reg, const std::intptr_t i);
@@ -524,10 +530,10 @@ namespace luramas::il::lifter::builder {
             expr make_bitwrite(const expr &dest, const expr &src, const expr &min, const expr &max);
 
             /* Stack */
-            void make_push(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);
-            void make_pop(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);
-            void make_pop(const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);
-            void make_page(const std::intptr_t ID);
+            void make_push(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID); /* Make stack push expr */
+            void make_pop(const expr &e, const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);  /* Make stack pop expr */
+            void make_pop(const std::uint32_t ID = LURAMAS_IR_DEFAULT_STACK_ID);                 /* Make stack pop */
+            void make_page(const luramas_raddress ID);                                           /* Make page */
 
             /* Clears builder */
             void clear();
@@ -540,34 +546,29 @@ namespace luramas::il::lifter::builder {
             }
             void cmp(const expr &e, const std::uintptr_t segregation = LURAMAS_IR_DEFAULT_SEGREGATION_ID);
 
-            boost::unordered_flat_map<luramas_register, luramas_register_contents> constant;
-            luramas_address idx = 0u;
-            luramas_address pc = 0u;
-            std::shared_ptr<luramas::il::ilang> il = nullptr;
-            std::shared_ptr<luramas::il::disassembly> current = nullptr;
-            boost::unordered_flat_map<profile::module_id, profile::analyze::details> details;
-            boost::unordered_flat_map<profile::module_id, boost::unordered_flat_map<luramas_address, std::shared_ptr<disassembly>>> original_address_data;
-            std::uint8_t suggested_bit_set = 0u;
+            luramas_address idx = 0u;                                                                                                    /* Index of current IL disassembly placeholder */
+            luramas_address pc = 0u;                                                                                                     /* Current PC */
+            std::uint8_t suggested_bit_set = 0u;                                                                                         /* Bit set to use */
+            profile::details details;                                                                                                    /* Profile details */
+            std::shared_ptr<luramas::il::ilang> il = nullptr;                                                                            /* Linked IL */
+            std::shared_ptr<luramas::il::disassembly> current = nullptr;                                                                 /* Current disassembly */
+            boost::unordered_flat_map<luramas_register, luramas_register_contents> constant;                                             /* Register map to immidiate constant */
+            boost::unordered_flat_map<luramas_raddress, std::pair<luramas_address, std::shared_ptr<disassembly>>> original_address_data; /* Real PC -> {Original address, Disassembly pointer} */
 
           private:
-            luramas_register temp = 0u;                                                                   /* Current avaliable register */
-            std::vector<std::intptr_t> opended_pages;                                                     /* Current unclosed pages */
-            std::vector<std::shared_ptr<luramas::il::disassembly>> opened_conditions;                     /* Current unclosed conditions */
-            boost::unordered_flat_map<luramas_address, std::shared_ptr<luramas::il::disassembly>> labels; /* Label map, Curr Address -> Any existing label */
-            boost::unordered_flat_map<std::string, luramas_id> globals;                                   /* Global table maps STR -> Global ID */
+            luramas_register temp = 0u;                                                                    /* Current avaliable register */
+            std::vector<luramas_raddress> opended_pages;                                                   /* Current unclosed pages */
+            std::vector<std::shared_ptr<luramas::il::disassembly>> opened_conditions;                      /* Current unclosed conditions */
+            boost::unordered_flat_map<luramas_raddress, std::shared_ptr<luramas::il::disassembly>> labels; /* Label map, Curr Address -> Any existing label */
+            boost::unordered_flat_map<std::string, luramas_id> globals;                                    /* Global table maps STR -> Global ID */
       };
 
-      template <typename inst_T, typename regs_T, typename flags_T, typename hardware_cnst_T>
+      /* Handler for CPU extra info */
+      template <typename inst_T, typename regs_T, typename flags_T, typename hardware_cnst_T, std::uint8_t MAX_LEN>
       struct registrar {
 
-            registrar(const inst_T inst, const std::shared_ptr<build> &build, const hardware_cnst_T &hw_constants, const luramas::profile::externals::data<regs_T> &externals, const luramas::profile::inst_bytes &bytes = {})
-                : inst(inst), build(build), hw_constants(hw_constants), bytes(bytes), externals(externals) {
-                  return;
-            }
-
-            inline void clear() {
-                  this->flags.clear();
-                  this->regs.clear();
+            registrar(const inst_T inst, const std::shared_ptr<build> &build, const hardware_cnst_T &hw_constants, const luramas::profile::externals::data<regs_T> &externals)
+                : inst(inst), build(build), hw_constants(hw_constants), externals(externals) {
                   return;
             }
 
@@ -595,6 +596,13 @@ namespace luramas::il::lifter::builder {
                   return;
             }
 
+            /* Clear flags and regs */
+            inline void clear() {
+                  this->flags.clear();
+                  this->regs.clear();
+                  return;
+            }
+
             /* Zero registers */
             inline void zero_regs() {
                   for (auto &[t, expr] : this->regs) {
@@ -610,22 +618,7 @@ namespace luramas::il::lifter::builder {
                   return;
             }
 
-            inline std::vector<profile::inst> get_details() const {
-
-                  std::vector<profile::inst> result;
-
-                  if (this->original.first.cmp(this->bytes)) {
-                        result.emplace_back(this->original.first);
-                  }
-                  if (this->original.discrepancies) {
-                        for (const auto &i : *this->original.discrepancies) {
-                              if (i.cmp(this->bytes)) {
-                                    result.emplace_back(i);
-                              }
-                        }
-                  }
-                  return result;
-            }
+            /* Get exprs as regs */
             inline std::vector<build::expr> get(const std::vector<regs_T> &regs) const {
 
                   std::vector<build::expr> result;
@@ -639,20 +632,21 @@ namespace luramas::il::lifter::builder {
             }
 
             /* Data */
-            inst_T inst;                            /* Current instruction handler */
-            hardware_cnst_T hw_constants;           /* User input hard-ware constants */
-            std::shared_ptr<build> build = nullptr; /* Linked builder */
-            luramas::profile::inst_bytes bytes;
-            luramas::profile::real_inst original;
-            luramas::profile::externals::data<regs_T> externals;
+            inst_T inst;                                               /* Current instruction handler */
+            hardware_cnst_T hw_constants;                              /* User input hard-ware constants */
+            std::shared_ptr<build> build = nullptr;                    /* Linked builder */
+            cpu_tracer::inst_bytes<MAX_LEN> bytes;                     /* Instruction bytes */
+            vinst<MAX_LEN> v_inst;                                     /* Instruction data */
+            profile::externals::data<regs_T> externals;                /* External functions */
             boost::unordered_flat_map<std::size_t, build::expr> regs;  /* Map of regs, register -> EXPR */
             boost::unordered_flat_map<std::size_t, build::expr> flags; /* Map of flags, register -> EXPR */
       };
 
+      /* Cast many exprs to a unsigned, N bitwidth type */
       template <std::size_t N, typename... EXPS>
       void cast(EXPS &...exprs) {
-            static_assert(sizeof...(exprs) > 0u, "requires at least one expr");
 
+            static_assert(sizeof...(exprs) > 0u, "requires at least one expr");
             ((
                  exprs = exprs.cast(types::underlying_type(false, types::read_type::bits, 0u, N))),
                 ...);

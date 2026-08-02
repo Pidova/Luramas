@@ -36,6 +36,7 @@ namespace luramas::ir::library {
             this->lib.value().try_emplace(key, ptr);
             return;
       }
+
       void library::members::init_lib() {
             if (!this->lib.has_value()) {
                   this->lib.emplace(boost::unordered_flat_map<std::string, std::shared_ptr<members>>());
@@ -54,10 +55,12 @@ namespace luramas::ir::library {
             }
             return;
       }
+
       void library::members::clear() {
             *this = library::members();
             return;
       }
+
       std::string library::members::str(const std::string &indent, bool is_last) const {
             std::ostringstream oss;
 

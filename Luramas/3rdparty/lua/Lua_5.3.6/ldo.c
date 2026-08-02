@@ -383,8 +383,8 @@ int luaD_poscall(lua_State *L, CallInfo *ci, StkId firstResult, int nres) {
 /* macro to check stack size, preserving 'p' */
 #define checkstackp(L, n, p)                                                                 \
       luaD_checkstackaux(L, n, ptrdiff_t t__ = savestack(L, p); /* save 'p' */               \
-                         luaC_checkGC(L),                       /* stack grow uses memory */ \
-                         p = restorestack(L, t__))              /* 'pos' part: restore 'p' */
+          luaC_checkGC(L),                                      /* stack grow uses memory */ \
+          p = restorestack(L, t__))                             /* 'pos' part: restore 'p' */
 
 /*
 ** Prepares a function call: checks the stack, creates a new CallInfo

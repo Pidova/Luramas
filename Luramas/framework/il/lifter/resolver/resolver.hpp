@@ -4,10 +4,8 @@
 
 namespace luramas::il::lifter::resolver {
 
-      /*
-        Passes after parser to fix up instruction.
-      */
-      template <typename T /* Original datastruct pointer i.e. Python not Python* for template. */>
+      /* Passes after parser to fix up instruction */
+      template <typename T /* Original datastruct pointer i.e. Python not Python* for template */>
       class resolver_manager {
 
           public:

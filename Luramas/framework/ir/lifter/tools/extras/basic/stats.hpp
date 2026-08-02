@@ -50,7 +50,7 @@ namespace luramas::ir::tools::stat {
       }
       /* return goes to pages */
       inline bool is_page_return(const std::shared_ptr<ir_stat> &return_stat) {
-            return is_return(return_stat) && !return_stat->smembers.empty();
+            return is_return(return_stat) && return_stat->flags.fpage_keyword;
       }
       /* return is empty */
       inline bool is_return_empty(const std::shared_ptr<ir_stat> &return_stat) {

@@ -5,14 +5,17 @@
 #include "parser/parser.hpp"
 #include <iostream>
 
-void luramas::il::X86::lifter::lift(const std::vector<std::pair<luramas::il::vinst, cs_insn>> &insts, const hardware_constants &hw_constants, std::shared_ptr<luramas::il::ilang> &buffer, const boost::unordered_flat_map<profile::module_id, profile::analyze::details> &details, const profile::externals::data<x86_reg> &external) {
+namespace luramas::il::X86::lifter {
 
-      luramas::il::helpers::low::disassembly_manager<cs_insn> dm(insts, buffer, details, x86_reg::X86_REG_ENDING + 1u, true);
+      void lift(std::shared_ptr<ilang> &buffer, const std::vector<vinst_cs> &insts, const hardware_constants &hw_constants, const profile::externals::data<x86_reg> &externals, const profile::details &details) {
 
-      /* Parse instructions. */
-      parser::parse_instruction(dm, hw_constants, external);
-      transformers::kinds(buffer);
-      return;
-}
+            helpers::low::disassembly_manager<MAX_LEN, cs_insn> dm(insts, buffer, details, x86_reg::X86_REG_ENDING + 1u, true);
+
+            /* Parse instructions. */
+            parser::parse_instruction(dm, externals, hw_constants);
+            transformers::kinds(buffer);
+            return;
+      }
+} // namespace luramas::il::X86::lifter
 
 #endif

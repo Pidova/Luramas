@@ -7,7 +7,7 @@
 
 /* DEBUG GLOBALS */
 #ifdef DEBUG
-#ifdef LURAMAS_TARGET_BIGDATA
+//#ifdef LURAMAS_TARGET_BIGDATA
 extern std::string LURMAS_GLOBAL_PDUMP;
 #define LURAMAS_PRINTF(format, ...)                                                              \
       {                                                                                          \
@@ -19,9 +19,9 @@ extern std::string LURMAS_GLOBAL_PDUMP;
             }                                                                                    \
             LURMAS_GLOBAL_PDUMP += buffer.data();                                                \
       }
-#else
-#define LURAMAS_PRINTF(format, ...) std::printf(format, ##__VA_ARGS__);
-#endif
+//#else
+//#define LURAMAS_PRINTF(format, ...) std::printf(format, ##__VA_ARGS__);
+//#endif
 #else
 #define LURAMAS_PRINTF(format, ...) (void)0
 #endif

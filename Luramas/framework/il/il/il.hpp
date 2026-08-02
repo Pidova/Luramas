@@ -21,17 +21,19 @@
 namespace luramas::il {
 
       /* Virtual instruction, instruction that can emit multiple instructions or do something very specific that has no direct translation */
+      template <std::uint8_t MAX_LEN>
       struct vinst {
-            profile::inst main;
-            profile::real_inst rinst;
-            luramas_flag fstart_cmp_bytes = false;
-            luramas_flag fend_cmp_bytes = false;
+            cpu_tracer::blocks::inst_data<MAX_LEN> inst;                    /* Instruction data */
+            std::optional<std::vector<profile::edge>> edges = std::nullopt; /* Edges to real PC */
+            luramas_flag fstart_cmp_bytes = false;                          /* Start of scope for SMC i.e (CODE INSTRUCTIONS == SMC START REGION) add it to stack */
+            luramas_flag fend_cmp_bytes = false;                            /* End of scope for SMC with the back of stack */
+            luramas_flag fentry = false;                                    /* Inst is entry? */
       };
 
       /* Programs memory */
       struct program_memory {
-            std::size_t base = 0u;
-            std::vector<std::uint8_t> memory;
+            std::size_t base = 0u;            /* Base pointer */
+            std::vector<std::uint8_t> memory; /* Memory region */
       };
 
       /* IL manager */
@@ -229,19 +231,19 @@ namespace luramas::il {
             std::vector<std::shared_ptr<disassembly>> back;                                   /* Data to insert in the back */
             boost::unordered_flat_set<std::shared_ptr<disassembly>> ignore;                   /* Data to ignore */
 
-            /* Throws error if IL is not valid. */
+            /* Throws error if IL is not valid */
             void validate(const errors::error &valid);
 
-            /* Validates operands for IL. */
+            /* Validates operands for IL */
             errors::error validate_operands();
 
-            /* Resolves mutated or missing addresses. */
+            /* Resolves mutated or missing addresses */
             void resolve_addresses();
 
-            /* Resolves jump location and reference. */
+            /* Resolves jump location and reference */
             void resolve_jumps();
 
-            /* Resolves xrefs. */
+            /* Resolves xrefs */
             void resolve_xrefs();
       };
 
@@ -282,34 +284,36 @@ namespace luramas::il {
                          Data is usually pre-parsed into parser when a lot of mutations need to be made
                          Everything is mapped out making it easier
                   */
-                  template <typename T>
+                  template <std::uint8_t MAX_LEN, typename T>
                   struct disassembly_manager {
 
-                        disassembly_manager(const std::vector<std::pair<luramas::il::vinst, T>> &data,
+                        disassembly_manager(const std::vector<std::pair<vinst<MAX_LEN>, T>> &data,
                             const std::shared_ptr<il::ilang> &il,
-                            const boost::unordered_flat_map<profile::module_id, profile::analyze::details> &details,
+                            const profile::details &details,
                             const luramas_register temp_reg = 0u,
-                            const bool fill_pending = false)
+                            const luramas_flag ffill_pending = false)
                             : data(data), temp_reg(temp_reg), il(il), details(details) {
 
-                              if (fill_pending) {
-                                    for (const auto &[i, d] : data) {
-                                          auto ptr = std::make_shared<disassembly>();
-                                          ptr->op = arch::opcodes::OP_PEND;
-                                          ptr->addr = i.main.pc;
-                                          auto [it, inserted] = this->original_address_data.try_emplace(i.main.mid, boost::unordered_flat_map<luramas_address, std::shared_ptr<disassembly>>());
-                                          it->second.try_emplace(i.main.pc, ptr);
-                                          this->il->insert_front(ptr);
-                                    }
-                                    this->il->commit_dis();
+                              /* Fill all instructions with pending */
+                              if (!ffill_pending) {
+                                    return;
                               }
+                              for (const auto &[i, d] : data) {
+                                    const auto ptr = std::make_shared<disassembly>();
+                                    ptr->op = arch::opcodes::OP_PEND;
+                                    ptr->addr = i.inst.inst.pc;
+                                    this->original_address_data[i.inst.inst.real_pc] = std::make_pair(ptr->addr, ptr);
+                                    this->il->insert_front(ptr);
+                              }
+                              this->il->commit_dis();
+                              return;
                         };
 
-                        std::vector<std::pair<luramas::il::vinst, T>> data;
-                        luramas_register temp_reg = 0u;
-                        std::shared_ptr<luramas::il::ilang> il = nullptr;
-                        boost::unordered_flat_map<profile::module_id, boost::unordered_flat_map<luramas_address, std::shared_ptr<disassembly>>> original_address_data;
-                        boost::unordered_flat_map<profile::module_id, profile::analyze::details> details;
+                        std::vector<std::pair<luramas::il::vinst<MAX_LEN>, T>> data;                                                                 /* Data */
+                        luramas_register temp_reg = 0u;                                                                                              /* Allocated largest temp reg: temp_reg <= temp_reg + 1... unused */
+                        std::shared_ptr<luramas::il::ilang> il = nullptr;                                                                            /* Linked IL */
+                        profile::details details;                                                                                                    /* Profile details */
+                        boost::unordered_flat_map<luramas_raddress, std::pair<luramas_address, std::shared_ptr<disassembly>>> original_address_data; /* Real PC -> {Original address, Disassembly pointer} */
                   };
             } // namespace low
       } // namespace helpers

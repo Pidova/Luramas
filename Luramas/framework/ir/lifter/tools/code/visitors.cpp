@@ -198,13 +198,10 @@ namespace luramas::ir::tools::visitors {
 
                   const auto &s = pm[curr];
 
-                  /* Definition */
                   if (tools::stat::is_definition(s)) {
                         ++curr;
                         continue;
                   }
-
-                  /* Goto */
                   if (tools::stat::branch::is_goto(s) && s->flags.fpage_seperator) {
                         curr = common::safe_take_jump(pm, curr);
                   }

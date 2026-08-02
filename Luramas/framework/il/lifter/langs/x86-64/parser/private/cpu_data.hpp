@@ -10,11 +10,11 @@ namespace internal {
       namespace globals {
 
             /* Registers */
-            static constexpr auto XCR = "XCR";
-            static constexpr auto MXCSR = "MXCSR";
-            static constexpr auto TASK_REGISTER = "TASK_REGISTER";
-            static constexpr auto x87FPUTagWord = "x87FPUTagWord";
-            static constexpr auto MSR = "MSR";
+            [[maybe_unused]] static constexpr auto XCR = "XCR";                     /* Extended Control Register */
+            [[maybe_unused]] static constexpr auto MXCSR = "MXCSR";                 /* Control and status information for SSE registers */
+            [[maybe_unused]] static constexpr auto TASK_REGISTER = "TASK_REGISTER"; /* Points to the Task State Segment in use */
+            [[maybe_unused]] static constexpr auto x87FPUTagWord = "x87FPUTagWord"; /* Identify Stack Overflows */
+            [[maybe_unused]] static constexpr auto MSR = "MSR";                     /* Handles CPU features */
       } // namespace globals
 
       namespace data {

@@ -1,12 +1,12 @@
 # X86-Emitter
 
-A small utility that takes raw x86-64 machine code, disassembles it with [Capstone](https://www.capstone-engine.org/), and prints out C++ `data.emit(...)` 
-calls for the `luramas::profile` emitter.
+A small utility that takes raw x86-64 machine code, disassembles it with [Capstone](https://www.capstone-engine.org/), and prints out C++ `b.emitd(...)` 
+calls for the `cpu_tracer::blocks::builder::builder<...>` builder.
 Jump and call targets are resolved automatically: reachable targets are turned into labels, while targets that fall outside the supplied buffer are printed separately so nothing is silently dropped.
 
 ## Limitations
 
-> This is designed to only test linearized behaviours to test x86 lifter and passes. Self-modifying code is not supported.
+> This is designed to only test linearized behaviours to test x86 lifter and passes.
 
 
 ## Overview
@@ -16,8 +16,8 @@ Given a byte array, the script will:
 - Disassemble the bytes as **64-bit x86** starting at a configurable base address.
 - Walk every instruction and collect the targets of all jumps and calls.
 - Assign an incrementing label ID to each reachable jump/call target.
-- Emit one `data.emit({ ... })` line per instruction, annotated with the original mnemonic and operands as a trailing comment.
-- For control-flow instructions, `inst_kind` (`jump_to` / `call_to`), the resolved label (or raw address), and for jumps whether the branch is conditional.
+- Emit one `b.emitd({ ... })` (`b` being builder) line per instruction, annotated with the original mnemonic and operands as a trailing comment.
+- For control-flow instructions, `inst_kind` (`JUMP` / `CALL`), the resolved label (or raw address), and for jumps whether the branch is conditional.
 - Print a list of any jump/call targets that were referenced but not present in the buffer.
 
 ## Example
@@ -39,7 +39,11 @@ As bytes (set by default):
 
 Output:
 ```
-data.emit({0x83, 0xC0, 0x05}); /* add eax, 5 */
+/* Build assembly */
+{
+      /* Build data */
+      b.emitd({0x83, 0xC0, 0x05}); /* add eax, 0x5 */
+}
 ```
 
 ## Usage

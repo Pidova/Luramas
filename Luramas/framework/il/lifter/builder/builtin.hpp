@@ -4,6 +4,7 @@
 /* Static definitions of builtins */
 namespace luramas::il::lifter::builder::builtin {
 
+      /* Builtin argument */
       struct arg {
 
             const char *name = "";               /* Argument nme */
@@ -11,16 +12,20 @@ namespace luramas::il::lifter::builder::builtin {
             std::int16_t idx = -1;               /* 0 > n = No IDX */
             types::native::compiler::object obj; /* Internal object */
 
+            /* Builtin arg name is empty? */
             inline bool empty() const {
                   return !std::strlen(this->name);
             }
       };
 
+      /* Builtin function name */
       struct func {
 
             const char *name = "";   /* Function name */
             std::vector<arg> dests;  /* Destination buffer args */
             std::vector<arg> source; /* Source buffer args */
+
+            /* Builtin func name is empty? */
             inline bool empty() const {
                   return !std::strlen(this->name);
             }

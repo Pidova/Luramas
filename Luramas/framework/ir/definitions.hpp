@@ -112,7 +112,7 @@ namespace luramas::ir {
             page_function_closure, /* Page function that got turned into a closure (ID : GLOBAL)R, CLOSURE(V) */
             page_function_start,   /* Start page function (ID : GLOBAL)R */
             page_function_end,     /* End page function (ID : GLOBAL)R */
-            page_function_goto,    /* Goto to page function, interpetation as pf_k  (ID : GLOBAL)R, (Args)Members, (Expecting param register)Smember, (Controller)V, (Insertion where)L, (Value)LBA  */
+            page_function_goto,    /* Goto to page function, interpetation as pf_k  (ID : GLOBAL)R, (Args)Members, (Expecting param register)Smember, (Controller)V, (Insertion where)L, (User Value)LBA  */
             page_function_pass,    /* End of page_function_end passes registers mutated in that page out of page if it can, all registers are linked (MEMBERS) */
             globals_preset,        /* Sets global based on the closests later in scope explicit global set of it (Stored in meta as closure with only stat being where it is set) */
             bitwrite,              /* Write to dest with (Starts at 0)[MIN, MAX] from source L(DEST), R(VALUE), [V(MIN), LBA(MAX)] */

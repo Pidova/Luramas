@@ -37,6 +37,7 @@ namespace luramas::ir::generation {
                   luramas_address ending = 0u;   /* Ending point */
                   luramas_blockrange node_range; /* Nodes begin */
 
+                  /* Emitters */
                   void emit(const std::shared_ptr<block> &jump, const std::shared_ptr<block> &then = nullptr, const std::shared_ptr<block> &fall = nullptr);
                   void emit(const luramas_address entry, const luramas_address ending = 0u, const luramas_address nodes_begin = 0u, const luramas_address nodes_end = 0u);
                   void emit(const luramas_address entry, const luramas_address ending = 0u, const luramas_blockrange range = {0u, 0u});
@@ -46,13 +47,16 @@ namespace luramas::ir::generation {
                   boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3u> get_successors_bk() const; /* Get successors with block kinds */
                   boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3u> get_block_successors() const;    /* Get block successors */
 
+                  /* Determines the edge kind connecting to the target block, prioritizing back-edges over forward successors */
                   edge_kind dominant_successor_edge(const std::shared_ptr<block> &target) const;
-                  luramas_address get_end() const;
-                  luramas_address get_front() const;
+
+                  /* Ranges */
+                  luramas_address get_end() const;   /* Gets front: [front, ...) */
+                  luramas_address get_front() const; /* Gets end: [..., end) */
 
                   /* Iterations */
-                  luramas_range_iter get_iter() const;
-                  luramas_range_reverse_iter get_riter() const;
+                  luramas_range_iter get_iter() const;          /* Normal range iterator */
+                  luramas_range_reverse_iter get_riter() const; /* Reverse range iterator */
             };
 
             struct cfg {
@@ -108,6 +112,7 @@ namespace luramas::ir::generation {
 
       namespace types {
 
+            /* SSA values seen with predicted count size */
             template <std::uint8_t p>
             using ssa_values = boost::unordered_flat_smallpolyset<luramas_xregister, p>;
 
@@ -125,6 +130,7 @@ namespace luramas::ir::generation {
                   phi,   /* PHI */
                   single /* Single SSA */
             };
+
             struct assignment {
 
                   boost::unordered_flat_smallpolyset<luramas_register, LURAMAS_PREDICTED_REGS> regs; /* Cached registers */

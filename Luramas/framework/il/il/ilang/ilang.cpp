@@ -12,6 +12,7 @@ namespace luramas::il {
             this->validate(this->validate_operands());
             this->resolve_xrefs();
 
+            /* Apply mutations, insertions, and track highest temporary register */
             luramas_address addr = 0u;
             if (!this->front.empty() || !this->back.empty() || !this->ignore.empty() || !this->insertions.empty()) {
                   auto mutated = std::move(this->front);
@@ -37,19 +38,25 @@ namespace luramas::il {
                   this->dis = std::move(mutated);
             }
 
+            /* Resolve addresses and jumps */
             if (resolve) {
                   this->resolve_addresses();
                   this->resolve_jumps();
             }
+
+            /* If original dismap is empty propagate it */
             if (this->dis_map.empty()) {
                   for (const auto &i : this->dis) {
                         this->dis_map.try_emplace(i->addr, i);
                   }
             }
+
+            /* Set a new address to each disassembly */
             for (const auto &i : this->dis) {
                   i->addr = addr++;
             }
 
+            /* Clean up */
             this->back.clear();
             this->front.clear();
             this->ignore.clear();

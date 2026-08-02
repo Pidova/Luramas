@@ -20,8 +20,10 @@ namespace std {
 } // namespace std
 
 /* Dead macros */
-#define lura_deadv(x) \
-      { [[maybe_unused]] x; };
+#define lura_deadv(x)           \
+      {                         \
+            [[maybe_unused]] x; \
+      };
 #define lura_dead(x) x;
 
 /* Flags */

@@ -14,10 +14,13 @@ namespace luramas::ir::passes {
             luramas_flag fafter_single = false; /* Keeps passing but only once after it can not anymore */
             luramas_flag fignore_ecc = false;   /* Ignore ecc if it is enabled */
 
+            /* Set has passed flag? */
             void passed() {
                   this->fpass = true;
                   return;
             }
+
+            /* Has passed? */
             bool is_passed() const {
                   return this->fpass;
             }

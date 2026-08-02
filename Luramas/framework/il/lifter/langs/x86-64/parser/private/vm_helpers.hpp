@@ -24,19 +24,19 @@ namespace build {
       inline void page_calls(const vm::registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands, const luramas::il::lifter::builder::build::expr &r) {
 
             const auto loc = operands.front();
-            const auto details = registrar.get_details();
-            const auto single = details.size() == 1u;
+            if (!registrar.v_inst.edges) {
+                  return;
+            }
+            const auto single = (*registrar.v_inst.edges).size() == 1u;
+            for (const auto &[roa, kind] : *registrar.v_inst.edges) {
 
-            for (const auto &inst : details) {
-
-                  if (inst.k != luramas::profile::inst_kind::call_to) {
+                  if (kind != luramas::profile::inst_kind::call_to) {
                         continue;
                   }
-                  if (const auto externals = registrar.externals.find(inst.lid); externals != registrar.externals.end()) {
+                  if (!roa.freal_pc) {
+                        if (const auto external = registrar.externals.find(roa.addr); external != registrar.externals.end()) {
 
-                        /* External */
-                        if (const auto external = externals->second.find(inst.loc); external != externals->second.end()) {
-
+                              /* External */
                               const auto &data = external->second;
                               if (single) {
                                     registrar.build->external_page_call(data.name, registrar.get(data.args), registrar.get(data.results));
@@ -46,13 +46,14 @@ namespace build {
                               continue;
                         }
                   }
-                  if (!registrar.build->is_page_loc(inst.lid, inst.loc)) {
-                        luramas::error::error("Call not page: " + std::to_string(inst.loc));
+                  if (!registrar.build->is_page_loc(roa.real_pc)) {
+                        luramas::error::error("Call not page: " + std::to_string(roa.real_pc));
                   }
+                  const auto next_pc = registrar.v_inst.inst.inst.bytes.size() + registrar.v_inst.inst.inst.pc;
                   if (single) {
-                        registrar.build->page_call(inst.lid, inst.loc, r, inst.bytes.size() + inst.pc);
+                        registrar.build->page_call(roa.real_pc, r, next_pc);
                   } else {
-                        registrar.build->non_direct_page_call(loc, inst.lid, inst.loc, r, inst.bytes.size() + inst.pc);
+                        registrar.build->non_direct_page_call(loc, roa.real_pc, r, next_pc);
                   }
             }
             return;
@@ -61,19 +62,19 @@ namespace build {
       inline void page_gotos(const vm::registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             const auto loc = operands.front();
-            const auto details = registrar.get_details();
-            const auto single = details.size() == 1u;
+            if (!registrar.v_inst.edges) {
+                  return;
+            }
+            const auto single = (*registrar.v_inst.edges).size() == 1u;
+            for (const auto &[roa, kind] : *registrar.v_inst.edges) {
 
-            for (const auto &inst : details) {
-
-                  if (inst.k != luramas::profile::inst_kind::jump_to) {
+                  if (kind != luramas::profile::inst_kind::jump_to) {
                         continue;
                   }
-                  if (const auto externals = registrar.externals.find(inst.lid); externals != registrar.externals.end()) {
+                  if (!roa.freal_pc) {
+                        if (const auto external = registrar.externals.find(roa.addr); external != registrar.externals.end()) {
 
-                        /* External */
-                        if (const auto external = externals->second.find(inst.loc); external != externals->second.end()) {
-
+                              /* External */
                               const auto &data = external->second;
                               if (single) {
                                     registrar.build->external_page_jmp(data.loc);
@@ -84,19 +85,19 @@ namespace build {
                         }
                   }
 
-                  if (!registrar.build->is_page_loc(inst.lid, inst.loc)) {
+                  if (!registrar.build->is_page_loc(roa.real_pc)) {
 
                         if (single) {
-                              registrar.build->make_goto(inst.lid, inst.loc);
+                              registrar.build->make_goto(roa.real_pc);
                         } else {
-                              registrar.build->make_non_direct_goto(loc, inst.lid, inst.loc);
+                              registrar.build->make_non_direct_goto(loc, roa.real_pc);
                         }
                   } else {
 
                         if (single) {
-                              registrar.build->page_jump(inst.lid, inst.loc);
+                              registrar.build->page_jump(roa.real_pc);
                         } else {
-                              registrar.build->non_direct_page_jmp(loc, inst.lid, inst.loc);
+                              registrar.build->non_direct_page_jmp(loc, roa.real_pc);
                         }
                   }
             }

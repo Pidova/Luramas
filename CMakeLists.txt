@@ -43,7 +43,7 @@ option(LURAMAS_PROFILE "Enable time checks on passes"            OFF)
 option(LURAMAS_DEBUG_SSA_STEPS       "Print each SSA step to debug"        OFF)
 option(LURAMAS_DEBUG_NO_DUMP         "Disallow dumps"                      OFF)
 option(LURAMAS_DEBUG_ERROR_CLIPBOARD "Copy dumped data to clipboard"       OFF)
-option(LURAMAS_TARGET_BIGDATA        "Dump big data into LURAMAS_GLOBAL_PDUMP" OFF)
+option(LURAMAS_TARGET_BIGDATA        "Dump big data into LURAMAS_GLOBAL_PDUMP" ON)
 
 # Gather all source file groups
 file(GLOB_RECURSE CLI_FILES
@@ -64,6 +64,11 @@ file(GLOB_RECURSE LUAU_FILES
     "Luramas/3rdparty/luau/*.cpp" 
     "Luramas/3rdparty/luau/*.h" 
     "Luramas/3rdparty/luau/*.c")
+file(GLOB_RECURSE LIB_FILES
+    "Luramas/3rdparty/libs/*.hpp" 
+    "Luramas/3rdparty/libs/*.cpp" 
+    "Luramas/3rdparty/libs/*.h" 
+    "Luramas/3rdparty/libs/*.c")
 file(GLOB_RECURSE SHARED_FILES
     "Luramas/shared/*.hpp" 
     "Luramas/shared/*.cpp" 
@@ -75,7 +80,7 @@ set_source_files_properties(
         ${LUA_FILES} ${LUAU_FILES}
         PROPERTIES COMPILE_OPTIONS "${THIRDPARTY_NO_WARN}")
 
-add_executable(Luramas ${SOURCE_FILES} ${LUA_FILES} ${LUAU_FILES} ${SHARED_FILES} ${CLI_FILES})
+add_executable(Luramas ${SOURCE_FILES} ${LUA_FILES} ${LUAU_FILES} ${LIB_FILES} ${SHARED_FILES} ${CLI_FILES})
 
 target_compile_definitions(Luramas PRIVATE
 		# X86
@@ -105,10 +110,12 @@ target_compile_definitions(Luramas PRIVATE
 target_include_directories(Luramas PRIVATE
     Luramas/3rdparty/lua
     Luramas/3rdparty/luau
+    Luramas/3rdparty/libs
     Luramas/shared
 )
 
 # Conan
+find_package(lz4)
 find_package(mpfr)
 find_package(capstone)
 find_package(Boost)
@@ -119,6 +126,7 @@ find_package(gmp)
 find_package(CLI11)
 
 target_link_libraries(Luramas
+                      lz4::lz4
                       mpfr::mpfr
                       capstone::capstone
                       boost::boost

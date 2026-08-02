@@ -49,14 +49,23 @@ More information and usage examples can be found in the [Scripts](scripts/) dire
 
 ## Testing
 
-**Each testing directory contains a corresponding output directory with the output of every test code.**
+**Each testing directory contains a corresponding output directory with the output of every test code. There is also a README.md to help with navigating it.**
 
 ### Scripts
 
-The **test-scripts/** directory contains sample scripts used for validating the decompiler across supported targets.
+The **tests/scripts** directory contains sample scripts used for validating the decompiler across supported **interpreted** targets.
 
-- [test-scripts/Lua_5.3.6/](test-scripts/Lua_5.3.6/) - Lua 5.3.6 
-- [test-scripts/LuaU/](test-scripts/LuaU/) - Luau
+- [tests/lua/](tests/lua/) - Lua Targets
+- [tests/luau/](tests/luau/) - LuaU Targets
+
+### Programs
+
+The **test/programs** directory contains sample programs used for validating the decompiler across supported **compiled** targets.
+Each test program contains metadata and code-generation in its output more information can be found here: [metadata](https://pidova.github.io/Luramas-Docs/docs/CLI/program-metadata)
+
+- [tests/programs/c](tests/programs/c/) - C Programs
+- [tests/programs/cpp](tests/programs/cpp/) - C++ Programs
+- [tests/programs/rust](tests/programs/rust/) - Rust Programs
 
 ## Examples
 

@@ -804,7 +804,7 @@ namespace luramas::il::arch {
             OP_PRETURN,       /* Return from page function if a target exist it will index its value in with that target. Opcode strung together like "OP_PRETURN f, r, x OP_PRETURN f, r, y" means that it could return to n locations; f valid flag, r being where the return loc is at, and x/y being locs.  | Valid Flag, if 0 rest of the operands are placeholders (Integral), Jump target (Register), Jump page ID (Integral)  */
             OP_STARTPAGEFUNC, /* Starts page function, not effected by isolate | * ID(Val)  */
             OP_ENDPAGEFUNC,   /* Ends page function, not effected by isolate | * ID(Val)  */
-            OP_PCALL,         /* Call to page function (args, returns are unknown and will get mapped transfered to other parts of code), Opaque register to get handled by user where call will place entry in register etc. | * ID(Val), * Reg(Register), Entry (Val)  */
+            OP_PCALL,         /* Call to page function (args, returns are unknown and will get mapped transfered to other parts of code), Opaque register to get handled by user where call will place entry in register etc. | * ID(Val), * Reg(Register), User Entry (Val)  */
             OP_PJUMP,         /* Jump to page | * ID(Val)  */
 
             OP_SEGREGATE, /* Next instruction any native flags set will be offset (including native ones) | * OFFSET(Val) */

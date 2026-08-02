@@ -762,7 +762,7 @@ namespace luramas::ir::passes {
 
                               if (const auto it = def->args.find(linked); it != def->args.end()) {
 
-                                    const auto idx = static_cast<std::size_t>(std::distance(def->args.begin(), it));
+                                    const auto idx = static_cast<luramas_index>(std::distance(def->args.begin(), it));
                                     args.emplace_back(idx);
                                     def->args.erase(it);
                                     if (idx < def->meta.size()) {

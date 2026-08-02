@@ -28,19 +28,12 @@ static constexpr std::uint8_t LURAMAS_IL_PREDICTED_RECURSION_AMOUNT = 10u; /* Pr
 static constexpr std::uint8_t LURAMAS_IR_DEFAULT_SEGREGATION_ID = 1u;      /* Predicted amount of recursion in IR */
 
 /* IR VALUES */
-static constexpr std::uint8_t LURAMAS_IR_DEFAULT_STACK_ID = 0u;
-static constexpr std::uint8_t LURAMAS_IR_OBJECT_MAX_INIT = 8u;
-static constexpr std::uint8_t LURAMAS_IR_SIMPLE_EXPR_LVALUES = 1u;
-static constexpr std::uint8_t LURAMAS_IR_SIMPLE_EXPR_RVALUES = 3u;
-static constexpr std::uint8_t LURAMAS_IR_SIMPLE_EXPR_EXPRS = LURAMAS_IR_SIMPLE_EXPR_LVALUES + LURAMAS_IR_SIMPLE_EXPR_RVALUES;
-static constexpr std::uint8_t LURAMAS_IR_SIMPLE_STAT_LVALUES = 2u;
-static constexpr std::uint8_t LURAMAS_IR_SIMPLE_STAT_RVALUES = 2u;
-static constexpr std::uint8_t LURAMAS_IR_SIMPLE_STAT_EXPRS = LURAMAS_IR_SIMPLE_STAT_LVALUES + LURAMAS_IR_SIMPLE_STAT_RVALUES;
-static constexpr std::uint8_t LURAMAS_IR_MAX_STR_RENDER_SIZE = 150u; /* 0 for no limit */
-static constexpr std::uint8_t LURAMAS_IR_COMPARATIVE_NON_OBJECT_TRUE = 1u;
-static constexpr std::uint8_t LURAMAS_IR_COMPARATIVE_NON_OBJECT_FALSE = 0u;
-static constexpr std::uint64_t LURAMAS_IR_ENTRY = 0ull;
-static constexpr std::uint64_t LURAMAS_IT_ENTRY = 0ull;
+static constexpr std::uint8_t LURAMAS_IR_DEFAULT_STACK_ID = 0u;             /* Default internal luramas stack ID */
+static constexpr std::uint8_t LURAMAS_IR_MAX_STR_RENDER_SIZE = 150u;        /* 0 for no limit, Ignores a string if size is too big  */
+static constexpr std::uint8_t LURAMAS_IR_COMPARATIVE_NON_OBJECT_TRUE = 1u;  /* Implicit true value compare */
+static constexpr std::uint8_t LURAMAS_IR_COMPARATIVE_NON_OBJECT_FALSE = 0u; /* Implicit false value compare */
+static constexpr luramas_address LURAMAS_IR_ENTRY = 0ull;                   /* IR entry address*/
+static constexpr luramas_address LURAMAS_IT_ENTRY = 0ull;                   /* IL entry address*/
 
 #define LURAMAS_IL_FS_EXTENSION ".lurail"
 #define LURAMAS_IR_FS_EXTENSION ".lurair"
