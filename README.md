@@ -43,9 +43,9 @@ Detailed building and configuration instructions can be found here: [Building](h
 
 ## Scripts
 
-Luramas includes helper scripts for automating common redundant tasks.
+Luramas includes helper python scripts for automating common redundant tasks.
 
-More information and usage examples can be found in the [Scripts](scripts/) directory.
+More information and usage examples can be found in the [Py-Scripts](py-scripts/) directory.
 
 ## Testing
 
@@ -55,8 +55,8 @@ More information and usage examples can be found in the [Scripts](scripts/) dire
 
 The **tests/scripts** directory contains sample scripts used for validating the decompiler across supported **interpreted** targets.
 
-- [tests/lua/](tests/lua/) - Lua Targets
-- [tests/luau/](tests/luau/) - LuaU Targets
+- [tests/scripts/lua/](tests/scripts/lua/) - Lua Targets
+- [tests/scripts/luau/](tests/scripts/luau/) - LuaU Targets
 
 ### Programs
 

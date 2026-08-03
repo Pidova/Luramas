@@ -3,6 +3,6 @@
 
 namespace luramas::ir::fuzzer {
 
-      /* Fuzz random IR space with seed */
+      /* Lower a libprotobuf-mutator provided program into IR space */
       ir_stat::space generate(std::uint64_t seed);
 } // namespace luramas::ir::fuzzer

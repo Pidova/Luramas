@@ -1,6 +1,6 @@
-# Scripts
+# Py-Scripts
 
-Helper scripts that generate data used by the main framework. 
+Helper python scripts that generate data used by the main framework. 
 These are build-time utilities, not part of the runtime.
 
 ## Contents
@@ -10,7 +10,6 @@ These are build-time utilities, not part of the runtime.
 * [`x86_intel_msr_builder/`](x86_intel_msr_builder/) - Generates C++ Intel X86 MSRs offsets.
 * [`vendored_target_headers/`](vendored_target_headers/) - Given vendored source files adds target guards to them.
 * [`vendored_include_to_relative/`](vendored_include_to_relative/) - Given vendored source files it changes absolute include paths to relative.
-* [`program_builder/`](program_builder/) - Compiles test programs to be able to decompile.
 
 See each subdirectory's `README.md` for details.
 

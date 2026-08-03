@@ -124,6 +124,7 @@ find_package(hunspell)
 find_package(frozen)
 find_package(gmp)
 find_package(CLI11)
+find_package(libprotobuf-mutator)
 
 target_link_libraries(Luramas
                       lz4::lz4
@@ -134,4 +135,5 @@ target_link_libraries(Luramas
                       hunspell::hunspell
                       frozen::frozen
                       gmp::gmp
-                      CLI11::CLI11)
+                      CLI11::CLI11
+                      libprotobuf-mutator::libprotobuf-mutator)

@@ -146,13 +146,13 @@ int main(int argc, char **argv) {
       auto format = std::make_shared<luramas::ir::data::format::format>(); /* Syntax format */
 
       /* CLI options */
-      std::string input("");                         /* Input directory */
-      std::string target("x86");                     /* Input target */
-      std::string test_dir("C:/repo/Luramas/tests"); /* Directory of repo/tests */
-      luramas_flag is_bytecode = false;              /* Is input bytecode (Only for input) */
-      luramas_flag all_tests = false;                /* Run all tests */
+      std::string input("");            /* Input directory */
+      std::string target("x86");        /* Input target */
+      std::string test_dir("");         /* Directory of repo/tests */
+      luramas_flag is_bytecode = false; /* Is input bytecode (Only for input) */
+      luramas_flag all_tests = false;   /* Run all tests */
 
-     // decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::X86, luramas::tests::scripts_directory::LUA_EXTENSION);
+      //decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::X86, luramas::tests::scripts_directory::LUA_EXTENSION);
 
       /* Options */
       app.set_help_flag("-h,--help,?", "Print help message and exit");

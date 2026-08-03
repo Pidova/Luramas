@@ -28,11 +28,11 @@ namespace luramas::ir {
             self,               /* Self */
             closure,            /* Closure */
             upvalue,            /* Upvalue */
-            ternary,            /* Ternary (l CMP r) ? ev : xv */
+            ternary,            /* Ternary: (l CMP r) ? ev : xv */
             cast,               /* Cast to type */
             flag,               /* Get flag based on ID */
-            blank_lvalue,       /* Nothing just L-Value */
-            page_function_call, /* Call to page function, it is assumed a returned will be met (ID : GLOBAL)R, (Args)Members,  (Insertion where)ev, (Value)xv, ({{expecting param register, nullptr}}, same size as args but its expecting param register which is from definition) tmembers, Controller (L)  */
+            blank_lvalue,       /* Nothing just L-Value: L */
+            page_function_call, /* Call to page function, it is assumed a returned will be met: (ID : GLOBAL)R, (Args)Members,  (Insertion where)ev, (Value)xv, ({{expecting param register, nullptr}}, same size as args but its expecting param register which is from definition) tmembers, Controller (L)  */
             amount              /* PSUEDO AMT (CANT BE ASSIGNED TO ANYTHING) */
       };
 

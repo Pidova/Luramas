@@ -7,6 +7,54 @@
 #define ASGN_SEED_UNIFORM_U8(seed) (seed = SEED_UNIFORM_U8(seed))
 #define ASGN_SEED_UNIFORM_SMALL_U8(seed) (seed = SEED_UNIFORM_U8(seed) / 4u)
 
+class seed_state {
+    public:
+      constexpr seed_state() noexcept = default;
+      constexpr explicit seed_state(const std::uint64_t value) noexcept
+          : mvalue(value) {
+      }
+
+      [[nodiscard]] constexpr std::uint64_t value() const noexcept {
+            return this->mvalue;
+      }
+
+      /* seed *= seed + 2 (wrap-around is intended) */
+      constexpr seed_state &randomize() noexcept {
+            this->mvalue *= this->mvalue + 2u;
+            return *this;
+      }
+
+      /* (u8(seed / 7) + 8) * 2 -> [16, 526] */
+      [[nodiscard]] constexpr std::uint32_t uniform_u8() const noexcept {
+            return (static_cast<std::uint32_t>(static_cast<std::uint8_t>(this->mvalue / 7u)) + 8u) * 2u;
+      }
+
+      /* uniform_u8() / 4 -> [4, 131] */
+      [[nodiscard]] constexpr std::uint32_t uniform_small_u8() const noexcept {
+            return uniform_u8() / 4u;
+      }
+
+      /* ASGN_SEED_UNIFORM_U8: mutate, then hand out the new value */
+      constexpr std::uint32_t next_uniform_u8() noexcept {
+            const auto next = uniform_u8();
+            this->mvalue = next;
+            return next;
+      }
+
+      /* ASGN_SEED_UNIFORM_SMALL_U8 */
+      constexpr std::uint32_t next_uniform_small_u8() noexcept {
+            const auto next = uniform_small_u8();
+            this->mvalue = next;
+            return next;
+      }
+      constexpr seed_state &operator++() noexcept {
+            ++this->mvalue;
+            return *this;
+      }
+
+    private:
+      std::uint64_t mvalue = 0u;
+};
 namespace luramas::ir::fuzzer {
 
       namespace fuzz_data {
