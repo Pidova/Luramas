@@ -947,7 +947,7 @@ namespace luramas::ir::tools::exprs {
       template <typename t>
       inline constexpr bool is(const std::shared_ptr<ir_stat::ir_expr> &expr, const t &d) {
 
-            if (expr == nullptr) {
+            if (!expr) {
                   return false;
             }
             if constexpr (std::is_same_v<t, bool>) {
@@ -956,8 +956,9 @@ namespace luramas::ir::tools::exprs {
                   return expr->is_tk<tkind::lura_int>() && expr->n == luramas_int(d);
             } else if constexpr (std::is_same_v<t, std::string>) {
                   return expr->is_tk<tkind::string>() && expr->v == d;
+            } else {
+                  return false;
             }
-            return false;
       }
 
       /* EXPR HAS REG */

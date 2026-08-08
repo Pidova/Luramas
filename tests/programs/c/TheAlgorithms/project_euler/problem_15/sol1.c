@@ -14,28 +14,24 @@
  * Hence, the path can be be traced in N out of 2N number of ways.
  * This is the same as binomial coeeficient.
  */
-unsigned long long number_of_paths(int N)
-{
-    unsigned long long path = 1;
-    for (int i = 0; i < N; i++)
-    {
-        path *= (N << 1) - i;
-        path /= i + 1;
-    }
+unsigned long long number_of_paths(int N) {
+      unsigned long long path = 1;
+      for (int i = 0; i < N; i++) {
+            path *= (N << 1) - i;
+            path /= i + 1;
+      }
 
-    return path;
+      return path;
 }
 
 /** Main function */
-int main(int argc, char **argv)
-{
-    int N = 20;
+int main(int argc, char **argv) {
+      int N = 20;
 
-    if (argc == 2)
-        N = atoi(argv[1]);
+      if (argc == 2)
+            N = atoi(argv[1]);
 
-    printf("Number of ways to traverse diagonal of %dx%d grid = %llu\n", N, N,
-           number_of_paths(N));
+      printf("Number of ways to traverse diagonal of %dx%d grid = %llu\n", N, N, number_of_paths(N));
 
-    return 0;
+      return 0;
 }

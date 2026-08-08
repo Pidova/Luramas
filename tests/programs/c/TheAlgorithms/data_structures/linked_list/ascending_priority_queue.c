@@ -26,157 +26,144 @@ delete() -  Would delete the smallest element in the queue
 #include <stdlib.h>
 #define NULL ((void *)0)
 
-struct node
-{
-    int data;
-    struct node *next;
+struct node {
+      int data;
+      struct node *next;
 };
 
 struct node *front, *rear;
 
 /* This function initializes the queue to empty by making both front and rear as
  * NULL */
-void createqueue() { front = rear = NULL; }
-
-int empty()
-{
-    if (front == NULL)
-        return 1;
-    else
-        return 0;
+void createqueue() {
+      front = rear = NULL;
 }
 
-void insert(int x)
-{
-    struct node *pnode;
-
-    pnode = (struct node *)malloc(sizeof(struct node));
-    if (pnode == NULL)
-    {
-        printf("Memory overflow. Unable to insert.\n");
-        exit(1);
-    }
-
-    pnode->data = x;
-    pnode->next = NULL; /* New node is always last node */
-
-    if (empty())
-        front = rear = pnode;
-    else
-    {
-        rear->next = pnode;
-        rear = pnode;
-    }
+int empty() {
+      if (front == NULL)
+            return 1;
+      else
+            return 0;
 }
 
-int removes()
-{
-    int min;
-    struct node *follow, *follow1, *p, *p1;
+void insert(int x) {
+      struct node *pnode;
 
-    if (empty())
-    {
-        printf("\nQueue Underflow. Unable to remove.");
-        exit(1);
-    }
+      pnode = (struct node *)malloc(sizeof(struct node));
+      if (pnode == NULL) {
+            printf("Memory overflow. Unable to insert.\n");
+            exit(1);
+      }
 
-    /* finding the node with minimum value in the APQ.*/
-    p = p1 = front;
-    follow = follow1 = NULL;
-    min = front->data;
-    while (p != NULL)
-    {
-        if (p->data < min)
-        {
-            min = p->data;
-            follow1 = follow;
-            p1 = p;
-        }
-        follow = p;
-        p = p->next;
-    }
+      pnode->data = x;
+      pnode->next = NULL; /* New node is always last node */
 
-    /* Deleting the node with min value */
-
-    if (p1 == front) /* deleting first node.*/
-    {
-        front = front->next;
-        if (front == NULL) /* Deleting the only one node */
-            rear = NULL;
-    }
-    else if (p1 == rear) /* Deleting last node */
-    {
-        rear = follow1;
-        rear->next = NULL;
-    }
-    else /* deleting any other node.*/
-        follow1->next = p1->next;
-
-    free(p1);
-    return min; /* DONT FORGET LAST 2 STATEMENTS.*/
+      if (empty())
+            front = rear = pnode;
+      else {
+            rear->next = pnode;
+            rear = pnode;
+      }
 }
 
-void show()
-{
-    struct node *p;
+int removes() {
+      int min;
+      struct node *follow, *follow1, *p, *p1;
 
-    if (empty())
-        printf("Queue empty. No data to display \n");
-    else
-    {
-        printf("Queue from front to rear is as shown: \n");
+      if (empty()) {
+            printf("\nQueue Underflow. Unable to remove.");
+            exit(1);
+      }
 
-        p = front;
-        while (p != NULL)
-        {
-            printf("%d ", p->data);
+      /* finding the node with minimum value in the APQ.*/
+      p = p1 = front;
+      follow = follow1 = NULL;
+      min = front->data;
+      while (p != NULL) {
+            if (p->data < min) {
+                  min = p->data;
+                  follow1 = follow;
+                  p1 = p;
+            }
+            follow = p;
             p = p->next;
-        }
+      }
 
-        printf("\n");
-    }
+      /* Deleting the node with min value */
+
+      if (p1 == front) /* deleting first node.*/
+      {
+            front = front->next;
+            if (front == NULL) /* Deleting the only one node */
+                  rear = NULL;
+      } else if (p1 == rear) /* Deleting last node */
+      {
+            rear = follow1;
+            rear->next = NULL;
+      } else /* deleting any other node.*/
+            follow1->next = p1->next;
+
+      free(p1);
+      return min; /* DONT FORGET LAST 2 STATEMENTS.*/
 }
 
-void destroyqueue() { front = rear = NULL; }
+void show() {
+      struct node *p;
 
-int main()
-{
-    int x, ch;
+      if (empty())
+            printf("Queue empty. No data to display \n");
+      else {
+            printf("Queue from front to rear is as shown: \n");
 
-    createqueue();
+            p = front;
+            while (p != NULL) {
+                  printf("%d ", p->data);
+                  p = p->next;
+            }
 
-    do
-    {
-        printf("\n\n  Menu: \n");
-        printf("1:Insert \n");
-        printf("2:Remove \n");
-        printf("3:exit \n");
-        printf("Enter your choice: ");
-        scanf("%d", &ch);
+            printf("\n");
+      }
+}
 
-        switch (ch)
-        {
-        case 1:
-            printf("Enter element to be inserted: ");
-            scanf("%d", &x);
-            insert(x);
-            show();
-            break;
+void destroyqueue() {
+      front = rear = NULL;
+}
 
-        case 2:
-            x = removes();
-            printf("Element removed is: %d\n", x);
-            show();
-            break;
+int main() {
+      int x, ch;
 
-        case 3:
-            break;
-        }
-    } while (ch != 3);
+      createqueue();
 
-    destroyqueue();
+      do {
+            printf("\n\n  Menu: \n");
+            printf("1:Insert \n");
+            printf("2:Remove \n");
+            printf("3:exit \n");
+            printf("Enter your choice: ");
+            scanf("%d", &ch);
 
-    return 0;
+            switch (ch) {
+                  case 1:
+                        printf("Enter element to be inserted: ");
+                        scanf("%d", &x);
+                        insert(x);
+                        show();
+                        break;
+
+                  case 2:
+                        x = removes();
+                        printf("Element removed is: %d\n", x);
+                        show();
+                        break;
+
+                  case 3:
+                        break;
+            }
+      } while (ch != 3);
+
+      destroyqueue();
+
+      return 0;
 }
 
 /* Output of the Program*/

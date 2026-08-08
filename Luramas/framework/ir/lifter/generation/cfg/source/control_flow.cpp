@@ -126,10 +126,10 @@ namespace luramas::ir::generation::cfg {
                         const auto &stat = ir.data[i];
                         parent_ids.emplace_back(!stack.empty() ? std::optional<luramas_address>(stack.back().first) : std::nullopt);
                         if (stat->is_k<keywords::page_function_start>()) {
-                              stack.emplace_back(i, stat->r->extract_integral_base());
+                              stack.emplace_back(i, static_cast<luramas_id>(stat->r->extract_integral_base()));
                         }
                         if (stat->is_k<keywords::page_function_end>()) {
-                              const auto id = stat->r->extract_integral_base();
+                              const auto id = static_cast<luramas_id>(stat->r->extract_integral_base());
                               std::erase_if(stack, [&](const auto &p) {
                                     return p.second == id;
                               });
@@ -275,14 +275,14 @@ namespace luramas::ir::generation::cfg {
 
             /* Go through blocks init and connect them */
             {
-                  for (const auto &[entry, block] : blocks) {
+                  for (const auto &[bentry, block] : blocks) {
 
                         if (block) {
 
-                              block->entry = entry;
-                              block->node_range.second = entry;
-                              block->node_range.first = entry;
-                              for (auto i = entry; i < ir.data.size(); ++i) {
+                              block->entry = bentry;
+                              block->node_range.second = bentry;
+                              block->node_range.first = bentry;
+                              for (auto i = bentry; i < ir.data.size(); ++i) {
 
                                     const auto &p = ir.data[i];
                                     const auto has_pages_edges = finclude_pages && pages_n_edges_blocks.contains(i);
@@ -291,16 +291,16 @@ namespace luramas::ir::generation::cfg {
                                     if (p->is_terminal() || block->fforced_end) {
                                           exit = true;
                                     } else {
-                                          if (i == entry && p->k == keywords::page_function_end) {
+                                          if (i == bentry && p->k == keywords::page_function_end) {
                                                 exit = true;
                                                 ++i;
                                           } else {
-                                                if (i != entry || p->is_scope_start() || p->is_paging() || p->is_k<keywords::until>() || p->is_k<keywords::end>()) {
+                                                if (i != bentry || p->is_scope_start() || p->is_paging() || p->is_k<keywords::until>() || p->is_k<keywords::end>()) {
                                                       switch (p->k) {
                                                             case keywords::end: {
 
                                                                   exit = true;
-                                                                  if (i != entry) {
+                                                                  if (i != bentry) {
                                                                         premature_exit = true;
                                                                         if (const auto it = blocks.find(i); it != blocks.end()) {
                                                                               block->fall = it->second;
@@ -333,7 +333,7 @@ namespace luramas::ir::generation::cfg {
                                                             }
                                                             case keywords::until: {
                                                                   exit = true;
-                                                                  if (i == entry) {
+                                                                  if (i == bentry) {
                                                                         auto it = blocks.find(end_labels[p->end_label].cond_loc);
                                                                         if (it != blocks.end()) {
                                                                               block->then = it->second;
@@ -348,7 +348,7 @@ namespace luramas::ir::generation::cfg {
                                                             }
                                                             case keywords::page_function_start: {
                                                                   exit = true;
-                                                                  if (i == entry) {
+                                                                  if (i == bentry) {
                                                                         if (const auto &page = pages[p->r->extract_integral_base()]; page.second) {
                                                                               if (auto it = blocks.find(*page.second); it != blocks.end()) {
                                                                                     block->jump = it->second;
@@ -420,7 +420,7 @@ namespace luramas::ir::generation::cfg {
                                                             }
                                                             case keywords::repeat: {
                                                                   exit = true;
-                                                                  if (i != entry) {
+                                                                  if (i != bentry) {
                                                                         premature_exit = true;
                                                                         if (const auto it = blocks.find(i); it != blocks.end()) {
                                                                               block->fall = it->second;
@@ -433,7 +433,7 @@ namespace luramas::ir::generation::cfg {
                                                                   break;
                                                             }
                                                             case keywords::while_: {
-                                                                  if (i != entry) {
+                                                                  if (i != bentry) {
                                                                         premature_exit = true;
                                                                         if (const auto it = blocks.find(i); it != blocks.end()) {
                                                                               block->fall = it->second;
@@ -508,7 +508,7 @@ namespace luramas::ir::generation::cfg {
 
                                     block->ending = i;
                                     if (premature_exit) {
-                                          block->node_range.second += block->node_range.second == entry;
+                                          block->node_range.second += block->node_range.second == bentry;
                                           break;
                                     }
                                     if (exit) {
@@ -521,25 +521,25 @@ namespace luramas::ir::generation::cfg {
                                                 std::shared_ptr<generation::cfg::block> first = nullptr;
                                                 const auto &data = pages_n_edges_blocks[i];
                                                 for (auto idx = 0u; idx < data.size(); ++idx) {
-                                                      const auto &p = data[idx];
-                                                      p->emit(i, i, i, i + extra_step);
+                                                      const auto &pd = data[idx];
+                                                      pd->emit(i, i, i, i + extra_step);
                                                       if (!first) {
-                                                            first = p;
+                                                            first = pd;
                                                       }
                                                       extra_step = false;
                                                       if (finclude_pages) {
                                                             if (const auto it = pages.find(expr_pages_refed[i][idx]); it != pages.end() && it->second.first) {
-                                                                  p->jump = blocks[*it->second.first];
+                                                                  pd->jump = blocks[*it->second.first];
                                                             }
                                                       }
                                                       if (prev) {
                                                             if (!prev->jump) {
-                                                                  prev->fall = p;
+                                                                  prev->fall = pd;
                                                             } else {
-                                                                  prev->then = p;
+                                                                  prev->then = pd;
                                                             }
                                                       }
-                                                      prev = p;
+                                                      prev = pd;
                                                 }
                                                 block->node_range.second = i;
                                                 if (prev) {
@@ -557,7 +557,7 @@ namespace luramas::ir::generation::cfg {
                                                 }
                                                 block->emit(nullptr, nullptr, first);
                                           }
-                                          block->node_range.second += block->node_range.second == entry;
+                                          block->node_range.second += block->node_range.second == bentry;
                                           break;
                                     }
                                     ++block->node_range.second;

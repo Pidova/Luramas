@@ -594,7 +594,6 @@ namespace luramas::ir::closures::lifter {
                         }
                         case luramas::il::lexer::inst_kinds::return_: {
 
-                              const auto regs = i->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>();
                               auto c = std::make_shared<ir_stat>();
                               for (const auto &s : sources) {
                                     c->emit_return(getl(i, s));
@@ -612,12 +611,12 @@ namespace luramas::ir::closures::lifter {
                               const auto call = getr(callr);
                               auto c = std::make_shared<ir_stat>();
                               bool ignore = false;
-                              for (const auto &i : sources) {
-                                    if (!ignore && i == callr) {
+                              for (const auto &s : sources) {
+                                    if (!ignore && s == callr) {
                                           ignore = true;
                                           continue;
                                     }
-                                    const auto a = getr(i);
+                                    const auto a = getr(s);
                                     if (no_ret) {
                                           c->emit_arg(a);
                                     } else {
@@ -626,11 +625,10 @@ namespace luramas::ir::closures::lifter {
                               }
                               for (const auto &d : dests) {
                                     const auto l = getl(i, d);
-                                    const auto r = l;
                                     if (dests.size() == 1u) {
-                                          c->l = r;
+                                          c->l = l;
                                     } else {
-                                          c->emit_mul_lv(r);
+                                          c->emit_mul_lv(l);
                                     }
                               }
                               if (no_ret) {
@@ -664,8 +662,8 @@ namespace luramas::ir::closures::lifter {
 
                               /* SETLIST ([?], ?)*/
                               auto c = std::make_shared<ir_stat>();
-                              for (const auto &i : sources) {
-                                    c->emit_tab_setlist(getr(dests.back()), getr(i));
+                              for (const auto &s : sources) {
+                                    c->emit_tab_setlist(getr(dests.back()), getr(s));
                               }
                               c->table_index = i->lex->disassembly->operands[3]->dis.val;
                               code.emplace_back(c);

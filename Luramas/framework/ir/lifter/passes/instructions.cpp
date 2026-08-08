@@ -54,7 +54,7 @@ namespace luramas::ir::passes {
                               bool unsafe = false;
                               for (auto l = i; l < label; ++l) {
 
-                                    const auto &p = pm[l];
+                                    const auto &lp = pm[l];
 
                                     /*
                                          ::l(2)::
@@ -62,7 +62,7 @@ namespace luramas::ir::passes {
                                          goto l(2):
                                          ::l::
                                     */
-                                    if (p->is_k<keywords::goto_label>() && tools::stat::past(i, pm.processed.labels[p->jlabel])) {
+                                    if (lp->is_k<keywords::goto_label>() && tools::stat::past(i, pm.processed.labels[lp->jlabel])) {
                                           unsafe = true;
                                           break;
                                     }
@@ -177,7 +177,7 @@ namespace luramas::ir::passes {
                                     /* Get primitive assignment if any */
                                     luramas_address primitive_assignment = 0u;
                                     for (const auto &[asign, range] : assignment_blocks) {
-                                          if (const auto &p = pm[asign]; p->is_assignment() && p->r && p->r->is_primitive() && pm.is_safe(p)) {
+                                          if (const auto &lp = pm[asign]; lp->is_assignment() && lp->r && lp->r->is_primitive() && pm.is_safe(lp)) {
                                                 primitive_assignment = asign;
                                                 break;
                                           }

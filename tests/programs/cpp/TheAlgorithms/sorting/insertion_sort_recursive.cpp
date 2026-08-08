@@ -28,11 +28,10 @@
  * 4. Continue this until the array is sorted: [1, 2, 3, 4, 5].
  */
 
-
-#include <algorithm>   /// for std::is_sorted
-#include <cassert>     /// for assert function in testing
-#include <iostream>    /// for std::cout and std::endl
-#include <vector>      /// for using std::vector
+#include <algorithm> /// for std::is_sorted
+#include <cassert>   /// for assert function in testing
+#include <iostream>  /// for std::cout and std::endl
+#include <vector>    /// for using std::vector
 
 /** 
  * @namespace sorting
@@ -40,48 +39,48 @@
  */
 namespace sorting {
 
-/**
+      /**
  * @brief Insertion Sort Function
  * 
  * @tparam T Type of the array elements
  * @param[in,out] arr Array to be sorted
  * @param n Size of the array
  */
-template <typename T>
-void insertionSort(T *arr, int n) {
-    for (int i = 1; i < n; i++) {
-        T temp = arr[i];
-        int j = i - 1;
-        while (j >= 0 && temp < arr[j]) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = temp;
-    }
-}
+      template <typename T>
+      void insertionSort(T *arr, int n) {
+            for (int i = 1; i < n; i++) {
+                  T temp = arr[i];
+                  int j = i - 1;
+                  while (j >= 0 && temp < arr[j]) {
+                        arr[j + 1] = arr[j];
+                        j--;
+                  }
+                  arr[j + 1] = temp;
+            }
+      }
 
-/**
+      /**
  * @brief Insertion Sort for a vector
  * 
  * @tparam T Type of the vector elements
  * @param [in,out] arr Pointer to the vector to be sorted
  */
-template <typename T>
-void insertionSort(std::vector<T> *arr) {
-    size_t n = arr->size();
+      template <typename T>
+      void insertionSort(std::vector<T> *arr) {
+            size_t n = arr->size();
 
-    for (size_t i = 1; i < n; i++) {
-        T temp = arr->at(i);
-        int32_t j = i - 1;
-        while (j >= 0 && temp < arr->at(j)) {
-            arr->at(j + 1) = arr->at(j);
-            j--;
-        }
-        arr->at(j + 1) = temp;
-    }
-}
+            for (size_t i = 1; i < n; i++) {
+                  T temp = arr->at(i);
+                  int32_t j = i - 1;
+                  while (j >= 0 && temp < arr->at(j)) {
+                        arr->at(j + 1) = arr->at(j);
+                        j--;
+                  }
+                  arr->at(j + 1) = temp;
+            }
+      }
 
-}  // namespace sorting
+} // namespace sorting
 
 /**
  * @brief Helper function to create a random array
@@ -92,10 +91,10 @@ void insertionSort(std::vector<T> *arr) {
  */
 template <typename T>
 static void create_random_array(T *arr, int N) {
-    while (N--) {
-        double r = (std::rand() % 10000 - 5000) / 100.f;
-        arr[N] = static_cast<T>(r);
-    }
+      while (N--) {
+            double r = (std::rand() % 10000 - 5000) / 100.f;
+            arr[N] = static_cast<T>(r);
+      }
 }
 
 /** 
@@ -103,43 +102,43 @@ static void create_random_array(T *arr, int N) {
  * @return void
  */
 static void tests() {
-    int arr1[10] = {78, 34, 35, 6, 34, 56, 3, 56, 2, 4};
-    std::cout << "Test 1... ";
-    sorting::insertionSort(arr1, 10);
-    assert(std::is_sorted(arr1, arr1 + 10));
-    std::cout << "passed" << std::endl;
+      int arr1[10] = {78, 34, 35, 6, 34, 56, 3, 56, 2, 4};
+      std::cout << "Test 1... ";
+      sorting::insertionSort(arr1, 10);
+      assert(std::is_sorted(arr1, arr1 + 10));
+      std::cout << "passed" << std::endl;
 
-    int arr2[5] = {5, -3, 7, -2, 1};
-    std::cout << "Test 2... ";
-    sorting::insertionSort(arr2, 5);
-    assert(std::is_sorted(arr2, arr2 + 5));
-    std::cout << "passed" << std::endl;
+      int arr2[5] = {5, -3, 7, -2, 1};
+      std::cout << "Test 2... ";
+      sorting::insertionSort(arr2, 5);
+      assert(std::is_sorted(arr2, arr2 + 5));
+      std::cout << "passed" << std::endl;
 
-    float arr3[5] = {5.6, -3.1, -3.0, -2.1, 1.8};
-    std::cout << "Test 3... ";
-    sorting::insertionSort(arr3, 5);
-    assert(std::is_sorted(arr3, arr3 + 5));
-    std::cout << "passed" << std::endl;
+      float arr3[5] = {5.6, -3.1, -3.0, -2.1, 1.8};
+      std::cout << "Test 3... ";
+      sorting::insertionSort(arr3, 5);
+      assert(std::is_sorted(arr3, arr3 + 5));
+      std::cout << "passed" << std::endl;
 
-    std::vector<float> arr4({5.6, -3.1, -3.0, -2.1, 1.8});
-    std::cout << "Test 4... ";
-    sorting::insertionSort(&arr4);
-    assert(std::is_sorted(std::begin(arr4), std::end(arr4)));
-    std::cout << "passed" << std::endl;
+      std::vector<float> arr4({5.6, -3.1, -3.0, -2.1, 1.8});
+      std::cout << "Test 4... ";
+      sorting::insertionSort(&arr4);
+      assert(std::is_sorted(std::begin(arr4), std::end(arr4)));
+      std::cout << "passed" << std::endl;
 
-    int arr5[50];
-    std::cout << "Test 5... ";
-    create_random_array(arr5, 50);
-    sorting::insertionSort(arr5, 50);
-    assert(std::is_sorted(arr5, arr5 + 50));
-    std::cout << "passed" << std::endl;
+      int arr5[50];
+      std::cout << "Test 5... ";
+      create_random_array(arr5, 50);
+      sorting::insertionSort(arr5, 50);
+      assert(std::is_sorted(arr5, arr5 + 50));
+      std::cout << "passed" << std::endl;
 
-    float arr6[50];
-    std::cout << "Test 6... ";
-    create_random_array(arr6, 50);
-    sorting::insertionSort(arr6, 50);
-    assert(std::is_sorted(arr6, arr6 + 50));
-    std::cout << "passed" << std::endl;
+      float arr6[50];
+      std::cout << "Test 6... ";
+      create_random_array(arr6, 50);
+      sorting::insertionSort(arr6, 50);
+      assert(std::is_sorted(arr6, arr6 + 50));
+      std::cout << "passed" << std::endl;
 }
 
 /** 
@@ -147,6 +146,6 @@ static void tests() {
  * @return 0 on successful exit.
  */
 int main() {
-    tests(); /// run self test implementations
-    return 0;
+      tests(); /// run self test implementations
+      return 0;
 }

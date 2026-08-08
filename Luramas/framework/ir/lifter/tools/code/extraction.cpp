@@ -15,8 +15,8 @@ namespace luramas::ir::tools::extract {
             result.emplace_back(start, violations::block_violates(pm, start + 1u, pm.amount()).ending_loc);
 
             while (tools::stat::branch::is_else_conditional(pm[result.back().second])) {
-                  const auto start = result.back().second;
-                  result.emplace_back(start, violations::block_violates(pm, start + 1u, pm.amount()).ending_loc);
+                  const auto bstart = result.back().second;
+                  result.emplace_back(bstart, violations::block_violates(pm, bstart + 1u, pm.amount()).ending_loc);
             }
             return result;
       }
@@ -30,8 +30,8 @@ namespace luramas::ir::tools::extract {
       std::vector<luramas_addresses> dominate_blocks(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
             std::vector<luramas_addresses> result;
-            for (const auto &[start, end] : extract::blocks(pm, start)) {
-                  result.emplace_back(accumulate::dominant(pm, start + 1u, end));
+            for (const auto &[bstart, bend] : extract::blocks(pm, start)) {
+                  result.emplace_back(accumulate::dominant(pm, bstart + 1u, bend));
             }
             return result;
       }
@@ -74,8 +74,8 @@ namespace luramas::ir::tools::extract {
       luramas_addresses cond_conditions(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
             luramas_addresses result;
-            for (const auto &[start, end] : blocks(pm, start)) {
-                  result.emplace_back(start - 1u);
+            for (const auto &[bstart, bend] : blocks(pm, start)) {
+                  result.emplace_back(bstart - 1u);
             }
             return result;
       }

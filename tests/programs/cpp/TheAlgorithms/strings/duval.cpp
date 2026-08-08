@@ -39,73 +39,73 @@
  * @namespace
  */
 namespace string {
-/**
+      /**
  * @brief Find the lexicographically smallest cyclic shift of a sequence.
  * @tparam T type of the sequence
  * @param s the sequence
  * @returns the 0-indexed position of the least cyclic shift of the sequence
  */
-template <typename T>
-size_t duval(const T& s) {
-    size_t n = s.size();
-    size_t i = 0, ans = 0;
-    while (i < n) {
-        ans = i;
-        size_t j = i + 1, k = i;
-        while (j < (n + n) && s[j % n] >= s[k % n]) {
-            if (s[k % n] < s[j % n]) {
-                k = i;
-            } else {
-                k++;
+      template <typename T>
+      size_t duval(const T &s) {
+            size_t n = s.size();
+            size_t i = 0, ans = 0;
+            while (i < n) {
+                  ans = i;
+                  size_t j = i + 1, k = i;
+                  while (j < (n + n) && s[j % n] >= s[k % n]) {
+                        if (s[k % n] < s[j % n]) {
+                              k = i;
+                        } else {
+                              k++;
+                        }
+                        j++;
+                  }
+                  while (i <= k) {
+                        i += j - k;
+                  }
             }
-            j++;
-        }
-        while (i <= k) {
-            i += j - k;
-        }
-    }
-    return ans;
-    // returns 0-indexed position of the least cyclic shift
-}
+            return ans;
+            // returns 0-indexed position of the least cyclic shift
+      }
 
-}  // namespace string
+} // namespace string
 
 /**
  * @brief self test implementation
  * returns void
  */
 static void test() {
-    using namespace string;
+      using namespace string;
 
-    // Test 1
-    std::string s1 = "abcab";
-    assert(duval(s1) == 3);
+      // Test 1
+      std::string s1 = "abcab";
+      assert(duval(s1) == 3);
 
-    // Test 2
-    std::string s2 = "011100";
-    assert(duval(s2) == 4);
+      // Test 2
+      std::string s2 = "011100";
+      assert(duval(s2) == 4);
 
-    // Test 3
-    std::vector<int> v = {5, 2, 1, 3, 4};
-    assert(duval(v) == 2);
+      // Test 3
+      std::vector<int> v = {5, 2, 1, 3, 4};
+      assert(duval(v) == 2);
 
-    // Test 4
-    std::array<int, 5> a = {1, 2, 3, 4, 5};
-    assert(duval(a) == 0);
+      // Test 4
+      std::array<int, 5> a = {1, 2, 3, 4, 5};
+      assert(duval(a) == 0);
 
-    // Test 5
-    std::deque<char> d = {'a', 'z', 'c', 'a', 'b'};
-    assert(duval(d) == 3);
+      // Test 5
+      std::deque<char> d = {'a', 'z', 'c', 'a', 'b'};
+      assert(duval(d) == 3);
 
-    // Test 6
-    std::string s3;
-    assert(duval(s3) == 0);
+      // Test 6
+      std::string s3;
+      assert(duval(s3) == 0);
 
-    // Test 7
-    std::vector<int> v2 = {5, 2, 1, 3, -4};
-    assert(duval(v2) == 4);
+      // Test 7
+      std::vector<int> v2 = {5, 2, 1, 3, -4};
+      assert(duval(v2) == 4);
 
-    std::cout << "All tests passed!" << std::endl;
+      std::cout << "All tests passed!" << std::endl;
 }
 
 /**
@@ -113,6 +113,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self test implementations
-    return 0;
+      test(); // run self test implementations
+      return 0;
 }

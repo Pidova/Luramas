@@ -3,7 +3,7 @@
  * @brief Pascal's triangle implementation
  */
 #ifdef _MSC_VER
-#include <string>  // required for Visual C
+#include <string> // required for Visual C
 #else
 #include <cstring>
 #endif
@@ -16,15 +16,15 @@
  * \param [in] n    depth of Pascal triangle to print
  */
 void show_pascal(int **arr, int n) {
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n + i; ++j) {
-            if (arr[i][j] == 0)
-                std::cout << std::setw(4) << " ";
-            else
-                std::cout << std::setw(4) << arr[i][j];
-        }
-        std::cout << std::endl;
-    }
+      for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n + i; ++j) {
+                  if (arr[i][j] == 0)
+                        std::cout << std::setw(4) << " ";
+                  else
+                        std::cout << std::setw(4) << arr[i][j];
+            }
+            std::cout << std::endl;
+      }
 }
 
 /**
@@ -34,42 +34,42 @@ void show_pascal(int **arr, int n) {
  * \result arr pointer returned
  */
 int **pascal_triangle(int **arr, int n) {
-    for (int i = 0; i < n; ++i) {
-        for (int j = n - i - 1; j < n + i; ++j) {
-            if (j == n - i - 1 || j == n + i - 1)
-                arr[i][j] = 1;  // The edge of the Pascal triangle goes in 1
-            else
-                arr[i][j] = arr[i - 1][j - 1] + arr[i - 1][j + 1];
-        }
-    }
+      for (int i = 0; i < n; ++i) {
+            for (int j = n - i - 1; j < n + i; ++j) {
+                  if (j == n - i - 1 || j == n + i - 1)
+                        arr[i][j] = 1; // The edge of the Pascal triangle goes in 1
+                  else
+                        arr[i][j] = arr[i - 1][j - 1] + arr[i - 1][j + 1];
+            }
+      }
 
-    return arr;
+      return arr;
 }
 
 /**
  * main function
  */
 int main() {
-    int n = 0;
+      int n = 0;
 
-    std::cout << "Set Pascal's Triangle Height" << std::endl;
-    std::cin >> n;
+      std::cout << "Set Pascal's Triangle Height" << std::endl;
+      std::cin >> n;
 
-    // memory allocation (Assign two-dimensional array to store Pascal triangle)
-    int **arr = new int *[n];
-    for (int i = 0; i < n; ++i) {
-        arr[i] = new int[2 * n - 1];
-        memset(arr[i], 0, sizeof(int) * (2 * n - 1));
-    }
+      // memory allocation (Assign two-dimensional array to store Pascal triangle)
+      int **arr = new int *[n];
+      for (int i = 0; i < n; ++i) {
+            arr[i] = new int[2 * n - 1];
+            memset(arr[i], 0, sizeof(int) * (2 * n - 1));
+      }
 
-    pascal_triangle(arr, n);
-    show_pascal(arr, n);
+      pascal_triangle(arr, n);
+      show_pascal(arr, n);
 
-    // deallocation
-    for (int i = 0; i < n; ++i) {
-        delete[] arr[i];
-    }
-    delete[] arr;
+      // deallocation
+      for (int i = 0; i < n; ++i) {
+            delete[] arr[i];
+      }
+      delete[] arr;
 
-    return 0;
+      return 0;
 }

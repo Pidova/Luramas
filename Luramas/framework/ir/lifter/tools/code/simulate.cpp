@@ -88,10 +88,10 @@ namespace luramas::ir::tools::simulate {
                               if (tools::exprs::values::is_reg(p->lba)) {
                                     if (pm.env_flags.fforloop_iterator_cmps) {
                                     }
-                                    const auto init = tools::compute::constant_evaluation(pm, p->l, regs);
-                                    const auto limit = tools::compute::constant_evaluation(pm, p->r, regs);
-                                    const auto step = tools::compute::constant_evaluation(pm, p->v, regs);
-                                    if (!init || !limit || !step) {
+                                    const auto linit = tools::compute::constant_evaluation(pm, p->l, regs);
+                                    const auto llimit = tools::compute::constant_evaluation(pm, p->r, regs);
+                                    const auto lstep = tools::compute::constant_evaluation(pm, p->v, regs);
+                                    if (!linit || !llimit || !lstep) {
                                           i = tools::common::safe_take_jump(pm, i);
                                     } else {
                                     }

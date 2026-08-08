@@ -114,20 +114,20 @@ namespace luramas::ir::passes {
                                     bool pass = true;
                                     boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat>> assignments;
                                     for (auto g = i + 1u; g < pm.amount(); ++g) {
-                                          const auto &s = pm[g];
+                                          const auto &rs = pm[g];
                                           if (assignments.size() == regs.size()) {
                                                 break;
                                           }
-                                          if (!s->is_k<keywords::assignment>() || s->l == nullptr || s->r == nullptr || (!s->r->is_k<expr_kinds::reg>() && !s->r->is_k<expr_kinds::upvalue>())) {
+                                          if (!rs->is_k<keywords::assignment>() || rs->l == nullptr || rs->r == nullptr || (!rs->r->is_k<expr_kinds::reg>() && !rs->r->is_k<expr_kinds::upvalue>())) {
                                                 pass = false;
                                                 break;
                                           }
-                                          const auto reg = s->r->reg;
+                                          const auto reg = rs->r->reg;
                                           if (assignments.find(reg) != assignments.end() || un_regs.find(reg) == un_regs.end()) {
                                                 pass = false;
                                                 break;
                                           } else {
-                                                assignments.try_emplace(reg, s);
+                                                assignments.try_emplace(reg, rs);
                                           }
                                     }
                                     if (pass && !assignments.empty()) {
@@ -136,8 +136,8 @@ namespace luramas::ir::passes {
                                                 ssa.emplace(generation::ssa::generate(pm.ir));
                                           }
 
-                                          for (const auto &s : ssa->nodes[p].l.assigns) {
-                                                const auto rssa = *s.second.second.begin();
+                                          for (const auto &rs : ssa->nodes[p].l.assigns) {
+                                                const auto rssa = *rs.second.second.begin();
                                                 if (ssa->defs[rssa].second.second.first.size() > 1u || ssa->phis.find(rssa) != ssa->phis.end()) {
                                                       pass = false;
                                                       break;
@@ -257,9 +257,9 @@ namespace luramas::ir::passes {
                                           }
 
                                           ir_stat::ir_expr::space targets;
-                                          for (const auto &s : ssa->nodes[prev].l.assigns) {
-                                                if (!ssa->defs[*s.second.second.begin()].second.second.first.size()) {
-                                                      const auto expr = *prev->visit(s.first).begin();
+                                          for (const auto &ls : ssa->nodes[prev].l.assigns) {
+                                                if (!ssa->defs[*ls.second.second.begin()].second.second.first.size()) {
+                                                      const auto expr = *prev->visit(ls.first).begin();
                                                       if (std::find(p->meta.begin(), p->meta.end(), expr) != p->meta.end()) {
                                                             targets.emplace_back(expr);
                                                       }

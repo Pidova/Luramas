@@ -8,7 +8,7 @@
 */
 
 #include "min_printf.h" /// for `min_printf` function
-#include <stdio.h> /// for `printf` function
+#include <stdio.h>      /// for `printf` function
 
 /**
  * @brief Main function
@@ -21,22 +21,20 @@
  * In each line user will see number or string covered with two colons, they are used to check from where the printing was started and where it ends
  * @returns 0 on exit
 */
-int main()
-{
-    // print strings using `printf` and `min_printf`
-    min_printf(":%d: :%1.6d:\n", 12, 56);
-    printf(":%d: :%1.6d:\n", 12, 56);
+int main() {
+      // print strings using `printf` and `min_printf`
+      min_printf(":%d: :%1.6d:\n", 12, 56);
+      printf(":%d: :%1.6d:\n", 12, 56);
 
-    printf("\n"); /// Printing an empty new line
+      printf("\n"); /// Printing an empty new line
 
-    // print floats or doubles using `printf` and `min_printf`
-    min_printf(":%f: :%3.6f:\n", 104.5654, 43.766443332);
-    printf(":%f: :%3.6f:\n", 104.5654, 43.766443332);
+      // print floats or doubles using `printf` and `min_printf`
+      min_printf(":%f: :%3.6f:\n", 104.5654, 43.766443332);
+      printf(":%f: :%3.6f:\n", 104.5654, 43.766443332);
 
-    printf("\n");
+      printf("\n");
 
-    // print integers `printf` and `min_printf`
-    min_printf(":%s: :%4.3s:\n", "Hello, World!", "Hello, World!");
-    printf(":%s: :%4.3s:\n", "Hello, World!", "Hello, World!");
-
+      // print integers `printf` and `min_printf`
+      min_printf(":%s: :%4.3s:\n", "Hello, World!", "Hello, World!");
+      printf(":%s: :%4.3s:\n", "Hello, World!", "Hello, World!");
 }

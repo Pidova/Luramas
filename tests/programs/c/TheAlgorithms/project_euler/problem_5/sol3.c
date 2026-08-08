@@ -15,21 +15,18 @@
  * @param b second number
  * @return GCD of `a` and `b`
  */
-unsigned long gcd(unsigned long a, unsigned long b)
-{
-    unsigned long r;
-    if (a > b)
-    {
-        unsigned long t = a;
-        a = b;
-        b = t;
-    }
-    while ((r = (a % b)))
-    {
-        a = b;
-        b = r;
-    }
-    return b;
+unsigned long gcd(unsigned long a, unsigned long b) {
+      unsigned long r;
+      if (a > b) {
+            unsigned long t = a;
+            a = b;
+            b = t;
+      }
+      while ((r = (a % b))) {
+            a = b;
+            b = r;
+      }
+      return b;
 }
 
 /** Compute [Least Common Multiple
@@ -38,23 +35,20 @@ unsigned long gcd(unsigned long a, unsigned long b)
  * @param b second number
  * @return LCM of `a` and `b`
  */
-unsigned long lcm(unsigned long a, unsigned long b)
-{
-    unsigned long long p = (unsigned long long)a * b;
-    return p / gcd(a, b);
+unsigned long lcm(unsigned long a, unsigned long b) {
+      unsigned long long p = (unsigned long long)a * b;
+      return p / gcd(a, b);
 }
 
 /** Main function
  * @returns 0 on exit
  */
-int main(void)
-{
-    unsigned long ans = 1;
-    unsigned long i;
-    for (i = 1; i <= 20; i++)
-    {
-        ans = lcm(ans, i);
-    }
-    printf("%lu\n", ans);
-    return 0;
+int main(void) {
+      unsigned long ans = 1;
+      unsigned long i;
+      for (i = 1; i <= 20; i++) {
+            ans = lcm(ans, i);
+      }
+      printf("%lu\n", ans);
+      return 0;
 }

@@ -24,10 +24,15 @@ namespace luramas::closures {
 
                   case luramas::il::arch::opcodes::OP_RETURN: {
 
-                        const auto dest = this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>().front()->dis.reg;
-                        auto amt = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val;
+                        /* Get kinds */
+                        const auto regs = this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>();
+                        const auto vals = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>();
+                        if (regs.empty() || vals.empty()) {
+                              return result;
+                        }
 
-                        if (amt) {
+                        const auto dest = regs.front()->dis.reg;
+                        if (auto amt = vals.front()->dis.val; amt) {
                               for (auto a = dest; a < (dest + amt); ++a) {
                                     result.emplace_back(a);
                               }
@@ -109,9 +114,16 @@ namespace luramas::closures {
             switch (this->lex->disassembly->op) {
                   case luramas::il::arch::opcodes::OP_RETURN: {
 
-                        const auto dest = this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>().front()->dis.reg;
+                        /* Get kinds */
+                        const auto regs = this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>();
+                        const auto vals = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>();
+                        if (regs.empty() || vals.empty()) {
+                              return result;
+                        }
 
-                        if (const auto amt = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val; amt) {
+                        /* Get results */
+                        const auto dest = regs.front()->dis.reg;
+                        if (const auto amt = vals.front()->dis.val; amt) {
                               for (auto i = dest; i < (dest + amt); ++i) {
                                     result.emplace_back(i);
                               }
@@ -332,7 +344,6 @@ namespace luramas::closures {
                         current_closure->closures.emplace_back(child);
                         closures.emplace_back(child);
                   }
-
                   current_closure->set_flags();
             } while (!closures.empty());
             return result;

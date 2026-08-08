@@ -25,49 +25,50 @@
  * @author [Mann Mehta](https://github.com/mann2108)
  */
 
-#include <cassert>   /// for assert
+#include <cassert> /// for assert
 #include <cstdint>
-#include <iostream>  /// for IO operations
+#include <iostream> /// for IO operations
 
 /**
  * @brief Mathematical algorithms
  * @namespace
  */
 namespace math {
-/**
+      /**
  * @brief Function to calculate Euler's Totient
  * @param n the number to find the Euler's Totient of
  */
-uint64_t phiFunction(uint64_t n) {
-    uint64_t result = n;
-    for (uint64_t i = 2; i * i <= n; i++) {
-        if (n % i != 0)
-            continue;
-        while (n % i == 0) n /= i;
+      uint64_t phiFunction(uint64_t n) {
+            uint64_t result = n;
+            for (uint64_t i = 2; i * i <= n; i++) {
+                  if (n % i != 0)
+                        continue;
+                  while (n % i == 0)
+                        n /= i;
 
-        result -= result / i;
-    }
-    if (n > 1)
-        result -= result / n;
+                  result -= result / i;
+            }
+            if (n > 1)
+                  result -= result / n;
 
-    return result;
-}
-}  // namespace math
+            return result;
+      }
+} // namespace math
 
 /**
  * @brief Self-test implementations
  * @returns void
  */
 static void test() {
-    assert(math::phiFunction(1) == 1);
-    assert(math::phiFunction(2) == 1);
-    assert(math::phiFunction(10) == 4);
-    assert(math::phiFunction(123456) == 41088);
-    assert(math::phiFunction(808017424794) == 263582333856);
-    assert(math::phiFunction(3141592) == 1570792);
-    assert(math::phiFunction(27182818) == 12545904);
+      assert(math::phiFunction(1) == 1);
+      assert(math::phiFunction(2) == 1);
+      assert(math::phiFunction(10) == 4);
+      assert(math::phiFunction(123456) == 41088);
+      assert(math::phiFunction(808017424794) == 263582333856);
+      assert(math::phiFunction(3141592) == 1570792);
+      assert(math::phiFunction(27182818) == 12545904);
 
-    std::cout << "All tests have successfully passed!\n";
+      std::cout << "All tests have successfully passed!\n";
 }
 
 /**
@@ -75,6 +76,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();
-    return 0;
+      test();
+      return 0;
 }

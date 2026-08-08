@@ -682,11 +682,12 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
 
                                                 if (type == op_table::type::k_idx_pp) {
 
-                                                      for (auto i = 0; i < p->sizep; i++)
-                                                            if (p->p[i] == gco2cl(kv.value.gc)->l.p) {
-                                                                  operand_value = i;
+                                                      for (auto pi = 0; pi < p->sizep; pi++) {
+                                                            if (p->p[pi] == gco2cl(kv.value.gc)->l.p) {
+                                                                  operand_value = pi;
                                                                   break;
                                                             }
+                                                      }
                                                 }
                                                 current_operand->k_value = "closure_" + std::to_string(operand_value);
                                                 break;

@@ -4,10 +4,9 @@
 #define L List_T
 typedef struct L *L;
 
-struct L
-{
-    void *val;
-    L next;
+struct L {
+      void *val;
+      L next;
 };
 
 extern L List_init(void);

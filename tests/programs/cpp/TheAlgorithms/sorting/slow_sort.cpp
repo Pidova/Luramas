@@ -11,46 +11,46 @@
 #include <iostream>
 
 void SlowSort(int a[], int i, int j) {
-    if (i >= j)
-        return;
-    int m = i + (j - i) / 2;  // midpoint, implemented this way to avoid
-                              // overflow
-    int temp;
-    SlowSort(a, i, m);
-    SlowSort(a, m + 1, j);
-    if (a[j] < a[m]) {
-        temp = a[j];  // swapping a[j] & a[m]
-        a[j] = a[m];
-        a[m] = temp;
-    }
-    SlowSort(a, i, j - 1);
+      if (i >= j)
+            return;
+      int m = i + (j - i) / 2; // midpoint, implemented this way to avoid
+                               // overflow
+      int temp;
+      SlowSort(a, i, m);
+      SlowSort(a, m + 1, j);
+      if (a[j] < a[m]) {
+            temp = a[j]; // swapping a[j] & a[m]
+            a[j] = a[m];
+            a[m] = temp;
+      }
+      SlowSort(a, i, j - 1);
 }
 
 // Sample Main function
 
 int main() {
-    int size;
-    std::cout << "\nEnter the number of elements : ";
+      int size;
+      std::cout << "\nEnter the number of elements : ";
 
-    std::cin >> size;
+      std::cin >> size;
 
-    int *arr = new int[size];
+      int *arr = new int[size];
 
-    std::cout << "\nEnter the unsorted elements : ";
+      std::cout << "\nEnter the unsorted elements : ";
 
-    for (int i = 0; i < size; ++i) {
-        std::cout << "\n";
-        std::cin >> arr[i];
-    }
+      for (int i = 0; i < size; ++i) {
+            std::cout << "\n";
+            std::cin >> arr[i];
+      }
 
-    SlowSort(arr, 0, size);
+      SlowSort(arr, 0, size);
 
-    std::cout << "Sorted array\n";
+      std::cout << "Sorted array\n";
 
-    for (int i = 0; i < size; ++i) {
-        std::cout << arr[i] << " ";
-    }
+      for (int i = 0; i < size; ++i) {
+            std::cout << arr[i] << " ";
+      }
 
-    delete[] arr;
-    return 0;
+      delete[] arr;
+      return 0;
 }

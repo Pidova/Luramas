@@ -826,26 +826,33 @@ namespace luramas::ir::tools {
                               return static_cast<ret>(l * r);
                         }
                         case luramas::il::arch::data::bin_kinds::div_: {
-                              return (!l || !r) ? static_cast<ret>(0) : static_cast<ret>(l / r);
+                              const auto ll = luramas_int(l);
+                              const auto lr = luramas_int(r);
+                              return (!ll || !lr) ? static_cast<ret>(0) : static_cast<ret>(ll / lr);
                         }
                         case luramas::il::arch::data::bin_kinds::idiv_: {
+                              const auto ll = luramas_int(l);
+                              const auto lr = luramas_int(r);
                               return (!l || !r) ? static_cast<ret>(0)
                                      : (std::is_same<lk, luramas_int>::value || std::is_same<rk, luramas_int>::value)
-                                         ? static_cast<ret>(math::floor(l / r))
+                                         ? static_cast<ret>(math::floor(ll / lr))
                                          : static_cast<ret>(std::floor(static_cast<double>(l) / static_cast<double>(r)));
                         }
-
                         case luramas::il::arch::data::bin_kinds::mod_: {
                               if constexpr (luramas::tools::native_supported_arith<lk>() && luramas::tools::native_supported_arith<rk>()) {
-                                    return static_cast<ret>(l % r);
+                                    const auto ll = luramas_int(l);
+                                    const auto lr = luramas_int(r);
+                                    return static_cast<ret>(ll % lr);
+                              } else {
+                                    return static_cast<ret>(std::fmod(static_cast<const double>(l), static_cast<const double>(r)));
                               }
-                              return static_cast<ret>(std::fmod(static_cast<const double>(l), static_cast<const double>(r)));
                         }
                         case luramas::il::arch::data::bin_kinds::pow_: {
                               if constexpr (luramas::tools::native_supported_arith<lk>() && luramas::tools::native_supported_arith<rk>() && luramas::tools::native_supported_arith<ret>()) {
                                     return static_cast<ret>(math::pow(l, r));
+                              } else {
+                                    luramas::error::error("Pow operation requires arith kinds");
                               }
-                              luramas::error::error("Pow operation requires arith kinds");
                         }
                         case luramas::il::arch::data::bin_kinds::and_: {
                               if constexpr (luramas::tools::native_supported_arith<lk>() && luramas::tools::native_supported_arith<rk>()) {
@@ -868,22 +875,29 @@ namespace luramas::ir::tools {
                         }
                         case luramas::il::arch::data::bin_kinds::shl_: {
                               if constexpr (luramas::tools::native_supported_arith<lk>() && luramas::tools::native_supported_arith<rk>()) {
+                                    const auto ll = luramas_int(l);
+                                    const auto lr = luramas_int(r);
                                     if constexpr (std::is_same_v<ret, bool>) {
-                                          return static_cast<ret>((l << r) != 0);
+                                          return static_cast<ret>((ll << lr) != 0);
                                     } else {
-                                          return static_cast<ret>(l << r);
+                                          return static_cast<ret>(ll << lr);
                                     }
+                              } else {
+                                    luramas::error::error("Shift left operation requires arith kinds");
                               }
-                              luramas::error::error("Shift left operation requires arith kinds");
                         }
                         case luramas::il::arch::data::bin_kinds::shr_: {
                               if constexpr (luramas::tools::native_supported_arith<lk>() && luramas::tools::native_supported_arith<rk>()) {
+                                    const auto ll = luramas_int(l);
+                                    const auto lr = luramas_int(r);
                                     if constexpr (std::is_same_v<ret, bool>) {
-                                          return static_cast<ret>((l >> r) != 0);
+                                          return static_cast<ret>(ll >> lr) != 0;
+                                    } else {
+                                          return static_cast<ret>(ll >> lr);
                                     }
-                                    return static_cast<ret>(l >> r);
+                              } else {
+                                    luramas::error::error("Shift right operation requires arith kinds");
                               }
-                              luramas::error::error("Shift right operation requires arith kinds");
                         }
                         case luramas::il::arch::data::bin_kinds::or_: {
                               if constexpr (luramas::tools::native_supported_arith<lk>() && luramas::tools::native_supported_arith<rk>()) {
@@ -921,10 +935,6 @@ namespace luramas::ir::tools {
                               luramas::error::error("Invalid binop");
                         }
                   }
-                  if constexpr (std::is_same_v<ret, bool>) {
-                        return false;
-                  }
-                  luramas::error::error("Invalid binop");
             }
 
             /* Compute logical expression (Will return nullptr if can not) */

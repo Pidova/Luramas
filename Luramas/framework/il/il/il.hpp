@@ -23,11 +23,12 @@ namespace luramas::il {
       /* Virtual instruction, instruction that can emit multiple instructions or do something very specific that has no direct translation */
       template <std::uint8_t MAX_LEN>
       struct vinst {
-            cpu_tracer::blocks::inst_data<MAX_LEN> inst;                    /* Instruction data */
-            std::optional<std::vector<profile::edge>> edges = std::nullopt; /* Edges to real PC */
-            luramas_flag fstart_cmp_bytes = false;                          /* Start of scope for SMC i.e (CODE INSTRUCTIONS == SMC START REGION) add it to stack */
-            luramas_flag fend_cmp_bytes = false;                            /* End of scope for SMC with the back of stack */
-            luramas_flag fentry = false;                                    /* Inst is entry? */
+            cpu_tracer::blocks::inst_data<MAX_LEN> inst;                                         /* Instruction data */
+            std::optional<std::vector<profile::edge>> edges = std::nullopt;                      /* Edges to real PC */
+            std::optional<std::vector<std::shared_ptr<disassembly>>> insert_dism = std::nullopt; /* Synthetically insert IL disassembly after lifted instruction */
+            luramas_flag fstart_cmp_bytes = false;                                               /* Start of scope for SMC i.e (CODE INSTRUCTIONS == SMC START REGION) add it to stack */
+            luramas_flag fend_cmp_bytes = false;                                                 /* End of scope for SMC with the back of stack */
+            luramas_flag fentry = false;                                                         /* Inst is entry? */
       };
 
       /* Programs memory */
@@ -195,6 +196,7 @@ namespace luramas::il {
             void insert(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v);
             void insert_front(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v);
             void insert(const luramas_address where, const std::shared_ptr<disassembly> &v);
+            void insert(const luramas_address where, const std::vector<std::shared_ptr<disassembly>> &v);
             void insert_front(luramas_address where, const std::shared_ptr<disassembly> &v);
             void insert_front(luramas_address where, const std::vector<std::shared_ptr<disassembly>> &v);
             void insert_original_unsafe(const luramas_address where, const std::shared_ptr<disassembly> &v);

@@ -119,9 +119,9 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
 
             /* Map globals */
             do {
-                  const auto code = codes.back();
+                  const auto bcode = codes.back();
                   codes.pop_back();
-                  for (const auto &c : code) {
+                  for (const auto &c : bcode) {
                         for (const auto &e : c->extract_exprs()) {
                               for (const auto &o : e->extract_exprs()) {
                                     if (o->is_global_tk()) {
@@ -138,11 +138,11 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
             /* Make names */
             codes = {code};
             do {
-                  const auto code = codes.back();
+                  const auto bcode = codes.back();
                   codes.pop_back();
                   if (format->vars.naming_conventions.anotations) {
                         /* TODO CACHE THIS */
-                        for (const auto &c : code) {
+                        for (const auto &c : bcode) {
                               for (const auto &e : c->extract_ordered_deep_exprs()) {
                                     if (e->is_register_reference() && !e->v.empty()) {
                                           vars.try_emplace(e, e->v);
@@ -151,9 +151,9 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                         }
                   }
                   if (format->vars.naming_conventions.smart.enabled) {
-                        generation::tools::smart_variables::generate(code, vars, format, globals, gvn, use_annotations);
+                        generation::tools::smart_variables::generate(bcode, vars, format, globals, gvn, use_annotations);
                   }
-                  for (const auto &c : code) {
+                  for (const auto &c : bcode) {
                         for (const auto &o : c->args) {
                               vars.try_emplace(o.second, make_basic_name(discriminator++, o.second->k, o.second->rk));
                         }

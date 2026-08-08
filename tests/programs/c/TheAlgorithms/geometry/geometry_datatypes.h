@@ -18,11 +18,10 @@
  * @{
  */
 /** 3D vector type */
-typedef struct vec_3d_
-{
-    float x; /**< X co-ordinate */
-    float y; /**< Y co-ordinate */
-    float z; /**< Z co-ordinate */
+typedef struct vec_3d_ {
+      float x; /**< X co-ordinate */
+      float y; /**< Y co-ordinate */
+      float z; /**< Z co-ordinate */
 } vec_3d;
 /** @} */
 
@@ -31,23 +30,19 @@ typedef struct vec_3d_
  * @{
  */
 /** A 3x3 Matrix type definition */
-typedef struct mat_3x3_
-{
-    union
-    { /**< 3 element row 1 */
-        float row1[3];
-        vec_3d vec1;
-    };
-    union
-    { /**< 3 element row 2 */
-        float row2[3];
-        vec_3d vec2;
-    };
-    union
-    { /**< 3 element row 3 */
-        float row3[3];
-        vec_3d vec3;
-    };
+typedef struct mat_3x3_ {
+      union { /**< 3 element row 1 */
+            float row1[3];
+            vec_3d vec1;
+      };
+      union { /**< 3 element row 2 */
+            float row2[3];
+            vec_3d vec2;
+      };
+      union { /**< 3 element row 3 */
+            float row3[3];
+            vec_3d vec3;
+      };
 } mat_3x3;
 /** @} */
 
@@ -57,43 +52,36 @@ typedef struct mat_3x3_
 /** a Quaternion type represented using a scalar \f$w\f$ or \f$q_0\f$ and a
  * 3D vector \f$\left(q_1,q_2,q_3\right)\f$
  */
-typedef struct quaternion_
-{
-    union
-    {
-        float w;  /**< real part of quaternion */
-        float q0; /**< real part of quaternion */
-    };
-    /**< dual part of quaternion */
-    union
-    {
-        vec_3d dual; /**< can be a 3D vector */
-        /** or individual values */
-        struct
-        {
-            float q1, q2, q3;
-        };
-    };
+typedef struct quaternion_ {
+      union {
+            float w;  /**< real part of quaternion */
+            float q0; /**< real part of quaternion */
+      };
+      /**< dual part of quaternion */
+      union {
+            vec_3d dual; /**< can be a 3D vector */
+            /** or individual values */
+            struct
+            {
+                  float q1, q2, q3;
+            };
+      };
 } quaternion;
 
 /** 3D Euler or Tait-Bryan angles (in radian) */
-typedef struct euler_
-{
-    union
-    {
-        float roll; /**< or bank \f$\phi\f$ = rotation about X axis */
-        float bank; /**< or roll \f$\phi\f$ = rotation about X axis */
-    };
-    union
-    {
-        float pitch; /**< or elevation \f$\theta\f$ = rotation about Y axis */
-        float elevation; /**< or pitch \f$\theta\f$ = rotation about Y axis */
-    };
-    union
-    {
-        float yaw;     /**< or heading \f$\psi\f$ = rotation about Z axis */
-        float heading; /**< or yaw \f$\psi\f$ = rotation about Z axis */
-    };
+typedef struct euler_ {
+      union {
+            float roll; /**< or bank \f$\phi\f$ = rotation about X axis */
+            float bank; /**< or roll \f$\phi\f$ = rotation about X axis */
+      };
+      union {
+            float pitch;     /**< or elevation \f$\theta\f$ = rotation about Y axis */
+            float elevation; /**< or pitch \f$\theta\f$ = rotation about Y axis */
+      };
+      union {
+            float yaw;     /**< or heading \f$\psi\f$ = rotation about Z axis */
+            float heading; /**< or yaw \f$\psi\f$ = rotation about Z axis */
+      };
 } euler;
 
 /** @} */
@@ -102,14 +90,13 @@ typedef struct euler_
  * @{
  */
 /** a dual quaternion type */
-typedef struct dual_quat_
-{
-    quaternion real; /**< real part of dual quaternion */
-    quaternion dual; /**< dual part of dual quaternion */
+typedef struct dual_quat_ {
+      quaternion real; /**< real part of dual quaternion */
+      quaternion dual; /**< dual part of dual quaternion */
 } dual_quat;
 
 /** @} */
 
-#endif  // __LIBQUAT_H_
+#endif // __LIBQUAT_H_
 
 /** @} */

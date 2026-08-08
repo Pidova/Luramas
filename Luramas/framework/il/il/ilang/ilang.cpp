@@ -101,6 +101,7 @@ namespace luramas::il {
             }
             return;
       }
+
       void ilang::insert(const luramas_address where, const std::shared_ptr<disassembly> &v) {
             if (!this->valid(where)) {
                   luramas::error::error("Invalid index");
@@ -108,6 +109,13 @@ namespace luramas::il {
             this->insert(this->dis[where], v);
             return;
       }
+      void ilang::insert(const luramas_address where, const std::vector<std::shared_ptr<disassembly>> &v) {
+            for (const auto &i : v) {
+                  this->insert(where, i);
+            }
+            return;
+      }
+
       void ilang::insert_front(luramas_address where, const std::shared_ptr<disassembly> &v) {
             if (!v) {
                   return;

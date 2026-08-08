@@ -591,7 +591,6 @@ namespace luramas::ir {
             void pass_manager::update(const luramas_flag fallow_ecc, const char *const last_pass) {
 
                   this->processed.clear();
-                  luramas_count tag_stack = 0u;
                   std::size_t available = 1u;
                   luramas_addresses breakable_stack;
                   luramas_addresses continueable_stack;

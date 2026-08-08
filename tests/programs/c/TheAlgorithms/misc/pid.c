@@ -27,62 +27,57 @@
  */
 #include <stdio.h>
 
-struct pid
-{
-    // Controller gains
-    float kP;
-    float kI;
-    float kD;
+struct pid {
+      // Controller gains
+      float kP;
+      float kI;
+      float kD;
 
-    // State variables
-    float lastError;
-    float integral;
+      // State variables
+      float lastError;
+      float integral;
 };
 
-float pid_step(struct pid *controller, float dt, float error)
-{
-    // Calculate p term
-    float p = error * controller->kP;
+float pid_step(struct pid *controller, float dt, float error) {
+      // Calculate p term
+      float p = error * controller->kP;
 
-    // Calculate i term
-    controller->integral += error * dt * controller->kI;
+      // Calculate i term
+      controller->integral += error * dt * controller->kI;
 
-    // Calculate d term, taking care to not divide by zero
-    float d =
-        dt == 0 ? 0 : ((error - controller->lastError) / dt) * controller->kD;
-    controller->lastError = error;
+      // Calculate d term, taking care to not divide by zero
+      float d =
+          dt == 0 ? 0 : ((error - controller->lastError) / dt) * controller->kD;
+      controller->lastError = error;
 
-    return p + controller->integral + d;
+      return p + controller->integral + d;
 }
 
-int main()
-{
-    printf("PID Controller Example\n");
+int main() {
+      printf("PID Controller Example\n");
 
-    struct pid controller = {.lastError = 0, .integral = 0};
+      struct pid controller = {.lastError = 0, .integral = 0};
 
-    // Take the controller gains from the user
-    printf(
-        "Please enter controller gains in format kP, kI, KD. For example, "
-        "\"1.2 2.1 3.2\"\n> ");
-    scanf("%f %f %f", &controller.kP, &controller.kI, &controller.kD);
-    printf("Using kP: %f, kI: %f, kD: %f\n", controller.kP, controller.kI,
-           controller.kD);
+      // Take the controller gains from the user
+      printf(
+          "Please enter controller gains in format kP, kI, KD. For example, "
+          "\"1.2 2.1 3.2\"\n> ");
+      scanf("%f %f %f", &controller.kP, &controller.kI, &controller.kD);
+      printf("Using kP: %f, kI: %f, kD: %f\n", controller.kP, controller.kI, controller.kD);
 
-    // How often the pid_step algorithm expects to be called. In a real life
-    // scenario this would be provided by calling time(NULL) - last_time, or by
-    // calling the function reliably at X Hz (using a timer or RTOS etc) For
-    // demonstration of this algorithm though, it is defined below as 1 second,
-    // allowing easy testing of integral and derivative terms.
-    float time_step = 1;
+      // How often the pid_step algorithm expects to be called. In a real life
+      // scenario this would be provided by calling time(NULL) - last_time, or by
+      // calling the function reliably at X Hz (using a timer or RTOS etc) For
+      // demonstration of this algorithm though, it is defined below as 1 second,
+      // allowing easy testing of integral and derivative terms.
+      float time_step = 1;
 
-    float error_value;
-    while (1)
-    {
-        printf("Enter error value\n>");
-        scanf("%f", &error_value);
+      float error_value;
+      while (1) {
+            printf("Enter error value\n>");
+            scanf("%f", &error_value);
 
-        float output = pid_step(&controller, time_step, error_value);
-        printf("Output: %f\n", output);
-    }
+            float output = pid_step(&controller, time_step, error_value);
+            printf("Output: %f\n", output);
+      }
 }

@@ -515,6 +515,11 @@ namespace luramas::il::lifter::builder {
             /* Set internal global table, returns ID relating to global */
             luramas_id set_global(const std::string &global);
 
+            /* Insert front of index */
+            void insertf(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v);
+            void insertf(const std::shared_ptr<luramas::il::disassembly> &v);
+
+            /* Insert back of index */
             void insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v);
             void insert(const std::shared_ptr<luramas::il::disassembly> &v);
 

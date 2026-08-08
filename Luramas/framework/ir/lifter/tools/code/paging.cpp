@@ -298,10 +298,10 @@ namespace luramas::ir::tools::paging {
                   const auto &stat = pm[i];
                   result.emplace_back(!stack.empty() ? std::optional<luramas_address>(stack.back().first) : std::nullopt);
                   if (tools::stat::is_page_function_start(stat)) {
-                        stack.emplace_back(i, stat->r->extract_integral_base());
+                        stack.emplace_back(i, static_cast<luramas_id>(stat->r->extract_integral_base()));
                   }
                   if (tools::stat::is_page_function_end(stat)) {
-                        const auto id = stat->r->extract_integral_base();
+                        const auto id = static_cast<luramas_id>(stat->r->extract_integral_base());
                         std::erase_if(stack, [&](const auto &p) {
                               return p.second == id;
                         });
@@ -625,7 +625,7 @@ namespace luramas::ir::tools::paging {
                   /* Page jump or call out? */
                   if (!p->flags.fvirtualized && (stat::is_page_function_jump(p) || stat::is_page_function_call(p))) {
 
-                        if (p->r->is_integral() && p->r->extract_integral_base() != page.id) {
+                        if (p->r->is_integral() && static_cast<luramas_id>(p->r->extract_integral_base()) != page.id) {
                               return false;
                         }
                   }
@@ -636,7 +636,7 @@ namespace luramas::ir::tools::paging {
                   for (const auto &e : exprs) {
 
                         /* Page call out? */
-                        if (tools::exprs::values::is_page_function_call(e) && e->r->is_integral() && e->r->extract_integral_base() != page.id) {
+                        if (tools::exprs::values::is_page_function_call(e) && e->r->is_integral() && static_cast<luramas_id>(e->r->extract_integral_base()) != page.id) {
                               return false;
                         }
                   }

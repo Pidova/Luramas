@@ -16,17 +16,17 @@
  * @author [Gleison Batista](https://github.com/gleisonbs)
  * @author [David Leal](https://github.com/Panquesito7)
  */
-#include <algorithm>  /// for std::max, std::min
-#include <array>      /// for std::array
-#include <cmath>      /// for log2
-#include <iostream>   /// for IO operations
+#include <algorithm> /// for std::max, std::min
+#include <array>     /// for std::array
+#include <cmath>     /// for log2
+#include <iostream>  /// for IO operations
 
 /**
  * @namespace backtracking
  * @brief Backtracking algorithms
  */
 namespace backtracking {
-/**
+      /**
  * @brief Check which is the maximum/minimum number in the array
  * @param depth current depth in game tree
  * @param node_index current index in array
@@ -35,29 +35,28 @@ namespace backtracking {
  * @param height maximum height for game tree
  * @returns the maximum or minimum number
  */
-template <size_t T>
-int minimax(int depth, int node_index, bool is_max,
-            const std::array<int, T> &scores, double height) {
-    if (depth == height) {
-        return scores[node_index];
-    }
+      template <size_t T>
+      int minimax(int depth, int node_index, bool is_max, const std::array<int, T> &scores, double height) {
+            if (depth == height) {
+                  return scores[node_index];
+            }
 
-    int v1 = minimax(depth + 1, node_index * 2, !is_max, scores, height);
-    int v2 = minimax(depth + 1, node_index * 2 + 1, !is_max, scores, height);
+            int v1 = minimax(depth + 1, node_index * 2, !is_max, scores, height);
+            int v2 = minimax(depth + 1, node_index * 2 + 1, !is_max, scores, height);
 
-    return is_max ? std::max(v1, v2) : std::min(v1, v2);
-}
-}  // namespace backtracking
+            return is_max ? std::max(v1, v2) : std::min(v1, v2);
+      }
+} // namespace backtracking
 
 /**
  * @brief Main function
  * @returns 0 on exit
  */
 int main() {
-    std::array<int, 8> scores = {90, 23, 6, 33, 21, 65, 123, 34423};
-    double height = log2(scores.size());
+      std::array<int, 8> scores = {90, 23, 6, 33, 21, 65, 123, 34423};
+      double height = log2(scores.size());
 
-    std::cout << "Optimal value: "
-              << backtracking::minimax(0, 0, true, scores, height) << std::endl;
-    return 0;
+      std::cout << "Optimal value: "
+                << backtracking::minimax(0, 0, true, scores, height) << std::endl;
+      return 0;
 }

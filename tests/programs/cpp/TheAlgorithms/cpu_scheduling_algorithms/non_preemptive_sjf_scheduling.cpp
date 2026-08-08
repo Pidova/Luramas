@@ -11,14 +11,14 @@
  * <a href="https://github.com/LakshmiSrikumar">Author : Lakshmi Srikumar </a>
  */
 
-#include <algorithm>      /// for sorting
-#include <cassert>        /// for assert
-#include <iomanip>        /// for formatting the output
-#include <iostream>       /// for IO operations
-#include <queue>          /// for std::priority_queue
-#include <random>         /// random number generation
-#include <unordered_set>  /// for std::unordered_set
-#include <vector>         /// for std::vector
+#include <algorithm>     /// for sorting
+#include <cassert>       /// for assert
+#include <iomanip>       /// for formatting the output
+#include <iostream>      /// for IO operations
+#include <queue>         /// for std::priority_queue
+#include <random>        /// random number generation
+#include <unordered_set> /// for std::unordered_set
+#include <vector>        /// for std::vector
 
 using std::cin;
 using std::cout;
@@ -42,12 +42,12 @@ using std::vector;
  * @returns false if t1 and t2 are in the INCORRECT order
  */
 template <typename S, typename T, typename E>
-bool sortcol(tuple<S, T, E>& t1, tuple<S, T, E>& t2) {
-    if (get<1>(t1) < get<1>(t2) ||
-        (get<1>(t1) == get<1>(t2) && get<0>(t1) < get<0>(t2))) {
-        return true;
-    }
-    return false;
+bool sortcol(tuple<S, T, E> &t1, tuple<S, T, E> &t2) {
+      if (get<1>(t1) < get<1>(t2) ||
+          (get<1>(t1) == get<1>(t2) && get<0>(t1) < get<0>(t2))) {
+            return true;
+      }
+      return false;
 }
 
 /**
@@ -59,8 +59,8 @@ bool sortcol(tuple<S, T, E>& t1, tuple<S, T, E>& t2) {
  */
 template <typename S, typename T, typename E>
 class Compare {
- public:
-    /**
+    public:
+      /**
      * @param t1 First tuple
      * @param t2 Second tuple
      * @brief A comparator function that checks whether to swap the two tuples
@@ -71,18 +71,18 @@ class Compare {
      * @returns true if the tuples SHOULD be swapped
      * @returns false if the tuples SHOULDN'T be swapped
      */
-    bool operator()(tuple<S, T, E, double, double, double>& t1,
-                    tuple<S, T, E, double, double, double>& t2) {
-        // Compare burst times for SJF
-        if (get<2>(t2) < get<2>(t1)) {
-            return true;
-        }
-        // If burst times are the same, compare arrival times
-        else if (get<2>(t2) == get<2>(t1)) {
-            return get<1>(t2) < get<1>(t1);
-        }
-        return false;
-    }
+      bool operator()(tuple<S, T, E, double, double, double> &t1,
+          tuple<S, T, E, double, double, double> &t2) {
+            // Compare burst times for SJF
+            if (get<2>(t2) < get<2>(t1)) {
+                  return true;
+            }
+            // If burst times are the same, compare arrival times
+            else if (get<2>(t2) == get<2>(t1)) {
+                  return get<1>(t2) < get<1>(t1);
+            }
+            return false;
+      }
 };
 
 /**
@@ -94,7 +94,7 @@ class Compare {
  */
 template <typename S, typename T, typename E>
 class SJF {
-    /**
+      /**
      * Priority queue of schedules(stored as tuples) of processes.
      * In each tuple
      * @tparam 1st element: Process ID
@@ -104,19 +104,19 @@ class SJF {
      * @tparam 5th element: Turnaround time
      * @tparam 6th element: Waiting time
      */
-    priority_queue<tuple<S, T, E, double, double, double>,
-                   vector<tuple<S, T, E, double, double, double>>,
-                   Compare<S, T, E>>
-        schedule;
+      priority_queue<tuple<S, T, E, double, double, double>,
+          vector<tuple<S, T, E, double, double, double>>,
+          Compare<S, T, E>>
+          schedule;
 
-    // Stores final status of all the processes after completing the execution.
-    vector<tuple<S, T, E, double, double, double>> result;
+      // Stores final status of all the processes after completing the execution.
+      vector<tuple<S, T, E, double, double, double>> result;
 
-    // Stores process IDs. Used for confirming absence of a process while  it.
-    unordered_set<S> idList;
+      // Stores process IDs. Used for confirming absence of a process while  it.
+      unordered_set<S> idList;
 
- public:
-    /**
+    public:
+      /**
      * @brief Adds the process to the ready queue if it isn't already there
      * @param id Process ID
      * @param arrival Arrival time of the process
@@ -124,17 +124,17 @@ class SJF {
      * @returns void
      *
      */
-    void addProcess(S id, T arrival, E burst) {
-        // Add if a process with process ID as id is not found in idList.
-        if (idList.find(id) == idList.end()) {
-            tuple<S, T, E, double, double, double> t =
-                make_tuple(id, arrival, burst, 0, 0, 0);
-            schedule.push(t);
-            idList.insert(id);
-        }
-    }
+      void addProcess(S id, T arrival, E burst) {
+            // Add if a process with process ID as id is not found in idList.
+            if (idList.find(id) == idList.end()) {
+                  tuple<S, T, E, double, double, double> t =
+                      make_tuple(id, arrival, burst, 0, 0, 0);
+                  schedule.push(t);
+                  idList.insert(id);
+            }
+      }
 
-    /**
+      /**
      * @brief Algorithm for scheduling CPU processes according to
      * the Shortest Job First (SJF) scheduling algorithm.
      *
@@ -151,66 +151,66 @@ class SJF {
      * @returns void
      */
 
-    vector<tuple<S, T, E, double, double, double>> scheduleForSJF() {
-        // Variable to keep track of time elapsed so far
-        double timeElapsed = 0;
+      vector<tuple<S, T, E, double, double, double>> scheduleForSJF() {
+            // Variable to keep track of time elapsed so far
+            double timeElapsed = 0;
 
-        while (!schedule.empty()) {
-            tuple<S, T, E, double, double, double> cur = schedule.top();
+            while (!schedule.empty()) {
+                  tuple<S, T, E, double, double, double> cur = schedule.top();
 
-            // If the current process arrived at time t2, the last process
-            // completed its execution at time t1, and t2 > t1.
-            if (get<1>(cur) > timeElapsed) {
-                timeElapsed += get<1>(cur) - timeElapsed;
+                  // If the current process arrived at time t2, the last process
+                  // completed its execution at time t1, and t2 > t1.
+                  if (get<1>(cur) > timeElapsed) {
+                        timeElapsed += get<1>(cur) - timeElapsed;
+                  }
+
+                  // Add Burst time to time elapsed
+                  timeElapsed += get<2>(cur);
+
+                  // Completion time of the current process will be same as time
+                  // elapsed so far
+                  get<3>(cur) = timeElapsed;
+
+                  // Turnaround time = Completion time - Arrival time
+                  get<4>(cur) = get<3>(cur) - get<1>(cur);
+
+                  // Waiting time = Turnaround time - Burst time
+                  get<5>(cur) = get<4>(cur) - get<2>(cur);
+
+                  // Turnaround time >= Burst time
+                  assert(get<4>(cur) >= get<2>(cur));
+
+                  // Waiting time is never negative
+                  assert(get<5>(cur) >= 0);
+
+                  result.push_back(cur);
+                  schedule.pop();
             }
-
-            // Add Burst time to time elapsed
-            timeElapsed += get<2>(cur);
-
-            // Completion time of the current process will be same as time
-            // elapsed so far
-            get<3>(cur) = timeElapsed;
-
-            // Turnaround time = Completion time - Arrival time
-            get<4>(cur) = get<3>(cur) - get<1>(cur);
-
-            // Waiting time = Turnaround time - Burst time
-            get<5>(cur) = get<4>(cur) - get<2>(cur);
-
-            // Turnaround time >= Burst time
-            assert(get<4>(cur) >= get<2>(cur));
-
-            // Waiting time is never negative
-            assert(get<5>(cur) >= 0);
-
-            result.push_back(cur);
-            schedule.pop();
-        }
-        return result;
-    }
-    /**
+            return result;
+      }
+      /**
      * @brief Utility function for printing the status of
      *  each process after execution
      * @returns void
      */
 
-    void printResult(
-        const vector<tuple<S, T, E, double, double, double>>& processes) {
-        cout << std::setw(17) << left << "Process ID" << std::setw(17) << left
-             << "Arrival Time" << std::setw(17) << left << "Burst Time"
-             << std::setw(17) << left << "Completion Time" << std::setw(17)
-             << left << "Turnaround Time" << std::setw(17) << left
-             << "Waiting Time" << endl;
+      void printResult(
+          const vector<tuple<S, T, E, double, double, double>> &processes) {
+            cout << std::setw(17) << left << "Process ID" << std::setw(17) << left
+                 << "Arrival Time" << std::setw(17) << left << "Burst Time"
+                 << std::setw(17) << left << "Completion Time" << std::setw(17)
+                 << left << "Turnaround Time" << std::setw(17) << left
+                 << "Waiting Time" << endl;
 
-        for (const auto& process : processes) {
-            cout << std::setprecision(2) << std::fixed << std::setw(17) << left
-                 << get<0>(process) << std::setw(17) << left << get<1>(process)
-                 << std::setw(17) << left << get<2>(process) << std::setw(17)
-                 << left << get<3>(process) << std::setw(17) << left
-                 << get<4>(process) << std::setw(17) << left << get<5>(process)
-                 << endl;
-        }
-    }
+            for (const auto &process : processes) {
+                  cout << std::setprecision(2) << std::fixed << std::setw(17) << left
+                       << get<0>(process) << std::setw(17) << left << get<1>(process)
+                       << std::setw(17) << left << get<2>(process) << std::setw(17)
+                       << left << get<3>(process) << std::setw(17) << left
+                       << get<4>(process) << std::setw(17) << left << get<5>(process)
+                       << endl;
+            }
+      }
 };
 
 /**
@@ -227,37 +227,36 @@ class SJF {
 template <typename S, typename T, typename E>
 vector<tuple<S, T, E, double, double, double>> get_final_status(
     vector<tuple<S, T, E>> input) {
-    // Sort the processes based on Arrival time and then Burst time
-    sort(input.begin(), input.end(), sortcol<S, T, E>);
+      // Sort the processes based on Arrival time and then Burst time
+      sort(input.begin(), input.end(), sortcol<S, T, E>);
 
-    // Result vector to hold the final status of each process
-    vector<tuple<S, T, E, double, double, double>> result(input.size());
-    double timeElapsed = 0;
+      // Result vector to hold the final status of each process
+      vector<tuple<S, T, E, double, double, double>> result(input.size());
+      double timeElapsed = 0;
 
-    for (size_t i = 0; i < input.size(); i++) {
-        // Extract Arrival time and Burst time
-        T arrival = get<1>(input[i]);
-        E burst = get<2>(input[i]);
+      for (size_t i = 0; i < input.size(); i++) {
+            // Extract Arrival time and Burst time
+            T arrival = get<1>(input[i]);
+            E burst = get<2>(input[i]);
 
-        // If the CPU is idle, move time to the arrival of the next process
-        if (arrival > timeElapsed) {
-            timeElapsed = arrival;
-        }
+            // If the CPU is idle, move time to the arrival of the next process
+            if (arrival > timeElapsed) {
+                  timeElapsed = arrival;
+            }
 
-        // Update timeElapsed by adding the burst time
-        timeElapsed += burst;
+            // Update timeElapsed by adding the burst time
+            timeElapsed += burst;
 
-        // Calculate Completion time, Turnaround time, and Waiting time
-        double completion = timeElapsed;
-        double turnaround = completion - arrival;
-        double waiting = turnaround - burst;
+            // Calculate Completion time, Turnaround time, and Waiting time
+            double completion = timeElapsed;
+            double turnaround = completion - arrival;
+            double waiting = turnaround - burst;
 
-        // Store the results in the result vector
-        result[i] = make_tuple(get<0>(input[i]), arrival, burst, completion,
-                               turnaround, waiting);
-    }
+            // Store the results in the result vector
+            result[i] = make_tuple(get<0>(input[i]), arrival, burst, completion, turnaround, waiting);
+      }
 
-    return result;
+      return result;
 }
 
 /**
@@ -265,45 +264,44 @@ vector<tuple<S, T, E, double, double, double>> get_final_status(
  * @returns void
  */
 static void test() {
-    // A vector to store the results of all processes across all test cases.
-    vector<tuple<uint32_t, uint32_t, uint32_t, double, double, double>>
-        finalResult;
+      // A vector to store the results of all processes across all test cases.
+      vector<tuple<uint32_t, uint32_t, uint32_t, double, double, double>>
+          finalResult;
 
-    for (int i{}; i < 10; i++) {
-        std::random_device rd;  // Seeding
-        std::mt19937 eng(rd());
-        std::uniform_int_distribution<> distr(1, 10);
+      for (int i{}; i < 10; i++) {
+            std::random_device rd; // Seeding
+            std::mt19937 eng(rd());
+            std::uniform_int_distribution<> distr(1, 10);
 
-        uint32_t n = distr(eng);
-        SJF<uint32_t, uint32_t, uint32_t> readyQueue;
-        vector<tuple<uint32_t, uint32_t, uint32_t, double, double, double>>
-            input(n);
+            uint32_t n = distr(eng);
+            SJF<uint32_t, uint32_t, uint32_t> readyQueue;
+            vector<tuple<uint32_t, uint32_t, uint32_t, double, double, double>>
+                input(n);
 
-        // Generate random arrival and burst times
-        for (uint32_t i{}; i < n; i++) {
-            get<0>(input[i]) = i;
-            get<1>(input[i]) = distr(eng);  // Random arrival time
-            get<2>(input[i]) = distr(eng);  // Random burst time
-        }
+            // Generate random arrival and burst times
+            for (uint32_t i{}; i < n; i++) {
+                  get<0>(input[i]) = i;
+                  get<1>(input[i]) = distr(eng); // Random arrival time
+                  get<2>(input[i]) = distr(eng); // Random burst time
+            }
 
-        // Print processes before scheduling
-        cout << "Processes before SJF scheduling:" << endl;
-        readyQueue.printResult(input);
+            // Print processes before scheduling
+            cout << "Processes before SJF scheduling:" << endl;
+            readyQueue.printResult(input);
 
-        // Add processes to the queue
-        for (uint32_t i{}; i < n; i++) {
-            readyQueue.addProcess(get<0>(input[i]), get<1>(input[i]),
-                                  get<2>(input[i]));
-        }
+            // Add processes to the queue
+            for (uint32_t i{}; i < n; i++) {
+                  readyQueue.addProcess(get<0>(input[i]), get<1>(input[i]), get<2>(input[i]));
+            }
 
-        // Perform SJF schedulings
-        auto finalResult = readyQueue.scheduleForSJF();
+            // Perform SJF schedulings
+            auto finalResult = readyQueue.scheduleForSJF();
 
-        // Print processes after scheduling
-        cout << "\nProcesses after SJF scheduling:" << endl;
-        readyQueue.printResult(finalResult);
-    }
-    cout << "All the tests have successfully passed!" << endl;
+            // Print processes after scheduling
+            cout << "\nProcesses after SJF scheduling:" << endl;
+            readyQueue.printResult(finalResult);
+      }
+      cout << "All the tests have successfully passed!" << endl;
 }
 
 /**
@@ -311,6 +309,6 @@ static void test() {
  * @returns 0 on successful exit
  */
 int main() {
-    test();
-    return 0;
+      test();
+      return 0;
 }

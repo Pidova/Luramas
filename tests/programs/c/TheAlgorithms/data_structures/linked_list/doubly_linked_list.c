@@ -20,10 +20,9 @@
 /**
  * @brief Doubly linked list struct
  */
-typedef struct list
-{
-    double value;               ///< value saved on each node
-    struct list *next, *prev;   ///< directing to other nodes or NULL
+typedef struct list {
+      double value;             ///< value saved on each node
+      struct list *next, *prev; ///< directing to other nodes or NULL
 } List;
 
 /**
@@ -76,12 +75,11 @@ void example();
  * @brief   Main function
  * @returns 0   on exit
  */
-int main()
-{
-    // examples for better understanding
-    example();
-    // code here
-    return 0;
+int main() {
+      // examples for better understanding
+      example();
+      // code here
+      return 0;
 }
 
 /**
@@ -89,13 +87,12 @@ int main()
  * @param   value       a value to be saved into the first list node
  * @returns new_list    the list created
  */
-List *create(double value)
-{
-    List *new_list = (List *)malloc(sizeof(List));
-    new_list->value = value;
-    new_list->next = NULL;
-    new_list->prev = NULL;
-    return new_list;
+List *create(double value) {
+      List *new_list = (List *)malloc(sizeof(List));
+      new_list->value = value;
+      new_list->next = NULL;
+      new_list->prev = NULL;
+      return new_list;
 }
 
 /**
@@ -105,69 +102,60 @@ List *create(double value)
  * @param   pos     a position into the list for value insertion
  * @returns list    the input list with a node more or the same list
  */
-List *insert(List *list, double value, int pos)
-{
-    // list NULL case
-    if (list == NULL)
-    {
-        list = create(value);
-        return list;
-    }
-
-    // position existing case
-    if (pos > 0)
-    {
-        List *cpy = list, *tmp = cpy;
-        int flag = 1, index = 1, size = 0;
-
-        while (tmp != NULL)
-        {
-            size++;
-            tmp = tmp->next;
-        }
-
-        // first position case
-        if (pos == 1)
-        {
-            List *new_node = create(value);
-            new_node->next = cpy;
-            cpy->prev = new_node;
-            list = new_node;
+List *insert(List *list, double value, int pos) {
+      // list NULL case
+      if (list == NULL) {
+            list = create(value);
             return list;
-        }
+      }
 
-        // position existing in list range case
-        if (size + 2 > pos)
-        {
-            while (cpy->next != NULL && index < pos)
-            {
-                flag++;
-                index++;
-                cpy = cpy->next;
+      // position existing case
+      if (pos > 0) {
+            List *cpy = list, *tmp = cpy;
+            int flag = 1, index = 1, size = 0;
+
+            while (tmp != NULL) {
+                  size++;
+                  tmp = tmp->next;
             }
 
-            List *new_node = (List *)malloc(sizeof(List));
-            new_node->value = value;
-
-            // position into list with no poiting for NULL
-            if (flag == pos)
-            {
-                cpy->prev->next = new_node;
-                new_node->next = cpy;
-                new_node->prev = cpy->prev;
-                cpy->prev = new_node;
+            // first position case
+            if (pos == 1) {
+                  List *new_node = create(value);
+                  new_node->next = cpy;
+                  cpy->prev = new_node;
+                  list = new_node;
+                  return list;
             }
 
-            // last position case
-            if (flag < pos)
-            {
-                new_node->next = cpy->next;
-                new_node->prev = cpy;
-                cpy->next = new_node;
+            // position existing in list range case
+            if (size + 2 > pos) {
+                  while (cpy->next != NULL && index < pos) {
+                        flag++;
+                        index++;
+                        cpy = cpy->next;
+                  }
+
+                  List *new_node = (List *)malloc(sizeof(List));
+                  new_node->value = value;
+
+                  // position into list with no poiting for NULL
+                  if (flag == pos) {
+                        cpy->prev->next = new_node;
+                        new_node->next = cpy;
+                        new_node->prev = cpy->prev;
+                        cpy->prev = new_node;
+                  }
+
+                  // last position case
+                  if (flag < pos) {
+                        new_node->next = cpy->next;
+                        new_node->prev = cpy;
+                        cpy->next = new_node;
+                  }
             }
-        }
-        return list;
-    }
+            return list;
+      }
 }
 
 /**
@@ -176,60 +164,52 @@ List *insert(List *list, double value, int pos)
  * @param   pos     a position into the list for value Deletion
  * @returns list    the input list with deleted values or the same list
  */
-List *delete(List *list, int pos)
-{
-    // list NULL case
-    if (list == NULL)
-        return list;
+List *delete(List *list, int pos) {
+      // list NULL case
+      if (list == NULL)
+            return list;
 
-    // position existing case
-    if (pos > 0)
-    {
-        List *cpy = list, *tmp = cpy;
-        int flag = 1, index = 1, size = 0;
+      // position existing case
+      if (pos > 0) {
+            List *cpy = list, *tmp = cpy;
+            int flag = 1, index = 1, size = 0;
 
-        while (tmp != NULL)
-        {
-            size++;
-            tmp = tmp->next;
-        }
-
-        // first position case
-        if (pos == 1)
-        {
-            if (size == 1)
-                return NULL;
-            cpy = cpy->next;
-            cpy->prev = NULL;
-            return cpy;
-        }
-
-        // position existing in list range case
-        if (size + 2 > pos)
-        {
-            while (cpy->next != NULL && index < pos)
-            {
-                flag++;
-                index++;
-                cpy = cpy->next;
+            while (tmp != NULL) {
+                  size++;
+                  tmp = tmp->next;
             }
 
-            if (flag == pos)
-            {
-                // position into list with no poiting for NULL
-                if (cpy->next != NULL)
-                {
-                    cpy->prev->next = cpy->next;
-                    cpy->next->prev = cpy->prev;
-                }
-
-                // last position case
-                else
-                    cpy->prev->next = NULL;
+            // first position case
+            if (pos == 1) {
+                  if (size == 1)
+                        return NULL;
+                  cpy = cpy->next;
+                  cpy->prev = NULL;
+                  return cpy;
             }
-        }
-        return list;
-    }
+
+            // position existing in list range case
+            if (size + 2 > pos) {
+                  while (cpy->next != NULL && index < pos) {
+                        flag++;
+                        index++;
+                        cpy = cpy->next;
+                  }
+
+                  if (flag == pos) {
+                        // position into list with no poiting for NULL
+                        if (cpy->next != NULL) {
+                              cpy->prev->next = cpy->next;
+                              cpy->next->prev = cpy->prev;
+                        }
+
+                        // last position case
+                        else
+                              cpy->prev->next = NULL;
+                  }
+            }
+            return list;
+      }
 }
 
 /**
@@ -239,13 +219,12 @@ List *delete(List *list, int pos)
  * @returns `1`     if the looked up value exists
  * @returns `0`     if the looked up value doesn't exist
  */
-int search(List *list, double value)
-{
-    if (list == NULL)
-        return 0;
-    if (list->value == value)
-        return 1;
-    search(list->next, value);
+int search(List *list, double value) {
+      if (list == NULL)
+            return 0;
+      if (list->value == value)
+            return 1;
+      search(list->next, value);
 }
 
 /**
@@ -253,41 +232,38 @@ int search(List *list, double value)
  * @param   list    a doubly linked List
  * @returns void
  */
-void print(List *list)
-{
-    if (list != NULL)
-    {
-        printf("%f\t", list->value);
-        print(list->next);
-    }
+void print(List *list) {
+      if (list != NULL) {
+            printf("%f\t", list->value);
+            print(list->next);
+      }
 }
 
 /**
  * @brief   Example function
  * @returns void
  */
-void example()
-{
-    List *my_list = NULL;
-    double node_value = 0;
-    int searching;
+void example() {
+      List *my_list = NULL;
+      double node_value = 0;
+      int searching;
 
-    my_list = create(node_value);
-    my_list = insert(my_list, 3, 1);
-    my_list = insert(my_list, 5, 3);
-    my_list = insert(my_list, 10, 3);
-    my_list = insert(my_list, 20, 3);
+      my_list = create(node_value);
+      my_list = insert(my_list, 3, 1);
+      my_list = insert(my_list, 5, 3);
+      my_list = insert(my_list, 10, 3);
+      my_list = insert(my_list, 20, 3);
 
-    print(my_list);
-    searching = search(my_list, 20);
-    printf("\n%d\n", searching);
+      print(my_list);
+      searching = search(my_list, 20);
+      printf("\n%d\n", searching);
 
-    my_list = delete (my_list, 1);
-    my_list = delete (my_list, 1);
-    my_list = delete (my_list, 1);
-    my_list = delete (my_list, 1);
+      my_list = delete (my_list, 1);
+      my_list = delete (my_list, 1);
+      my_list = delete (my_list, 1);
+      my_list = delete (my_list, 1);
 
-    print(my_list);
-    searching = search(my_list, 20);
-    printf("\n%d\n", searching);
+      print(my_list);
+      searching = search(my_list, 20);
+      printf("\n%d\n", searching);
 }

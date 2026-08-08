@@ -10,12 +10,12 @@
  * Time Complexity: O(N ^ 2)
  */
 
-#include <assert.h>     /// for assert
-#include <stdbool.h>    /// for bool
-#include <stdio.h>      /// for IO operations
-#include <stdlib.h>     /// for dynammic memory allocation
-#include <time.h>       /// for random number generation
-#include <inttypes.h>   /// for int32_t types
+#include <assert.h>   /// for assert
+#include <inttypes.h> /// for int32_t types
+#include <stdbool.h>  /// for bool
+#include <stdio.h>    /// for IO operations
+#include <stdlib.h>   /// for dynammic memory allocation
+#include <time.h>     /// for random number generation
 
 /**
  * @brief Swap numbers by reference(using pointers)
@@ -23,11 +23,10 @@
  * @param second pointer to second number
  * @returns void
  */
-void swap(int32_t *first, int32_t *second)
-{
-    int32_t temp = *first;
-    *first = *second;
-    *second = temp;
+void swap(int32_t *first, int32_t *second) {
+      int32_t temp = *first;
+      *first = *second;
+      *second = temp;
 }
 
 /**
@@ -49,34 +48,28 @@ void swap(int32_t *first, int32_t *second)
  * @param size the size of the array
  * @returns void
  */
-void oddEvenSort(int *arr, int size)
-{
-    bool isSorted = false;
-    while(!isSorted)
-    {
-        isSorted = true;
-        int32_t i;
+void oddEvenSort(int *arr, int size) {
+      bool isSorted = false;
+      while (!isSorted) {
+            isSorted = true;
+            int32_t i;
 
-        // Even phase
-        for(i = 0; i <= size - 2; i += 2)
-        {
-            if(arr[i] > arr[i + 1])
-            {
-                swap(&arr[i], &arr[i + 1]);
-                isSorted = false;
+            // Even phase
+            for (i = 0; i <= size - 2; i += 2) {
+                  if (arr[i] > arr[i + 1]) {
+                        swap(&arr[i], &arr[i + 1]);
+                        isSorted = false;
+                  }
             }
-        }
 
-        // Odd phase
-        for(i = 1; i <= size - 2; i += 2)
-        {
-            if(arr[i] > arr[i + 1])
-            {
-                swap(&arr[i], &arr[i + 1]);
-                isSorted = false;
+            // Odd phase
+            for (i = 1; i <= size - 2; i += 2) {
+                  if (arr[i] > arr[i + 1]) {
+                        swap(&arr[i], &arr[i + 1]);
+                        isSorted = false;
+                  }
             }
-        }
-    }
+      }
 }
 
 /**
@@ -87,34 +80,30 @@ void oddEvenSort(int *arr, int size)
  * of the test array correspond to the elements of the solution array.
  * @returns void
  */
-static void test()
-{
-    int32_t arr1[] = {-9, 2, 3, 1};
-    int32_t arr1Soln[] = {-9, 1, 2, 3};
-    int32_t arr2[] = {9, 7, 5, 3, 8, 2, 1, 4, 0, 6};
-    int32_t arr2Soln[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+static void test() {
+      int32_t arr1[] = {-9, 2, 3, 1};
+      int32_t arr1Soln[] = {-9, 1, 2, 3};
+      int32_t arr2[] = {9, 7, 5, 3, 8, 2, 1, 4, 0, 6};
+      int32_t arr2Soln[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    oddEvenSort(arr1, 4);
-    oddEvenSort(arr2, 10);
+      oddEvenSort(arr1, 4);
+      oddEvenSort(arr2, 10);
 
-     for (int32_t i = 0; i < 4; i++)
-     {
-         assert(arr1[i] == arr1Soln[i]);    
-     }
+      for (int32_t i = 0; i < 4; i++) {
+            assert(arr1[i] == arr1Soln[i]);
+      }
 
-    for (int32_t i = 0; i < 10; i++)
-    {
-        assert(arr2[i] == arr2Soln[i]);    
-    }
-    printf("All tests have passed!\n");
+      for (int32_t i = 0; i < 10; i++) {
+            assert(arr2[i] == arr2Soln[i]);
+      }
+      printf("All tests have passed!\n");
 }
 
 /**
  * @brief Main function
  * @returns 0 on exit
  */
-int main()
-{
-    test();  // run self-test implementations
-    return 0;
+int main() {
+      test(); // run self-test implementations
+      return 0;
 }

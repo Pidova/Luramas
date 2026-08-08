@@ -27,9 +27,9 @@
  *
  */
 int FindNextGap(int gap) {
-    gap = (gap * 10) / 13;
+      gap = (gap * 10) / 13;
 
-    return std::max(1, gap);
+      return std::max(1, gap);
 }
 
 /** Function to sort array
@@ -40,7 +40,7 @@ int FindNextGap(int gap) {
  *
  */
 void CombSort(int *arr, int l, int r) {
-    /**
+      /**
      *
      * initial gap will be maximum and the maximum possible value is
      * the size of the array that is n and which is equal to r in this
@@ -48,54 +48,56 @@ void CombSort(int *arr, int l, int r) {
      * the array we are using r to initialize the initial gap.
      *
      */
-    int gap = r;
+      int gap = r;
 
-    /// Initialize swapped as true to make sure that loop runs
-    bool swapped = true;
+      /// Initialize swapped as true to make sure that loop runs
+      bool swapped = true;
 
-    /// Keep running until gap = 1 or none elements were swapped
-    while (gap != 1 || swapped) {
-        /// Find next gap
-        gap = FindNextGap(gap);
+      /// Keep running until gap = 1 or none elements were swapped
+      while (gap != 1 || swapped) {
+            /// Find next gap
+            gap = FindNextGap(gap);
 
-        swapped = false;
+            swapped = false;
 
-        /// Compare all elements with current gap
-        for (int i = l; i < r - gap; ++i) {
-            if (arr[i] > arr[i + gap]) {
-                std::swap(arr[i], arr[i + gap]);
-                swapped = true;
+            /// Compare all elements with current gap
+            for (int i = l; i < r - gap; ++i) {
+                  if (arr[i] > arr[i + gap]) {
+                        std::swap(arr[i], arr[i + gap]);
+                        swapped = true;
+                  }
             }
-        }
-    }
+      }
 }
 
 void tests() {
-    /// Test 1
-    int arr1[10] = {34, 56, 6, 23, 76, 34, 76, 343, 4, 76};
-    CombSort(arr1, 0, 10);
-    assert(std::is_sorted(arr1, arr1 + 10));
-    std::cout << "Test 1 passed\n";
+      /// Test 1
+      int arr1[10] = {34, 56, 6, 23, 76, 34, 76, 343, 4, 76};
+      CombSort(arr1, 0, 10);
+      assert(std::is_sorted(arr1, arr1 + 10));
+      std::cout << "Test 1 passed\n";
 
-    /// Test 2
-    int arr2[8] = {-6, 56, -45, 56, 0, -1, 8, 8};
-    CombSort(arr2, 0, 8);
-    assert(std::is_sorted(arr2, arr2 + 8));
-    std::cout << "Test 2 Passed\n";
+      /// Test 2
+      int arr2[8] = {-6, 56, -45, 56, 0, -1, 8, 8};
+      CombSort(arr2, 0, 8);
+      assert(std::is_sorted(arr2, arr2 + 8));
+      std::cout << "Test 2 Passed\n";
 }
 
 /** Main function */
 int main() {
-    /// Running predefined tests
-    tests();
+      /// Running predefined tests
+      tests();
 
-    /// For user interaction
-    int n;
-    std::cin >> n;
-    int *arr = new int[n];
-    for (int i = 0; i < n; ++i) std::cin >> arr[i];
-    CombSort(arr, 0, n);
-    for (int i = 0; i < n; ++i) std::cout << arr[i] << ' ';
-    delete[] arr;
-    return 0;
+      /// For user interaction
+      int n;
+      std::cin >> n;
+      int *arr = new int[n];
+      for (int i = 0; i < n; ++i)
+            std::cin >> arr[i];
+      CombSort(arr, 0, n);
+      for (int i = 0; i < n; ++i)
+            std::cout << arr[i] << ' ';
+      delete[] arr;
+      return 0;
 }

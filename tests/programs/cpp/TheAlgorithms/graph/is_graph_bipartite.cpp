@@ -40,52 +40,52 @@
  * @brief Graph algorithms
  */
 namespace graph {
-/**
+      /**
  * @namespace is_graph_bipartite
  * @brief Functions for checking whether a graph is bipartite or not
  */
-namespace is_graph_bipartite {
-/**
+      namespace is_graph_bipartite {
+            /**
  * @brief Class for representing graph as an adjacency list.
  */
-class Graph {
- private:
-    int n;  ///< size of the graph
+            class Graph {
+                private:
+                  int n; ///< size of the graph
 
-    std::vector<std::vector<int> >
-        adj;  ///< adj stores the graph as an adjacency list
+                  std::vector<std::vector<int>>
+                      adj; ///< adj stores the graph as an adjacency list
 
-    std::vector<int> side;  ///< stores the side of the vertex
+                  std::vector<int> side; ///< stores the side of the vertex
 
- public:
-    /**
+                public:
+                  /**
      * @brief Constructor that initializes the graph on creation
      * @param size number of vertices of the graph
      */
-    explicit Graph(int size) {
-        n = size;
-        adj.resize(n);
-        side.resize(n, -1);
-    }
+                  explicit Graph(int size) {
+                        n = size;
+                        adj.resize(n);
+                        side.resize(n, -1);
+                  }
 
-    void addEdge(int u, int v);  /// function to add edges to our graph
+                  void addEdge(int u, int v); /// function to add edges to our graph
 
-    bool
-    is_bipartite();  /// function to check whether the graph is bipartite or not
-};
+                  bool
+                  is_bipartite(); /// function to check whether the graph is bipartite or not
+            };
 
-/**
+            /**
  * @brief Function that add an edge between two nodes or vertices of graph
  *
  * @param u is a node or vertex of graph
  * @param v is a node or vertex of graph
  */
-void Graph::addEdge(int u, int v) {
-    adj[u - 1].push_back(v - 1);
-    adj[v - 1].push_back(u - 1);
-}
+            void Graph::addEdge(int u, int v) {
+                  adj[u - 1].push_back(v - 1);
+                  adj[v - 1].push_back(u - 1);
+            }
 
-/**
+            /**
  * @brief function that checks whether the graph is bipartite or not
  * the function returns true if the graph is a bipartite graph
  * the function returns false if the graph is not a bipartite graph
@@ -103,69 +103,69 @@ void Graph::addEdge(int u, int v) {
  * @returns `true` if th graph is bipartite
  * @returns `false` otherwise
  */
-bool Graph::is_bipartite() {
-    bool check = true;
-    std::queue<int> q;
-    for (int current_edge = 0; current_edge < n; ++current_edge) {
-        if (side[current_edge] == -1) {
-            q.push(current_edge);
-            side[current_edge] = 0;
-            while (q.size()) {
-                int current = q.front();
-                q.pop();
-                for (auto neighbour : adj[current]) {
-                    if (side[neighbour] == -1) {
-                        side[neighbour] = (1 ^ side[current]);
-                        q.push(neighbour);
-                    } else {
-                        check &= (side[neighbour] != side[current]);
-                    }
-                }
+            bool Graph::is_bipartite() {
+                  bool check = true;
+                  std::queue<int> q;
+                  for (int current_edge = 0; current_edge < n; ++current_edge) {
+                        if (side[current_edge] == -1) {
+                              q.push(current_edge);
+                              side[current_edge] = 0;
+                              while (q.size()) {
+                                    int current = q.front();
+                                    q.pop();
+                                    for (auto neighbour : adj[current]) {
+                                          if (side[neighbour] == -1) {
+                                                side[neighbour] = (1 ^ side[current]);
+                                                q.push(neighbour);
+                                          } else {
+                                                check &= (side[neighbour] != side[current]);
+                                          }
+                                    }
+                              }
+                        }
+                  }
+                  return check;
             }
-        }
-    }
-    return check;
-}
-}  // namespace is_graph_bipartite
-}  // namespace graph
+      } // namespace is_graph_bipartite
+} // namespace graph
 
 /**
  * Function to test the above algorithm
  * @returns none
  */
 static void test() {
-    graph::is_graph_bipartite::Graph G1(
-        5);  /// creating graph G1 with 5 vertices
-    /// adding edges to the graphs as per the illustrated example
-    G1.addEdge(1, 2);
-    G1.addEdge(1, 3);
-    G1.addEdge(3, 4);
-    G1.addEdge(4, 5);
+      graph::is_graph_bipartite::Graph G1(
+          5); /// creating graph G1 with 5 vertices
+      /// adding edges to the graphs as per the illustrated example
+      G1.addEdge(1, 2);
+      G1.addEdge(1, 3);
+      G1.addEdge(3, 4);
+      G1.addEdge(4, 5);
 
-    graph::is_graph_bipartite::Graph G2(
-        3);  /// creating graph G2 with 3 vertices
-    /// adding edges to the graphs as per the illustrated example
-    G2.addEdge(1, 2);
-    G2.addEdge(1, 3);
-    G2.addEdge(2, 3);
+      graph::is_graph_bipartite::Graph G2(
+          3); /// creating graph G2 with 3 vertices
+      /// adding edges to the graphs as per the illustrated example
+      G2.addEdge(1, 2);
+      G2.addEdge(1, 3);
+      G2.addEdge(2, 3);
 
-    /// checking whether the graphs are bipartite or not
-    if (G1.is_bipartite()) {
-        std::cout << "The given graph G1 is a bipartite graph\n";
-    } else {
-        std::cout << "The given graph G1 is not a bipartite graph\n";
-    }
-    if (G2.is_bipartite()) {
-        std::cout << "The given graph G2 is a bipartite graph\n";
-    } else {
-        std::cout << "The given graph G2 is not a bipartite graph\n";
-    }
+      /// checking whether the graphs are bipartite or not
+      if (G1.is_bipartite()) {
+            std::cout << "The given graph G1 is a bipartite graph\n";
+      } else {
+            std::cout << "The given graph G1 is not a bipartite graph\n";
+      }
+      if (G2.is_bipartite()) {
+            std::cout << "The given graph G2 is a bipartite graph\n";
+      } else {
+            std::cout << "The given graph G2 is not a bipartite graph\n";
+      }
 }
 
 /**
  * Main function
  */
 int main() {
-    test();  /// Testing
-    return 0;
+      test(); /// Testing
+      return 0;
 }

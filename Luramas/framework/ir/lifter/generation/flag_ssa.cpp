@@ -38,9 +38,9 @@ namespace luramas::ir::generation::flag_ssa {
                               }
                         }
                         if (const auto expr = exprs.find(p); expr != exprs.end()) {
-                              for (const auto &expr : expr->second.all) {
-                                    if (expr && expr->is_k<expr_kinds::flag>() && expr->r->is_integral()) {
-                                          ssa_node.rvalues.emplace_back(expr->r->extract_integral_base());
+                              for (const auto &e : expr->second.all) {
+                                    if (e && e->is_k<expr_kinds::flag>() && e->r->is_integral()) {
+                                          ssa_node.rvalues.emplace_back(e->r->extract_integral_base());
                                     }
                               }
                         }

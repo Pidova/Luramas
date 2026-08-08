@@ -380,9 +380,9 @@ namespace luramas::ir::code::generation::tools::smart_variables {
 
                                           if (format->vars.naming_conventions.smart.expression_canonicalization) {
 
-                                                for (const auto &e : {e->l, e->r}) {
-                                                      if (e && e->is_register_reference() && buffer.find(e) == buffer.end()) {
-                                                            add_valid(format->vars.naming_conventions.smart.basic_naming.value, e, format->vars.naming_conventions.delimeter);
+                                                for (const auto &ae : {e->l, e->r}) {
+                                                      if (ae && ae->is_register_reference() && buffer.find(ae) == buffer.end()) {
+                                                            add_valid(format->vars.naming_conventions.smart.basic_naming.value, ae, format->vars.naming_conventions.delimeter);
                                                       }
                                                 }
                                           }

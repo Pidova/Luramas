@@ -28,12 +28,10 @@
 #undef FALSE
 #endif
 
-
-#ifndef  _MSC_VER
-typedef enum
-{
-    FALSE = 0,
-    TRUE = 1
+#ifndef _MSC_VER
+typedef enum {
+      FALSE = 0,
+      TRUE = 1
 } BOOL;
 
 #else
@@ -46,10 +44,10 @@ typedef int BOOL;
 
 #endif
 /* converts BOOL to bool */
-#define BOOLtobool(w)     ((w != FALSE) ? true : false)
+#define BOOLtobool(w) ((w != FALSE) ? true : false)
 
 /* converts bool to BOOL */
-#define booltoBOOL(w)     ((w == true) ? TRUE : FALSE)
+#define booltoBOOL(w) ((w == true) ? TRUE : FALSE)
 
 #endif /* __BOOL_H__ */
 /*--------------------------------------------------------------------------*/

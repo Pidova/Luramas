@@ -273,14 +273,14 @@ namespace luramas::ir::tools::types {
                   }
             }
 
-            for (const auto &[reg, types] : reg_types) {
+            for (const auto &[reg, rtypes] : reg_types) {
 
                   /* Most frequent */
                   std::size_t max_count = 0;
                   std::shared_ptr<ir::types::object::type> most_frequent = nullptr;
 
-                  for (const auto &i : types) {
-                        if (const auto count = static_cast<std::size_t>(std::count_if(types.begin(), types.end(), [&](const auto &x) {
+                  for (const auto &i : rtypes) {
+                        if (const auto count = static_cast<std::size_t>(std::count_if(rtypes.begin(), rtypes.end(), [&](const auto &x) {
                                   return x && i && *x == *i;
                             }));
                             count > max_count) {

@@ -44,9 +44,9 @@ namespace luramas::ir::tools::replace {
                   for (auto &i : v->members) {
                         add(i);
                   }
-                  for (auto &[i, v] : v->tmembers) {
-                        add(i);
-                        add(v);
+                  for (auto &[im, vm] : v->tmembers) {
+                        add(im);
+                        add(vm);
                   }
             }
             return;

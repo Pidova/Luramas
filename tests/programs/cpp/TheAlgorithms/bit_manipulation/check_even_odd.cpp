@@ -31,56 +31,56 @@
  * @author [Vedant Mukhedkar](https://github.com/git5v)
  */
 
-#include <cassert>   /// for assert
-#include <cstdint>   /// for uint32_t
-#include <iostream>  /// for IO operations
-#include <string>    /// for std::string
+#include <cassert>  /// for assert
+#include <cstdint>  /// for uint32_t
+#include <iostream> /// for IO operations
+#include <string>   /// for std::string
 
 /**
  * @namespace bit_manipulation
  * @brief Bit manipulation algorithms
  */
 namespace bit_manipulation {
-/**
+      /**
  * @namespace even_odd
  * @brief Functions for checking if a number is even or odd using bitwise operations
  */
-namespace even_odd {
+      namespace even_odd {
 
-/**
+            /**
  * @brief Checks if a number is even or odd using bitwise AND.
  * @param N The number to check.
  * @returns "Even" if N is even, "Odd" if N is odd.
      */
-        bool is_even(std::int64_t N) {
-            return (N & 1) == 0 ? true : false;
-        }
+            bool is_even(std::int64_t N) {
+                  return (N & 1) == 0 ? true : false;
+            }
 
-    }  // namespace even_odd
-}  // namespace bit_manipulation
+      } // namespace even_odd
+} // namespace bit_manipulation
 
 /**
  * @brief Self-test implementations
  * @returns void
  */
 static void test() {
-    using bit_manipulation::even_odd::is_even;
+      using bit_manipulation::even_odd::is_even;
 
-    // Test Even numbers
-    assert(is_even(0) == true);
-    assert(is_even(2) == true);
-    assert(is_even(100) == true);
-    assert(is_even(-4) == true);
-    assert(is_even(-1000) == true);
+      // Test Even numbers
+      assert(is_even(0) == true);
+      assert(is_even(2) == true);
+      assert(is_even(100) == true);
+      assert(is_even(-4) == true);
+      assert(is_even(-1000) == true);
 
-    // Test Odd numbers
-    assert(is_even(1) == false);
-    assert(is_even(3) == false);
-    assert(is_even(101) == false);
-    assert(is_even(-5) == false);
-    assert(is_even(-999) == false);
+      // Test Odd numbers
+      assert(is_even(1) == false);
+      assert(is_even(3) == false);
+      assert(is_even(101) == false);
+      assert(is_even(-5) == false);
+      assert(is_even(-999) == false);
 
-    std::cout << "All test cases successfully passed!" << std::endl;
+      std::cout << "All test cases successfully passed!" << std::endl;
 }
 
 /**
@@ -88,6 +88,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementations
-    return 0;
+      test(); // run self-test implementations
+      return 0;
 }

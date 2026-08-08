@@ -464,7 +464,6 @@ namespace luramas::il::disassembler {
                         luramas::error::error("Unkown IL opcode.");
                   }
             }
-            return NULL;
       }
 
       std::string operand_string(const std::shared_ptr<luramas::il::arch::operand::operand> &operand) {

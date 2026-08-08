@@ -15,9 +15,9 @@
  * @author [Kunal Nayak](https://github.com/Kunal766)
  */
 
-#include <cassert>   /// for assert
+#include <cassert> /// for assert
 #include <cstdint>
-#include <iostream>  /// for IO operations
+#include <iostream> /// for IO operations
 
 /**
  * @namespace bit_manipulation
@@ -25,77 +25,77 @@
  */
 namespace bit_manipulation {
 
-/**
+      /**
  * @brief The main function implements checking the next number
  * @param x the number that will be calculated
  * @returns a number
  */
-uint64_t next_higher_number(uint64_t x) {
-    uint64_t rightOne = 0;
-    uint64_t nextHigherOneBit = 0;
-    uint64_t rightOnesPattern = 0;
+      uint64_t next_higher_number(uint64_t x) {
+            uint64_t rightOne = 0;
+            uint64_t nextHigherOneBit = 0;
+            uint64_t rightOnesPattern = 0;
 
-    uint64_t next = 0;
+            uint64_t next = 0;
 
-    if (x) {
-        // right most set bit
-        rightOne = x & -static_cast<signed>(x);
+            if (x) {
+                  // right most set bit
+                  rightOne = x & -static_cast<signed>(x);
 
-        // reset the pattern and set next higher bit
-        // left part of x will be here
-        nextHigherOneBit = x + rightOne;
+                  // reset the pattern and set next higher bit
+                  // left part of x will be here
+                  nextHigherOneBit = x + rightOne;
 
-        // nextHigherOneBit is now part [D] of the above explanation.
+                  // nextHigherOneBit is now part [D] of the above explanation.
 
-        // isolate the pattern
-        rightOnesPattern = x ^ nextHigherOneBit;
+                  // isolate the pattern
+                  rightOnesPattern = x ^ nextHigherOneBit;
 
-        // right adjust pattern
-        rightOnesPattern = (rightOnesPattern) / rightOne;
+                  // right adjust pattern
+                  rightOnesPattern = (rightOnesPattern) / rightOne;
 
-        // correction factor
-        rightOnesPattern >>= 2;
+                  // correction factor
+                  rightOnesPattern >>= 2;
 
-        // rightOnesPattern is now part [A] of the above explanation.
+                  // rightOnesPattern is now part [A] of the above explanation.
 
-        // integrate new pattern (Add [D] and [A])
-        next = nextHigherOneBit | rightOnesPattern;
-    }
+                  // integrate new pattern (Add [D] and [A])
+                  next = nextHigherOneBit | rightOnesPattern;
+            }
 
-    return next;
-}
+            return next;
+      }
 
-}  // namespace bit_manipulation
+} // namespace bit_manipulation
 
 /**
  * @brief Self-test implementations
  * @returns void
  */
 static void test() {
-    // x = 4 return 8
-    assert(bit_manipulation::next_higher_number(4) == 8);
-    // x = 6 return 9
-    assert(bit_manipulation::next_higher_number(6) == 9);
-    // x = 13 return 14
-    assert(bit_manipulation::next_higher_number(13) == 14);
-    // x = 64 return 128
-    assert(bit_manipulation::next_higher_number(64) == 128);
-    // x = 15 return 23
-    assert(bit_manipulation::next_higher_number(15) == 23);
-    // x= 32 return 64
-    assert(bit_manipulation::next_higher_number(32) == 64);
-    // x = 97 return 98
-    assert(bit_manipulation::next_higher_number(97) == 98);
-    // x = 1024 return 2048
-    assert(bit_manipulation::next_higher_number(1024) == 2048);
+      // x = 4 return 8
+      assert(bit_manipulation::next_higher_number(4) == 8);
+      // x = 6 return 9
+      assert(bit_manipulation::next_higher_number(6) == 9);
+      // x = 13 return 14
+      assert(bit_manipulation::next_higher_number(13) == 14);
+      // x = 64 return 128
+      assert(bit_manipulation::next_higher_number(64) == 128);
+      // x = 15 return 23
+      assert(bit_manipulation::next_higher_number(15) == 23);
+      // x= 32 return 64
+      assert(bit_manipulation::next_higher_number(32) == 64);
+      // x = 97 return 98
+      assert(bit_manipulation::next_higher_number(97) == 98);
+      // x = 1024 return 2048
+      assert(bit_manipulation::next_higher_number(1024) == 2048);
 
-    std::cout << "All test cases have successfully passed!" << std::endl;
+      std::cout << "All test cases have successfully passed!" << std::endl;
 }
 /**
  * @brief Main function
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementations
-    return 0;
+      test(); // run self-test implementations
+      return 0;
 }

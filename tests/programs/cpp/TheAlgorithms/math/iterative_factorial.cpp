@@ -25,10 +25,10 @@
  *
  */
 
-#include <cassert>    /// for assert
-#include <cstdint>    /// for integral types
-#include <exception>  /// for std::invalid_argument
-#include <iostream>   /// for std::cout
+#include <cassert>   /// for assert
+#include <cstdint>   /// for integral types
+#include <exception> /// for std::invalid_argument
+#include <iostream>  /// for std::cout
 
 /**
  * @namespace
@@ -36,7 +36,7 @@
  */
 namespace math {
 
-/**
+      /**
  * @brief Calculates the factorial iteratively.
  * @param n Nth factorial.
  * @return Factorial.
@@ -44,73 +44,73 @@ namespace math {
  * @warning Maximum=20 because there are no 128-bit integers in C++. 21!
  * returns 1.419e+19, which is not 21! but (21! % UINT64_MAX).
  */
-uint64_t iterativeFactorial(uint8_t n) {
-    if (n > 20) {
-        throw std::invalid_argument("Maximum n value is 20");
-    }
+      uint64_t iterativeFactorial(uint8_t n) {
+            if (n > 20) {
+                  throw std::invalid_argument("Maximum n value is 20");
+            }
 
-    // 1 because it is the identity number of multiplication.
-    uint64_t accumulator = 1;
+            // 1 because it is the identity number of multiplication.
+            uint64_t accumulator = 1;
 
-    while (n > 1) {
-        accumulator *= n;
-        --n;
-    }
+            while (n > 1) {
+                  accumulator *= n;
+                  --n;
+            }
 
-    return accumulator;
-}
+            return accumulator;
+      }
 
-}  // namespace math
+} // namespace math
 
 /**
  * @brief Self-test implementations to test iterativeFactorial function.
  * @note There is 1 special case: 0! = 1.
  */
 static void test() {
-    // Special case test
-    std::cout << "Exception case test \n"
-                 "Input: 0 \n"
-                 "Expected output: 1 \n\n";
-    assert(math::iterativeFactorial(0) == 1);
+      // Special case test
+      std::cout << "Exception case test \n"
+                   "Input: 0 \n"
+                   "Expected output: 1 \n\n";
+      assert(math::iterativeFactorial(0) == 1);
 
-    // Base case
-    std::cout << "Base case test \n"
-                 "Input: 1 \n"
-                 "Expected output: 1 \n\n";
-    assert(math::iterativeFactorial(1) == 1);
+      // Base case
+      std::cout << "Base case test \n"
+                   "Input: 1 \n"
+                   "Expected output: 1 \n\n";
+      assert(math::iterativeFactorial(1) == 1);
 
-    // Small case
-    std::cout << "Small number case test \n"
-                 "Input: 5 \n"
-                 "Expected output: 120 \n\n";
-    assert(math::iterativeFactorial(5) == 120);
+      // Small case
+      std::cout << "Small number case test \n"
+                   "Input: 5 \n"
+                   "Expected output: 120 \n\n";
+      assert(math::iterativeFactorial(5) == 120);
 
-    // Medium case
-    std::cout << "Medium number case test \n"
-                 "Input: 10 \n"
-                 "Expected output: 3628800 \n\n";
-    assert(math::iterativeFactorial(10) == 3628800);
+      // Medium case
+      std::cout << "Medium number case test \n"
+                   "Input: 10 \n"
+                   "Expected output: 3628800 \n\n";
+      assert(math::iterativeFactorial(10) == 3628800);
 
-    // Maximum case
-    std::cout << "Maximum case test \n"
-                 "Input: 20 \n"
-                 "Expected output: 2432902008176640000\n\n";
-    assert(math::iterativeFactorial(20) == 2432902008176640000);
+      // Maximum case
+      std::cout << "Maximum case test \n"
+                   "Input: 20 \n"
+                   "Expected output: 2432902008176640000\n\n";
+      assert(math::iterativeFactorial(20) == 2432902008176640000);
 
-    // Exception test
-    std::cout << "Exception test \n"
-                 "Input: 21 \n"
-                 "Expected output: Exception thrown \n";
+      // Exception test
+      std::cout << "Exception test \n"
+                   "Input: 21 \n"
+                   "Expected output: Exception thrown \n";
 
-    bool wasExceptionThrown = false;
-    try {
-        math::iterativeFactorial(21);
-    } catch (const std::invalid_argument&) {
-        wasExceptionThrown = true;
-    }
-    assert(wasExceptionThrown);
+      bool wasExceptionThrown = false;
+      try {
+            math::iterativeFactorial(21);
+      } catch (const std::invalid_argument &) {
+            wasExceptionThrown = true;
+      }
+      assert(wasExceptionThrown);
 
-    std::cout << "All tests have passed successfully.\n";
+      std::cout << "All tests have passed successfully.\n";
 }
 
 /**
@@ -118,6 +118,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // Run self-test implementation
-    return 0;
+      test(); // Run self-test implementation
+      return 0;
 }

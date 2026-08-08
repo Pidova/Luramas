@@ -79,7 +79,7 @@ namespace luramas::ir::closures::generate {
             c->flags.flink_regs = pm.det_flags.fmain_closure;
 
             /* Propagate with placeholders */
-            for (const auto &_ : c->args) {
+            for ([[maybe_unused]] const auto &_ : c->args) {
                   c->meta.emplace_back(nullptr);
             }
             pm.push_front(c);

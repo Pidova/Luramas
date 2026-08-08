@@ -14,54 +14,54 @@
  * @param celsius Temperature in degrees celsius double
  * @returns Double of temperature in degrees Fahrenheit
  */
- double celcius_to_fahrenheit(double celsius) {
-    return (celsius * 9.0 / 5.0) + 32.0;
- }
+double celcius_to_fahrenheit(double celsius) {
+      return (celsius * 9.0 / 5.0) + 32.0;
+}
 
 /**
  * @brief Self-test implementations
  * @returns void
  */
 static void test() {
-    // 1st test
-    double input = 0.0;
-    double expected = 32.0;
+      // 1st test
+      double input = 0.0;
+      double expected = 32.0;
 
-    double output = celcius_to_fahrenheit(input);
+      double output = celcius_to_fahrenheit(input);
 
-    // 1st test
-    printf("TEST 1\n");
-    printf("Input: %f\n", input);
-    printf("Expected Output: %f\n", expected);
-    printf("Output: %f\n", output);
-    assert(output == expected);
-    printf("== TEST PASSED ==\n\n");
+      // 1st test
+      printf("TEST 1\n");
+      printf("Input: %f\n", input);
+      printf("Expected Output: %f\n", expected);
+      printf("Output: %f\n", output);
+      assert(output == expected);
+      printf("== TEST PASSED ==\n\n");
 
-    // 2nd test
-    input = 100.0;
-    expected = 212.0;
+      // 2nd test
+      input = 100.0;
+      expected = 212.0;
 
-    output = celcius_to_fahrenheit(input);
+      output = celcius_to_fahrenheit(input);
 
-    printf("TEST 2\n");
-    printf("Input: %f\n", input);
-    printf("Expected Output: %f\n", expected);
-    printf("Output: %f\n", output);
-    assert(output == expected);
-    printf("== TEST PASSED ==\n\n");
+      printf("TEST 2\n");
+      printf("Input: %f\n", input);
+      printf("Expected Output: %f\n", expected);
+      printf("Output: %f\n", output);
+      assert(output == expected);
+      printf("== TEST PASSED ==\n\n");
 
-    // 3rd test
-    input = 22.5;
-    expected = 72.5;
+      // 3rd test
+      input = 22.5;
+      expected = 72.5;
 
-    output = celcius_to_fahrenheit(input);
+      output = celcius_to_fahrenheit(input);
 
-    printf("TEST 3\n");
-    printf("Input: %f\n", input);
-    printf("Expected Output: %f\n", expected);
-    printf("Output: %f\n", output);
-    assert(output == expected);
-    printf("== TEST PASSED ==\n\n");
+      printf("TEST 3\n");
+      printf("Input: %f\n", input);
+      printf("Expected Output: %f\n", expected);
+      printf("Output: %f\n", output);
+      assert(output == expected);
+      printf("== TEST PASSED ==\n\n");
 }
 
 /**
@@ -69,6 +69,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementations
-    return 0;
+      test(); // run self-test implementations
+      return 0;
 }

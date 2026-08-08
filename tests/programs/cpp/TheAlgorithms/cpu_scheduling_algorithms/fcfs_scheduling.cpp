@@ -9,16 +9,16 @@
  * @author [Pratyush Vatsa](https://github.com/Pratyush219)
  */
 
-#include <algorithm>      /// for sorting
-#include <cassert>        /// for assert
+#include <algorithm> /// for sorting
+#include <cassert>   /// for assert
 #include <cstdint>
-#include <cstdlib>        /// random number generation
-#include <ctime>          /// for time
-#include <iomanip>        /// for formatting the output
-#include <iostream>       /// for IO operations
-#include <queue>          /// for std::priority_queue
-#include <unordered_set>  /// for std::unordered_set
-#include <vector>         /// for std::vector
+#include <cstdlib>       /// random number generation
+#include <ctime>         /// for time
+#include <iomanip>       /// for formatting the output
+#include <iostream>      /// for IO operations
+#include <queue>         /// for std::priority_queue
+#include <unordered_set> /// for std::unordered_set
+#include <vector>        /// for std::vector
 
 using std::cin;
 using std::cout;
@@ -43,13 +43,13 @@ using std::vector;
  * @returns false if t1 and t2 are in the INCORRECT order
  */
 template <typename S, typename T, typename E>
-bool sortcol(tuple<S, T, E>& t1, tuple<S, T, E>& t2) {
-    if (get<1>(t1) < get<1>(t2)) {
-        return true;
-    } else if (get<1>(t1) == get<1>(t2) && get<0>(t1) < get<0>(t2)) {
-        return true;
-    }
-    return false;
+bool sortcol(tuple<S, T, E> &t1, tuple<S, T, E> &t2) {
+      if (get<1>(t1) < get<1>(t2)) {
+            return true;
+      } else if (get<1>(t1) == get<1>(t2) && get<0>(t1) < get<0>(t2)) {
+            return true;
+      }
+      return false;
 }
 
 /**
@@ -61,8 +61,8 @@ bool sortcol(tuple<S, T, E>& t1, tuple<S, T, E>& t2) {
  */
 template <typename S, typename T, typename E>
 class Compare {
- public:
-    /**
+    public:
+      /**
      * @param t1 First tuple
      * @param t2 Second tuple
      * @brief A comparator function that checks whether to swap the two tuples
@@ -73,18 +73,18 @@ class Compare {
      * @returns true if the tuples SHOULD be swapped
      * @returns false if the tuples SHOULDN'T be swapped
      */
-    bool operator()(tuple<S, T, E, double, double, double>& t1,
-                    tuple<S, T, E, double, double, double>& t2) {
-        // Compare arrival times
-        if (get<1>(t2) < get<1>(t1)) {
-            return true;
-        }
-        // If arrival times are same, then compare Process IDs
-        else if (get<1>(t2) == get<1>(t1)) {
-            return get<0>(t2) < get<0>(t1);
-        }
-        return false;
-    }
+      bool operator()(tuple<S, T, E, double, double, double> &t1,
+          tuple<S, T, E, double, double, double> &t2) {
+            // Compare arrival times
+            if (get<1>(t2) < get<1>(t1)) {
+                  return true;
+            }
+            // If arrival times are same, then compare Process IDs
+            else if (get<1>(t2) == get<1>(t1)) {
+                  return get<0>(t2) < get<0>(t1);
+            }
+            return false;
+      }
 };
 
 /**
@@ -96,7 +96,7 @@ class Compare {
  */
 template <typename S, typename T, typename E>
 class FCFS {
-    /**
+      /**
      * Priority queue of schedules(stored as tuples) of processes.
      * In each tuple
      * 1st element: Process ID
@@ -106,20 +106,20 @@ class FCFS {
      * 5th element: Turnaround time
      * 6th element: Waiting time
      */
-    priority_queue<tuple<S, T, E, double, double, double>,
-                   vector<tuple<S, T, E, double, double, double>>,
-                   Compare<S, T, E>>
-        schedule;
+      priority_queue<tuple<S, T, E, double, double, double>,
+          vector<tuple<S, T, E, double, double, double>>,
+          Compare<S, T, E>>
+          schedule;
 
-    // Stores final status of all the processes after completing the execution.
-    vector<tuple<S, T, E, double, double, double>> result;
+      // Stores final status of all the processes after completing the execution.
+      vector<tuple<S, T, E, double, double, double>> result;
 
-    // Stores process IDs. Used for confirming absence of a process while adding
-    // it.
-    unordered_set<S> idList;
+      // Stores process IDs. Used for confirming absence of a process while adding
+      // it.
+      unordered_set<S> idList;
 
- public:
-    /**
+    public:
+      /**
      * @brief Adds the process to the ready queue if it isn't already there
      * @param id Process ID
      * @param arrival Arrival time of the process
@@ -127,17 +127,17 @@ class FCFS {
      * @returns void
      *
      */
-    void addProcess(S id, T arrival, E burst) {
-        // Add if a process with process ID as id is not found in idList.
-        if (idList.find(id) == idList.end()) {
-            tuple<S, T, E, double, double, double> t =
-                make_tuple(id, arrival, burst, 0, 0, 0);
-            schedule.push(t);
-            idList.insert(id);
-        }
-    }
+      void addProcess(S id, T arrival, E burst) {
+            // Add if a process with process ID as id is not found in idList.
+            if (idList.find(id) == idList.end()) {
+                  tuple<S, T, E, double, double, double> t =
+                      make_tuple(id, arrival, burst, 0, 0, 0);
+                  schedule.push(t);
+                  idList.insert(id);
+            }
+      }
 
-    /**
+      /**
      * @brief Algorithm for scheduling CPU processes according to the First Come
      * First Serve(FCFS) scheduling algorithm.
      *
@@ -152,63 +152,63 @@ class FCFS {
      *
      * @returns void
      */
-    vector<tuple<S, T, E, double, double, double>> scheduleForFcfs() {
-        // Variable to keep track of time elapsed so far
-        double timeElapsed = 0;
+      vector<tuple<S, T, E, double, double, double>> scheduleForFcfs() {
+            // Variable to keep track of time elapsed so far
+            double timeElapsed = 0;
 
-        while (!schedule.empty()) {
-            tuple<S, T, E, double, double, double> cur = schedule.top();
+            while (!schedule.empty()) {
+                  tuple<S, T, E, double, double, double> cur = schedule.top();
 
-            // If the current process arrived at time t2, the last process
-            // completed its execution at time t1, and t2 > t1.
-            if (get<1>(cur) > timeElapsed) {
-                timeElapsed += get<1>(cur) - timeElapsed;
+                  // If the current process arrived at time t2, the last process
+                  // completed its execution at time t1, and t2 > t1.
+                  if (get<1>(cur) > timeElapsed) {
+                        timeElapsed += get<1>(cur) - timeElapsed;
+                  }
+
+                  // Add Burst time to time elapsed
+                  timeElapsed += get<2>(cur);
+
+                  // Completion time of the current process will be same as time
+                  // elapsed so far
+                  get<3>(cur) = timeElapsed;
+
+                  // Turnaround time = Completion time - Arrival time
+                  get<4>(cur) = get<3>(cur) - get<1>(cur);
+
+                  // Waiting time = Turnaround time - Burst time
+                  get<5>(cur) = get<4>(cur) - get<2>(cur);
+
+                  result.push_back(cur);
+                  schedule.pop();
             }
+            return result;
+      }
 
-            // Add Burst time to time elapsed
-            timeElapsed += get<2>(cur);
-
-            // Completion time of the current process will be same as time
-            // elapsed so far
-            get<3>(cur) = timeElapsed;
-
-            // Turnaround time = Completion time - Arrival time
-            get<4>(cur) = get<3>(cur) - get<1>(cur);
-
-            // Waiting time = Turnaround time - Burst time
-            get<5>(cur) = get<4>(cur) - get<2>(cur);
-
-            result.push_back(cur);
-            schedule.pop();
-        }
-        return result;
-    }
-
-    /**
+      /**
      * @brief Utility function for printing the status of each process after
      * execution
      * @returns void
      */
-    void printResult() {
-        cout << "Status of all the proceses post completion is as follows:"
-             << endl;
+      void printResult() {
+            cout << "Status of all the proceses post completion is as follows:"
+                 << endl;
 
-        cout << std::setw(17) << left << "Process ID" << std::setw(17) << left
-             << "Arrival Time" << std::setw(17) << left << "Burst Time"
-             << std::setw(17) << left << "Completion Time" << std::setw(17)
-             << left << "Turnaround Time" << std::setw(17) << left
-             << "Waiting Time" << endl;
+            cout << std::setw(17) << left << "Process ID" << std::setw(17) << left
+                 << "Arrival Time" << std::setw(17) << left << "Burst Time"
+                 << std::setw(17) << left << "Completion Time" << std::setw(17)
+                 << left << "Turnaround Time" << std::setw(17) << left
+                 << "Waiting Time" << endl;
 
-        for (size_t i{}; i < result.size(); i++) {
-            cout << std::setprecision(2) << std::fixed << std::setw(17) << left
-                 << get<0>(result[i]) << std::setw(17) << left
-                 << get<1>(result[i]) << std::setw(17) << left
-                 << get<2>(result[i]) << std::setw(17) << left
-                 << get<3>(result[i]) << std::setw(17) << left
-                 << get<4>(result[i]) << std::setw(17) << left
-                 << get<5>(result[i]) << endl;
-        }
-    }
+            for (size_t i{}; i < result.size(); i++) {
+                  cout << std::setprecision(2) << std::fixed << std::setw(17) << left
+                       << get<0>(result[i]) << std::setw(17) << left
+                       << get<1>(result[i]) << std::setw(17) << left
+                       << get<2>(result[i]) << std::setw(17) << left
+                       << get<3>(result[i]) << std::setw(17) << left
+                       << get<4>(result[i]) << std::setw(17) << left
+                       << get<5>(result[i]) << endl;
+            }
+      }
 };
 
 /**
@@ -225,29 +225,29 @@ class FCFS {
 template <typename S, typename T, typename E>
 vector<tuple<S, T, E, double, double, double>> get_final_status(
     vector<tuple<uint32_t, uint32_t, uint32_t>> input) {
-    sort(input.begin(), input.end(), sortcol<S, T, E>);
-    vector<tuple<S, T, E, double, double, double>> result(input.size());
-    double timeElapsed = 0;
-    for (size_t i{}; i < input.size(); i++) {
-        T arrival = get<1>(input[i]);
-        E burst = get<2>(input[i]);
+      sort(input.begin(), input.end(), sortcol<S, T, E>);
+      vector<tuple<S, T, E, double, double, double>> result(input.size());
+      double timeElapsed = 0;
+      for (size_t i{}; i < input.size(); i++) {
+            T arrival = get<1>(input[i]);
+            E burst = get<2>(input[i]);
 
-        if (arrival > timeElapsed) {
-            timeElapsed += arrival - timeElapsed;
-        }
-        timeElapsed += burst;
-        double completion = timeElapsed;
-        double turnaround = completion - arrival;
-        double waiting = turnaround - burst;
+            if (arrival > timeElapsed) {
+                  timeElapsed += arrival - timeElapsed;
+            }
+            timeElapsed += burst;
+            double completion = timeElapsed;
+            double turnaround = completion - arrival;
+            double waiting = turnaround - burst;
 
-        get<0>(result[i]) = get<0>(input[i]);
-        get<1>(result[i]) = arrival;
-        get<2>(result[i]) = burst;
-        get<3>(result[i]) = completion;
-        get<4>(result[i]) = turnaround;
-        get<5>(result[i]) = waiting;
-    }
-    return result;
+            get<0>(result[i]) = get<0>(input[i]);
+            get<1>(result[i]) = arrival;
+            get<2>(result[i]) = burst;
+            get<3>(result[i]) = completion;
+            get<4>(result[i]) = turnaround;
+            get<5>(result[i]) = waiting;
+      }
+      return result;
 }
 
 /**
@@ -255,30 +255,29 @@ vector<tuple<S, T, E, double, double, double>> get_final_status(
  * @returns void
  */
 static void test() {
-    for (int i{}; i < 1000; i++) {
-        srand(time(nullptr));
-        uint32_t n = 1 + rand() % 1000;
-        FCFS<uint32_t, uint32_t, uint32_t> readyQueue;
-        vector<tuple<uint32_t, uint32_t, uint32_t>> input(n);
-
-        for (uint32_t i{}; i < n; i++) {
-            get<0>(input[i]) = i;
+      for (int i{}; i < 1000; i++) {
             srand(time(nullptr));
-            get<1>(input[i]) = 1 + rand() % 10000;
-            srand(time(nullptr));
-            get<2>(input[i]) = 1 + rand() % 10000;
-        }
+            uint32_t n = 1 + rand() % 1000;
+            FCFS<uint32_t, uint32_t, uint32_t> readyQueue;
+            vector<tuple<uint32_t, uint32_t, uint32_t>> input(n);
 
-        for (uint32_t i{}; i < n; i++) {
-            readyQueue.addProcess(get<0>(input[i]), get<1>(input[i]),
-                                  get<2>(input[i]));
-        }
-        vector<tuple<uint32_t, uint32_t, uint32_t, double, double, double>>
-            res = get_final_status<uint32_t, uint32_t, uint32_t>(input);
-        assert(res == readyQueue.scheduleForFcfs());
-        // readyQueue.printResult();
-    }
-    cout << "All the tests have successfully passed!" << endl;
+            for (uint32_t i{}; i < n; i++) {
+                  get<0>(input[i]) = i;
+                  srand(time(nullptr));
+                  get<1>(input[i]) = 1 + rand() % 10000;
+                  srand(time(nullptr));
+                  get<2>(input[i]) = 1 + rand() % 10000;
+            }
+
+            for (uint32_t i{}; i < n; i++) {
+                  readyQueue.addProcess(get<0>(input[i]), get<1>(input[i]), get<2>(input[i]));
+            }
+            vector<tuple<uint32_t, uint32_t, uint32_t, double, double, double>>
+                res = get_final_status<uint32_t, uint32_t, uint32_t>(input);
+            assert(res == readyQueue.scheduleForFcfs());
+            // readyQueue.printResult();
+      }
+      cout << "All the tests have successfully passed!" << endl;
 }
 
 /**
@@ -286,6 +285,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementations
-    return 0;
+      test(); // run self-test implementations
+      return 0;
 }

@@ -132,6 +132,7 @@ std::optional<std::string> decompile(const std::string &target, const std::strin
 /* Read, decompile, and output tests */
 void decompile_tests(const std::string &test_dir, std::shared_ptr<luramas::ir::data::format::format> &format, const char *const scripts_directory, const char *const supported_targets_str, const char *const extension) {
 
+      decompile(supported_targets_str, "", format, false);
       for (const auto &i : get_scripts(test_dir.c_str(), scripts_directory)) {
             if (const auto dec = decompile(supported_targets_str, i.code, format, false); dec) {
                   write_output(test_dir, i, *dec, extension);
@@ -152,7 +153,7 @@ int main(int argc, char **argv) {
       luramas_flag is_bytecode = false; /* Is input bytecode (Only for input) */
       luramas_flag all_tests = false;   /* Run all tests */
 
-      //decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::X86, luramas::tests::scripts_directory::LUA_EXTENSION);
+      decompile_tests(test_dir, format, luramas::tests::scripts_directory::LUA_V53, luramas::supported_targets_str::X86, luramas::tests::scripts_directory::LUA_EXTENSION);
 
       /* Options */
       app.set_help_flag("-h,--help,?", "Print help message and exit");

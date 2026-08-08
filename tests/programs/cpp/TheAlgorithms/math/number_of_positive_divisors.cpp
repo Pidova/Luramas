@@ -30,54 +30,54 @@
  * @returns number of positive divisors of n (or 1 if n = 0)
  */
 int number_of_positive_divisors(int n) {
-    if (n < 0) {
-        n = -n; // take the absolute value of n
-    }
+      if (n < 0) {
+            n = -n; // take the absolute value of n
+      }
 
-    int number_of_divisors = 1;
+      int number_of_divisors = 1;
 
-    for (int i = 2; i * i <= n; i++) {
-        // This part is doing the prime factorization.
-        // Note that we cannot find a composite divisor of n unless we would
-        // already previously find the corresponding prime divisor and dvided
-        // n by that prime. Therefore, all the divisors found here will
-        // actually be primes.
-        // The loop terminates early when it is left with a number n which
-        // does not have a divisor smaller or equal to sqrt(n) - that means
-        // the remaining number is a prime itself.
-        int prime_exponent = 0;
-        while (n % i == 0) {
-            // Repeatedly divide n by the prime divisor n to compute
-            // the exponent (e_i in the algorithm description).
-            prime_exponent++;
-            n /= i;
-        }
-        number_of_divisors *= prime_exponent + 1;
-    }
-    if (n > 1) {
-        // In case the remaining number n is a prime number itself
-        // (essentially p_k^1) the final answer is also multiplied by (e_k+1).
-        number_of_divisors *= 2;
-    }
+      for (int i = 2; i * i <= n; i++) {
+            // This part is doing the prime factorization.
+            // Note that we cannot find a composite divisor of n unless we would
+            // already previously find the corresponding prime divisor and dvided
+            // n by that prime. Therefore, all the divisors found here will
+            // actually be primes.
+            // The loop terminates early when it is left with a number n which
+            // does not have a divisor smaller or equal to sqrt(n) - that means
+            // the remaining number is a prime itself.
+            int prime_exponent = 0;
+            while (n % i == 0) {
+                  // Repeatedly divide n by the prime divisor n to compute
+                  // the exponent (e_i in the algorithm description).
+                  prime_exponent++;
+                  n /= i;
+            }
+            number_of_divisors *= prime_exponent + 1;
+      }
+      if (n > 1) {
+            // In case the remaining number n is a prime number itself
+            // (essentially p_k^1) the final answer is also multiplied by (e_k+1).
+            number_of_divisors *= 2;
+      }
 
-    return number_of_divisors;
+      return number_of_divisors;
 }
 
 /**
  * Test implementations
  */
 void tests() {
-    assert(number_of_positive_divisors(36) == 9);
-    assert(number_of_positive_divisors(-36) == 9);
-    assert(number_of_positive_divisors(1) == 1);
-    assert(number_of_positive_divisors(2011) == 2); // 2011 is a prime
-    assert(number_of_positive_divisors(756) == 24); // 756 = 2^2 * 3^3 * 7
+      assert(number_of_positive_divisors(36) == 9);
+      assert(number_of_positive_divisors(-36) == 9);
+      assert(number_of_positive_divisors(1) == 1);
+      assert(number_of_positive_divisors(2011) == 2); // 2011 is a prime
+      assert(number_of_positive_divisors(756) == 24); // 756 = 2^2 * 3^3 * 7
 }
 
 /**
  * Main function
  */
 int main() {
-    tests();
-    return 0;
+      tests();
+      return 0;
 }

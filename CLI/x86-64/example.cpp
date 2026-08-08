@@ -30,29 +30,140 @@ std::optional<std::string> luramas::decompile_x86(const std::string &code, std::
       boost::unordered_flat_set<luramas_address> external_addrs;                                                 /* External addresses */
       boost::unordered_flat_map<luramas_address, boost::unordered_flat_set<luramas_address>> external_addresses; /* External addresses to compile {realpc -> external addr] */
 
+      std::optional<luramas_address> main_ret = std::nullopt; // TEST
+
       /* Build assembly */
       {
             /* Build data */
-            b.emitd({0xB8, 0x05, 0x00, 0x00, 0x00});                                                                      /* mov eax, 0x5 */
-            b.emitd({0xBB, 0x05, 0x00, 0x00, 0x00});                                                                      /* mov ebx, 0x5 */
-            b.emitd({0x39, 0xD8});                                                                                        /* cmp eax, ebx */
-            const auto i_je_10_rpc = b.emitd({0x74, 0x02}, edges{{0x10, edges_k::next}}, JUMP).first;                     /* je label_10 */
-            const auto i_jmp_15_rpc = b.emitd({0xEB, 0x05}, edges{{0x15, edges_k::next}}, JUMP).first;                    /* jmp label_15 */
-            const auto label_10 = *b.emit_label(0x10);                                                                    /* label_10: */
-            const auto i_call_1e_rpc = b.emitd({0xE8, 0x09, 0x00, 0x00, 0x00}, edges{{0x1E, edges_k::next}}, CALL).first; /* call 1e */
-            const auto label_15 = *b.emit_label(0x15);                                                                    /* label_15: */
-            b.emitd({0xB8, 0x01, 0x00, 0x00, 0x00});                                                                      /* mov eax, 0x1 */
-            b.emitd({0x31, 0xDB});                                                                                        /* xor ebx, ebx */
-            b.emitd({0xCD, 0x80});                                                                                        /* int 0x80 */
-            const auto label_1E = *b.emit_label(0x1E);                                                                    /* label_1E: */
-            external_addresses[b.emitd({0xE8, 0x95, 0x99, 0x92, 0x02}, std::nullopt, CALL).first].insert(0x29299b8);      /* call 29299b8 [EXTERNAL] */
-            external_addrs.insert(0x29299b8);                                                                             /* External: 0x29299b8 */
-            const auto i_retn_1e_rpc = b.emitd({0xC3}, edges{{0x1E, edges_k::next}}, RETN).first;                         /* ret */
+            b.emitd({0x55});                                                                                                     /* push rbp */
+            b.emitd({0x48, 0x89, 0xE5});                                                                                         /* mov rbp, rsp */
+            b.emitd({0x48, 0x83, 0xEC, 0x20});                                                                                   /* sub rsp, 0x20 */
+            b.emitd({0xC7, 0x45, 0xFC, 0x00, 0x00, 0x00, 0x00});                                                                 /* mov dword ptr [rbp - 0x4], 0x0 */
+            b.emitd({0xC7, 0x45, 0xF8, 0x09, 0x00, 0x00, 0x00});                                                                 /* mov dword ptr [rbp - 0x8], 0x9 */
+            b.emitd({0xC7, 0x45, 0xF4, 0x00, 0x00, 0x00, 0x00});                                                                 /* mov dword ptr [rbp - 0xc], 0x0 */
+            const auto label_1D = *b.emit_label(0x1D);                                                                           /* label_1D: */
+            b.emitd({0x81, 0x7D, 0xF4, 0xE8, 0x03, 0x00, 0x00});                                                                 /* cmp dword ptr [rbp - 0xc], 0x3e8 */
+            const auto i_jge_5d_rpc = b.emitd({0x7D, 0x37}, edges{{0x5D, edges_k::next}}, JUMP).first;                           /* jge label_5D */
+            b.emitd({0x8B, 0x45, 0xF4});                                                                                         /* mov eax, dword ptr [rbp - 0xc] */
+            b.emitd({0x89, 0x45, 0xE8});                                                                                         /* mov dword ptr [rbp - 0x18], eax */
+            b.emitd({0x8B, 0x45, 0xF4});                                                                                         /* mov eax, dword ptr [rbp - 0xc] */
+            b.emitd({0x35, 0xAA, 0x00, 0x00, 0x00});                                                                             /* xor eax, 0xaa */
+            b.emitd({0x89, 0x45, 0xEC});                                                                                         /* mov dword ptr [rbp - 0x14], eax */
+            b.emitd({0x8B, 0x45, 0xF4});                                                                                         /* mov eax, dword ptr [rbp - 0xc] */
+            b.emitd({0x83, 0xC0, 0x03});                                                                                         /* add eax, 0x3 */
+            b.emitd({0x89, 0x45, 0xF0});                                                                                         /* mov dword ptr [rbp - 0x10], eax */
+            b.emitd({0x48, 0x8D, 0x7D, 0xF8});                                                                                   /* lea rdi, [rbp - 0x8] */
+            b.emitd({0x48, 0x8D, 0x75, 0xE8});                                                                                   /* lea rsi, [rbp - 0x18] */
+            b.emitd({0xBA, 0x13, 0x00, 0x00, 0x00});                                                                             /* mov edx, 0x13 */
+            const auto i_call_65_rpc = b.emitd({0xE8, 0x13, 0x00, 0x00, 0x00}, edges{{0x65, edges_k::next}}, CALL).first;        /* call 65 */
+            const auto label_625 = *b.emit_label(0x625);                                                                         /* label_65: */
+            b.emitd({0x8B, 0x45, 0xF4});                                                                                         /* mov eax, dword ptr [rbp - 0xc] */
+            b.emitd({0x83, 0xC0, 0x01});                                                                                         /* add eax, 0x1 */
+            b.emitd({0x89, 0x45, 0xF4});                                                                                         /* mov dword ptr [rbp - 0xc], eax */
+            const auto i_jmp_1d_rpc = b.emitd({0xEB, 0xC0}, edges{{0x1D, edges_k::next}}, JUMP).first;                           /* jmp label_1D */
+            const auto label_5D = *b.emit_label(0x5D);                                                                           /* label_5D: */
+            b.emitd({0x31, 0xC0});                                                                                               /* xor eax, eax */
+            b.emitd({0x48, 0x83, 0xC4, 0x20});                                                                                   /* add rsp, 0x20 */
+            b.emitd({0x5D});                                                                                                     /* pop rbp */
+            main_ret = b.emitd({0x90}, edges{{0x5D, edges_k::next}}).first;                                                      /* (nop)ret */
+            const auto label_65 = *b.emit_label(0x65);                                                                           /* label_65: */
+            b.emitd({0x55});                                                                                                     /* push rbp */
+            b.emitd({0x48, 0x89, 0xE5});                                                                                         /* mov rbp, rsp */
+            b.emitd({0x48, 0x89, 0x7D, 0xF8});                                                                                   /* mov qword ptr [rbp - 0x8], rdi */
+            b.emitd({0x48, 0x89, 0x75, 0xF0});                                                                                   /* mov qword ptr [rbp - 0x10], rsi */
+            b.emitd({0x89, 0x55, 0xEC});                                                                                         /* mov dword ptr [rbp - 0x14], edx */
+            b.emitd({0xC7, 0x45, 0xE8, 0x00, 0x00, 0x00, 0x00});                                                                 /* mov dword ptr [rbp - 0x18], 0x0 */
+            b.emitd({0xC7, 0x45, 0xE4, 0x00, 0x00, 0x00, 0x00});                                                                 /* mov dword ptr [rbp - 0x1c], 0x0 */
+            b.emitd({0x8B, 0x45, 0xEC});                                                                                         /* mov eax, dword ptr [rbp - 0x14] */
+            b.emitd({0x83, 0xF0, 0x5A});                                                                                         /* xor eax, 0x5a */
+            b.emitd({0x48, 0x8B, 0x4D, 0xF0});                                                                                   /* mov rcx, qword ptr [rbp - 0x10] */
+            b.emitd({0x8B, 0x09});                                                                                               /* mov ecx, dword ptr [rcx] */
+            b.emitd({0xD1, 0xE1});                                                                                               /* shl ecx, 0x1 */
+            b.emitd({0x01, 0xC8});                                                                                               /* add eax, ecx */
+            b.emitd({0x89, 0x45, 0xE0});                                                                                         /* mov dword ptr [rbp - 0x20], eax */
+            const auto label_95 = *b.emit_label(0x95);                                                                           /* label_95: */
+            b.emitd({0x83, 0x7D, 0xE4, 0x0A});                                                                                   /* cmp dword ptr [rbp - 0x1c], 0xa */
+            const auto i_jge_120_rpc = b.emitd({0x0F, 0x8D, 0x81, 0x00, 0x00, 0x00}, edges{{0x120, edges_k::next}}, JUMP).first; /* jge label_120 */
+            b.emitd({0x8B, 0x45, 0xE0});                                                                                         /* mov eax, dword ptr [rbp - 0x20] */
+            b.emitd({0x6B, 0x4D, 0xE4, 0x03});                                                                                   /* imul ecx, dword ptr [rbp - 0x1c], 0x3 */
+            b.emitd({0x31, 0xC8});                                                                                               /* xor eax, ecx */
+            b.emitd({0x89, 0x45, 0xE0});                                                                                         /* mov dword ptr [rbp - 0x20], eax */
+            b.emitd({0x8B, 0x45, 0xE0});                                                                                         /* mov eax, dword ptr [rbp - 0x20] */
+            b.emitd({0x83, 0xE0, 0x01});                                                                                         /* and eax, 0x1 */
+            b.emitd({0x83, 0xF8, 0x00});                                                                                         /* cmp eax, 0x0 */
+            const auto i_jne_d0_rpc = b.emitd({0x75, 0x1A}, edges{{0xD0, edges_k::next}}, JUMP).first;                           /* jne label_D0 */
+            b.emitd({0x48, 0x8B, 0x45, 0xF8});                                                                                   /* mov rax, qword ptr [rbp - 0x8] */
+            b.emitd({0x48, 0x63, 0x4D, 0xE4});                                                                                   /* movsxd rcx, dword ptr [rbp - 0x1c] */
+            b.emitd({0x8B, 0x04, 0x88});                                                                                         /* mov eax, dword ptr [rax + rcx*0x4] */
+            b.emitd({0x48, 0x8B, 0x4D, 0xF0});                                                                                   /* mov rcx, qword ptr [rbp - 0x10] */
+            b.emitd({0x03, 0x41, 0x04});                                                                                         /* add eax, dword ptr [rcx + 0x4] */
+            b.emitd({0x03, 0x45, 0xE8});                                                                                         /* add eax, dword ptr [rbp - 0x18] */
+            b.emitd({0x89, 0x45, 0xE8});                                                                                         /* mov dword ptr [rbp - 0x18], eax */
+            const auto i_jmp_e8_rpc = b.emitd({0xEB, 0x18}, edges{{0xE8, edges_k::next}}, JUMP).first;                           /* jmp label_E8 */
+            const auto label_D0 = *b.emit_label(0xD0);                                                                           /* label_D0: */
+            b.emitd({0x48, 0x8B, 0x45, 0xF8});                                                                                   /* mov rax, qword ptr [rbp - 0x8] */
+            b.emitd({0x48, 0x63, 0x4D, 0xE4});                                                                                   /* movsxd rcx, dword ptr [rbp - 0x1c] */
+            b.emitd({0x8B, 0x04, 0x88});                                                                                         /* mov eax, dword ptr [rax + rcx*0x4] */
+            b.emitd({0x48, 0x8B, 0x4D, 0xF0});                                                                                   /* mov rcx, qword ptr [rbp - 0x10] */
+            b.emitd({0x33, 0x41, 0x08});                                                                                         /* xor eax, dword ptr [rcx + 0x8] */
+            b.emitd({0x03, 0x45, 0xE8});                                                                                         /* add eax, dword ptr [rbp - 0x18] */
+            b.emitd({0x89, 0x45, 0xE8});                                                                                         /* mov dword ptr [rbp - 0x18], eax */
+            const auto label_E8 = *b.emit_label(0xE8);                                                                           /* label_E8: */
+            b.emitd({0x83, 0x7D, 0xE8, 0x64});                                                                                   /* cmp dword ptr [rbp - 0x18], 0x64 */
+            const auto i_jle_f0_rpc = b.emitd({0x7E, 0x02}, edges{{0xF0, edges_k::next}}, JUMP).first;                           /* jle label_F0 */
+            const auto i_jmp_120_rpc = b.emitd({0xEB, 0x30}, edges{{0x120, edges_k::next}}, JUMP).first;                         /* jmp label_120 */
+            const auto label_F0 = *b.emit_label(0xF0);                                                                           /* label_F0: */
+            b.emitd({0x8B, 0x45, 0xE4});                                                                                         /* mov eax, dword ptr [rbp - 0x1c] */
+            b.emitd({0x83, 0xC0, 0x01});                                                                                         /* add eax, 0x1 */
+            b.emitd({0x89, 0x45, 0xE4});                                                                                         /* mov dword ptr [rbp - 0x1c], eax */
+            b.emitd({0x8B, 0x45, 0xE4});                                                                                         /* mov eax, dword ptr [rbp - 0x1c] */
+            b.emitd({0xB9, 0x03, 0x00, 0x00, 0x00});                                                                             /* mov ecx, 0x3 */
+            b.emitd({0x99});                                                                                                     /* cdq */
+            b.emitd({0xF7, 0xF9});                                                                                               /* idiv ecx */
+            b.emitd({0x83, 0xFA, 0x00});                                                                                         /* cmp edx, 0x0 */
+            const auto i_jne_10b_rpc = b.emitd({0x75, 0x02}, edges{{0x10B, edges_k::next}}, JUMP).first;                         /* jne label_10B */
+            const auto i_jmp_95_rpc = b.emitd({0xEB, 0x8A}, edges{{0x95, edges_k::next}}, JUMP).first;                           /* jmp label_95 */
+            const auto label_10B = *b.emit_label(0x10B);                                                                         /* label_10B: */
+            b.emitd({0x8B, 0x45, 0xE0});                                                                                         /* mov eax, dword ptr [rbp - 0x20] */
+            b.emitd({0xD1, 0xE0});                                                                                               /* shl eax, 0x1 */
+            b.emitd({0x8B, 0x4D, 0xE0});                                                                                         /* mov ecx, dword ptr [rbp - 0x20] */
+            b.emitd({0xC1, 0xF9, 0x1F});                                                                                         /* sar ecx, 0x1f */
+            b.emitd({0x09, 0xC8});                                                                                               /* or eax, ecx */
+            b.emitd({0x89, 0x45, 0xE0});                                                                                         /* mov dword ptr [rbp - 0x20], eax */
+            const auto i_jmp_95_rpc_ = b.emitd({0xE9, 0x75, 0xFF, 0xFF, 0xFF}, edges{{0x95, edges_k::next}}, JUMP).first;        /* jmp label_95 */
+            const auto label_120 = *b.emit_label(0x120);                                                                         /* label_120: */
+            b.emitd({0x8B, 0x45, 0xE8});                                                                                         /* mov eax, dword ptr [rbp - 0x18] */
+            b.emitd({0xD1, 0xE0});                                                                                               /* shl eax, 0x1 */
+            b.emitd({0x89, 0x45, 0xDC});                                                                                         /* mov dword ptr [rbp - 0x24], eax */
+            b.emitd({0x8B, 0x45, 0xDC});                                                                                         /* mov eax, dword ptr [rbp - 0x24] */
+            b.emitd({0x2B, 0x45, 0xE8});                                                                                         /* sub eax, dword ptr [rbp - 0x18] */
+            b.emitd({0x89, 0x45, 0xDC});                                                                                         /* mov dword ptr [rbp - 0x24], eax */
+            b.emitd({0x83, 0x7D, 0xEC, 0x00});                                                                                   /* cmp dword ptr [rbp - 0x14], 0x0 */
+            const auto i_jge_142_rpc = b.emitd({0x7D, 0x0B}, edges{{0x142, edges_k::next}}, JUMP).first;                         /* jge label_142 */
+            b.emitd({0x8B, 0x45, 0xDC});                                                                                         /* mov eax, dword ptr [rbp - 0x24] */
+            b.emitd({0x35, 0xEF, 0xBE, 0xAD, 0xDE});                                                                             /* xor eax, 0xdeadbeef */
+            b.emitd({0x89, 0x45, 0xDC});                                                                                         /* mov dword ptr [rbp - 0x24], eax */
+            const auto label_142 = *b.emit_label(0x142);                                                                         /* label_142: */
+            b.emitd({0x8B, 0x45, 0xDC});                                                                                         /* mov eax, dword ptr [rbp - 0x24] */
+            b.emitd({0x89, 0x05, 0x00, 0x00, 0x00, 0x00});                                                                       /* mov dword ptr [rip], eax */
+            b.emitd({0x8B, 0x45, 0xE8});                                                                                         /* mov eax, dword ptr [rbp - 0x18] */
+            b.emitd({0x03, 0x45, 0xE0});                                                                                         /* add eax, dword ptr [rbp - 0x20] */
+            b.emitd({0x5D});                                                                                                     /* pop rbp */
+            const auto i_retn_142_rpc = b.emitd({0xC3}, edges{{0x142, edges_k::next}}, RETN).first;                              /* ret */
             /* Connect Edges */
-            b.connect_edge<edges_k::next>(label_10, i_je_10_rpc);   /* je label_10 -> label_10 */
-            b.connect_edge<edges_k::next>(label_15, i_jmp_15_rpc);  /* jmp label_15 -> label_15 */
-            b.connect_edge<edges_k::next>(label_1E, i_call_1e_rpc); /* call 1e -> label_1E */
-            b.connect_edge<edges_k::next>(label_1E, i_retn_1e_rpc); /* ret -> label_1E */
+            b.connect_edge<edges_k::next>(label_5D, i_jge_5d_rpc);    /* jge label_5D -> label_5D */
+            b.connect_edge<edges_k::next>(label_65, i_call_65_rpc);   /* call 65 -> label_65 */
+            b.connect_edge<edges_k::next>(label_1D, i_jmp_1d_rpc);    /* jmp label_1D -> label_1D */
+            b.connect_edge<edges_k::next>(label_120, i_jge_120_rpc);  /* jge label_120 -> label_120 */
+            b.connect_edge<edges_k::next>(label_D0, i_jne_d0_rpc);    /* jne label_D0 -> label_D0 */
+            b.connect_edge<edges_k::next>(label_E8, i_jmp_e8_rpc);    /* jmp label_E8 -> label_E8 */
+            b.connect_edge<edges_k::next>(label_F0, i_jle_f0_rpc);    /* jle label_F0 -> label_F0 */
+            b.connect_edge<edges_k::next>(label_120, i_jmp_120_rpc);  /* jmp label_120 -> label_120 */
+            b.connect_edge<edges_k::next>(label_10B, i_jne_10b_rpc);  /* jne label_10B -> label_10B */
+            b.connect_edge<edges_k::next>(label_95, i_jmp_95_rpc_);   /* jmp label_95 -> label_95 */
+            b.connect_edge<edges_k::next>(label_95, i_jmp_95_rpc);    /* jmp label_95 -> label_95 */
+            b.connect_edge<edges_k::next>(label_142, i_jge_142_rpc);  /* jge label_142 -> label_142 */
+            b.connect_edge<edges_k::next>(label_625, i_retn_142_rpc); /* ret -> label_625 */
       }
 
       /* Build builder */
@@ -94,10 +205,10 @@ std::optional<std::string> luramas::decompile_x86(const std::string &code, std::
 
       /* Generate instruction pointers */
       {
-            for (const auto &i : luramas::profile::analyze::linearize(graph)) {
+            for (const auto &id : luramas::profile::analyze::linearize(graph)) {
 
-                  csh handle;                  /* Current capstone handle */
-                  const auto &node = graph[i]; /* On node */
+                  csh handle = 0u;              /* Current capstone handle */
+                  const auto &node = graph[id]; /* On node */
 
                   /* Get capstone handle */
                   switch (node->interpretation_id) {
@@ -185,6 +296,13 @@ std::optional<std::string> luramas::decompile_x86(const std::string &code, std::
             }
       }
 
+      // TEST
+      if (main_ret) {
+            auto ptr = std::make_shared<luramas::il::disassembly>();
+            ptr->op = luramas::il::arch::opcodes::OP_RETURN;
+            pinsts[*main_ret].first.insert_dism = {ptr};
+      }
+
       /* Generate page/label data */
       profile::details details;
       details.pages = luramas::profile::analyze::generate_pages(raw_data);
@@ -239,6 +357,10 @@ std::optional<std::string> luramas::decompile_x86(const std::string &code, std::
       };
       format->linebreak.page_function_end_post = 1u;
 
+      for (const auto &u : luramas::ir::lift(closure, env_flags)) {
+            std::cout << u->str() << std::endl;
+      }
+      std::cin.get();
       std::cout << luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::cpp, luramas::ir::lift(closure, env_flags), format) << std::endl;
       std::cin.get();
       return luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::cpp, luramas::ir::lift(closure, env_flags), format);

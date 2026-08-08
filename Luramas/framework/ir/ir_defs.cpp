@@ -69,9 +69,9 @@ namespace luramas::ir {
       luramas_register se_ir::avaliable_register(const ir_stat::space &data) {
             luramas_register result = 0u;
             for (const auto &i : data) {
-                  for (const auto &i : i->extract_ordered_deep_exprs()) {
-                        if (i->is_register_reference() && i->reg > result) {
-                              result = i->reg;
+                  for (const auto &e : i->extract_ordered_deep_exprs()) {
+                        if (e->is_register_reference() && e->reg > result) {
+                              result = e->reg;
                         }
                   }
             }

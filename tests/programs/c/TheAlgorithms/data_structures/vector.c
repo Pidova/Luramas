@@ -4,15 +4,15 @@
  * @details This vector implementation in C comes with some wrapper functions that lets the user work with data without having to worrying about memory.
  */
 
-#include <stdio.h>     /// for IO operations
-#include <stdlib.h>    /// for malloc() and free()
-#include <assert.h>    /// for testing using assert()
+#include <assert.h> /// for testing using assert()
+#include <stdio.h>  /// for IO operations
+#include <stdlib.h> /// for malloc() and free()
 
 /** This is the struct that defines the vector. */
 typedef struct {
-    int len;           ///< contains the length of the vector
-    int current;       ///< holds the current item
-    int* contents;     ///< the internal array itself
+      int len;       ///< contains the length of the vector
+      int current;   ///< holds the current item
+      int *contents; ///< the internal array itself
 } Vector;
 
 /**
@@ -22,11 +22,11 @@ typedef struct {
  * @params int     (the actual data to be passed to the vector)
  * @returns none
  */
-void init(Vector* vec, int val) {
-    vec->contents = (int*)malloc(sizeof(int));
-    vec->contents[0] = val;
-    vec->current = 0;
-    vec->len = 1;
+void init(Vector *vec, int val) {
+      vec->contents = (int *)malloc(sizeof(int));
+      vec->contents[0] = val;
+      vec->current = 0;
+      vec->len = 1;
 }
 
 /**
@@ -34,8 +34,8 @@ void init(Vector* vec, int val) {
  * @params Vector* (a pointer to the Vector struct)
  * @returns: none
  */
-void delete(Vector* vec) {
-    free(vec->contents);    
+void delete(Vector *vec) {
+      free(vec->contents);
 }
 
 /**
@@ -43,9 +43,9 @@ void delete(Vector* vec) {
  * @params Vector* (a pointer to the Vector struct)
  * @returns: none
  */
-void clear(Vector* vec) {
-    delete(vec);
-    init(vec, 0);
+void clear(Vector *vec) {
+      delete (vec);
+      init(vec, 0);
 }
 
 /**
@@ -53,8 +53,8 @@ void clear(Vector* vec) {
  * @params Vector* (a pointer to the Vector struct)
  * @returns: int
  */
-int len(Vector* vec) {
-    return vec->len;    
+int len(Vector *vec) {
+      return vec->len;
 }
 
 /**
@@ -63,10 +63,10 @@ int len(Vector* vec) {
  * @params int     (the value to be pushed)
  * @returns: none
  */
-void push(Vector* vec, int val) {
-    vec->contents = realloc(vec->contents, (sizeof(int) * (vec->len + 1)));
-    vec->contents[vec->len] = val;
-    vec->len++;
+void push(Vector *vec, int val) {
+      vec->contents = realloc(vec->contents, (sizeof(int) * (vec->len + 1)));
+      vec->contents[vec->len] = val;
+      vec->len++;
 }
 
 /**
@@ -75,11 +75,11 @@ void push(Vector* vec, int val) {
  * @params int     (the index to get value from)
  * @returns: int
  */
-int get(Vector* vec, int index) {
-    if(index < vec->len) {
-        return vec->contents[index];
-    }
-    return -1;
+int get(Vector *vec, int index) {
+      if (index < vec->len) {
+            return vec->contents[index];
+      }
+      return -1;
 }
 
 /**
@@ -88,10 +88,10 @@ int get(Vector* vec, int index) {
  * @params int     (the index to set value at)
  * @returns: none
  */
-void set(Vector* vec, int index, int val) {
-    if(index < vec->len) {
-        vec->contents[index] = val;
-    }
+void set(Vector *vec, int index, int val) {
+      if (index < vec->len) {
+            vec->contents[index] = val;
+      }
 }
 
 /**
@@ -99,13 +99,13 @@ void set(Vector* vec, int index, int val) {
  * @params Vector* (a pointer to the Vector struct)
  * @returns: int
  */
-int next(Vector* vec) {
-    if(vec->current == vec->len) {
-        vec->current = 0;
-    }
-    int current_val = vec->contents[vec->current];
-    vec->current++;
-    return current_val;
+int next(Vector *vec) {
+      if (vec->current == vec->len) {
+            vec->current = 0;
+      }
+      int current_val = vec->contents[vec->current];
+      vec->current++;
+      return current_val;
 }
 
 /**
@@ -113,8 +113,8 @@ int next(Vector* vec) {
  * @params Vector* (a pointer to the Vector struct)
  * @returns: void*
  */
-void* begin(Vector* vec) {
-    return (void*)vec->contents;
+void *begin(Vector *vec) {
+      return (void *)vec->contents;
 }
 
 /**
@@ -122,13 +122,13 @@ void* begin(Vector* vec) {
  * @params Vector* (a pointer to the Vector struct)
  * @returns: none
  */
-void print(Vector* vec) {
-    int size = vec->len;
-    printf("[ ");
-    for(int count = 0; count < size; count++) {
-        printf("%d ", vec->contents[count]);
-    }
-    printf("]\n");
+void print(Vector *vec) {
+      int size = vec->len;
+      printf("[ ");
+      for (int count = 0; count < size; count++) {
+            printf("%d ", vec->contents[count]);
+      }
+      printf("]\n");
 }
 
 /**
@@ -136,17 +136,17 @@ void print(Vector* vec) {
  * @returns: none
  */
 static void test() {
-    Vector vec;
-    init(&vec, 10);
-    assert(get(&vec, 0) == 10);
-    push(&vec, 20);
-    assert(get(&vec, 1) == 20);
-    set(&vec, 0, 11);
-    assert(get(&vec, 0) == 11);
-    assert(next(&vec) == 11);
-    set(&vec, 1, 22);
-    assert(get(&vec, 1) == 22);
-    assert(len(&vec) == 2);
+      Vector vec;
+      init(&vec, 10);
+      assert(get(&vec, 0) == 10);
+      push(&vec, 20);
+      assert(get(&vec, 1) == 20);
+      set(&vec, 0, 11);
+      assert(get(&vec, 0) == 11);
+      assert(next(&vec) == 11);
+      set(&vec, 1, 22);
+      assert(get(&vec, 1) == 22);
+      assert(len(&vec) == 2);
 }
 
 /**
@@ -154,15 +154,15 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();
+      test();
 
-    Vector vec;
-    init(&vec, 10);
-    push(&vec, 20);
-    print(&vec);
-    set(&vec, 0, 11);
-    set(&vec, 1, 22);
-    print(&vec);
-    printf("Length: %d\n", len(&vec));
-    return 0;
+      Vector vec;
+      init(&vec, 10);
+      push(&vec, 20);
+      print(&vec);
+      set(&vec, 0, 11);
+      set(&vec, 1, 22);
+      print(&vec);
+      printf("Length: %d\n", len(&vec));
+      return 0;
 }

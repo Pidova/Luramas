@@ -407,7 +407,6 @@ namespace lua_53_parsers {
 
                   auto &dis = pm.il->dis[i];
                   const auto &org = pm.dism[i];
-                  const auto addr = org->addr;
                   pm.il->reset_temp_reg();
 
                   /* Add loop inits */

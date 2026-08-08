@@ -15,10 +15,10 @@
  * @author [David Leal](https://github.com/Panquesito7)
 */
 
-#include <stdio.h>      /// for IO operations
-#include <assert.h>     /// for assert
-#include <math.h>       /// for pow
-#include <inttypes.h>   /// for uint64_t
+#include <assert.h>   /// for assert
+#include <inttypes.h> /// for uint64_t
+#include <math.h>     /// for pow
+#include <stdio.h>    /// for IO operations
 
 /**
  * @brief Converts the given binary number
@@ -27,15 +27,15 @@
  * @returns The decimal equivalent of the binary number
 */
 int convert_to_decimal(uint64_t number) {
-    int decimal_number = 0, i = 0;
+      int decimal_number = 0, i = 0;
 
-    while (number > 0) {
-        decimal_number += (number % 10) * pow(2, i);
-        number = number / 10;
-        i++;
-    }
+      while (number > 0) {
+            decimal_number += (number % 10) * pow(2, i);
+            number = number / 10;
+            i++;
+      }
 
-    return decimal_number;
+      return decimal_number;
 }
 
 /**
@@ -43,26 +43,25 @@ int convert_to_decimal(uint64_t number) {
  * @returns void
 */
 static void tests() {
-    assert(convert_to_decimal(111) == 7);
-    assert(convert_to_decimal(101) == 5);
-    assert(convert_to_decimal(1010) == 10);
-    assert(convert_to_decimal(1101) == 13);
-    assert(convert_to_decimal(100001) == 33);
-    assert(convert_to_decimal(10101001) == 169);
-    assert(convert_to_decimal(111010) == 58);
-    assert(convert_to_decimal(100000000) == 256);
-    assert(convert_to_decimal(10000000000) == 1024);
-    assert(convert_to_decimal(101110111) == 375);
+      assert(convert_to_decimal(111) == 7);
+      assert(convert_to_decimal(101) == 5);
+      assert(convert_to_decimal(1010) == 10);
+      assert(convert_to_decimal(1101) == 13);
+      assert(convert_to_decimal(100001) == 33);
+      assert(convert_to_decimal(10101001) == 169);
+      assert(convert_to_decimal(111010) == 58);
+      assert(convert_to_decimal(100000000) == 256);
+      assert(convert_to_decimal(10000000000) == 1024);
+      assert(convert_to_decimal(101110111) == 375);
 
-    printf("All tests have successfully passed!\n");
+      printf("All tests have successfully passed!\n");
 }
 
 /**
  * @brief Main function
  * @returns 0 on exit
 */
-int main()
-{
-    tests();  // run self-test implementations
-    return 0;
+int main() {
+      tests(); // run self-test implementations
+      return 0;
 }

@@ -18,35 +18,35 @@
  * @author [David Leal](https://github.com/Panquesito7)
  */
 
-#include <array>     /// for std::array
-#include <iostream>  /// for IO operations
+#include <array>    /// for std::array
+#include <iostream> /// for IO operations
 
 /**
  * @namespace backtracking
  * @brief Backtracking algorithms
  */
 namespace backtracking {
-/**
+      /**
  * @namespace graph_coloring
  * @brief Functions for the [Graph
  * Coloring](https://en.wikipedia.org/wiki/Graph_coloring) algorithm,
  */
-namespace graph_coloring {
-/**
+      namespace graph_coloring {
+            /**
  * @brief A utility function to print the solution
  * @tparam V number of vertices in the graph
  * @param color array of colors assigned to the nodes
  */
-template <size_t V>
-void printSolution(const std::array<int, V>& color) {
-    std::cout << "Following are the assigned colors\n";
-    for (auto& col : color) {
-        std::cout << col;
-    }
-    std::cout << "\n";
-}
+            template <size_t V>
+            void printSolution(const std::array<int, V> &color) {
+                  std::cout << "Following are the assigned colors\n";
+                  for (auto &col : color) {
+                        std::cout << col;
+                  }
+                  std::cout << "\n";
+            }
 
-/**
+            /**
  * @brief Utility function to check if the current color assignment is safe for
  * vertex v
  * @tparam V number of vertices in the graph
@@ -57,18 +57,17 @@ void printSolution(const std::array<int, V>& color) {
  * @returns `true` if the color is safe to be assigned to the node
  * @returns `false` if the color is not safe to be assigned to the node
  */
-template <size_t V>
-bool isSafe(int v, const std::array<std::array<int, V>, V>& graph,
-            const std::array<int, V>& color, int c) {
-    for (int i = 0; i < V; i++) {
-        if (graph[v][i] && c == color[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+            template <size_t V>
+            bool isSafe(int v, const std::array<std::array<int, V>, V> &graph, const std::array<int, V> &color, int c) {
+                  for (int i = 0; i < V; i++) {
+                        if (graph[v][i] && c == color[i]) {
+                              return false;
+                        }
+                  }
+                  return true;
+            }
 
-/**
+            /**
  * @brief Recursive utility function to solve m coloring problem
  * @tparam V number of vertices in the graph
  * @param graph matrix of graph nonnectivity
@@ -77,53 +76,51 @@ bool isSafe(int v, const std::array<std::array<int, V>, V>& graph,
  * that this parameter gets modified by the function
  * @param v index of graph vertex to check
  */
-template <size_t V>
-void graphColoring(const std::array<std::array<int, V>, V>& graph, int m,
-                   std::array<int, V> color, int v) {
-    // base case:
-    // If all vertices are assigned a color then return true
-    if (v == V) {
-        printSolution<V>(color);
-        return;
-    }
+            template <size_t V>
+            void graphColoring(const std::array<std::array<int, V>, V> &graph, int m, std::array<int, V> color, int v) {
+                  // base case:
+                  // If all vertices are assigned a color then return true
+                  if (v == V) {
+                        printSolution<V>(color);
+                        return;
+                  }
 
-    // Consider this vertex v and try different colors
-    for (int c = 1; c <= m; c++) {
-        // Check if assignment of color c to v is fine
-        if (isSafe<V>(v, graph, color, c)) {
-            color[v] = c;
+                  // Consider this vertex v and try different colors
+                  for (int c = 1; c <= m; c++) {
+                        // Check if assignment of color c to v is fine
+                        if (isSafe<V>(v, graph, color, c)) {
+                              color[v] = c;
 
-            // recur to assign colors to rest of the vertices
-            graphColoring<V>(graph, m, color, v + 1);
+                              // recur to assign colors to rest of the vertices
+                              graphColoring<V>(graph, m, color, v + 1);
 
-            // If assigning color c doesn't lead to a solution then remove it
-            color[v] = 0;
-        }
-    }
-}
-}  // namespace graph_coloring
-}  // namespace backtracking
+                              // If assigning color c doesn't lead to a solution then remove it
+                              color[v] = 0;
+                        }
+                  }
+            }
+      } // namespace graph_coloring
+} // namespace backtracking
 
 /**
  * @brief Main function
  * @returns 0 on exit
  */
 int main() {
-    // Create following graph and test whether it is 3 colorable
-    // (3)---(2)
-    // |   / |
-    // |  /  |
-    // | /   |
-    // (0)---(1)
+      // Create following graph and test whether it is 3 colorable
+      // (3)---(2)
+      // |   / |
+      // |  /  |
+      // | /   |
+      // (0)---(1)
 
-    const int V = 4;  // number of vertices in the graph
-    std::array<std::array<int, V>, V> graph = {
-        std::array<int, V>({0, 1, 1, 1}), std::array<int, V>({1, 0, 1, 0}),
-        std::array<int, V>({1, 1, 0, 1}), std::array<int, V>({1, 0, 1, 0})};
+      const int V = 4; // number of vertices in the graph
+      std::array<std::array<int, V>, V> graph = {
+          std::array<int, V>({0, 1, 1, 1}), std::array<int, V>({1, 0, 1, 0}), std::array<int, V>({1, 1, 0, 1}), std::array<int, V>({1, 0, 1, 0})};
 
-    int m = 3;  // Number of colors
-    std::array<int, V> color{};
+      int m = 3; // Number of colors
+      std::array<int, V> color{};
 
-    backtracking::graph_coloring::graphColoring<V>(graph, m, color, 0);
-    return 0;
+      backtracking::graph_coloring::graphColoring<V>(graph, m, color, 0);
+      return 0;
 }

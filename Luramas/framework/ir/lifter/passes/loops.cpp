@@ -262,9 +262,9 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
                                                 for (const auto &end : end_labels) {
                                                       last_end = std::max(last_end, end);
                                                 }
-                                                for (auto &i : goto_mutate) {
-                                                      if (pm.safe(i)) {
-                                                            tools::stat::mutate::continue_stat_cleared(i);
+                                                for (const auto &g : goto_mutate) {
+                                                      if (pm.safe(g)) {
+                                                            tools::stat::mutate::continue_stat_cleared(g);
                                                       }
                                                 }
 

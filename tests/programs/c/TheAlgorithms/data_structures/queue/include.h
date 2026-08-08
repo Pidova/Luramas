@@ -10,12 +10,11 @@
  * two pointers 'next' and 'pre' (type : struct node).
  */
 
-struct node
-{
-    int data;
-    struct node *next;
-    struct node *pre;
-} * head, *tail, *tmp;
+struct node {
+      int data;
+      struct node *next;
+      struct node *pre;
+} *head, *tail, *tmp;
 
 ////////////////////////////////////////////////////////////////////////////////
 // FORWARD DECLARATIONS

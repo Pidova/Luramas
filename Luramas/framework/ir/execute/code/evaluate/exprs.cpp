@@ -288,13 +288,9 @@ namespace luramas::ir::execution::evaluate::exprs {
                         break;
                   }
                   case luramas::il::arch::data::bin_kinds::ref_: {
-                        switch (obj.k) {
-                              default: {
-                                    exe_error<errors::kinds::invalid_unary_operand>(result);
-                                    return result;
-                              }
-                        }
-                        break;
+                        /* Implement */
+                        exe_error<errors::kinds::invalid_unary_operand>(result);
+                        return result;
                   }
                   default: {
                         break;
@@ -549,33 +545,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             if (!expr) {
                   return result;
             }
-            switch (expr->k) {
-                        //  case expr_kinds::reg: {
-                        //        if (expr->reg >= env.registers.size()) {
-                        //              return result; // Return empty object
-                        //        }
-                        //        result = env.registers[expr->reg];
-                        //        break;
-                        //  }
-                        //  case expr_kinds::global: {
-                        //        if (expr->global >= env.globals.size()) {
-                        //              return result; // Return empty object
-                        //        }
-                        //        result = env.globals[expr->global];
-                        //        break;
-                        //  }
-                        //  case expr_kinds::value: {
-                        //        result = expr->value;
-                        //        break;
-                        //  }
-                        //  case expr_kinds::call: {
-                        //        // Handle function call expression
-                        //        break;
-                        //  }
-                  default: {
-                        break;
-                  }
-            }
+            // TODO: implement
             return result;
       }
 } // namespace luramas::ir::execution::evaluate::exprs

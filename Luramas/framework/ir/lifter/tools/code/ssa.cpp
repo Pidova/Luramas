@@ -178,10 +178,10 @@ namespace luramas::ir::tools::ssa {
                         }
                   }
 
-                  for (const auto &[ssa, node] : ssa.defs) {
+                  for (const auto &[ssar, node] : ssa.defs) {
 
-                        if (!ignore.contains(ssa)) {
-                              result.emplace_back(ssa);
+                        if (!ignore.contains(ssar)) {
+                              result.emplace_back(ssar);
                         }
                   }
                   return result;

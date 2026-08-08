@@ -74,7 +74,7 @@ namespace luramas::ir::tools::common {
 
       bool continues_to_loop(luramas::ir::passes::pass_manager &pm, const std::shared_ptr<ir_stat> &continue_stat, const luramas_address loop) {
 
-            return stat::is_continue(continue_stat) && continue_stat->underlying_jump == loop;
+            return stat::is_continue(continue_stat) && luramas_address(continue_stat->underlying_jump) == loop;
       }
       bool breaks_to_loop(luramas::ir::passes::pass_manager &pm, const std::shared_ptr<ir_stat> &break_stat, const luramas_address loop) {
 

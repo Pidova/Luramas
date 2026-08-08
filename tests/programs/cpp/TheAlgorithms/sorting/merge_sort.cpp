@@ -35,38 +35,40 @@
  * @param r - end index or right index of second half array
  */
 void merge(int *arr, int l, int m, int r) {
-    int n1 = m - l + 1;
-    int n2 = r - m;
+      int n1 = m - l + 1;
+      int n2 = r - m;
 
-    std::vector<int> L(n1), R(n2);
+      std::vector<int> L(n1), R(n2);
 
-    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+      for (int i = 0; i < n1; i++)
+            L[i] = arr[l + i];
+      for (int j = 0; j < n2; j++)
+            R[j] = arr[m + 1 + j];
 
-    int i = 0, j = 0, k = l;
+      int i = 0, j = 0, k = l;
 
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
+      while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                  arr[k] = L[i];
+                  i++;
+            } else {
+                  arr[k] = R[j];
+                  j++;
+            }
+            k++;
+      }
+
+      while (i < n1) {
             arr[k] = L[i];
             i++;
-        } else {
+            k++;
+      }
+
+      while (j < n2) {
             arr[k] = R[j];
             j++;
-        }
-        k++;
-    }
-
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+            k++;
+      }
 }
 
 /**
@@ -80,12 +82,12 @@ void merge(int *arr, int l, int m, int r) {
  *
  */
 void mergeSort(int *arr, int l, int r) {
-    if (l < r) {
-        int m = l + (r - l) / 2;
-        mergeSort(arr, l, m);
-        mergeSort(arr, m + 1, r);
-        merge(arr, l, m, r);
-    }
+      if (l < r) {
+            int m = l + (r - l) / 2;
+            mergeSort(arr, l, m);
+            mergeSort(arr, m + 1, r);
+            merge(arr, l, m, r);
+      }
 }
 
 /**
@@ -93,31 +95,32 @@ void mergeSort(int *arr, int l, int r) {
  * sorting
  */
 void show(int *arr, int size) {
-    for (int i = 0; i < size; i++) std::cout << arr[i] << " ";
-    std::cout << "\n";
+      for (int i = 0; i < size; i++)
+            std::cout << arr[i] << " ";
+      std::cout << "\n";
 }
 
 /** Main function */
 int main() {
-    int size;
-    std::cout << "Enter the number of elements: ";
-    std::cin >> size;
+      int size;
+      std::cout << "Enter the number of elements: ";
+      std::cin >> size;
 
-    if (size <= 0) {
-        std::cout << "Invalid size.\n";
-        return 1;
-    }
+      if (size <= 0) {
+            std::cout << "Invalid size.\n";
+            return 1;
+      }
 
-    int *arr = new int[size];
-    std::cout << "Enter the unsorted elements: ";
-    for (int i = 0; i < size; ++i) {
-        std::cin >> arr[i];
-    }
+      int *arr = new int[size];
+      std::cout << "Enter the unsorted elements: ";
+      for (int i = 0; i < size; ++i) {
+            std::cin >> arr[i];
+      }
 
-    mergeSort(arr, 0, size - 1);
-    std::cout << "Sorted array: ";
-    show(arr, size);
-    delete[] arr;
-    return 0;
+      mergeSort(arr, 0, size - 1);
+      std::cout << "Sorted array: ";
+      show(arr, size);
+      delete[] arr;
+      return 0;
 }
 /** @} */

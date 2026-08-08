@@ -41,14 +41,14 @@
  */
 namespace dynamic_programming {
 
-/**
+      /**
  * @namespace word_break
  * @brief Functions for [Word Break](https://leetcode.com/problems/word-break/)
  * problem
  */
-namespace word_break {
+      namespace word_break {
 
-/**
+            /**
  * @brief Function that checks if the string passed in param is present in
  * the the unordered_set passed
  *
@@ -57,12 +57,12 @@ namespace word_break {
  * @returns `true` if str is present in strSet
  * @returns `false` if str is not present in strSet
  */
-bool exists(const std::string &str,
-            const std::unordered_set<std::string> &strSet) {
-    return strSet.find(str) != strSet.end();
-}
+            bool exists(const std::string &str,
+                const std::unordered_set<std::string> &strSet) {
+                  return strSet.find(str) != strSet.end();
+            }
 
-/**
+            /**
  * @brief Function that checks if the string passed in param can be
  * segmented from position 'pos', and then correctly go on to segment the
  * rest of the string correctly as well to reach a solution
@@ -77,46 +77,45 @@ bool exists(const std::string &str,
  * index pos
  * @returns `false` otherwise
  */
-bool check(const std::string &s, const std::unordered_set<std::string> &strSet,
-           int pos, std::vector<int> *dp) {
-    if (pos == s.length()) {
-        // if we have reached till the end of the string, means we have
-        // segmented throughout correctly hence we have a solution, thus
-        // returning true
-        return true;
-    }
+            bool check(const std::string &s, const std::unordered_set<std::string> &strSet, int pos, std::vector<int> *dp) {
+                  if (pos == s.length()) {
+                        // if we have reached till the end of the string, means we have
+                        // segmented throughout correctly hence we have a solution, thus
+                        // returning true
+                        return true;
+                  }
 
-    if (dp->at(pos) != INT_MAX) {
-        // if dp[pos] is not INT_MAX, means we must have saved a solution
-        // for the position pos; then return if the solution at pos is true
-        // or not
-        return dp->at(pos) == 1;
-    }
+                  if (dp->at(pos) != INT_MAX) {
+                        // if dp[pos] is not INT_MAX, means we must have saved a solution
+                        // for the position pos; then return if the solution at pos is true
+                        // or not
+                        return dp->at(pos) == 1;
+                  }
 
-    std::string wordTillNow =
-        "";  // string to save the prefixes of word till different positons
+                  std::string wordTillNow =
+                      ""; // string to save the prefixes of word till different positons
 
-    for (int i = pos; i < s.length(); i++) {
-        // Loop starting from pos to end, to check valid set of
-        // segmentations if any
-        wordTillNow +=
-            std::string(1, s[i]);  // storing the prefix till the position i
+                  for (int i = pos; i < s.length(); i++) {
+                        // Loop starting from pos to end, to check valid set of
+                        // segmentations if any
+                        wordTillNow +=
+                            std::string(1, s[i]); // storing the prefix till the position i
 
-        // if the prefix till current position is present in the dictionary
-        // and the remaining substring can also be segmented legally, then
-        // set solution at position pos in the memo, and return true
-        if (exists(wordTillNow, strSet) && check(s, strSet, i + 1, dp)) {
-            dp->at(pos) = 1;
-            return true;
-        }
-    }
-    // if function has still not returned, then there must be no legal
-    // segmentation possible after segmenting at pos
-    dp->at(pos) = 0;  // so set solution at pos as false
-    return false;     // and return no solution at position pos
-}
+                        // if the prefix till current position is present in the dictionary
+                        // and the remaining substring can also be segmented legally, then
+                        // set solution at position pos in the memo, and return true
+                        if (exists(wordTillNow, strSet) && check(s, strSet, i + 1, dp)) {
+                              dp->at(pos) = 1;
+                              return true;
+                        }
+                  }
+                  // if function has still not returned, then there must be no legal
+                  // segmentation possible after segmenting at pos
+                  dp->at(pos) = 0; // so set solution at pos as false
+                  return false;    // and return no solution at position pos
+            }
 
-/**
+            /**
  * @brief Function that checks if the string passed in param can be
  * segmented into the strings present in the vector.
  * In others words, it checks if any permutation of strings in
@@ -128,59 +127,59 @@ bool check(const std::string &s, const std::unordered_set<std::string> &strSet,
  * wordDict
  * @return `false` otherwise
  */
-bool wordBreak(const std::string &s, const std::vector<std::string> &wordDict) {
-    // unordered set to store words in the dictionary for constant time
-    // search
-    std::unordered_set<std::string> strSet;
-    for (const auto &s : wordDict) {
-        strSet.insert(s);
-    }
-    // a vector to be used for memoization, whose value at index i will
-    // tell if the string s can be segmented (correctly) at position i.
-    // initializing it with INT_MAX (which will denote no solution)
-    std::vector<int> dp(s.length(), INT_MAX);
+            bool wordBreak(const std::string &s, const std::vector<std::string> &wordDict) {
+                  // unordered set to store words in the dictionary for constant time
+                  // search
+                  std::unordered_set<std::string> strSet;
+                  for (const auto &s : wordDict) {
+                        strSet.insert(s);
+                  }
+                  // a vector to be used for memoization, whose value at index i will
+                  // tell if the string s can be segmented (correctly) at position i.
+                  // initializing it with INT_MAX (which will denote no solution)
+                  std::vector<int> dp(s.length(), INT_MAX);
 
-    // calling check method with position = 0, to check from left
-    // from where can be start segmenting the complete string in correct
-    // manner
-    return check(s, strSet, 0, &dp);
-}
+                  // calling check method with position = 0, to check from left
+                  // from where can be start segmenting the complete string in correct
+                  // manner
+                  return check(s, strSet, 0, &dp);
+            }
 
-}  // namespace word_break
-}  // namespace dynamic_programming
+      } // namespace word_break
+} // namespace dynamic_programming
 
 /**
  * @brief Test implementations
  * @returns void
  */
 static void test() {
-    // the complete string
-    const std::string s = "applepenapple";
-    // the dictionary to be used
-    const std::vector<std::string> wordDict = {"apple", "pen"};
+      // the complete string
+      const std::string s = "applepenapple";
+      // the dictionary to be used
+      const std::vector<std::string> wordDict = {"apple", "pen"};
 
-    assert(dynamic_programming::word_break::wordBreak(s, wordDict));
+      assert(dynamic_programming::word_break::wordBreak(s, wordDict));
 
-    // should return true, as applepenapple can be segmented as apple + pen +
-    // apple
-    std::cout << dynamic_programming::word_break::wordBreak(s, wordDict)
-              << std::endl;
-    std::cout << "Test implementation passed!\n";
+      // should return true, as applepenapple can be segmented as apple + pen +
+      // apple
+      std::cout << dynamic_programming::word_break::wordBreak(s, wordDict)
+                << std::endl;
+      std::cout << "Test implementation passed!\n";
 }
 /**
  * @brief Main function
  * @returns 0 on exit
  */
 int main() {
-    test();  // call the test function :)
+      test(); // call the test function :)
 
-    // the complete string
-    const std::string s = "applepenapple";
-    // the dictionary to be used
-    const std::vector<std::string> wordDict = {"apple", "pen"};
+      // the complete string
+      const std::string s = "applepenapple";
+      // the dictionary to be used
+      const std::vector<std::string> wordDict = {"apple", "pen"};
 
-    // should return true, as applepenapple can be segmented as apple + pen +
-    // apple
-    std::cout << dynamic_programming::word_break::wordBreak(s, wordDict)
-              << std::endl;
+      // should return true, as applepenapple can be segmented as apple + pen +
+      // apple
+      std::cout << dynamic_programming::word_break::wordBreak(s, wordDict)
+                << std::endl;
 }

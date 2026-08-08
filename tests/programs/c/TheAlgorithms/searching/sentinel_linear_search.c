@@ -11,8 +11,8 @@
  * Time Complexity: O(N)
  */
 
-#include <stdio.h>   /// for IO operations
-#include <assert.h>  /// for assert
+#include <assert.h> /// for assert
+#include <stdio.h>  /// for IO operations
 
 /**
  * @brief Utility function to search for an element in the array and return the index of the element
@@ -33,47 +33,46 @@
  * @param key the value we want to search
  * @return i if found, otherwise -1 is returned.
  */
-int sentinel_linear_search( int arr[], int len, int key ){
-	if(key == arr[len-1]){
-		return len-1;
-	}
-	
-	int temp = arr[len-1]; 
-	arr[len-1] = key;
-	
-	int i = 0;
-	while (arr[len-1] != arr[i]) {
-		i++;
-	}
-	
-	arr[len-1] = temp;
-	
-	return i != len-1 ? i : -1;
-	 
+int sentinel_linear_search(int arr[], int len, int key) {
+      if (key == arr[len - 1]) {
+            return len - 1;
+      }
+
+      int temp = arr[len - 1];
+      arr[len - 1] = key;
+
+      int i = 0;
+      while (arr[len - 1] != arr[i]) {
+            i++;
+      }
+
+      arr[len - 1] = temp;
+
+      return i != len - 1 ? i : -1;
 }
 
 /**
  * @brief Self-test implementations
  * @returns void
  */
-static void test(){
-	int n,i;
-	n = 5;
-	/* init array */
-	int arr[] = { 1, 2, 2, 6, 99, 100, 999 };
+static void test() {
+      int n, i;
+      n = 5;
+      /* init array */
+      int arr[] = {1, 2, 2, 6, 99, 100, 999};
 
-	assert(sentinel_linear_search( arr, n, 1 )==0);
-	assert(sentinel_linear_search( arr, n, 2 )==1);
-	assert(sentinel_linear_search( arr, n, 6 )==3);
-	assert(sentinel_linear_search( arr, n, 101 )==-1);
-	printf("All test cases have successfully passed!\n");
-} 
+      assert(sentinel_linear_search(arr, n, 1) == 0);
+      assert(sentinel_linear_search(arr, n, 2) == 1);
+      assert(sentinel_linear_search(arr, n, 6) == 3);
+      assert(sentinel_linear_search(arr, n, 101) == -1);
+      printf("All test cases have successfully passed!\n");
+}
 
 /**
  * @brief Main function
  * @returns 0 on exit
  */
-int main(){
-	test();  // run self-test implementations
-	return 0;
+int main() {
+      test(); // run self-test implementations
+      return 0;
 }

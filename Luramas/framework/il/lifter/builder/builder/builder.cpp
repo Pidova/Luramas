@@ -266,17 +266,27 @@ namespace luramas::il::lifter::builder {
             this->make_global(reg, str);
             return;
       }
-      luramas_id build::set_global(const std::string &global) {
 
-            return this->globals.try_emplace(global, this->globals.size()).first->second;
+      void build::insertf(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) {
+            this->il->insert_front(this->idx, v);
+            return;
+      }
+      void build::insertf(const std::shared_ptr<luramas::il::disassembly> &v) {
+            this->il->insert_front(this->idx, v);
+            return;
       }
       void build::insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) {
-            this->il->insert_front(this->idx, v);
+            this->il->insert(this->idx, v);
             return;
       }
       void build::insert(const std::shared_ptr<luramas::il::disassembly> &v) {
-            this->il->insert_front(this->idx, v);
+            this->il->insert(this->idx, v);
             return;
+      }
+
+      luramas_id build::set_global(const std::string &global) {
+
+            return this->globals.try_emplace(global, this->globals.size()).first->second;
       }
       build::expr build::make_reg(const luramas_register r) {
             reg result(r);

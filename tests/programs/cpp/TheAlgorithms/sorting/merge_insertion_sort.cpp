@@ -18,12 +18,12 @@
  * \brief Sorting algorithms
  */
 namespace sorting {
-/** \namespace merge_insertion
+      /** \namespace merge_insertion
  * \brief Combined Intersion-Merge sorting algorithm
  */
-namespace merge_insertion {
+      namespace merge_insertion {
 
-/**
+            /**
  * @brief Insertion merge algorithm
  * @see insertion_sort.cpp
  *
@@ -33,27 +33,27 @@ namespace merge_insertion {
  * @param start start index of sorting window
  * @param end end index of sorting window
  */
-template <typename T, size_t N>
-static void InsertionSort(std::array<T, N> *A, size_t start, size_t end) {
-    size_t i = 0, j = 0;
-    T *ptr = A->data();
+            template <typename T, size_t N>
+            static void InsertionSort(std::array<T, N> *A, size_t start, size_t end) {
+                  size_t i = 0, j = 0;
+                  T *ptr = A->data();
 
-    for (i = start; i < end; i++) {
-        T temp = ptr[i];
-        j = i;
-        while (j > start && temp < ptr[j - 1]) {
-            ptr[j] = ptr[j - 1];
-            j--;
-        }
-        //   for (j = i; j > start && temp < ptr[j - 1]; --j) {
-        //       ptr[j] = ptr[j - 1];
-        //   }
+                  for (i = start; i < end; i++) {
+                        T temp = ptr[i];
+                        j = i;
+                        while (j > start && temp < ptr[j - 1]) {
+                              ptr[j] = ptr[j - 1];
+                              j--;
+                        }
+                        //   for (j = i; j > start && temp < ptr[j - 1]; --j) {
+                        //       ptr[j] = ptr[j - 1];
+                        //   }
 
-        ptr[j] = temp;
-    }
-}
+                        ptr[j] = temp;
+                  }
+            }
 
-/**
+            /**
  * @brief Perform merge of data in a window
  *
  * @tparam T array data type
@@ -63,34 +63,34 @@ static void InsertionSort(std::array<T, N> *A, size_t start, size_t end) {
  * @param max end index of window
  * @param mid mid-point of window
  */
-template <typename T, size_t N>
-static void merge(std::array<T, N> *array, size_t min, size_t max, size_t mid) {
-    size_t firstIndex = min;
-    size_t secondIndex = mid + 1;
+            template <typename T, size_t N>
+            static void merge(std::array<T, N> *array, size_t min, size_t max, size_t mid) {
+                  size_t firstIndex = min;
+                  size_t secondIndex = mid + 1;
 
-    auto ptr = array->data();
-    std::array<T, N + 1> tempArray{0};
+                  auto ptr = array->data();
+                  std::array<T, N + 1> tempArray{0};
 
-    // While there are elements in the left or right runs
-    for (size_t index = min; index <= max; index++) {
-        // If left run head exists and is <= existing right run head.
-        if (firstIndex <= mid &&
-            (secondIndex > max || ptr[firstIndex] <= ptr[secondIndex])) {
-            tempArray[index] = ptr[firstIndex];
-            firstIndex++;
-        } else {
-            tempArray[index] = ptr[secondIndex];
-            secondIndex++;
-        }
-    }
+                  // While there are elements in the left or right runs
+                  for (size_t index = min; index <= max; index++) {
+                        // If left run head exists and is <= existing right run head.
+                        if (firstIndex <= mid &&
+                            (secondIndex > max || ptr[firstIndex] <= ptr[secondIndex])) {
+                              tempArray[index] = ptr[firstIndex];
+                              firstIndex++;
+                        } else {
+                              tempArray[index] = ptr[secondIndex];
+                              secondIndex++;
+                        }
+                  }
 
-    // transfer to the initial array
-    memcpy(ptr + min, tempArray.data() + min, (max - min) * sizeof(T));
-    //  for (int index = min; index <= max; index++) ptr[index] =
-    //  tempArray[index];
-}
+                  // transfer to the initial array
+                  memcpy(ptr + min, tempArray.data() + min, (max - min) * sizeof(T));
+                  //  for (int index = min; index <= max; index++) ptr[index] =
+                  //  tempArray[index];
+            }
 
-/**
+            /**
  * @brief Final combined algorithm.
  * Algorithm utilizes ::sorting::merge_insertion::InsertionSort if window length
  * is less than threshold, else performs merge sort recursively using
@@ -103,53 +103,52 @@ static void merge(std::array<T, N> *array, size_t min, size_t max, size_t mid) {
  * @param max end index of sort window
  * @param threshold window length threshold
  */
-template <typename T, size_t N>
-void mergeSort(std::array<T, N> *array, size_t min, size_t max,
-               size_t threshold) {
-    // prerequisite
-    if ((max - min) <= threshold) {
-        InsertionSort(array, min, max);
-    } else {
-        // get the middle point
-        size_t mid = (max + min) >> 1;
+            template <typename T, size_t N>
+            void mergeSort(std::array<T, N> *array, size_t min, size_t max, size_t threshold) {
+                  // prerequisite
+                  if ((max - min) <= threshold) {
+                        InsertionSort(array, min, max);
+                  } else {
+                        // get the middle point
+                        size_t mid = (max + min) >> 1;
 
-        // apply merge sort to both parts of this
-        mergeSort(array, min, mid, threshold);
-        mergeSort(array, mid, max, threshold);
+                        // apply merge sort to both parts of this
+                        mergeSort(array, min, mid, threshold);
+                        mergeSort(array, mid, max, threshold);
 
-        // and finally merge all that sorted stuff
-        merge(array, min, max, mid);
-    }
-}
+                        // and finally merge all that sorted stuff
+                        merge(array, min, max, mid);
+                  }
+            }
 
-}  // namespace merge_insertion
-}  // namespace sorting
+      } // namespace merge_insertion
+} // namespace sorting
 
 /**
  * @brief Function to test code using random arrays
  * @returns none
  */
 static void test() {
-    constexpr size_t size = 30;
-    std::array<int, size> array{0};
-    // input
-    for (int i = 0; i < size; i++) {
-        array[i] = std::rand() % 100 - 50;
-        std::cout << array[i] << " ";
-    }
-    std::cout << std::endl;
+      constexpr size_t size = 30;
+      std::array<int, size> array{0};
+      // input
+      for (int i = 0; i < size; i++) {
+            array[i] = std::rand() % 100 - 50;
+            std::cout << array[i] << " ";
+      }
+      std::cout << std::endl;
 
-    sorting::merge_insertion::InsertionSort(&array, 0, size);
-    //  sorting::merge_insertion::mergeSort(&array, 0, size, 10);
+      sorting::merge_insertion::InsertionSort(&array, 0, size);
+      //  sorting::merge_insertion::mergeSort(&array, 0, size, 10);
 
-    // output
-    for (int i = 0; i < size; ++i) {
-        std::cout << array[i] << " ";
-    }
-    std::cout << std::endl;
+      // output
+      for (int i = 0; i < size; ++i) {
+            std::cout << array[i] << " ";
+      }
+      std::cout << std::endl;
 
-    assert(std::is_sorted(std::begin(array), std::end(array)));
-    std::cout << "Test passed\n";
+      assert(std::is_sorted(std::begin(array), std::end(array)));
+      std::cout << "Test passed\n";
 }
 
 /**
@@ -157,7 +156,7 @@ static void test() {
  * @return 0 on exit
  */
 int main() {
-    std::srand(std::time(nullptr));
-    test();
-    return 0;
+      std::srand(std::time(nullptr));
+      test();
+      return 0;
 }

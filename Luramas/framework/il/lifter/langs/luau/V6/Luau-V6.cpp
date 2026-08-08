@@ -67,8 +67,8 @@ namespace luramas::il::lifter {
                               if (!vect) {
                                     luramas::error::error("String is nullptr");
                               }
-                              for (auto i = 0u; i < LUA_VECTOR_SIZE; ++i) {
-                                    ptr->vector.vector.emplace_back(vect[i]);
+                              for (auto vi = 0u; vi < LUA_VECTOR_SIZE; ++vi) {
+                                    ptr->vector.vector.emplace_back(vect[vi]);
                               }
                               ptr->type = luramas::il::arch::data::kval_kinds::vector;
                               break;
@@ -110,13 +110,13 @@ namespace luramas::il::lifter {
                               break;
                         }
                         case lua_Type::LUA_TPROTO: {
-                              const auto p = gco2p(kval.value.gc);
-                              if (!p) {
+                              const auto lp = gco2p(kval.value.gc);
+                              if (!lp) {
                                     luramas::error::error("Proto is nullptr");
                               }
                               ptr->type = luramas::il::arch::data::kval_kinds::function;
                               ptr->closure.id = i;
-                              ptr->closure.ilang_closure = lift_closure(p);
+                              ptr->closure.ilang_closure = lift_closure(lp);
                               break;
                         }
                         case lua_Type::LUA_TUPVAL: {

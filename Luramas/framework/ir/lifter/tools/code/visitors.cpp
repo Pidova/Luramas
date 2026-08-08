@@ -163,12 +163,12 @@ namespace luramas::ir::tools::visitors {
             const auto block = violations::block_violates(pm, loc, pm.amount());
             if (block.reason == violations::block_violation_exceptions::invalid_end || block.reason == violations::block_violation_exceptions::invalid_else_conditional) {
 
-                  const auto loc = tools::common::reverse_safe_take_jump(pm, block.ending_loc);
-                  if (!tools::stat::branch::is_if_cond(pm[loc])) {
+                  const auto rloc = tools::common::reverse_safe_take_jump(pm, block.ending_loc);
+                  if (!tools::stat::branch::is_if_cond(pm[rloc])) {
                         return false;
                   }
 
-                  buffer = loc;
+                  buffer = rloc;
                   return true;
             }
             return false;

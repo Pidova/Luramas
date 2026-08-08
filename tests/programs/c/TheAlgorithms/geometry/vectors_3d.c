@@ -5,7 +5,7 @@
  */
 
 #include <stdio.h>
-#ifdef __arm__  // if compiling for ARM-Cortex processors
+#ifdef __arm__ // if compiling for ARM-Cortex processors
 #define LIBQUAT_ARM
 #include <arm_math.h>
 #else
@@ -28,18 +28,17 @@
  * @param[in] b vector to subtract
  * @returns resultant vector
  */
-vec_3d vector_sub(const vec_3d *a, const vec_3d *b)
-{
-    vec_3d out;
+vec_3d vector_sub(const vec_3d *a, const vec_3d *b) {
+      vec_3d out;
 #ifdef LIBQUAT_ARM
-    arm_sub_f32((float *)a, (float *)b, (float *)&out);
+      arm_sub_f32((float *)a, (float *)b, (float *)&out);
 #else
-    out.x = a->x - b->x;
-    out.y = a->y - b->y;
-    out.z = a->z - b->z;
+      out.x = a->x - b->x;
+      out.y = a->y - b->y;
+      out.z = a->z - b->z;
 #endif
 
-    return out;
+      return out;
 }
 
 /**
@@ -50,18 +49,17 @@ vec_3d vector_sub(const vec_3d *a, const vec_3d *b)
  * @param[in] b vector to add
  * @returns resultant vector
  */
-vec_3d vector_add(const vec_3d *a, const vec_3d *b)
-{
-    vec_3d out;
+vec_3d vector_add(const vec_3d *a, const vec_3d *b) {
+      vec_3d out;
 #ifdef LIBQUAT_ARM
-    arm_add_f32((float *)a, (float *)b, (float *)&out);
+      arm_add_f32((float *)a, (float *)b, (float *)&out);
 #else
-    out.x = a->x + b->x;
-    out.y = a->y + b->y;
-    out.z = a->z + b->z;
+      out.x = a->x + b->x;
+      out.y = a->y + b->y;
+      out.z = a->z + b->z;
 #endif
 
-    return out;
+      return out;
 }
 
 /**
@@ -73,18 +71,17 @@ vec_3d vector_add(const vec_3d *a, const vec_3d *b)
  * @param[in] b second vector
  * @returns resulting dot product
  */
-float dot_prod(const vec_3d *a, const vec_3d *b)
-{
-    float dot;
+float dot_prod(const vec_3d *a, const vec_3d *b) {
+      float dot;
 #ifdef LIBQUAT_ARM
-    arm_dot_prod_f32((float *)a, (float *)b, &dot);
+      arm_dot_prod_f32((float *)a, (float *)b, &dot);
 #else
-    dot = a->x * b->x;
-    dot += a->y * b->y;
-    dot += a->z * b->z;
+      dot = a->x * b->x;
+      dot += a->y * b->y;
+      dot += a->z * b->z;
 #endif
 
-    return dot;
+      return dot;
 }
 
 /**
@@ -102,15 +99,14 @@ float dot_prod(const vec_3d *a, const vec_3d *b)
  * @param[in] b second vector @f$\vec{b}@f$
  * @returns resultant vector @f$\vec{o}=\vec{a}\times\vec{b}@f$
  */
-vec_3d vector_prod(const vec_3d *a, const vec_3d *b)
-{
-    vec_3d out;  // better this way to avoid copying results to input
-                 // vectors themselves
-    out.x = a->y * b->z - a->z * b->y;
-    out.y = -a->x * b->z + a->z * b->x;
-    out.z = a->x * b->y - a->y * b->x;
+vec_3d vector_prod(const vec_3d *a, const vec_3d *b) {
+      vec_3d out; // better this way to avoid copying results to input
+                  // vectors themselves
+      out.x = a->y * b->z - a->z * b->y;
+      out.y = -a->x * b->z + a->z * b->x;
+      out.z = a->x * b->y - a->y * b->x;
 
-    return out;
+      return out;
 }
 
 /**
@@ -119,14 +115,12 @@ vec_3d vector_prod(const vec_3d *a, const vec_3d *b)
  * @param[in] name  name of the vector
  * @returns string representation of vector
  */
-const char *print_vector(const vec_3d *a, const char *name)
-{
-    static char vec_str[100];  // static to ensure the string life extends the
-                               // life of function
+const char *print_vector(const vec_3d *a, const char *name) {
+      static char vec_str[100]; // static to ensure the string life extends the
+                                // life of function
 
-    snprintf(vec_str, 99, "vec(%s) = (%.3g)i + (%.3g)j + (%.3g)k\n", name, a->x,
-             a->y, a->z);
-    return vec_str;
+      snprintf(vec_str, 99, "vec(%s) = (%.3g)i + (%.3g)j + (%.3g)k\n", name, a->x, a->y, a->z);
+      return vec_str;
 }
 
 /**
@@ -135,16 +129,15 @@ const char *print_vector(const vec_3d *a, const char *name)
  * @param[in] a input vector
  * @returns norm of the given vector
  */
-float vector_norm(const vec_3d *a)
-{
-    float n = dot_prod(a, a);
+float vector_norm(const vec_3d *a) {
+      float n = dot_prod(a, a);
 #ifdef LIBQUAT_ARM
-    arm_sqrt_f32(*n, n);
+      arm_sqrt_f32(*n, n);
 #else
-    n = sqrtf(n);
+      n = sqrtf(n);
 #endif
 
-    return n;
+      return n;
 }
 
 /**
@@ -153,23 +146,21 @@ float vector_norm(const vec_3d *a)
  * @param[in] a input vector
  * @returns n unit vector in the direction of @f$\vec{a}@f$
  */
-vec_3d unit_vec(const vec_3d *a)
-{
-    vec_3d n = {0};
+vec_3d unit_vec(const vec_3d *a) {
+      vec_3d n = {0};
 
-    float norm = vector_norm(a);
-    if (fabsf(norm) < EPSILON)
-    {  // detect possible divide by 0
-        return n;
-    }
+      float norm = vector_norm(a);
+      if (fabsf(norm) < EPSILON) { // detect possible divide by 0
+            return n;
+      }
 
-    if (norm != 1.F)  // perform division only if needed
-    {
-        n.x = a->x / norm;
-        n.y = a->y / norm;
-        n.z = a->z / norm;
-    }
-    return n;
+      if (norm != 1.F) // perform division only if needed
+      {
+            n.x = a->x / norm;
+            n.y = a->y / norm;
+            n.z = a->z / norm;
+      }
+      return n;
 }
 
 /**
@@ -185,10 +176,9 @@ vec_3d unit_vec(const vec_3d *a)
  * @returns the `3x3` matrix for the cross product operator
  * @f$\left(\vec{a}\times\right)@f$
  */
-mat_3x3 get_cross_matrix(const vec_3d *a)
-{
-    mat_3x3 A = {0., -a->z, a->y, a->z, 0., -a->x, -a->y, a->x, 0.};
-    return A;
+mat_3x3 get_cross_matrix(const vec_3d *a) {
+      mat_3x3 A = {0., -a->z, a->y, a->z, 0., -a->x, -a->y, a->x, 0.};
+      return A;
 }
 
 /**
@@ -199,19 +189,18 @@ mat_3x3 get_cross_matrix(const vec_3d *a)
  * @returns angle between @f$\vec{a}@f$ and @f$\vec{b}@f$ in radians
  */
 
-double get_angle(const vec_3d *a, const vec_3d *b)
-{
-    double alpha, cos_alpha;
-    float norm_a = vector_norm(a); ///< The norm of vector a
-    float norm_b = vector_norm(b); ///< The norm of vector b
-    if (fabsf(norm_a) < EPSILON || fabsf(norm_b) < EPSILON) /// detect possible division by 0 - the angle is not defined in this case
-    {  
-        return NAN; 
-    }
+double get_angle(const vec_3d *a, const vec_3d *b) {
+      double alpha, cos_alpha;
+      float norm_a = vector_norm(a);                          ///< The norm of vector a
+      float norm_b = vector_norm(b);                          ///< The norm of vector b
+      if (fabsf(norm_a) < EPSILON || fabsf(norm_b) < EPSILON) /// detect possible division by 0 - the angle is not defined in this case
+      {
+            return NAN;
+      }
 
-    cos_alpha = dot_prod(a, b) / (norm_a * norm_b);
-    alpha = acos(cos_alpha); // delivers the radian
-    return alpha; // in range from -1 to 1
+      cos_alpha = dot_prod(a, b) / (norm_a * norm_b);
+      alpha = acos(cos_alpha); // delivers the radian
+      return alpha;            // in range from -1 to 1
 }
 
 /** @} */
@@ -220,36 +209,35 @@ double get_angle(const vec_3d *a, const vec_3d *b)
  * @brief Testing function
  * @returns `void`
  */
-static void test()
-{
-    vec_3d a = {1., 2., 3.};
-    vec_3d b = {1., 1., 1.};
-    float d;
+static void test() {
+      vec_3d a = {1., 2., 3.};
+      vec_3d b = {1., 1., 1.};
+      float d;
 
-    // printf("%s", print_vector(&a, "a"));
-    // printf("%s", print_vector(&b, "b"));
+      // printf("%s", print_vector(&a, "a"));
+      // printf("%s", print_vector(&b, "b"));
 
-    d = vector_norm(&a);
-    // printf("|a| = %.4g\n", d);
-    assert(fabsf(d - 3.742f) < 0.01);
-    d = vector_norm(&b);
-    // printf("|b| = %.4g\n", d);
-    assert(fabsf(d - 1.732f) < 0.01);
+      d = vector_norm(&a);
+      // printf("|a| = %.4g\n", d);
+      assert(fabsf(d - 3.742f) < 0.01);
+      d = vector_norm(&b);
+      // printf("|b| = %.4g\n", d);
+      assert(fabsf(d - 1.732f) < 0.01);
 
-    d = dot_prod(&a, &b);
-    // printf("Dot product: %f\n", d);
-    assert(fabsf(d - 6.f) < 0.01);
+      d = dot_prod(&a, &b);
+      // printf("Dot product: %f\n", d);
+      assert(fabsf(d - 6.f) < 0.01);
 
-    vec_3d c = vector_prod(&a, &b);
-    // printf("Vector product ");
-    // printf("%s", print_vector(&c, "c"));
-    assert(fabsf(c.x - (-1.f)) < 0.01);
-    assert(fabsf(c.y - (2.f)) < 0.01);
-    assert(fabsf(c.z - (-1.f)) < 0.01);
+      vec_3d c = vector_prod(&a, &b);
+      // printf("Vector product ");
+      // printf("%s", print_vector(&c, "c"));
+      assert(fabsf(c.x - (-1.f)) < 0.01);
+      assert(fabsf(c.y - (2.f)) < 0.01);
+      assert(fabsf(c.z - (-1.f)) < 0.01);
 
-    double alpha = get_angle(&a, &b);
-    // printf("The angle is %f\n", alpha);
-    assert(fabsf(alpha - 0.387597) < 0.01);
+      double alpha = get_angle(&a, &b);
+      // printf("The angle is %f\n", alpha);
+      assert(fabsf(alpha - 0.387597) < 0.01);
 }
 
 /**
@@ -257,9 +245,8 @@ static void test()
  *
  * @return 0 on exit
  */
-int main(void)
-{
-    test();
+int main(void) {
+      test();
 
-    return 0;
+      return 0;
 }

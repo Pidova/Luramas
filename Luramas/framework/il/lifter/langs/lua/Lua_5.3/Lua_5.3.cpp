@@ -11,7 +11,6 @@ namespace luramas::il::lifter {
 
       void lift(Proto *p, const std::vector<std::shared_ptr<lua_53_disassembler::disassembly>> &dism, std::shared_ptr<luramas::il::ilang> &buffer, const luramas_register start_tempreg) {
 
-            luramas_register stack_top = 0u;
             buffer->ctemp_reg = start_tempreg;
             lifter::parser::parser_manager<std::shared_ptr<lua_53_disassembler::disassembly>> pm(buffer, dism, lua_53_parsers::instructions, false);
             lifter::resolver::resolver_manager<Proto *> rm(buffer, p);

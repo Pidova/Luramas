@@ -7,27 +7,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct node
-{
-    struct node *leftNode;
-    int data;
-    struct node *rightNode;
+struct node {
+      struct node *leftNode;
+      int data;
+      struct node *rightNode;
 };
 
-struct node *newNode(int data)
-{
-    struct node *node = (struct node *)malloc(sizeof(struct node));
+struct node *newNode(int data) {
+      struct node *node = (struct node *)malloc(sizeof(struct node));
 
-    node->leftNode = NULL;
-    node->data = data;
-    node->rightNode = NULL;
+      node->leftNode = NULL;
+      node->data = data;
+      node->rightNode = NULL;
 
-    return node;
+      return node;
 }
 
-int main(void)
-{
-    /* new node can be created here as :-
+int main(void) {
+      /* new node can be created here as :-
 
        struct node *nameOfNode = newNode(data);
 
@@ -35,5 +32,5 @@ int main(void)
        nameOfNode->leftNode and so on.
     */
 
-    return 0;
+      return 0;
 }

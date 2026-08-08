@@ -159,6 +159,11 @@ namespace parser {
                         }
                         opened_conditions.pop_back();
                   }
+
+                  /* Custom IL */
+                  if (vinst.insert_dism) {
+                        build->insert(*vinst.insert_dism);
+                  }
                   pc += d.size;
             }
             if (!opened_conditions.empty()) {

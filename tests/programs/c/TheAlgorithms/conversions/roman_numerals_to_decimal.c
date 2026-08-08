@@ -16,31 +16,31 @@
  * @returns Integer of decimal value for given symbol
  */
 int symbol(char symbol) {
-    int value = 0;
-    switch(symbol) {
-        case 'I':
-            value = 1;
-            break;
-        case 'V':
-            value = 5;
-            break;
-        case 'X':
-            value = 10;
-            break;
-        case 'L':
-            value = 50;
-            break;
-        case 'C':
-            value = 100;
-            break;
-        case 'D':
-            value = 500;
-            break;
-        case 'M':
-            value = 1000;
-            break;
-    }
-    return value;    
+      int value = 0;
+      switch (symbol) {
+            case 'I':
+                  value = 1;
+                  break;
+            case 'V':
+                  value = 5;
+                  break;
+            case 'X':
+                  value = 10;
+                  break;
+            case 'L':
+                  value = 50;
+                  break;
+            case 'C':
+                  value = 100;
+                  break;
+            case 'D':
+                  value = 500;
+                  break;
+            case 'M':
+                  value = 1000;
+                  break;
+      }
+      return value;
 }
 
 /**
@@ -49,21 +49,21 @@ int symbol(char symbol) {
  * @returns The converted number in decimal form
  */
 int roman_to_decimal(char input[]) {
-    int result = 0; // result in decimal
+      int result = 0; // result in decimal
 
-    for(int i = 0; i < strlen(input); i++) {
-        if(strlen(input) > i + 1) {
-            if(symbol(input[i]) >= symbol(input[i + 1])) {
-                result += symbol(input[i]); // add value to sum
+      for (int i = 0; i < strlen(input); i++) {
+            if (strlen(input) > i + 1) {
+                  if (symbol(input[i]) >= symbol(input[i + 1])) {
+                        result += symbol(input[i]); // add value to sum
+                  } else {
+                        result += symbol(input[i + 1]) - symbol(input[i]); // if the current symbol is smaller than the next (ex. IV), subtract it from the next symbol
+                        i++;                                               // skip over an extra symbol
+                  }
             } else {
-                result += symbol(input[i + 1]) - symbol(input[i]); // if the current symbol is smaller than the next (ex. IV), subtract it from the next symbol
-                i++; // skip over an extra symbol 
+                  result += symbol(input[i]); // add value to sum
             }
-        } else {
-            result += symbol(input[i]); // add value to sum
-        }
-    }
-    return result;
+      }
+      return result;
 }
 
 /**
@@ -71,44 +71,44 @@ int roman_to_decimal(char input[]) {
  * @returns void
  */
 static void test() {
-    // 1st test
-    char input[] = "MCMIV";
-    int expected = 1904;
-    
-    int output = roman_to_decimal(input);
+      // 1st test
+      char input[] = "MCMIV";
+      int expected = 1904;
 
-    printf("TEST 1\n");
-    printf("Input: %s\n", input);
-    printf("Expected Output: %d\n", expected);
-    printf("Output: %d\n", output);
-    assert(output == expected);
-    printf("== TEST PASSED ==\n\n");
+      int output = roman_to_decimal(input);
 
-    // 2nd test
-    char input2[] = "MMMDCCXXIV";
-    expected = 3724;
-    
-    output = roman_to_decimal(input2);
+      printf("TEST 1\n");
+      printf("Input: %s\n", input);
+      printf("Expected Output: %d\n", expected);
+      printf("Output: %d\n", output);
+      assert(output == expected);
+      printf("== TEST PASSED ==\n\n");
 
-    printf("TEST 2\n");
-    printf("Input: %s\n", input2);
-    printf("Expected Output: %d\n", expected);
-    printf("Output: %d\n", output);
-    assert(output == expected);
-    printf("== TEST PASSED ==\n\n");
+      // 2nd test
+      char input2[] = "MMMDCCXXIV";
+      expected = 3724;
 
-    // 3rd test
-    char input3[] = "III";
-    expected = 3;
-    
-    output = roman_to_decimal(input3);
+      output = roman_to_decimal(input2);
 
-    printf("TEST 3\n");
-    printf("Input: %s\n", input3);
-    printf("Expected Output: %d\n", expected);
-    printf("Output: %d\n", output);
-    assert(output == expected);
-    printf("== TEST PASSED ==\n\n");
+      printf("TEST 2\n");
+      printf("Input: %s\n", input2);
+      printf("Expected Output: %d\n", expected);
+      printf("Output: %d\n", output);
+      assert(output == expected);
+      printf("== TEST PASSED ==\n\n");
+
+      // 3rd test
+      char input3[] = "III";
+      expected = 3;
+
+      output = roman_to_decimal(input3);
+
+      printf("TEST 3\n");
+      printf("Input: %s\n", input3);
+      printf("Expected Output: %d\n", expected);
+      printf("Output: %d\n", output);
+      assert(output == expected);
+      printf("== TEST PASSED ==\n\n");
 }
 
 /**
@@ -116,6 +116,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementations
-    return 0;
+      test(); // run self-test implementations
+      return 0;
 }

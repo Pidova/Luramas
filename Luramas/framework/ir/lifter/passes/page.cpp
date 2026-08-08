@@ -298,8 +298,8 @@ namespace luramas::ir::passes {
 
                               /* Generate */
                               const auto p = tools::stat::generate::page_function_pass();
-                              for (const auto &i : stack.back()) {
-                                    p->members.emplace_back(tools::exprs::generate::reg(i));
+                              for (const auto &r : stack.back()) {
+                                    p->members.emplace_back(tools::exprs::generate::reg(r));
                               }
                               pm.insert(pm[i], p);
                               pm.mut(LURAMAS_DEBUG_LINE);
@@ -410,8 +410,8 @@ namespace luramas::ir::passes {
                                                             i->flags.flink_regs = true;
                                                             boost::unordered_flat_set<luramas_index> idxs;
                                                             for (const auto &[r, expr] : def->args) {
-                                                                  if (const auto it = i->args.find(r); it != i->args.end() && it->second->is_integral()) {
-                                                                        idxs.insert(it->second->extract_integral_base());
+                                                                  if (const auto ait = i->args.find(r); ait != i->args.end() && ait->second->is_integral()) {
+                                                                        idxs.insert(ait->second->extract_integral_base());
                                                                   } else {
                                                                         i->members.emplace_back(expr);
                                                                         i->args[r] = tools::exprs::generate::integral(i->members.size() - 1u);
@@ -494,9 +494,9 @@ namespace luramas::ir::passes {
 
                                           if (id->is_integral()) {
 
-                                                if (const auto &page = det.index_page(id->extract_integral_base()); page) {
+                                                if (const auto &ipage = det.index_page(id->extract_integral_base()); ipage) {
 
-                                                      if (const auto &def = (*page).second.definition; def && ret->members.size() < def->args.size()) {
+                                                      if (const auto &def = (*ipage).second.definition; def && ret->members.size() < def->args.size()) {
 
                                                             /* Go through each definitio see if it exists in page return index */
                                                             for (const auto &[r, _] : def->args) {
@@ -715,9 +715,9 @@ namespace luramas::ir::passes {
                         auto i = range.first;
                         while (pm.contains(i)) {
 
-                              const auto &s = pm[i];
-                              if (tools::stat::branch::is_controller_if_cond_goto(s)) {
-                                    refs.erase(s->r->extract_integral_base());
+                              const auto &pi = pm[i];
+                              if (tools::stat::branch::is_controller_if_cond_goto(pi)) {
+                                    refs.erase(pi->r->extract_integral_base());
                                     i = tools::common::safe_take_jump(pm, i) + 1u;
                                     continue;
                               }

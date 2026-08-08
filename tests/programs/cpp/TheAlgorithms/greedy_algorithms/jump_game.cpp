@@ -22,16 +22,16 @@
  * @author [David Leal](https://github.com/Panquesito7)
  */
 
-#include <cassert>   /// for assert
-#include <iostream>  /// for std::cout
-#include <vector>    /// for std::vector
+#include <cassert>  /// for assert
+#include <iostream> /// for std::cout
+#include <vector>   /// for std::vector
 
 /**
  * @namespace
  * @brief Greedy Algorithms
  */
 namespace greedy_algorithms {
-/**
+      /**
  * @brief Checks whether the given element (default is `1`) can jump to the last
  * index.
  * @param nums array of numbers containing the maximum jump (in steps) from that
@@ -39,29 +39,29 @@ namespace greedy_algorithms {
  * @returns true  if the index can be reached
  * @returns false if the index can NOT be reached
  */
-bool can_jump(const std::vector<int> &nums) {
-    size_t lastPos = nums.size() - 1;
-    for (size_t i = lastPos; i != static_cast<size_t>(-1); i--) {
-        if (i + nums[i] >= lastPos) {
-            lastPos = i;
-        }
-    }
-    return lastPos == 0;
-}
-}  // namespace greedy_algorithms
+      bool can_jump(const std::vector<int> &nums) {
+            size_t lastPos = nums.size() - 1;
+            for (size_t i = lastPos; i != static_cast<size_t>(-1); i--) {
+                  if (i + nums[i] >= lastPos) {
+                        lastPos = i;
+                  }
+            }
+            return lastPos == 0;
+      }
+} // namespace greedy_algorithms
 
 /**
  * @brief Function to test the above algorithm
  * @returns void
  */
 static void test() {
-    assert(greedy_algorithms::can_jump(std::vector<int>({4, 3, 1, 0, 5})));
-    assert(!greedy_algorithms::can_jump(std::vector<int>({3, 2, 1, 0, 4})));
-    assert(greedy_algorithms::can_jump(std::vector<int>({5, 9, 4, 7, 15, 3})));
-    assert(!greedy_algorithms::can_jump(std::vector<int>({1, 0, 5, 8, 12})));
-    assert(greedy_algorithms::can_jump(std::vector<int>({2, 1, 4, 7})));
+      assert(greedy_algorithms::can_jump(std::vector<int>({4, 3, 1, 0, 5})));
+      assert(!greedy_algorithms::can_jump(std::vector<int>({3, 2, 1, 0, 4})));
+      assert(greedy_algorithms::can_jump(std::vector<int>({5, 9, 4, 7, 15, 3})));
+      assert(!greedy_algorithms::can_jump(std::vector<int>({1, 0, 5, 8, 12})));
+      assert(greedy_algorithms::can_jump(std::vector<int>({2, 1, 4, 7})));
 
-    std::cout << "All tests have successfully passed!\n";
+      std::cout << "All tests have successfully passed!\n";
 }
 
 /**
@@ -69,6 +69,6 @@ static void test() {
  * @returns 0 on exit
  */
 int main() {
-    test();  // run self-test implementations
-    return 0;
+      test(); // run self-test implementations
+      return 0;
 }

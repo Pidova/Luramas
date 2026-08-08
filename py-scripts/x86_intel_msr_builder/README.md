@@ -9,7 +9,7 @@ one-line description as a trailing comment so nothing is lost against the source
 ## Limitations
 
 > This is designed to only parse the linear text of the "Register Address:" MSR tables. Registers described purely
-> in prose, or in tables using a different layout, are not extracted. A handful of descriptions may come through truncated.
+> in text, or in tables using a different layout, are not extracted. A handful of descriptions may come through truncated.
 
 ## Overview
 

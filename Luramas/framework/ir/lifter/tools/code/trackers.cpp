@@ -97,7 +97,7 @@ namespace luramas::ir::tools::trackers {
                   } else if (stat::branch::is_goto(e) || (include_implicit_gotos && tools::stat::is_break(e))) {
 
                         const auto taken = tools::common::safe_take_jump(pm, start);
-                        if (expecting_goto == taken || taken < start) {
+                        if (luramas_address(expecting_goto) == taken || taken < start) {
                               break;
                         }
                         start = taken;
