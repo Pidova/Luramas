@@ -1,8 +1,8 @@
 #include "../../types/arith.hpp"
-#include <math.h>
-#include <stdio.h>
+#include <cmath>
+#include <cstdio>
 
-inline std::pair<std::string, bool> sanatize(const std::string &s) {
+inline static std::pair<std::string, bool> sanatize(const std::string &s) {
       const auto b = s.find_first_not_of(" \t\n\r");
       const auto e = s.find_last_not_of(" \t\n\r");
 
@@ -11,8 +11,8 @@ inline std::pair<std::string, bool> sanatize(const std::string &s) {
       }
 
       const auto trimmed = s.substr(b, e - b + 1);
-      std::string r("");
-      std::size_t i = 0u;
+      std::string r;
+      std::size_t i = 0U;
       bool precise = false;
 
       if (trimmed[i] == '-' || trimmed[i] == '+') {
@@ -249,7 +249,7 @@ luramas_int &luramas_int::operator>>=(const luramas_int &i) {
 }
 
 luramas_int::operator bool() const {
-      return this->precise() ? (this->p != 0.0) : (this->b != 0u);
+      return this->precise() ? (this->p != 0.0) : (this->b != 0U);
 }
 luramas_int::operator luramas_int_base() const {
       return this->precise() ? static_cast<luramas_int_base>(this->p) : static_cast<luramas_int_base>(this->b);
@@ -272,7 +272,7 @@ double luramas_int::cast_p() const {
 }
 
 double luramas_int::extract_double() const {
-      return this->precise() ? this->p : double(this->b);
+      return this->precise() ? this->p : static_cast<double>(this->b);
 }
 luramas_int_base luramas_int::extract_base() const {
       return static_cast<luramas_int_base>(this->b);
@@ -313,18 +313,18 @@ bool luramas_int::is_nan() const {
 }
 std::uint16_t luramas_int::bit_width() const {
       if (this->precise()) {
-            return 1u;
+            return 1U;
       }
       const auto abs_b = boost::multiprecision::abs(this->b);
       return abs_b == 0 ? static_cast<std::uint16_t>(1) : static_cast<std::uint16_t>(boost::multiprecision::msb(abs_b) + 1);
 }
 std::uint16_t luramas_int::count_leading_ones() const {
 
-      std::uint16_t result = 0u;
+      std::uint16_t result = 0U;
       if (!this->precise()) {
 
             auto v = this->b;
-            for (auto i = this->bit_width() - 1u; i >= 0u; --i) {
+            for (auto i = this->bit_width() - 1U; i >= 0U; --i) {
                   if ((v >> i) & 1) {
                         ++result;
                   } else {
@@ -336,7 +336,7 @@ std::uint16_t luramas_int::count_leading_ones() const {
 }
 std::uint16_t luramas_int::count_trailing_zeros() const {
 
-      std::uint16_t result = 0u;
+      std::uint16_t result = 0U;
       if (!this->precise()) {
             auto v = this->b;
             while (!(v & 1) && v) {
@@ -349,19 +349,20 @@ std::uint16_t luramas_int::count_trailing_zeros() const {
 luramas_int luramas_int::read(const luramas_int &min, const luramas_int &max) const {
 
       if (max < min) {
-            return 0u;
+            return 0U;
       }
-      const auto mask = (luramas_int(1u) << (max - min + 1)) - 1;
+      const auto mask = (luramas_int(1U) << (max - min + 1)) - 1;
       return (*this >> min) & mask;
 }
 std::pair<std::uint16_t, std::uint16_t> luramas_int::first_trailing_ones() const {
 
       bool in_run = false;
       const auto bw = this->bit_width();
-      std::uint16_t start = 0u, end = 0u;
+      std::uint16_t start = 0U;
+      std::uint16_t end = 0U;
 
-      for (auto i = 0u; i < bw; ++i) {
-            if (((*this >> i) & 1u) == 1u) {
+      for (auto i = 0U; i < bw; ++i) {
+            if (((*this >> i) & 1U) == 1U) {
                   if (!in_run) {
                         start = i;
                         in_run = true;
@@ -371,7 +372,7 @@ std::pair<std::uint16_t, std::uint16_t> luramas_int::first_trailing_ones() const
                   break;
             }
       }
-      return in_run ? std::make_pair(start, end) : std::make_pair(static_cast<std::uint16_t>(0u), static_cast<std::uint16_t>(0u));
+      return in_run ? std::make_pair(start, end) : std::make_pair(static_cast<std::uint16_t>(0U), static_cast<std::uint16_t>(0U));
 }
 luramas_int luramas_int::sign_extend(const std::uint16_t s) const {
 

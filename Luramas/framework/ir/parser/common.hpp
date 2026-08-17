@@ -42,7 +42,7 @@ namespace luramas::ir::parser {
             unclosed_string,        /* Unclosed string */
             assignment_mismatch,    /* Mismatch in assignment size */
       };
-      const char *const str(const errors &err);
+      const char *str(const errors &err);
 
       namespace exprs {
 

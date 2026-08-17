@@ -2,16 +2,16 @@
 #include "optable.hpp"
 
 enum class set_action : std::uint8_t {
-      instruction, /* Sets all instruction info, op, mnenomic, hint. */
-      operands     /* Sets all operands including details about it. */
+      INSTRUCTION, /* Sets all instruction info, op, mnenomic, hint. */
+      OPERANDS     /* Sets all operands including details about it. */
 };
 
-template <set_action n>
-void set_data(std::shared_ptr<luramas::disassembler::PY::disassembly> &buffer) {
+template <set_action N>
+static void set_data(std::shared_ptr<luramas::disassembler::PY::disassembly> &buffer) {
 
-      switch (n) {
+      switch (N) {
 
-            case set_action::instruction: {
+            case set_action::INSTRUCTION: {
 
                   // TODO ADD OPTABLE INDEXING
 

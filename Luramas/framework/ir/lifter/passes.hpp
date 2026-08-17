@@ -115,15 +115,15 @@ namespace luramas::ir::passes {
 
             /* Contains */
             bool contains(const luramas_address n) const;
-            bool contains(const luramas_address start, const luramas_address end, const luramas_address n) const;
+            static bool contains(const luramas_address start, const luramas_address end, const luramas_address n);
 
             /* Valid */
-            bool valid_prev(const std::size_t idx, std::size_t n) const;
+            static bool valid_prev(const std::size_t idx, std::size_t n);
             bool valid_next(const std::size_t idx, std::size_t n) const;
             bool valid(const std::size_t idx) const;
 
             /* Is safe */
-            bool is_safe_flags(const std::shared_ptr<ir_stat> &se) const;
+            static bool is_safe_flags(const std::shared_ptr<ir_stat> &se);
             bool is_safe(const std::shared_ptr<ir_stat> &se) const;
             bool is_safe(const std::size_t start_idx, const std::size_t end_idx) const;
             bool is_safe(const luramas_blockrange &r) const;

@@ -3,7 +3,7 @@
 
 namespace luramas::ir::standardize::annotations {
 
-      std::string standardize(const std::string &input, Hunspell &checker) {
+      static std::string standardize(const std::string &input, Hunspell &checker) {
 
             auto result = input;
             if (!checker.spell(result)) {
@@ -11,7 +11,7 @@ namespace luramas::ir::standardize::annotations {
                         if (i.find(' ') != std::string::npos) {
 
                               const auto pos = i.find(' ');
-                              if (pos + 2u >= i.length() || (pos + 1u < i.length() && !std::isalnum(i[pos + 1]))) {
+                              if (pos + 2U >= i.length() || (pos + 1U < i.length() && !std::isalnum(i[pos + 1]))) {
                                     continue;
                               }
                               result = i;
@@ -20,7 +20,7 @@ namespace luramas::ir::standardize::annotations {
                   }
             }
 
-            std::string compiled("");
+            std::string compiled;
             bool punder = false;
             for (const auto &i : result) {
                   if (std::isalnum(i)) {

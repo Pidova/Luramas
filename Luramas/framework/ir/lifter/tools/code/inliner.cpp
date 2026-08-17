@@ -20,7 +20,7 @@ namespace luramas::ir::tools::inliner {
 
             bool can_inline(luramas::ir::passes::pass_manager &pm, const std::vector<std::optional<luramas_address>> &parent_pages, const tools::paging::details::page &page, const luramas_count max_references) {
 
-                  if (!page.definition || !page.fvalid || pm[page.range.first]->flags.fpage_main || page.count_references() != 1u || (*page.references.begin()).second.size() > max_references) {
+                  if (!page.definition || !page.fvalid || pm[page.range.first]->flags.fpage_main || page.count_references() != 1U || (*page.references.begin()).second.size() > max_references) {
                         return false;
                   }
 
@@ -74,7 +74,7 @@ namespace luramas::ir::tools::inliner {
                                     if (const auto &def = pm[*loc_target]; tools::stat::is_definition(def)) {
 
                                           auto it = def->args.begin();
-                                          for (auto i = 0u; i < stat->members.size(); ++i) {
+                                          for (auto i = 0U; i < stat->members.size(); ++i) {
 
                                                 if (it == def->args.end()) {
                                                       break;
@@ -90,7 +90,7 @@ namespace luramas::ir::tools::inliner {
                         }
                         case keywords::definition: {
 
-                              for (auto i = 0u; i < stat->meta.size(); ++i) {
+                              for (auto i = 0U; i < stat->meta.size(); ++i) {
 
                                     if (i >= stat->args.size()) {
                                           break;
@@ -125,12 +125,12 @@ namespace luramas::ir::tools::inliner {
                               if (const auto &def = pm[*loc_target]; tools::stat::is_definition(def)) {
 
                                     auto it = def->args.begin();
-                                    for (auto i = 0u; i < texpr->members.size(); ++i) {
+                                    for (const auto &member : texpr->members) {
 
                                           if (it == def->args.end()) {
                                                 break;
                                           }
-                                          result.emplace_back(tools::stat::generate::assignment((*def->args.begin()).second, texpr->members[i]));
+                                          result.emplace_back(tools::stat::generate::assignment((*def->args.begin()).second, member));
                                           ++it;
                                     }
                                     const auto v = inline_dynamic(pm, def, loc_target);
@@ -146,7 +146,7 @@ namespace luramas::ir::tools::inliner {
             return result;
       }
 
-      ir_stat::space inline_data(luramas::ir::passes::pass_manager &pm, const ir_stat::space &data, const ir_stat::ir_expr::space &calle_assigns, const ir_stat::ir_expr::space args, const bool register_calle_assigns) {
+      ir_stat::space inline_data(luramas::ir::passes::pass_manager &pm, const ir_stat::space &data, const ir_stat::ir_expr::space &calle_assigns, const ir_stat::ir_expr::space &args, const bool register_calle_assigns) {
 
             ir_stat::space result;
 
@@ -158,12 +158,12 @@ namespace luramas::ir::tools::inliner {
             }
 
             if (register_calle_assigns) {
-                  luramas_register avaliable = 0u;
-                  for (auto &i : calle_assigns) {
+                  luramas_register avaliable = 0U;
+                  for (const auto &i : calle_assigns) {
                         if (i->is_register_reference()) {
                               continue;
                         }
-                        avaliable += (avaliable) ? 1u : se_ir::avaliable_register(data) + pm.ir.avaliable_register();
+                        avaliable += (avaliable) ? 1U : se_ir::avaliable_register(data) + pm.ir.avaliable_register();
                         i->clear();
                         i->emit_reg(avaliable);
                   }
@@ -172,7 +172,7 @@ namespace luramas::ir::tools::inliner {
             boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> params;
 
             bool exits_early = false;
-            for (auto i = 0ull; i < data.size(); ++i) {
+            for (auto i = 0ULL; i < data.size(); ++i) {
 
                   auto p = data[i];
 
@@ -180,7 +180,7 @@ namespace luramas::ir::tools::inliner {
                   if (p->is_k<keywords::definition>()) {
 
                         params.clear();
-                        for (auto a = 0u; a < p->parameters.size(); ++a) {
+                        for (auto a = 0U; a < p->parameters.size(); ++a) {
 
                               if (a >= args.size()) {
                                     return result;
@@ -210,11 +210,11 @@ namespace luramas::ir::tools::inliner {
                   switch (p->k) {
                         case keywords::retn: {
 
-                              const auto last_return = i == data.size() - 1u;
+                              const auto last_return = i == data.size() - 1U;
                               if (last_return && tools::stat::common::empty_return(p)) {
                                     break;
                               }
-                              for (auto reti = 0u; reti < p->members.size(); ++reti) {
+                              for (auto reti = 0U; reti < p->members.size(); ++reti) {
 
                                     if (reti >= calle_assigns.size()) {
                                           break;

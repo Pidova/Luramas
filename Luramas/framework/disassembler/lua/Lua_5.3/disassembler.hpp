@@ -59,7 +59,7 @@ namespace lua_53_disassembler {
       };
 
       /* Disassemble address */
-      void disassemble(const luramas_address pc, Proto *p, std::shared_ptr<disassembly> &buffer);
+      void disassemble(const luramas_address addr, Proto *p, std::shared_ptr<disassembly> &buffer);
 
       /* Disassemble address */
       void disassemble(Proto *p, std::vector<std::shared_ptr<disassembly>> &buffer);

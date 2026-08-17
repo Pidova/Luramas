@@ -8,6 +8,26 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# clang-tidy
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+if(CLANG_TIDY_EXE)
+    set(CMAKE_CXX_CLANG_TIDY
+        ${CLANG_TIDY_EXE};
+        -extra-arg=-Wno-unknown-warning-option;
+        -warnings-as-errors=*
+    )
+    if(MSVC)
+        list(APPEND CMAKE_CXX_CLANG_TIDY
+            --extra-arg-before=--driver-mode=cl
+            -extra-arg=/EHsc)
+    else()
+        list(APPEND CMAKE_CXX_CLANG_TIDY -extra-arg=-fexceptions)
+    endif()
+    message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+else()
+    message(WARNING "clang-tidy not found")
+endif()
+
 # Compile options 
 if(MSVC AND CMAKE_GENERATOR MATCHES "Visual Studio")
     add_compile_options(/MP)
@@ -124,7 +144,6 @@ find_package(hunspell)
 find_package(frozen)
 find_package(gmp)
 find_package(CLI11)
-find_package(libprotobuf-mutator)
 
 target_link_libraries(Luramas
                       lz4::lz4
@@ -135,5 +154,4 @@ target_link_libraries(Luramas
                       hunspell::hunspell
                       frozen::frozen
                       gmp::gmp
-                      CLI11::CLI11
-                      libprotobuf-mutator::libprotobuf-mutator)
+                      CLI11::CLI11)

@@ -59,7 +59,7 @@ namespace luramas::ir {
       }
       void ir_stat::load(std::istream &is) {
 
-            std::uint32_t packed_flags = 0u;
+            std::uint32_t packed_flags = 0U;
             is.read(reinterpret_cast<char *>(&packed_flags), sizeof(packed_flags));
             this->flags.unpack(packed_flags);
 
@@ -89,7 +89,7 @@ namespace luramas::ir {
             load_expr(this->v);
 
             auto load_data = [&](auto &vec) {
-                  luramas_count size = 0u;
+                  luramas_count size = 0U;
                   is.read(reinterpret_cast<char *>(&size), sizeof(size));
                   vec.resize(size);
                   for (auto &i : vec) {
@@ -104,18 +104,18 @@ namespace luramas::ir {
             load_data(this->tmembers);
             load_data(this->meta);
 
-            luramas_count args_size = 0u;
+            luramas_count args_size = 0U;
             is.read(reinterpret_cast<char *>(&args_size), sizeof(args_size));
             this->args.clear();
             for (auto i = 0; i < args_size; ++i) {
-                  luramas_register key = 0u;
+                  luramas_register key = 0U;
                   is.read(reinterpret_cast<char *>(&key), sizeof(key));
                   auto value = std::make_shared<ir_expr>();
                   load_expr(value);
                   this->args.try_emplace(key, value);
             }
 
-            luramas_count annotation_size = 0u;
+            luramas_count annotation_size = 0U;
             is.read(reinterpret_cast<char *>(&annotation_size), sizeof(annotation_size));
             this->annotation.resize(annotation_size);
             is.read(reinterpret_cast<char *>(this->annotation.data()), annotation_size);

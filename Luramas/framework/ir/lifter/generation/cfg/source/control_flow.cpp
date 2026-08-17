@@ -3,13 +3,13 @@
 #include <stack>
 
 struct condition {
-      luramas_address cond_loc = 0u;
-      luramas_address ending_loc = 0u;
-      luramas_address else_loc = 0u;
+      luramas_address cond_loc = 0U;
+      luramas_address ending_loc = 0U;
+      luramas_address else_loc = 0U;
 
       explicit condition() = default;
       explicit condition(const luramas_address loc)
-          : cond_loc(loc), ending_loc(0u), else_loc(0u) {
+          : cond_loc(loc) {
       }
 };
 
@@ -32,9 +32,9 @@ namespace luramas::ir::generation::cfg {
             this->emit(entry, ending, range.first, range.second);
             return;
       }
-      boost::fixed_vector<std::pair<edge_kind, std::shared_ptr<block>>, 3u> block::get_successors() const {
+      boost::fixed_vector<std::pair<edge_kind, std::shared_ptr<block>>, 3U> block::get_successors() const {
 
-            boost::fixed_vector<std::pair<edge_kind, std::shared_ptr<block>>, 3u> result;
+            boost::fixed_vector<std::pair<edge_kind, std::shared_ptr<block>>, 3U> result;
             if (this->fall) {
                   result.push_back({this->fallk, this->fall});
             }
@@ -46,9 +46,9 @@ namespace luramas::ir::generation::cfg {
             }
             return result;
       }
-      boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3u> block::get_successors_bk() const {
+      boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3U> block::get_successors_bk() const {
 
-            boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3u> result;
+            boost::fixed_vector<std::pair<block_kind, std::shared_ptr<block>>, 3U> result;
             if (this->fall) {
                   result.push_back({block_kind::fall, this->fall});
             }
@@ -60,8 +60,8 @@ namespace luramas::ir::generation::cfg {
             }
             return result;
       }
-      boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3u> block::get_block_successors() const {
-            boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3u> result;
+      boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3U> block::get_block_successors() const {
+            boost::fixed_vector<std::shared_ptr<generation::cfg::block>, 3U> result;
             for (const auto &[_, b] : this->get_successors()) {
                   result.push_back(b);
             }
@@ -109,7 +109,7 @@ namespace luramas::ir::generation::cfg {
 
             /* Reserve */
             {
-                  const auto size = ir.data.size() / 10u;
+                  const auto size = ir.data.size() / 10U;
                   labels.reserve(size);
                   end_labels.reserve(size);
                   result.highlevel_scope_ids.reserve(ir.data.size());
@@ -141,14 +141,14 @@ namespace luramas::ir::generation::cfg {
             if (finclude_pages) {
                   for (auto i = entry; i < ir.data.size(); ++i) {
                         if (const auto &p = ir.data[i]; p->flags.fpage_call_internally_managed && p->k == keywords::page_function_goto) {
-                              parent_page_linked_returns[p->r->extract_integral_base()].emplace_back(i + 1u);
+                              parent_page_linked_returns[p->r->extract_integral_base()].emplace_back(i + 1U);
                         }
                   }
             }
 
             /* Map starts */
             {
-                  luramas_id scope_id = 0u;
+                  luramas_id scope_id = 0U;
                   for (auto i = entry; i < ir.data.size(); ++i) {
 
                         const auto &p = ir.data[i];
@@ -193,15 +193,15 @@ namespace luramas::ir::generation::cfg {
                                     }
                               }
                         }
-                        scope_id -= p->is_scope_end();
-                        result.highlevel_scope_ids.emplace_back(scope_id - (p->c == condition_kind::else_ || p->c == condition_kind::elseif_));
-                        scope_id += p->is_scope_start_highlevel();
+                        scope_id -= static_cast<luramas_id>(p->is_scope_end());
+                        result.highlevel_scope_ids.emplace_back(scope_id - static_cast<luramas_id>(p->c == condition_kind::else_ || p->c == condition_kind::elseif_));
+                        scope_id += static_cast<luramas_id>(p->is_scope_start_highlevel());
                   }
             }
 
             /* Reserve */
             {
-                  const auto size = (end_labels.size() * 2u) + labels.size();
+                  const auto size = (end_labels.size() * 2U) + labels.size();
                   blocks.reserve(size);
             }
 
@@ -213,14 +213,14 @@ namespace luramas::ir::generation::cfg {
 
                         const auto &p = ir.data[i];
                         if (p->is_scope_start() || p->is_implicit_flow_interrupt()) {
-                              blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                              blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                               blocks.try_emplace(p->end_label ? end_labels[p->end_label].ending_loc : p->jlabel ? labels[p->jlabel]
                                                                                                                 : p->underlying_jump,
                                   std::make_shared<generation::cfg::block>());
                         }
                         switch (p->k) {
                               case keywords::for_loop_init: {
-                                    blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                                    blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                                     break;
                               }
                               case keywords::while_:
@@ -230,23 +230,23 @@ namespace luramas::ir::generation::cfg {
                               }
                               case keywords::end:
                               case keywords::until: {
-                                    blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                                    blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                                     break;
                               }
                               case keywords::page_function_end: {
                                     blocks.try_emplace(i, std::make_shared<generation::cfg::block>()).first->second->fforced_end = forced;
-                                    blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                                    blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                                     break;
                               }
                               case keywords::page_function_goto: {
                                     if (p->pfk == page_function_goto_kind::call) {
-                                          blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                                          blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                                     }
                                     break;
                               }
                               case keywords::page_function_start: {
                                     blocks.try_emplace(i, std::make_shared<generation::cfg::block>());
-                                    blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                                    blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                                     break;
                               }
                               default: {
@@ -266,7 +266,7 @@ namespace luramas::ir::generation::cfg {
                                     }
                               }
                               if (!p->is_terminal()) {
-                                    blocks.try_emplace(i + 1u, std::make_shared<generation::cfg::block>());
+                                    blocks.try_emplace(i + 1U, std::make_shared<generation::cfg::block>());
                                     paged_extra_blocks.try_emplace(i, std::make_shared<generation::cfg::block>());
                               }
                         }
@@ -306,12 +306,12 @@ namespace luramas::ir::generation::cfg {
                                                                               block->fall = it->second;
                                                                         }
                                                                   } else if (const auto cond = end_labels[p->end_label].cond_loc; ir.data[cond]->is_loop()) {
-                                                                        const auto it = blocks.find(cond + (!ir.data[cond]->is_k<keywords::while_>() && !ir.data[cond]->is_k<keywords::repeat>()));
+                                                                        const auto it = blocks.find(cond + static_cast<luramas_address>(!ir.data[cond]->is_k<keywords::while_>() && !ir.data[cond]->is_k<keywords::repeat>()));
                                                                         if (it != blocks.end()) {
                                                                               block->jump = it->second;
                                                                         }
                                                                   } else {
-                                                                        if (const auto it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                        if (const auto it = blocks.find(i + 1U); it != blocks.end()) {
                                                                               block->fall = it->second;
                                                                         }
                                                                   }
@@ -338,7 +338,7 @@ namespace luramas::ir::generation::cfg {
                                                                         if (it != blocks.end()) {
                                                                               block->then = it->second;
                                                                         }
-                                                                        if (it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                        if (it = blocks.find(i + 1U); it != blocks.end()) {
                                                                               block->jump = it->second;
                                                                         }
                                                                   } else if (const auto it = blocks.find(i); it != blocks.end()) {
@@ -352,13 +352,13 @@ namespace luramas::ir::generation::cfg {
                                                                         if (const auto &page = pages[p->r->extract_integral_base()]; page.second) {
                                                                               if (auto it = blocks.find(*page.second); it != blocks.end()) {
                                                                                     block->jump = it->second;
-                                                                                    if (it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                                    if (it = blocks.find(i + 1U); it != blocks.end()) {
                                                                                           block->then = it->second;
                                                                                     }
-                                                                              } else if (it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                              } else if (it = blocks.find(i + 1U); it != blocks.end()) {
                                                                                     block->fall = it->second;
                                                                               }
-                                                                        } else if (const auto it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                        } else if (const auto it = blocks.find(i + 1U); it != blocks.end()) {
                                                                               block->fall = it->second;
                                                                         }
                                                                   } else if (const auto it = blocks.find(i); it != blocks.end()) {
@@ -396,12 +396,12 @@ namespace luramas::ir::generation::cfg {
                                                                               block->jump = it->second;
                                                                         }
                                                                   } else {
-                                                                        auto it = blocks.find(i + 1u);
+                                                                        auto it = blocks.find(i + 1U);
                                                                         if (it != blocks.end()) {
                                                                               block->then = it->second;
                                                                         }
                                                                         const auto &ending = end_labels[p->end_label];
-                                                                        if (it = blocks.find(ending.else_loc ? ending.else_loc + 1u : ending.ending_loc); it != blocks.end()) {
+                                                                        if (it = blocks.find(ending.else_loc ? ending.else_loc + 1U : ending.ending_loc); it != blocks.end()) {
                                                                               block->jump = it->second;
                                                                         }
                                                                   }
@@ -409,7 +409,7 @@ namespace luramas::ir::generation::cfg {
                                                             }
                                                             case keywords::condition_goto: {
                                                                   exit = true;
-                                                                  auto it = blocks.find(i + 1u);
+                                                                  auto it = blocks.find(i + 1U);
                                                                   if (it != blocks.end()) {
                                                                         block->then = it->second;
                                                                   }
@@ -426,7 +426,7 @@ namespace luramas::ir::generation::cfg {
                                                                               block->fall = it->second;
                                                                         }
                                                                   } else {
-                                                                        if (const auto it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                        if (const auto it = blocks.find(i + 1U); it != blocks.end()) {
                                                                               block->fall = it->second;
                                                                         }
                                                                   }
@@ -440,12 +440,12 @@ namespace luramas::ir::generation::cfg {
                                                                         }
                                                                   } else {
                                                                         exit = true;
-                                                                        auto it = blocks.find(i + 1u);
+                                                                        auto it = blocks.find(i + 1U);
                                                                         if (!p->l || p->r || !p->l->is_tk<tkind::boolean>() || !p->l->bv) {
                                                                               if (it != blocks.end()) {
                                                                                     block->then = it->second;
                                                                               }
-                                                                              it = blocks.find(end_labels[p->end_label].ending_loc + 1u);
+                                                                              it = blocks.find(end_labels[p->end_label].ending_loc + 1U);
                                                                               if (it != blocks.end()) {
                                                                                     block->jump = it->second;
                                                                               }
@@ -460,7 +460,7 @@ namespace luramas::ir::generation::cfg {
                                                             case keywords::forloop_generic:
                                                             case keywords::forloop_numeric: {
                                                                   exit = true;
-                                                                  if (const auto it = blocks.find(i + 1u); it != blocks.end()) {
+                                                                  if (const auto it = blocks.find(i + 1U); it != blocks.end()) {
                                                                         block->fall = it->second;
                                                                   }
                                                                   break;
@@ -481,11 +481,11 @@ namespace luramas::ir::generation::cfg {
                                                       switch (p->k) {
                                                             case keywords::for_loop_init: {
                                                                   exit = true;
-                                                                  auto it = blocks.find(i + 1u);
+                                                                  auto it = blocks.find(i + 1U);
                                                                   if (it != blocks.end()) {
                                                                         block->then = it->second;
                                                                   }
-                                                                  if (it = blocks.find(end_labels[ir.data[i - 1u]->end_label].ending_loc + 1u); it != blocks.end()) {
+                                                                  if (it = blocks.find(end_labels[ir.data[i - 1U]->end_label].ending_loc + 1U); it != blocks.end()) {
                                                                         block->jump = it->second;
                                                                   }
                                                                   break;
@@ -508,21 +508,21 @@ namespace luramas::ir::generation::cfg {
 
                                     block->ending = i;
                                     if (premature_exit) {
-                                          block->node_range.second += block->node_range.second == bentry;
+                                          block->node_range.second += static_cast<unsigned long long>(block->node_range.second == bentry);
                                           break;
                                     }
                                     if (exit) {
 
-                                          block->node_range.second += !p->is_scope_end() || block->fforced_end || p->is_k<keywords::until>();
+                                          block->node_range.second += static_cast<unsigned long long>(!p->is_scope_end() || block->fforced_end || p->is_k<keywords::until>());
                                           if (has_pages_edges) {
 
                                                 luramas_flag extra_step = true;
                                                 std::shared_ptr<generation::cfg::block> prev = nullptr;
                                                 std::shared_ptr<generation::cfg::block> first = nullptr;
                                                 const auto &data = pages_n_edges_blocks[i];
-                                                for (auto idx = 0u; idx < data.size(); ++idx) {
+                                                for (auto idx = 0U; idx < data.size(); ++idx) {
                                                       const auto &pd = data[idx];
-                                                      pd->emit(i, i, i, i + extra_step);
+                                                      pd->emit(i, i, i, i + static_cast<unsigned long long>(extra_step));
                                                       if (!first) {
                                                             first = pd;
                                                       }
@@ -547,17 +547,17 @@ namespace luramas::ir::generation::cfg {
                                                             const auto b = paged_extra_blocks[i];
                                                             prev->fall = b;
                                                             b->emit(block->jump, block->then, block->fall);
-                                                            b->emit(i, i, i, i + extra_step);
+                                                            b->emit(i, i, i, i + static_cast<unsigned long long>(extra_step));
                                                             extra_step = false;
                                                       } else if (!p->is_terminal()) {
-                                                            if (const auto it = blocks.find(i + 1u); it != blocks.end()) {
+                                                            if (const auto it = blocks.find(i + 1U); it != blocks.end()) {
                                                                   prev->fall = it->second;
                                                             }
                                                       }
                                                 }
                                                 block->emit(nullptr, nullptr, first);
                                           }
-                                          block->node_range.second += block->node_range.second == bentry;
+                                          block->node_range.second += static_cast<unsigned long long>(block->node_range.second == bentry);
                                           break;
                                     }
                                     ++block->node_range.second;
@@ -717,15 +717,15 @@ namespace luramas::ir::generation::cfg {
 
             const auto start_iter = std::ranges::find(this->highlevel_scope_ids, n);
             if (start_iter == this->highlevel_scope_ids.end()) {
-                  return 0u;
+                  return 0U;
             }
 
             const auto end_iter = std::ranges::find_if(start_iter, this->highlevel_scope_ids.end(), [n](const auto id) { return id != n; });
-            return end_iter != this->highlevel_scope_ids.end() ? std::distance(this->highlevel_scope_ids.begin(), end_iter) - 1u : 0u;
+            return end_iter != this->highlevel_scope_ids.end() ? std::distance(this->highlevel_scope_ids.begin(), end_iter) - 1U : 0U;
       }
       std::shared_ptr<block> cfg::most_scope_id(const std::vector<std::shared_ptr<block>> &v) const {
 
-            std::pair<std::size_t, std::shared_ptr<block>> result = {0u, nullptr};
+            std::pair<std::size_t, std::shared_ptr<block>> result = {0U, nullptr};
             for (const auto &i : v) {
                   if (const auto id = this->highlevel_scope_ids[i->get_end()]; id > result.first || !result.second) {
                         result = std::make_pair(id, i);
@@ -736,7 +736,7 @@ namespace luramas::ir::generation::cfg {
       boost::unordered_flat_map<std::shared_ptr<block>, luramas_index> cfg::map() const {
 
             boost::unordered_flat_map<std::shared_ptr<block>, luramas_index> result;
-            for (auto i = 0u; i < this->blocks.size(); ++i) {
+            for (auto i = 0U; i < this->blocks.size(); ++i) {
                   result[this->blocks[i]] = i;
             }
             return result;

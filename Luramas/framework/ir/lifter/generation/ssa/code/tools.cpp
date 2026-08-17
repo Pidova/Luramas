@@ -4,7 +4,7 @@ namespace luramas::ir::ssa_builder::tools {
 
       void global_version(std::vector<ssa_node> &buffer) {
 
-            luramas_xregister gver = generation::ssa::UNKNOWN_SSA_VERSION + 1u;
+            luramas_xregister gver = generation::ssa::UNKNOWN_SSA_VERSION + 1U;
             boost::unordered_flat_map<luramas_register, boost::unordered_flat_map<luramas_xregister, luramas_xregister>> global_map;
 
             /* Lvalues: Populate maps for all explicit definitions */

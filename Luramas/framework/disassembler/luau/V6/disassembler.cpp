@@ -3,16 +3,16 @@
 #include <iostream>
 
 enum set_action : std::uint8_t {
-      instruction, /* Sets all instruction info, op, mnenomic, hint. */
-      operands     /* Sets all operands including details about it. */
+      INSTRUCTION, /* Sets all instruction info, op, mnenomic, hint. */
+      OPERANDS     /* Sets all operands including details about it. */
 };
 
-template <set_action n>
-void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const Proto *p, const op_table::optable op_table) {
+template <set_action N>
+static void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const Proto *p, const op_table::optable &op_table) {
 
-      switch (n) {
+      switch (N) {
 
-            case set_action::instruction: {
+            case set_action::INSTRUCTION: {
 
                   buffer->op = op_table.op;
                   switch (buffer->op) {
@@ -433,12 +433,12 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                   break;
             }
 
-            case set_action::operands: {
+            case set_action::OPERANDS: {
 
-                  std::intptr_t AUX_CACHE = 0;
+                  std::intptr_t aux_cache = 0;
                   const auto op_count = op_table.operands.size();
 
-                  for (auto i = 0u; i < op_count; ++i) {
+                  for (auto i = 0U; i < op_count; ++i) {
 
                         auto current_operand = std::make_shared<luau_v6_disassembler::operand>();
 
@@ -447,7 +447,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                         const auto operand_encoding = op_table.operands[i];
                         const auto type = op_table.types[i];
 
-                        const auto split = ((i + 1u) == op_count) ? " " : ", ";
+                        const auto *const split = ((i + 1U) == op_count) ? " " : ", ";
 
                         /* Set operand value. */
                         switch (operand_encoding) {
@@ -465,7 +465,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                               }
                               case op_table::operands::C_dec: {
                                     const auto c = decode_C(*buffer->code);
-                                    operand_value = (c == 0u) ? static_cast<const std::intptr_t>(c) : static_cast<const std::intptr_t>(c - 1);
+                                    operand_value = (c == 0U) ? static_cast<const std::intptr_t>(c) : static_cast<const std::intptr_t>(c - 1);
                                     break;
                               }
                               case op_table::operands::C_inc: {
@@ -482,7 +482,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                               }
                               case op_table::operands::AUX: {
                                     operand_value = *(++buffer->code);
-                                    if (std::int32_t(*buffer->code) < 0) {
+                                    if (static_cast<std::int32_t>(*buffer->code) < 0) {
                                           operand_value = (buffer->op == LuauOpcode::LOP_FORGLOOP) ? 1 : 0;
                                     }
                                     break;
@@ -492,15 +492,15 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                                     break;
                               }
                               case op_table::operands::AUX_cache: {
-                                    AUX_CACHE = *(++buffer->code);
+                                    aux_cache = *(++buffer->code);
                                     break;
                               }
                               case op_table::operands::CACHE_LEAST_SIGNIFICANT: {
-                                    operand_value = AUX_CACHE & 0xff;
+                                    operand_value = aux_cache & 0xff;
                                     break;
                               }
                               case op_table::operands::CACHE_MOST_SIGNIFICANT: {
-                                    operand_value = ((AUX_CACHE >> 8) & 0xff);
+                                    operand_value = ((aux_cache >> 8) & 0xff);
                                     break;
                               }
                               default: {
@@ -532,12 +532,12 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                                     const auto v = decode_B(on);
 
                                     current_operand->capture_reg = v;
-                                    buffer->data += (tt == 2u ? "upvalue_" : "r") + std::to_string(v) + split;
+                                    buffer->data += (tt == 2U ? "upvalue_" : "r") + std::to_string(v) + split;
                                     break;
                               }
                               case op_table::type::fastcall_idx: {
                                     buffer->data += std::string(op_table::fastcall_array[operand_value]) + split;
-                                    current_operand->fastcall_idx = std::uint8_t(operand_value);
+                                    current_operand->fastcall_idx = static_cast<std::uint8_t>(operand_value);
                                     break;
                               }
                               case op_table::type::table_size: {
@@ -569,13 +569,13 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                               case op_table::type::jmp: {
                                     buffer->data += std::to_string(operand_value) + split;
                                     current_operand->jmp = operand_value;
-                                    current_operand->ref_addr = current_operand->jmp + buffer->addr + 1u;
+                                    current_operand->ref_addr = current_operand->jmp + buffer->addr + 1U;
                                     break;
                               }
                               case op_table::type::reg:
                               case op_table::type::dest: {
                                     buffer->data += 'r' + std::to_string(operand_value) + split;
-                                    current_operand->reg = luramas_register(operand_value);
+                                    current_operand->reg = static_cast<luramas_register>(operand_value);
                                     break;
                               }
                               case op_table::type::val: {
@@ -610,9 +610,9 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                                     const auto source = buffer->code[1];
                                     const std::int32_t brco = source >> 30;
 
-                                    const auto id1 = (brco > 0) ? std::int32_t(source >> 20) & 1023 : -1;
-                                    const auto id2 = (brco > 1) ? std::int32_t(source >> 10) & 1023 : -1;
-                                    const auto id3 = (brco > 2) ? std::int32_t(source) & 1023 : -1;
+                                    const auto id1 = (brco > 0) ? static_cast<std::int32_t>(source >> 20) & 1023 : -1;
+                                    const auto id2 = (brco > 1) ? static_cast<std::int32_t>(source >> 10) & 1023 : -1;
+                                    const auto id3 = (brco > 2) ? static_cast<std::int32_t>(source) & 1023 : -1;
 
                                     if (id1 >= 0) {
                                           current_operand->k_value += gco2ts(p->k[id1].value.gc)->data;
@@ -631,7 +631,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                               case op_table::type::k_value_nstr: {
 
                                     const auto kv = p->k[operand_value];
-                                    const auto ts = gco2ts(kv.value.gc);
+                                    auto *const ts = gco2ts(kv.value.gc);
                                     current_operand->k_value.assign(ts->data, ts->len);
                                     luramas_str_escape(current_operand->k_value);
                                     buffer->data += current_operand->k_value + split;
@@ -647,7 +647,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                                     switch (kv.tt) {
                                           case lua_Type::LUA_TVECTOR: {
                                                 /* Hack lol */
-                                                const auto values = kv.value.v;
+                                                const auto *const values = kv.value.v;
                                                 const auto v1 = *values;
                                                 const auto v2 = values[1];
                                                 const auto v3 = values[2];
@@ -667,7 +667,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
                                                 break;
                                           }
                                           case lua_Type::LUA_TSTRING: {
-                                                const auto ts = gco2ts(kv.value.gc);
+                                                auto *const ts = gco2ts(kv.value.gc);
                                                 current_operand->k_value.assign(ts->data, ts->len);
                                                 luramas_str_escape(current_operand->k_value);
                                                 current_operand->k_value.insert(0, 1, '\"');
@@ -724,7 +724,7 @@ void set_data(std::shared_ptr<luau_v6_disassembler::disassembly> &buffer, const 
       return;
 }
 
-void check_op(const std::uint8_t op) {
+static void check_op(const std::uint8_t op) {
       if (op >= sizeof(op_table::op_table) / sizeof(op_table::op_table[0])) {
             luramas::error::error("Invalid lifter opcode");
       }
@@ -734,14 +734,14 @@ void check_op(const std::uint8_t op) {
 void luau_v6_disassembler::disassemble(const luramas_address addr, const Proto *p, std::shared_ptr<luau_v6_disassembler::disassembly> &buffer) {
 
       /* Get intruction and set instruction. */
-      const auto op = std::uint8_t(decode_opcode(p->code[addr]));
+      const auto op = static_cast<std::uint8_t>(decode_opcode(p->code[addr]));
 
       check_op(op);
       const auto code = op_table::op_table[op];
-      set_data<set_action::instruction>(buffer, p, code);
+      set_data<set_action::INSTRUCTION>(buffer, p, code);
 
       /* Set code. */
-      const auto start_pc = p->code + addr;
+      auto *const start_pc = p->code + addr;
       buffer->code = start_pc;
       buffer->addr = addr;
 
@@ -750,13 +750,13 @@ void luau_v6_disassembler::disassemble(const luramas_address addr, const Proto *
 
       /* Init data. */
       buffer->data = std::string(buffer->mnenomic) + ' ';
-      set_data<set_action::operands>(buffer, p, code);
+      set_data<set_action::OPERANDS>(buffer, p, code);
 
       /* Calculate lenght. */
-      buffer->len = (std::uint8_t(reinterpret_cast<const luramas_address>(buffer->code) - reinterpret_cast<const luramas_address>(start_pc)) / sizeof(Instruction)) + 1u;
+      buffer->len = (static_cast<std::uint8_t>(reinterpret_cast<const luramas_address>(buffer->code) - reinterpret_cast<const luramas_address>(start_pc)) / sizeof(Instruction)) + 1U;
 
       /* Bytes */
-      for (auto i = 0u; i < buffer->len; ++i) {
+      for (auto i = 0U; i < buffer->len; ++i) {
             buffer->bytes.emplace_back(p->code[buffer->addr + i]);
       }
       return;
@@ -764,7 +764,7 @@ void luau_v6_disassembler::disassemble(const luramas_address addr, const Proto *
 
 void luau_v6_disassembler::disassemble(const Proto *p, std::vector<std::shared_ptr<luau_v6_disassembler::disassembly>> &buffer) {
 
-      for (auto pc = 0u; pc < unsigned(p->sizecode);) {
+      for (auto pc = 0U; pc < static_cast<unsigned>(p->sizecode);) {
             auto dism = std::make_shared<luau_v6_disassembler::disassembly>();
             disassemble(pc, p, dism);
             buffer.emplace_back(dism);

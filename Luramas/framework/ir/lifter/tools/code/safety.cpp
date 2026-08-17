@@ -69,7 +69,7 @@ namespace luramas::ir::tools::safety {
             return buffer > av && buffer > bv;
       }
 
-      bool page(passes::pass_manager &pm, const generation::ssa::ssa &ssa) {
+      static bool page(passes::pass_manager & /*pm*/, const generation::ssa::ssa & /*ssa*/) {
 
             return false;
       }

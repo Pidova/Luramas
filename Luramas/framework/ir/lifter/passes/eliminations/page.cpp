@@ -2,7 +2,7 @@
 
 namespace luramas::ir::passes {
 
-      void dead_page_elimination(pass_manager &pm, shared &s) {
+      void dead_page_elimination(pass_manager &pm, shared & /*s*/) {
 
             const auto page_details = tools::paging::gen_details(pm);
             for (const auto &[expr, map] : page_details.pages) {
@@ -21,7 +21,7 @@ namespace luramas::ir::passes {
                                     return;
                                   }
                               */
-                              if (const auto range = page.code_range(pm.ir.data); tools::count::insts(range) == 1u && tools::stat::is_return(pm[range.first]) && !tools::paging::referenced_in_page(page)) {
+                              if (const auto range = page.code_range(pm.ir.data); tools::count::insts(range) == 1U && tools::stat::is_return(pm[range.first]) && !tools::paging::referenced_in_page(page)) {
 
                                     tools::eliminate::page(pm, page_details, page);
                                     continue;
@@ -32,7 +32,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void dead_page_definition_elimination(pass_manager &pm, shared &s, generation::ssa::ssa &ssa) {
+      void dead_page_definition_elimination(pass_manager &pm, shared & /*s*/, generation::ssa::ssa &ssa) {
 
             for (const auto &[expr, map] : tools::paging::gen_details(pm).pages) {
 
@@ -42,7 +42,7 @@ namespace luramas::ir::passes {
                         std::vector<luramas_index> args;
 
                         /* Remove */
-                        const auto &def = pm[page.range.first + 1u];
+                        const auto &def = pm[page.range.first + 1U];
                         if (tools::stat::is_definition(def) && def->flags.flink_regs) {
 
                               for (const auto &[linked, data] : ssa.nodes[def].l.assigns) {
@@ -74,13 +74,13 @@ namespace luramas::ir::passes {
                                                 if (const auto &p = (!exp ? pm[i.n] : exp->closure[i.n]); tools::stat::is_page_function_goto(p)) {
 
                                                       if (p->members.empty()) {
-                                                            for (const auto &[r, expr] : def->args) {
-                                                                  p->members.emplace_back(expr);
+                                                            for (const auto &[ar, aexpr] : def->args) {
+                                                                  p->members.emplace_back(aexpr);
                                                             }
                                                       } else {
-                                                            for (const auto &i : args) {
-                                                                  if (i < p->members.size()) {
-                                                                        p->members.erase(p->members.begin() + i);
+                                                            for (const auto &a : args) {
+                                                                  if (a < p->members.size()) {
+                                                                        p->members.erase(p->members.begin() + a);
                                                                   }
                                                             }
                                                       }
@@ -88,8 +88,8 @@ namespace luramas::ir::passes {
                                           } else if (tools::exprs::values::is_page_function_call(i.e)) {
 
                                                 if (i.e->members.empty()) {
-                                                      for (const auto &[r, expr] : def->args) {
-                                                            i.e->members.emplace_back(expr);
+                                                      for (const auto &[ar, aexpr] : def->args) {
+                                                            i.e->members.emplace_back(aexpr);
                                                       }
                                                 } else {
                                                       for (const auto &a : args) {

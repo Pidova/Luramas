@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../../constants.hpp"
 #include "includes/common.hpp"
 #include "patterns/foldables/compilables/compilables.hpp"
@@ -6,15 +8,15 @@
 
 void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
-      for (auto i = 0ull; i < pm.amount(); ++i) {
+      for (auto i = 0ULL; i < pm.amount(); ++i) {
 
             auto &p = pm[i];
             switch (p->k) {
                   case keywords::condition_goto: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
-                              const auto &prev = pm[i - 1u];
+                              const auto &prev = pm[i - 1U];
 
                               /*
                                     if  (?) then
@@ -23,7 +25,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /end/
                                     /::l::/
                               */
-                              if (prev->is_k<keywords::condition>() && tools::stat::branch::is_jlabel_target(pm[pm.processed.end_labels[prev->end_label].second + 1u], p) && pm.safe(p, prev)) {
+                              if (prev->is_k<keywords::condition>() && tools::stat::branch::is_jlabel_target(pm[pm.processed.end_labels[prev->end_label].second + 1U], p) && pm.safe(p, prev)) {
 
                                     tools::stat::mutate::flip_cmp(p);
                                     prev->append_cond<expr_logical::and_>(p->l, p->b, p->r);
@@ -43,9 +45,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /*                       
                                     if (?) then goto l end
@@ -58,7 +60,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               if (tools::stat::branch::is_if_cond(next)) {
 
                                     const auto end_label = pm.processed.end_labels[next->end_label].second;
-                                    if (tools::stat::future(i, end_label) && pm.valid_next<1u>(end_label) && tools::stat::branch::is_cond_goto_label(p, tools::visitors::next_safe_executable_stat(pm, end_label + 1u)) && pm.safe(p, next)) {
+                                    if (tools::stat::future(i, end_label) && pm.valid_next<1U>(end_label) && tools::stat::branch::is_cond_goto_label(p, tools::visitors::next_safe_executable_stat(pm, end_label + 1U)) && pm.safe(p, next)) {
 
                                           tools::stat::mutate::flip_cmp(p);
                                           next->append_cond<expr_logical::and_, true>(p->l, p->b, p->r);
@@ -68,9 +70,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<2u>(i)) {
+                        if (pm.valid_next<2U>(i)) {
 
-                              const auto &[n1, n2] = std::tie(pm[i + 1u], pm[i + 2u]);
+                              const auto &[n1, n2] = std::tie(pm[i + 1U], pm[i + 2U]);
 
                               /* 
                                      if (?) then goto l; end
@@ -84,9 +86,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<2u>(i) && pm.valid_prev<1u>(i)) {
+                        if (pm.valid_next<2U>(i) && pm.valid_prev<1U>(i)) {
 
-                              const auto &[p1, n1, n2] = std::tie(pm[i - 1u], pm[i + 1u], pm[i + 2u]);
+                              const auto &[p1, n1, n2] = std::tie(pm[i - 1U], pm[i + 1U], pm[i + 2U]);
 
                               /*
                                      r = ??;
@@ -104,7 +106,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<5u>(i)) {
+                        if (pm.valid_next<5U>(i)) {
 
                               /*
                                    if (?) then goto l end [NO r]
@@ -116,16 +118,16 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                    /r = ?/
                                    /end/
                               */
-                              luramas_address disp = 0u;
-                              if (!tools::stat::branch::is_contains_compare(p, pm[i + 1u]->r)) {
+                              luramas_address disp = 0U;
+                              if (!tools::stat::branch::is_contains_compare(p, pm[i + 1U]->r)) {
 
-                                    const auto next_if = tools::stat::branch::is_if_cond(pm[i + 2u]);
-                                    if (next_if || patterns::repeatables::assignments::pattern_1(pm, s, i + 1u, disp)) {
+                                    const auto next_if = tools::stat::branch::is_if_cond(pm[i + 2U]);
+                                    if (next_if || patterns::repeatables::assignments::pattern_1(pm, s, i + 1U, disp)) {
 
-                                          disp += i + 1u;
-                                          if (pm.valid_next<5u>(disp) && pm.is_safe(i, disp + 5u)) {
+                                          disp += i + 1U;
+                                          if (pm.valid_next<5U>(disp) && pm.is_safe(i, disp + 5U)) {
 
-                                                const auto &[n, n1, n2, n3, n4, p1] = std::tie(pm[disp], pm[disp + 1u], pm[disp + 2u], pm[disp + 3u], pm[disp + 4u], pm[disp - 1u]);
+                                                const auto &[n, n1, n2, n3, n4, p1] = std::tie(pm[disp], pm[disp + 1U], pm[disp + 2U], pm[disp + 3U], pm[disp + 4U], pm[disp - 1U]);
                                                 if (tools::stat::branch::is_single_label_ref(pm, n2) &&
                                                     tools::stat::branch::is_if_end(n1, n4, n->l) &&
                                                     tools::stat::assignment::same_single_assignment(n, n3) &&
@@ -134,12 +136,12 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                                                       auto cmp = tools::exprs::generate::logical<expr_logical::and_>(tools::stat::mutate::mimic_compare(n1, n->r), n3->r);
                                                       if (!next_if) {
-                                                            cmp = tools::exprs::generate::logical<expr_logical::or_>(patterns::constant_folding::compilables::assignments::pattern_1(pm, s, i + 1u, disp), cmp);
+                                                            cmp = tools::exprs::generate::logical<expr_logical::or_>(patterns::constant_folding::compilables::assignments::pattern_1(pm, s, i + 1U, disp), cmp);
                                                       }
                                                       cmp = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::mutate::cmp_extract(p), cmp);
 
                                                       n3->r = cmp;
-                                                      pm.remove(i, disp + 3u);
+                                                      pm.remove(i, disp + 3U);
                                                       pm.remove(n4);
                                                       pm.set_safe(n3);
                                                       pm.mut(LURAMAS_DEBUG_LINE);
@@ -149,11 +151,11 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<6u>(i)) {
+                        if (pm.valid_next<6U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u]);
+                              const auto &[n1, n2, n3, n4, n5, n6] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U]);
 
-                              if (pm.env_flags.fallow_ternaries && tools::stat::assignment::is_single_assignment_rvalue(n1) && tools::stat::branch::is_if_cond(n2) && pm.processed.jlabels_refs[p->jlabel].size() <= 1u) {
+                              if (pm.env_flags.fallow_ternaries && tools::stat::assignment::is_single_assignment_rvalue(n1) && tools::stat::branch::is_if_cond(n2) && pm.processed.jlabels_refs[p->jlabel].size() <= 1U) {
 
                                     /*
                                         if (??) then goto l end [1 REF]
@@ -168,39 +170,39 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                    */
                                     if (!tools::stat::branch::is_contains_compare_reg(n2, n1->l->reg)) {
 
-                                          auto disp = 2u;
+                                          auto disp = 2U;
                                           const auto &n2_end = pm[pm.processed.end_labels[n2->end_label].second];
-                                          while (pm.valid_next(i, disp + 2u)) {
+                                          while (pm.valid_next(i, disp + 2U)) {
 
-                                                const auto &[assign, condition] = std::tie(pm[i + disp + 1u], pm[i + disp + 2u]);
+                                                const auto &[assign, condition] = std::tie(pm[i + disp + 1U], pm[i + disp + 2U]);
                                                 if (tools::stat::branch::is_cond_goto_label(p, assign)) {
                                                       break;
                                                 }
                                                 if (!tools::stat::assignment::same_assignment_single(n1, assign) ||
                                                     !tools::stat::branch::is_if_cond(condition) || tools::stat::branch::is_contains_compare_reg(condition, n1->l->reg) ||
-                                                    n2_end != pm[pm.processed.end_labels[condition->end_label].second + (disp / 2u)]) {
-                                                      disp = 0u;
+                                                    n2_end != pm[pm.processed.end_labels[condition->end_label].second + (disp / 2U)]) {
+                                                      disp = 0U;
                                                       break;
                                                 }
-                                                disp += 2u;
+                                                disp += 2U;
                                           }
                                           if (disp) {
 
-                                                const auto &assign = pm[i + disp + 2u];
+                                                const auto &assign = pm[i + disp + 2U];
                                                 if (tools::stat::assignment::same_single_assignment(n1, assign)) {
 
-                                                      const auto ends_amt = disp / 2u;
-                                                      const auto end_idx = i + disp + ends_amt + 3u;
+                                                      const auto ends_amt = disp / 2U;
+                                                      const auto end_idx = i + disp + ends_amt + 3U;
 
-                                                      if (tools::stat::common::contiguous<keywords::end>(pm, i + disp + 3u, end_idx) && pm.is_safe(i, end_idx)) {
+                                                      if (tools::stat::common::contiguous<keywords::end>(pm, i + disp + 3U, end_idx) && pm.is_safe(i, end_idx)) {
 
                                                             pm.remove(p);
-                                                            pm.remove(i + 2u, end_idx, true);
+                                                            pm.remove(i + 2U, end_idx, true);
                                                             pm.set_safe(i, end_idx);
 
                                                             /* Compile cmp */
                                                             std::shared_ptr<ir_stat::ir_expr> compiled_cmp = nullptr;
-                                                            for (auto e = 2u; e != disp; ++e) {
+                                                            for (auto e = 2U; e != disp; ++e) {
                                                                   const auto &cmp_p = pm[e + i];
                                                                   if (tools::stat::branch::is_if_cond(cmp_p)) {
                                                                         const auto e_cmp = tools::exprs::mutate::cmp_extract(cmp_p);
@@ -232,42 +234,42 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                         */
                                           if (tools::stat::branch::is_single_compare(n2, n1->l)) {
 
-                                                auto disp = 2u;
+                                                auto disp = 2U;
                                                 const auto &n2_end = pm[pm.processed.end_labels[n2->end_label].second];
-                                                while (pm.valid_next(i, disp + 2u)) {
+                                                while (pm.valid_next(i, disp + 2U)) {
 
-                                                      const auto &[assign, condition] = std::tie(pm[i + disp + 1u], pm[i + disp + 2u]);
+                                                      const auto &[assign, condition] = std::tie(pm[i + disp + 1U], pm[i + disp + 2U]);
                                                       if (tools::stat::branch::is_cond_goto_label(p, assign)) {
                                                             break;
                                                       }
 
                                                       if (!tools::stat::assignment::same_single_assignment(n1, assign) ||
                                                           !tools::stat::branch::is_if_cond(condition) || !tools::stat::branch::is_single_compare(condition, n1->l) ||
-                                                          n2_end != pm[pm.processed.end_labels[condition->end_label].second + (disp / 2u)]) {
-                                                            disp = 0u;
+                                                          n2_end != pm[pm.processed.end_labels[condition->end_label].second + (disp / 2U)]) {
+                                                            disp = 0U;
                                                             break;
                                                       }
-                                                      disp += 2u;
+                                                      disp += 2U;
                                                 }
                                                 if (disp) {
 
-                                                      const auto &assign = pm[i + disp + 2u];
+                                                      const auto &assign = pm[i + disp + 2U];
                                                       if (tools::stat::assignment::same_single_assignment(n1, assign)) {
 
-                                                            const auto ends_amt = disp / 2u;
-                                                            const auto end_idx = i + disp + ends_amt + 3u;
+                                                            const auto ends_amt = disp / 2U;
+                                                            const auto end_idx = i + disp + ends_amt + 3U;
 
-                                                            if (tools::stat::common::contiguous<keywords::end>(pm, i + disp + 3u, end_idx) && pm.is_safe(i, end_idx)) {
+                                                            if (tools::stat::common::contiguous<keywords::end>(pm, i + disp + 3U, end_idx) && pm.is_safe(i, end_idx)) {
 
                                                                   pm.remove(i, end_idx);
                                                                   pm.set_safe(i, end_idx);
 
                                                                   /* Compile cmp */
                                                                   std::shared_ptr<ir_stat::ir_expr> compiled_cmp = nullptr;
-                                                                  for (auto e = 1u; e != disp; ++e) {
-                                                                        const auto &assign = pm[e + i];
-                                                                        if (tools::stat::assignment::is_single_assignment(assign)) {
-                                                                              compiled_cmp = !compiled_cmp ? assign->r : tools::exprs::generate::logical<expr_logical::and_>(compiled_cmp, assign->r);
+                                                                  for (auto e = 1U; e != disp; ++e) {
+                                                                        const auto &dassign = pm[e + i];
+                                                                        if (tools::stat::assignment::is_single_assignment(dassign)) {
+                                                                              compiled_cmp = !compiled_cmp ? dassign->r : tools::exprs::generate::logical<expr_logical::and_>(compiled_cmp, dassign->r);
                                                                         }
                                                                   }
                                                                   if (compiled_cmp) {
@@ -299,7 +301,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<7u>(i)) {
+                        if (pm.valid_next<7U>(i)) {
 
                               /*
                                     if (??) then goto l end
@@ -316,19 +318,19 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     [NEXT SAFE EXECUTABLE]
                                     ::l2::
                               */
-                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u]);
+                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U]);
                               if (pm.is_safe(p, n1, n2, n3, n4)) {
 
-                                    luramas_address disp = 0u;
-                                    if (patterns::repeatables::if_condition::pattern_1(pm, s, i + 1u, disp) && pm.valid_next<3u>(i + disp) && pm.is_safe(i, i + disp + 4u)) {
+                                    luramas_address disp = 0U;
+                                    if (patterns::repeatables::if_condition::pattern_1(pm, s, i + 1U, disp) && pm.valid_next<3U>(i + disp) && pm.is_safe(i, i + disp + 4U)) {
 
-                                          const auto &[first_cond_label, assignment] = std::tie(pm[i + disp + 1u], pm[i + disp + 2u]);
+                                          const auto &[first_cond_label, assignment] = std::tie(pm[i + disp + 1U], pm[i + disp + 2U]);
 
-                                          if (tools::stat::branch::is_cond_goto_label(p, first_cond_label) && tools::stat::branch::is_cond_goto_label(n3, tools::visitors::next_safe_executable_stat(pm, i + disp + 3u)) &&
+                                          if (tools::stat::branch::is_cond_goto_label(p, first_cond_label) && tools::stat::branch::is_cond_goto_label(n3, tools::visitors::next_safe_executable_stat(pm, i + disp + 3U)) &&
                                               tools::stat::assignment::same_single_assignment(n2, assignment)) {
 
-                                                assignment->r = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::mutate::cmp_extract(p), patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 1u, i + disp + 4u)), assignment->r);
-                                                pm.remove(i, i + disp + 1u);
+                                                assignment->r = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::mutate::cmp_extract(p), patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 1U, i + disp + 4U)), assignment->r);
+                                                pm.remove(i, i + disp + 1U);
                                                 pm.set_safe(assignment);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
@@ -336,9 +338,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<8u>(i)) {
+                        if (pm.valid_next<8U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6, n7, n8] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u], pm[i + 7u], pm[i + 8u]);
+                              const auto &[n1, n2, n3, n4, n5, n6, n7, n8] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U], pm[i + 7U], pm[i + 8U]);
 
                               /*
                                     if (??) then goto l end;
@@ -368,7 +370,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<9u>(i)) {
+                        if (pm.valid_next<9U>(i)) {
 
                               /*
                                  if (??) then goto l end
@@ -384,36 +386,36 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                  /[NEXT EXECUTABLE]/
                                  /l2:/
                              */
-                              luramas_address disp = 0u;
-                              const auto &[n1, n2] = std::tie(pm[i + 1u], pm[i + 2u]);
+                              luramas_address disp = 0U;
+                              const auto &[n1, n2] = std::tie(pm[i + 1U], pm[i + 2U]);
                               if (tools::stat::assignment::is_single_assignment(n1) &&
                                   tools::stat::branch::is_if_cond(n2, n1->l) &&
-                                  patterns::repeatables::if_condition::pattern_1(pm, s, i + 3u, disp) &&
-                                  pm.valid_next<4u>(disp + i + 3u) && pm.is_safe(i, disp + i + 7u)) {
+                                  patterns::repeatables::if_condition::pattern_1(pm, s, i + 3U, disp) &&
+                                  pm.valid_next<4U>(disp + i + 3U) && pm.is_safe(i, disp + i + 7U)) {
 
-                                    disp += i + 3u;
-                                    const auto &[first_cond_label, assignment, if_stat_end, cond_goto] = std::tie(pm[disp], pm[disp + 1u], pm[disp + 2u], pm[disp - 2u]);
+                                    disp += i + 3U;
+                                    const auto &[first_cond_label, assignment, if_stat_end, cond_goto] = std::tie(pm[disp], pm[disp + 1U], pm[disp + 2U], pm[disp - 2U]);
 
                                     if (tools::stat::branch::is_cond_goto_label_single_ref(p, first_cond_label, pm) &&
                                         tools::stat::assignment::same_single_assignment(n1, assignment) &&
                                         tools::stat::branch::is_if_end(n2, if_stat_end) &&
-                                        tools::stat::branch::is_cond_goto_label(cond_goto, tools::visitors::next_executable_stat(pm, disp + 3u))) {
+                                        tools::stat::branch::is_cond_goto_label(cond_goto, tools::visitors::next_executable_stat(pm, disp + 3U))) {
 
                                           n1->r = tools::exprs::generate::logical<expr_logical::or_>(
                                               tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::mutate::cmp_extract(p), n1->r),
-                                              tools::exprs::generate::logical<expr_logical::or_>(patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 3u, disp),
+                                              tools::exprs::generate::logical<expr_logical::or_>(patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 3U, disp),
                                                   assignment->r));
                                           pm.remove(p);
-                                          pm.remove(i + 2u, disp + 3u);
+                                          pm.remove(i + 2U, disp + 3U);
                                           pm.set_safe(n1);
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                               }
                         }
 
-                        if (pm.valid_next<10u>(i)) {
+                        if (pm.valid_next<10U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6, n7, n8, n9, n10] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u], pm[i + 7u], pm[i + 8u], pm[i + 9u], pm[i + 10u]);
+                              const auto &[n1, n2, n3, n4, n5, n6, n7, n8, n9, n10] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U], pm[i + 7U], pm[i + 8U], pm[i + 9U], pm[i + 10U]);
 
                               /*
                                      if (??) then goto l end
@@ -440,9 +442,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<12u>(i)) {
+                        if (pm.valid_next<12U>(i)) {
 
-                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u]);
+                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U]);
 
                               /*
                                     if (??) then goto l end
@@ -463,26 +465,26 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                   tools::stat::branch::is_if_cond(n3, n2->l) &&
                                   tools::stat::branch::is_cond_goto_label_single_ref(n1, n4, pm)) {
 
-                                    luramas_address disp = 0u;
-                                    if (patterns::repeatables::if_condition::pattern_1(pm, s, i + 5u, disp) && pm.valid_next<4u>(i + disp + 5u)) {
+                                    luramas_address disp = 0U;
+                                    if (patterns::repeatables::if_condition::pattern_1(pm, s, i + 5U, disp) && pm.valid_next<4U>(i + disp + 5U)) {
 
-                                          disp += i + 5u;
+                                          disp += i + 5U;
 
-                                          const auto &[d, d1, d2, dp1] = std::tie(pm[disp], pm[disp + 1u], pm[disp + 2u], pm[disp - 2u]);
-                                          if (pm.is_safe(i, disp + 4u) &&
+                                          const auto &[d, d1, d2, dp1] = std::tie(pm[disp], pm[disp + 1U], pm[disp + 2U], pm[disp - 2U]);
+                                          if (pm.is_safe(i, disp + 4U) &&
                                               tools::stat::branch::is_cond_goto_label_single_ref(p, d, pm) &&
                                               tools::stat::assignment::same_single_assignment(n2, d1) &&
                                               tools::stat::branch::is_if_end(n3, d2) &&
-                                              tools::stat::branch::is_cond_goto_label(dp1, tools::visitors::next_safe_executable_stat(pm, disp + 3u))) {
+                                              tools::stat::branch::is_cond_goto_label(dp1, tools::visitors::next_safe_executable_stat(pm, disp + 3U))) {
 
                                                 n2->r = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::mutate::cmp_extract(p),
                                                     tools::exprs::generate::logical<expr_logical::or_>(
                                                         tools::exprs::generate::logical<expr_logical::or_>(
                                                             tools::exprs::generate::logical<expr_logical::and_>(tools::exprs::mutate::cmp_extract(n1), n2->r),
-                                                            patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 5u, disp)),
+                                                            patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 5U, disp)),
                                                         d1->r));
                                                 pm.remove(p, n1);
-                                                pm.remove(i + 3u, disp + 3u);
+                                                pm.remove(i + 3U, disp + 3U);
                                                 pm.set_safe(n2);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
@@ -491,9 +493,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                         }
 
                         const auto label = pm.processed.labels[p->jlabel];
-                        if (pm.valid_next<1u>(label)) {
+                        if (pm.valid_next<1U>(label)) {
 
-                              const auto &label_next = pm[label + 1u];
+                              const auto &label_next = pm[label + 1U];
 
                               /*
                                     if (??) then goto l; end
@@ -523,9 +525,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::end: {
 
-                        if (pm.valid_prev<2u>(i)) {
+                        if (pm.valid_prev<2U>(i)) {
 
-                              const auto &[p2, p1] = std::tie(pm[i - 2u], pm[i - 1u]);
+                              const auto &[p2, p1] = std::tie(pm[i - 2U], pm[i - 1U]);
 
                               /*
                                   if  (?) then 
@@ -543,9 +545,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::assignment: {
 
-                        if (pm.valid_prev<2u>(i) && pm.valid_next<1u>(i)) {
+                        if (pm.valid_prev<2U>(i) && pm.valid_next<1U>(i)) {
 
-                              const auto &[p2, p1, next] = std::tie(pm[i - 2u], pm[i - 1u], pm[i + 1u]);
+                              const auto &[p2, p1, next] = std::tie(pm[i - 2U], pm[i - 1U], pm[i + 1U]);
 
                               /*
                                     r = ?
@@ -567,7 +569,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                         r = ?
                                     /end/
                               */
-                              if (pm.is_safe(p2, p1, p, next) && tools::stat::branch::is_if_end(p1, next) && tools::stat::assignment::same_single_assignment(p, p2) && p1->visit_sources(p->l->reg).size() == 1u && *p2->l == *p->l) {
+                              if (pm.is_safe(p2, p1, p, next) && tools::stat::branch::is_if_end(p1, next) && tools::stat::assignment::same_single_assignment(p, p2) && p1->visit_sources(p->l->reg).size() == 1U && *p2->l == *p->l) {
 
                                     bool clonable = false;
                                     p1->propagate(p->l->reg, p2->r, clonable);
@@ -579,9 +581,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<3u>(i)) {
+                        if (pm.valid_next<3U>(i)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                               /*
                                      r = ? [not R]
@@ -680,9 +682,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<5u>(i)) {
+                        if (pm.valid_next<5U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u]);
+                              const auto &[n1, n2, n3, n4, n5] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U]);
 
                               /*
                                 r = ?
@@ -705,9 +707,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<6u>(i)) {
+                        if (pm.valid_next<6U>(i)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                               /*
                                    r = [SAME RVALUE];
@@ -721,9 +723,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               if (tools::stat::branch::is_if_cond(n3)) {
 
                                     const auto end = pm.processed.end_labels[n3->end_label].second;
-                                    if (pm.valid_next<1u>(end)) {
+                                    if (pm.valid_next<1U>(end)) {
 
-                                          const auto &[end_stat, next_end_stat] = std::tie(pm[end], pm[end + 1u]);
+                                          const auto &[end_stat, next_end_stat] = std::tie(pm[end], pm[end + 1U]);
                                           if (pm.is_safe(p, n1, n2, n3, end_stat, next_end_stat) &&
                                               tools::stat::assignment::same_assignment_single(p, n2) &&
                                               tools::stat::branch::is_if_end(n1, next_end_stat) && tools::stat::branch::is_if_end(n3, end_stat) &&
@@ -738,9 +740,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<8u>(i)) {
+                        if (pm.valid_next<8U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6, n7, n8] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u], pm[i + 7u], pm[i + 8u]);
+                              const auto &[n1, n2, n3, n4, n5, n6, n7, n8] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U], pm[i + 7U], pm[i + 8U]);
 
                               /*
                                     r = ?
@@ -764,9 +766,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<1u>(i) && pm.valid_prev<1u>(i)) {
+                        if (pm.valid_next<1U>(i) && pm.valid_prev<1U>(i)) {
 
-                              const auto &[prev, next] = std::tie(pm[i - 1u], pm[i + 1u]);
+                              const auto &[prev, next] = std::tie(pm[i - 1U], pm[i + 1U]);
 
                               /*
                                     if (? ?? ?) then
@@ -785,10 +787,10 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::table_assign: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
-                              std::size_t offset = 0u;
-                              const auto &prev = pm[i - 1u];
+                              std::size_t offset = 0U;
+                              const auto &prev = pm[i - 1U];
 
                               if (pm.is_safe(prev)) {
                                     do {
@@ -810,11 +812,11 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                           }
                                     } while (pm.contains(i + (++offset)));
                                     if (offset) {
-                                          i += offset - 1u;
+                                          i += offset - 1U;
                                     }
                               }
 
-                              offset = 0u;
+                              offset = 0U;
 
                               if (pm.is_safe(prev)) {
                                     do {
@@ -834,7 +836,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                           }
                                     } while (pm.contains(i + (++offset)));
                                     if (offset) {
-                                          i += offset - 1u;
+                                          i += offset - 1U;
                                     }
                               }
                         }
@@ -842,9 +844,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::label: {
 
-                        if (pm.valid_prev<2u>(i)) {
+                        if (pm.valid_prev<2U>(i)) {
 
-                              const auto &[prev, cond] = std::tie(pm[i - 1u], pm[i - 2u]);
+                              const auto &[prev, cond] = std::tie(pm[i - 1U], pm[i - 2U]);
 
                               /*
                                  if (x) then goto l; end
@@ -865,9 +867,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               case expr_kinds::reg:
                               case expr_kinds::upvalue: {
 
-                                    if (pm.valid_prev<1u>(i)) {
+                                    if (pm.valid_prev<1U>(i)) {
 
-                                          const auto &prev = pm[i - 1u];
+                                          const auto &prev = pm[i - 1U];
 
                                           /* 
                                              x = {}
@@ -909,9 +911,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::condition: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
-                              const auto &prev = pm[i - 1u];
+                              const auto &prev = pm[i - 1U];
 
                               /*
                                    if  (??) then
@@ -924,7 +926,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                                     const auto end_p = pm.processed.end_labels[p->end_label].second;
                                     const auto end_prev = pm.processed.end_labels[prev->end_label].second;
-                                    if (end_prev == end_p + 1u) {
+                                    if (end_prev == end_p + 1U) {
 
                                           const auto &lr = pm[end_p];
                                           if (pm.safe(prev, p, lr)) {
@@ -937,9 +939,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /* 
                                   if (??) then
@@ -954,9 +956,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<2u>(i) && pm.valid_prev<1u>(i)) {
+                        if (pm.valid_next<2U>(i) && pm.valid_prev<1U>(i)) {
 
-                              const auto &[p1, n1, n2] = std::tie(pm[i - 1u], pm[i + 1u], pm[i + 2u]);
+                              const auto &[p1, n1, n2] = std::tie(pm[i - 1U], pm[i + 1U], pm[i + 2U]);
 
                               /*              
                                     r = ?
@@ -973,9 +975,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<3u>(i)) {
+                        if (pm.valid_next<3U>(i)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                               /*
                                    if (??) then
@@ -983,7 +985,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                    /end/
                                    /return {ONE MEMBER};/
                               */
-                              if (pm.env_flags.fallow_ternaries && tools::stat::branch::is_if_end(p, n2) && tools::stat::is_return(n1) && tools::stat::is_return(n3) && n1->members.size() == 1u && n3->members.size() == 1u && pm.safe(p, n1, n2, n3)) {
+                              if (pm.env_flags.fallow_ternaries && tools::stat::branch::is_if_end(p, n2) && tools::stat::is_return(n1) && tools::stat::is_return(n3) && n1->members.size() == 1U && n3->members.size() == 1U && pm.safe(p, n1, n2, n3)) {
 
                                     n3->members.front() = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->members.front(), n3->members.front());
                                     pm.remove(p, n1, n2);
@@ -998,7 +1000,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               */
                               bool last_loop_end = false;
                               if (pm.is_safe(p, n1, n2) && tools::stat::branch::is_stat_else_end(p, n2) &&
-                                  tools::stat::is_break(n1) && tools::visitors::last_safe_end(pm, i + 3u, last_loop_end) && last_loop_end) {
+                                  tools::stat::is_break(n1) && tools::visitors::last_safe_end(pm, i + 3U, last_loop_end) && last_loop_end) {
 
                                     tools::stat::mutate::continue_stat_cleared(n1);
                                     pm.insert(n2, tools::stat::generate::break_stat());
@@ -1016,10 +1018,10 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /end/
                                     /FLOW INTERUPT;/                            
                               */
-                              if (pm.is_safe(p, n1, n2, n3) && tools::stat::branch::is_if_end(p, n2) && n1->is_flow_interrupt() && tools::common::basic_if_stat(pm, i + 3u)) {
+                              if (pm.is_safe(p, n1, n2, n3) && tools::stat::branch::is_if_end(p, n2) && n1->is_flow_interrupt() && tools::common::basic_if_stat(pm, i + 3U)) {
 
-                                    const auto end = tools::common::safe_take_jump(pm, i + 3u);
-                                    if (pm.valid_next<1u>(end) && pm[end + 1u]->compare(n1, false)) {
+                                    const auto end = tools::common::safe_take_jump(pm, i + 3U);
+                                    if (pm.valid_next<1U>(end) && pm[end + 1U]->compare(n1, false)) {
 
                                           tools::stat::mutate::flip_cmp(p);
                                           n3->append_cond<expr_logical::and_>(p->l, p->b, p->r);
@@ -1045,9 +1047,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<4u>(i)) {
+                        if (pm.valid_next<4U>(i)) {
 
-                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u]);
+                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U]);
 
                               /*
                                     if (??) then
@@ -1076,7 +1078,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               if (pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::branch::is_if_cond_logical(p) && tools::stat::assignment::same_single_assignment(n1, n3, false) &&
                                   tools::stat::branch::is_else_cond(n2) && tools::exprs::values::is_boolean(n1->r, n3->r, false)) {
 
-                                    if (const auto decomposed = tools::extract::decompose_logical(p->l); std::all_of(decomposed.begin(), decomposed.end(), [](const auto &I) {
+                                    if (const auto decomposed = tools::extract::decompose_logical(p->l); std::ranges::all_of(decomposed, [](const auto &I) {
                                               return tools::exprs::values::is_condition(I, false);
                                         })) {
 
@@ -1094,7 +1096,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                        /??({SINGLE PARAM});/
                                     /end/
                               */
-                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::common::same_call_function_arg_count(n1, n3, static_cast<std::size_t>(1u)) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n4) && tools::stat::common::same_call_function_arg_count(n1, n3, static_cast<std::size_t>(1U)) &&
                                   tools::stat::branch::is_else_cond(n2)) {
 
                                     n1->members.front() = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->members.front(), n3->members.front());
@@ -1104,9 +1106,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<5u>(i)) {
+                        if (pm.valid_next<5U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u]);
+                              const auto &[n1, n2, n3, n4, n5] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U]);
 
                               /*
                                         if  (?) then
@@ -1120,7 +1122,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               if (pm.is_safe(p, n1, n2, n3, n4)) {
 
                                     if (tools::stat::branch::is_if_end(p, n3) && tools::stat::assignment::same_single_assignment(n1, n4) && tools::stat::branch::is_cond_goto(n2) &&
-                                        tools::stat::branch::is_single_compare(n2, n1->l, n1->r) && tools::stat::branch::is_cond_goto_label(n2, tools::visitors::next_safe_executable_stat(pm, i + 5u))) {
+                                        tools::stat::branch::is_single_compare(n2, n1->l, n1->r) && tools::stat::branch::is_cond_goto_label(n2, tools::visitors::next_safe_executable_stat(pm, i + 5U))) {
 
                                           n4->r = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::generate::logical<expr_logical::and_>(tools::exprs::mutate::cmp_extract(p), tools::stat::mutate::mimic_compare(n2, n1->r)), n4->r);
                                           pm.remove(p, n1, n2, n3);
@@ -1146,13 +1148,13 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     if (!tools::stat::branch::is_contains_compare_reg(p, reg) && tools::stat::branch::is_cond_goto(n2) && !tools::stat::branch::is_contains_compare_reg(n2, reg)) {
 
                                           bool hit = false;
-                                          const auto disp = tools::visitors::last_safe_end(pm, i + 3u, hit);
-                                          if (!hit && tools::stat::branch::is_if_end(p, pm[i + 3u]) && pm.valid_next<2u>(disp) && pm.is_safe(i, disp + 2u) &&
-                                              tools::stat::assignment::is_reg_assignment(pm[disp + 1u], reg) &&
-                                              tools::stat::branch::is_cond_goto_label(n2, tools::visitors::next_safe_executable_stat(pm, disp + 2u))) {
+                                          const auto disp = tools::visitors::last_safe_end(pm, i + 3U, hit);
+                                          if (!hit && tools::stat::branch::is_if_end(p, pm[i + 3U]) && pm.valid_next<2U>(disp) && pm.is_safe(i, disp + 2U) &&
+                                              tools::stat::assignment::is_reg_assignment(pm[disp + 1U], reg) &&
+                                              tools::stat::branch::is_cond_goto_label(n2, tools::visitors::next_safe_executable_stat(pm, disp + 2U))) {
 
-                                                auto &assignment = pm[disp + 1u];
-                                                assignment->r = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::generate::logical<expr_logical::and_>(tools::exprs::mutate::cmp_extract(p), tools::exprs::mutate::cmp_extract(pm[i + 2u], !pm[i + 1u]->r->bv)), assignment->r);
+                                                auto &assignment = pm[disp + 1U];
+                                                assignment->r = tools::exprs::generate::logical<expr_logical::or_>(tools::exprs::generate::logical<expr_logical::and_>(tools::exprs::mutate::cmp_extract(p), tools::exprs::mutate::cmp_extract(pm[i + 2U], !pm[i + 1U]->r->bv)), assignment->r);
 
                                                 pm.remove(p, n1, n2, n3);
                                                 pm.set_safe(p, n1, n2, n3, assignment);
@@ -1170,7 +1172,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                   /[LAST SAFE END]/
                                   /l: OR goto l;/
                               */
-                              const auto &n5_executable = tools::visitors::next_safe_executable_stat(pm, i + 5u);
+                              const auto &n5_executable = tools::visitors::next_safe_executable_stat(pm, i + 5U);
                               if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) &&
                                   tools::stat::branch::is_if_end(p, n3) && tools::stat::assignment::same_single_assignment(n1, n4) &&
                                   (tools::stat::branch::is_goto_label(n2, n5_executable) || tools::stat::branch::same_goto(n2, n5_executable))) {
@@ -1214,27 +1216,27 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                   tools::stat::assignment::is_single_assignment_rvalue_boolean(n1) && n2->is_k<keywords::condition_goto>() &&
                                   tools::stat::branch::equality(n2) && !tools::stat::branch::is_contains_compare(n2, n1->l)) {
 
-                                    std::size_t disp = 3u;
+                                    std::size_t disp = 3U;
                                     while (!pm[i + disp]->is_k<keywords::end>()) {
-                                          if (!pm.valid_next<2u>(i + disp)) {
-                                                disp = 0u;
+                                          if (!pm.valid_next<2U>(i + disp)) {
+                                                disp = 0U;
                                                 break;
                                           }
                                           const auto &assignment = pm[i + disp];
-                                          const auto &condition_goto = pm[i + disp + 1u];
+                                          const auto &condition_goto = pm[i + disp + 1U];
                                           if (!tools::stat::assignment::same_single_assignment_rvalue_boolean(assignment, n1) ||
                                               !tools::stat::branch::same_cond_goto_labels(condition_goto, n2) ||
                                               !tools::stat::branch::equality(condition_goto) ||
                                               !tools::stat::branch::is_contains_compare(condition_goto, n1->l)) {
-                                                disp = 0u;
+                                                disp = 0U;
                                                 break;
                                           }
-                                          disp += 2u;
+                                          disp += 2U;
                                     }
-                                    if (disp && pm.valid_next<3u>(i + disp)) {
+                                    if (disp && pm.valid_next<3U>(i + disp)) {
 
-                                          const auto &[end_stat, assignment, goto_stat] = std::tie(pm[i + disp], pm[i + disp + 1u], pm[i + disp + 2u]);
-                                          if (pm.is_safe(i, i + disp + 3u) &&
+                                          const auto &[end_stat, assignment, goto_stat] = std::tie(pm[i + disp], pm[i + disp + 1U], pm[i + disp + 2U]);
+                                          if (pm.is_safe(i, i + disp + 3U) &&
                                               tools::stat::branch::is_if_end(p, end_stat) &&
                                               tools::stat::assignment::same_single_assignment_rvalue_boolean(n1, assignment) &&
                                               tools::stat::branch::same_cond_goto_goto_labels(n2, goto_stat)) {
@@ -1243,8 +1245,8 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                                 bool rv = true;
                                                 auto cond = tools::exprs::mutate::cmp_extract(p, !assignment->r->bv);
                                                 std::shared_ptr<ir_stat::ir_expr> compiled_cmp = nullptr;
-                                                for (auto o = i + 1u; o < disp - 1u; ++o) {
-                                                      const auto d = pm[o];
+                                                for (auto o = i + 1U; o < disp - 1U; ++o) {
+                                                      const auto &d = pm[o];
                                                       if (tools::stat::assignment::is_rvalue_boolean(d)) {
                                                             rv = d->r->bv;
                                                       } else if (tools::stat::branch::is_comparable(d)) {
@@ -1260,7 +1262,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                                       cond = tools::exprs::generate::logical<expr_logical::or_>(cond, compiled_cmp);
                                                 }
                                                 assignment->r = cond;
-                                                pm.remove(i, disp + i + 1u);
+                                                pm.remove(i, disp + i + 1U);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
                                     }
@@ -1292,7 +1294,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     /??({SINGLE PARAM});/
                                     /SAME INTERRUPT/
                               */
-                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n3) && tools::stat::common::same_call_function_arg_count(n1, n4, static_cast<std::size_t>(1u)) &&
+                              if (pm.env_flags.fallow_ternaries && pm.is_safe(p, n1, n2, n3, n4) && tools::stat::branch::is_if_end(p, n3) && tools::stat::common::same_call_function_arg_count(n1, n4, static_cast<std::size_t>(1U)) &&
                                   tools::stat::common::same_interrupts(n2, n5)) {
 
                                     n1->members.front() = tools::exprs::generate::ternary(tools::exprs::mutate::cmp_extract(p), n1->members.front(), n4->members.front());
@@ -1336,9 +1338,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<6u>(i)) {
+                        if (pm.valid_next<6U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u]);
+                              const auto &[n1, n2, n3, n4, n5, n6] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U]);
 
                               /*
                                     if  (??) then
@@ -1363,9 +1365,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<7u>(i)) {
+                        if (pm.valid_next<7U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6, n7] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u], pm[i + 7u]);
+                              const auto &[n1, n2, n3, n4, n5, n6, n7] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U], pm[i + 7U]);
 
                               /*
                                     if  (? ?? ?) then
@@ -1388,9 +1390,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<8u>(i)) {
+                        if (pm.valid_next<8U>(i)) {
 
-                              const auto &[n1, n2, n3, n4, n5, n6, n7] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u], pm[i + 7u]);
+                              const auto &[n1, n2, n3, n4, n5, n6, n7] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U], pm[i + 7U]);
 
                               /*
                                     if  (??) then
@@ -1409,19 +1411,19 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               */
                               if (pm.is_safe(p, n1, n2, n3, n4, n5, n6, n7)) {
 
-                                    luramas_address disp = 0u;
-                                    if (patterns::repeatables::if_condition::pattern_1(pm, s, i + 1u, disp) && pm.valid_next<3u>(i + disp + 1u)) {
+                                    luramas_address disp = 0U;
+                                    if (patterns::repeatables::if_condition::pattern_1(pm, s, i + 1U, disp) && pm.valid_next<3U>(i + disp + 1U)) {
 
-                                          disp += i + 1u;
-                                          const auto &[cond_end, assignment] = std::tie(pm[disp], pm[disp + 1u]);
+                                          disp += i + 1U;
+                                          const auto &[cond_end, assignment] = std::tie(pm[disp], pm[disp + 1U]);
 
-                                          if (pm.is_safe(i, disp + 2u) &&
+                                          if (pm.is_safe(i, disp + 2U) &&
                                               tools::stat::branch::is_if_end(p, cond_end) &&
-                                              tools::stat::branch::is_cond_goto_label(n3, tools::visitors::next_executable_stat(pm, disp + 2u)) &&
+                                              tools::stat::branch::is_cond_goto_label(n3, tools::visitors::next_executable_stat(pm, disp + 2U)) &&
                                               tools::stat::assignment::same_single_assignment(n2, assignment)) {
 
-                                                assignment->r = tools::exprs::generate::logical<expr_logical::or_>(patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 1u, disp), assignment->r);
-                                                pm.remove(i, disp + 1u);
+                                                assignment->r = tools::exprs::generate::logical<expr_logical::or_>(patterns::constant_folding::compilables::if_condition::pattern_1(pm, s, i + 1U, disp), assignment->r);
+                                                pm.remove(i, disp + 1U);
                                                 pm.set_safe(assignment);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
@@ -1429,9 +1431,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_prev<1u>(i) && pm.valid_next<11u>(i)) {
+                        if (pm.valid_prev<1U>(i) && pm.valid_next<11U>(i)) {
 
-                              const auto &[p1, n1] = std::tie(pm[i - 1u], pm[i + 1u]);
+                              const auto &[p1, n1] = std::tie(pm[i - 1U], pm[i + 1U]);
 
                               /*
                                    r = ?
@@ -1453,22 +1455,22 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               */
                               if (pm.is_safe(p, p1, n1)) {
 
-                                    auto disp = 0ull;
+                                    auto disp = 0ULL;
                                     std::shared_ptr<ir_stat> cond_goto_stat = nullptr;
-                                    while (tools::stat::assignment::same_single_assignment(p1, pm[i + disp + 2u]) &&
-                                           ((cond_goto_stat == nullptr && pm[i + disp + 3u]->is_k<keywords::condition_goto>() && (cond_goto_stat = pm[i + disp + 3u])) ||
-                                               (cond_goto_stat != nullptr && tools::stat::branch::same_cond_goto_labels(cond_goto_stat, pm[i + disp + 3u])))) {
-                                          disp += 2u;
-                                          if (!tools::stat::branch::is_single_compare(cond_goto_stat, cond_goto_stat->l) || !pm.is_safe(pm[i + disp + 2u], pm[i + disp + 3u])) {
-                                                disp = 0u;
+                                    while (tools::stat::assignment::same_single_assignment(p1, pm[i + disp + 2U]) &&
+                                           ((cond_goto_stat == nullptr && pm[i + disp + 3U]->is_k<keywords::condition_goto>() && (cond_goto_stat = pm[i + disp + 3U])) ||
+                                               (cond_goto_stat != nullptr && tools::stat::branch::same_cond_goto_labels(cond_goto_stat, pm[i + disp + 3U])))) {
+                                          disp += 2U;
+                                          if (!tools::stat::branch::is_single_compare(cond_goto_stat, cond_goto_stat->l) || !pm.is_safe(pm[i + disp + 2U], pm[i + disp + 3U])) {
+                                                disp = 0U;
                                                 break;
                                           }
                                     }
-                                    if (disp && pm.valid_next(8u, i + disp + 2u)) {
+                                    if (disp && pm.valid_next(8U, i + disp + 2U)) {
 
-                                          disp += i + 2u;
+                                          disp += i + 2U;
 
-                                          const auto &[n2, n3, n4, n5, n6, n7, n8, n9] = std::tie(pm[disp], pm[disp + 1u], pm[disp + 2u], pm[disp + 3u], pm[disp + 4u], pm[disp + 5u], pm[disp + 6u], pm[disp + 7u]);
+                                          const auto &[n2, n3, n4, n5, n6, n7, n8, n9] = std::tie(pm[disp], pm[disp + 1U], pm[disp + 2U], pm[disp + 3U], pm[disp + 4U], pm[disp + 5U], pm[disp + 6U], pm[disp + 7U]);
                                           if (pm.is_safe(n2, n3, n4, n5, n6, n7, n8, n9) &&
                                               tools::stat::branch::is_if_end(n1, n2) && tools::stat::branch::is_if_end(n3, n6) && tools::stat::branch::is_if_end_singlecmp(p, n8, p1->l) &&
                                               tools::stat::assignment::same_single_assignment(p1, n4) && tools::stat::assignment::same_single_assignment(p1, n7) &&
@@ -1476,24 +1478,24 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                                                 /* Compile repeats */
                                                 std::shared_ptr<ir_stat::ir_expr> rep_expr = nullptr;
-                                                for (auto o = i + 2u; o < disp; o += 2u) {
+                                                for (auto o = i + 2U; o < disp; o += 2U) {
                                                       auto expr = pm[o]->r;
-                                                      expr->b = pm[o + 1u]->b;
+                                                      expr->b = pm[o + 1U]->b;
                                                       rep_expr = (rep_expr == nullptr) ? expr : tools::exprs::generate::logical<expr_logical::or_>(rep_expr, expr);
                                                 }
 
                                                 // TODO: FINISH LOGICAL TERNARYS
                                                 p1->r = rep_expr;
-                                                pm.remove(i, disp + 7u);
+                                                pm.remove(i, disp + 7U);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
                                     }
                               }
                         }
 
-                        if (pm.valid_prev<1u>(i) && pm.valid_next<7u>(i)) {
+                        if (pm.valid_prev<1U>(i) && pm.valid_next<7U>(i)) {
 
-                              const auto &[p1, n1, n2, n3, n4, n5, n6, n7] = std::tie(pm[i - 1u], pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u], pm[i + 5u], pm[i + 6u], pm[i + 7u]);
+                              const auto &[p1, n1, n2, n3, n4, n5, n6, n7] = std::tie(pm[i - 1U], pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U], pm[i + 5U], pm[i + 6U], pm[i + 7U]);
 
                               /*
                                     r = ??
@@ -1518,9 +1520,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::forloop_generic: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
-                              const auto &prev = pm[i - 1u];
+                              const auto &prev = pm[i - 1U];
 
                               /*
                                     r(n), ... = ??
@@ -1535,8 +1537,8 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                                                 const auto it = std::find_if(prev->members.begin(), prev->members.end(), [&](const auto &m) { return m->is_reg(target); });
                                                 if (it != prev->members.end()) {
-                                                      prev->members.erase(std::remove(prev->members.begin(), prev->members.end(), *it));
-                                                      if (prev->members.size() == 1u) {
+                                                      prev->members.erase(std::remove(prev->members.begin(), prev->members.end(), *it), prev->members.end());
+                                                      if (prev->members.size() == 1U) {
                                                             prev->l = prev->members.front();
                                                             prev->members.clear();
                                                       }
@@ -1553,7 +1555,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                         if (pm.valid_prev<1>(i) && pm.valid_next<1>(i)) {
 
-                              const auto &[p1, n1] = std::tie(pm[i - 1u], pm[i + 1u]);
+                              const auto &[p1, n1] = std::tie(pm[i - 1U], pm[i + 1U]);
 
                               /*                       
                                   if  (?) then
@@ -1573,9 +1575,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<2u>(i)) {
+                        if (pm.valid_next<2U>(i)) {
 
-                              const auto &[n1, n2] = std::tie(pm[i + 1u], pm[i + 2u]);
+                              const auto &[n1, n2] = std::tie(pm[i + 1U], pm[i + 2U]);
 
                               /*
                                     goto l
@@ -1591,9 +1593,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
 
                         const auto label = tools::common::safe_take_jump(pm, i);
 
-                        if (pm.valid_next<1u>(label)) {
+                        if (pm.valid_next<1U>(label)) {
 
-                              const auto &label_next = pm[label + 1u];
+                              const auto &label_next = pm[label + 1U];
 
                               /*
                                   goto l
@@ -1619,9 +1621,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<2u>(label)) {
+                        if (pm.valid_next<2U>(label)) {
 
-                              const auto &[ln1, ln2] = std::tie(pm[label + 1u], pm[label + 2u]);
+                              const auto &[ln1, ln2] = std::tie(pm[label + 1U], pm[label + 2U]);
 
                               /*
                                   goto l
@@ -1644,7 +1646,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                   /::l::/
                                   /[END OF CODE]/
                          */
-                        if (!pm.valid_next<1u>(label)) {
+                        if (!pm.valid_next<1U>(label)) {
                               pm.remove(p);
                               pm.insert(p, tools::stat::generate::retn());
                               pm.mut(LURAMAS_DEBUG_LINE);
@@ -1653,9 +1655,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::stack_pop: {
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /* 
                                      STACK_POP (??, ID)
@@ -1673,9 +1675,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::stack_push: {
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /* 
                                      STACK_PUSH (??, ID)
@@ -1693,7 +1695,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::continue_: {
 
-                        if (pm.valid_next<2u>(i)) {
+                        if (pm.valid_next<2U>(i)) {
 
                               /* 
                                       continue
@@ -1710,7 +1712,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::retn: {
 
-                        if (pm.valid_next<2u>(i)) {
+                        if (pm.valid_next<2U>(i)) {
 
                               /* 
                                   return ??;
@@ -1727,9 +1729,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::while_: {
 
-                        if (pm.valid_next<3u>(i)) {
+                        if (pm.valid_next<3U>(i)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                               /*
                                     while (true) do
@@ -1764,9 +1766,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::page_function_start: {
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &n = pm[i + 1u];
+                              const auto &n = pm[i + 1U];
 
                               /* 
                                     Page start/
@@ -1779,9 +1781,9 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<2u>(i)) {
+                        if (pm.valid_next<2U>(i)) {
 
-                              const auto &[n1, n2] = std::tie(pm[i + 1u], pm[i + 2u]);
+                              const auto &[n1, n2] = std::tie(pm[i + 1U], pm[i + 2U]);
 
                               /* 
                                     Page start
@@ -1789,7 +1791,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                     end
                                     [[END]]
                               */
-                              if (tools::stat::is_definition(n1) && tools::stat::is_page_function_end(n2, p->r->extract_integral_base()) && !pm.contains(i + 3u) && pm.safe(p, n1, n2)) {
+                              if (tools::stat::is_definition(n1) && tools::stat::is_page_function_end(n2, p->r->extract_integral_base()) && !pm.contains(i + 3U) && pm.safe(p, n1, n2)) {
                                     pm.insert(n1, tools::stat::generate::retn());
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
@@ -1798,16 +1800,16 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                   }
                   case keywords::bitwrite: {
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &n = pm[i + 1u];
+                              const auto &n = pm[i + 1U];
 
                               /* 
 									 bitwrite(x, b, [n(p1), n(p2)]);
                                      bitwrite(x, b, [n in range of [n(p1), n(p2)] , n2]);                 
                               */
                               if (tools::stat::is_bitwrite(n) && tools::stat::is_bitwrite(p, n->l, n->r) && tools::exprs::basic::is_integral(p->v, p->lba, n->v, n->lba) &&
-                                  math::is::range_ii(p->lba->extract_integral() + 1u, n->v->extract_integral(), n->lba->extract_integral())) {
+                                  math::is::range_ii(p->lba->extract_integral() + 1U, n->v->extract_integral(), n->lba->extract_integral())) {
 
                                     n->v->n = p->v->n;
                                     pm.remove(p);

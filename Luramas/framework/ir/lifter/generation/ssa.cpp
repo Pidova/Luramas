@@ -1,7 +1,7 @@
 #include "../generation.hpp"
 #include "ssa\ssa_builder.hpp"
 
-struct node_data {
+struct NodeData {
       bool defines = false;
       std::vector<std::pair<luramas_register, luramas_xregister>> dests;
       luramas_registers sources;
@@ -14,7 +14,7 @@ namespace luramas::ir::generation::ssa {
 
             /* Data */
             ssa result(ir);
-            std::vector<node_data> nodes;                                                                              /* Compiled node data */
+            std::vector<NodeData> nodes;                                                                               /* Compiled node data */
             boost::unordered_flat_map<luramas_address, boost::unordered_flat_multiset<luramas_register>> capture_regs; /* Register captured at address */
             boost::unordered_flat_map<luramas_register, luramas_address /* Start */> captured_refs;                    /* Register captured by location */
             boost::unordered_flat_smallpolyset<luramas_address, LURAMAS_PREDICTED_UPVALUES> upvalue_volatile;          /* Addresses where upvalues are volatile */
@@ -29,16 +29,16 @@ namespace luramas::ir::generation::ssa {
             /* Map out dests and sources */
             {
                   for (auto loc = LURAMAS_IR_ENTRY; loc < ir.data.size(); ++loc) {
-                        node_data node;
+                        NodeData node;
                         const auto &i = ir.data[loc];
                         if (exprs) {
-                              auto &data = exprs.value().find(i)->second;
+                              const auto &data = exprs.value().find(i)->second;
 
                               /* Dests */
                               node.dests.reserve(data.lvalues_regs.size());
                               for (const auto &r : data.lvalues_regs) {
                                     result.nodes[i].l.reference(r);
-                                    node.dests.emplace_back(std::make_pair(r, 0ull));
+                                    node.dests.emplace_back(r, 0ULL);
                               }
 
                               /* Sources */
@@ -79,7 +79,7 @@ namespace luramas::ir::generation::ssa {
                               node.dests.reserve(dests.size());
                               for (const auto &r : dests) {
                                     result.nodes[i].l.reference(r);
-                                    node.dests.emplace_back(r, 0ull);
+                                    node.dests.emplace_back(r, 0ULL);
                               }
 
                               /* Sources */
@@ -119,7 +119,7 @@ namespace luramas::ir::generation::ssa {
                         /* Definition */
                         if (i->is_k<keywords::definition>() && node.dests.empty()) {
                               for (const auto &[r, expr] : i->args) {
-                                    node.dests.emplace_back(r, 0ull);
+                                    node.dests.emplace_back(r, 0ULL);
                               }
                         }
                         nodes.emplace_back(node);
@@ -176,7 +176,7 @@ namespace luramas::ir::generation::ssa {
 
                               /* Assingments, defs */
                               node.l.assign(v, r, true);
-                              result.defs.try_emplace(v, std::make_pair(stat, std::make_pair(i, std::make_pair(0u, 0u))));
+                              result.defs.try_emplace(v, std::make_pair(stat, std::make_pair(i, std::make_pair(0U, 0U))));
                               result.assignments.insert(r);
 
                               /* Reference */
@@ -191,7 +191,7 @@ namespace luramas::ir::generation::ssa {
                   }
 
                   /* Rvalues */
-                  for (auto i = 0u; i < ssa.size(); ++i) {
+                  for (auto i = 0U; i < ssa.size(); ++i) {
 
                         if (i >= ir.data.size()) {
                               continue;

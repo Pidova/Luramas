@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../../../builder/builder.hpp"
 #include "../common.hpp"
 
@@ -8,12 +10,12 @@ namespace luramas::ir::closures::lifter {
             auto regs = upvalues ? upvalues->pre_defined : boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>>();
             ir_stat::space code;
 
-            struct scope_stack_s {
+            struct ScopeStackS {
                   bool loop = false;
                   bool close = false;
                   boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> regs;
             };
-            std::vector<scope_stack_s> scope_stack;
+            std::vector<ScopeStackS> scope_stack;
             const auto exit_scope = [&]() {
                   if (!scope_stack.empty()) {
                         regs = std::move(scope_stack.back().regs);
@@ -22,7 +24,7 @@ namespace luramas::ir::closures::lifter {
                   return;
             };
             const auto enter_scope = [&](const bool loop, const bool close) {
-                  scope_stack.emplace_back(scope_stack_s(loop, close, regs));
+                  scope_stack.emplace_back(ScopeStackS(loop, close, regs));
                   regs = boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>>(regs);
                   return;
             };
@@ -141,31 +143,31 @@ namespace luramas::ir::closures::lifter {
             std::vector<std::pair<std::shared_ptr<ir_stat::ir_expr>, luramas::il::arch::operand::upvalue_kind>> captures;
 
             {
-                  std::vector<luramas_address> on = {0u};
+                  std::vector<luramas_address> on = {0U};
                   for (const auto &i : closure->nodes) {
 
                         if (i->lex->jumps()) {
 
                               const auto jmp = i->lex->jump();
                               while (on.back() <= i->address) {
-                                    if (on.size() > 1u) {
+                                    if (on.size() > 1U) {
                                           on.pop_back();
                                     } else {
                                           break;
                                     }
                               }
 
-                              const auto jmp_loc = jmp + 1u;
+                              const auto jmp_loc = jmp + 1U;
 
                               /* Label Map */
-                              if (on.size() > 1u && on.back() < jmp) {
+                              if (on.size() > 1U && on.back() < jmp) {
                                     label_map.try_emplace(jmp, jmp_loc);
                                     continue;
                               }
 
                               /* For INIT */
                               if (i->lex->jump_forward() && i->lex->kind == luramas::il::lexer::inst_kinds::forinit) {
-                                    on.emplace_back(jmp - (closure->nodes[jmp]->lex->kind != luramas::il::lexer::inst_kinds::for_));
+                                    on.emplace_back(jmp - static_cast<luramas_address>(closure->nodes[jmp]->lex->kind != luramas::il::lexer::inst_kinds::for_));
                                     continue;
                               }
 
@@ -179,7 +181,7 @@ namespace luramas::ir::closures::lifter {
                   }
             }
 
-            std::uint16_t segregated = 0u;
+            std::uint16_t segregated = 0U;
             std::shared_ptr<ir_stat::ir_expr> cached_closure = nullptr;
             std::vector<luramas::il::arch::data::flags> flags;
             std::vector<std::pair<std::shared_ptr<ir_stat::ir_expr>, std::shared_ptr<ir_stat::ir_expr>>> tag_kv;
@@ -213,14 +215,14 @@ namespace luramas::ir::closures::lifter {
                               code.emplace_back(luramas::ir::tools::stat::generate::label(label->second));
                         } else if (label == label_map.end() && end != ends.end()) { /* No label and ends */
 
-                              for (auto idx = 0u; idx < end->second; ++idx) {
+                              for (auto idx = 0U; idx < end->second; ++idx) {
                                     code.emplace_back(luramas::ir::tools::stat::generate::end());
                                     exit_scope();
                               }
                         } else if (label != label_map.end() && end != ends.end()) { /* Label and ends */
 
                               /* Do non-loops first */
-                              auto idx = 0u;
+                              auto idx = 0U;
                               while (idx < end->second) {
                                     if (!scope_stack.empty()) {
                                           if (!scope_stack.back().close) {
@@ -330,7 +332,7 @@ namespace luramas::ir::closures::lifter {
                                     /* Memory */
                                     case luramas::il::arch::opcodes::OP_MEMSET: {
 
-                                          code.emplace_back(luramas::ir::tools::stat::generate::memoryset(getr(sources.front()), getr(sources[1u]), i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val));
+                                          code.emplace_back(luramas::ir::tools::stat::generate::memoryset(getr(sources.front()), getr(sources[1U]), i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val));
                                           break;
                                     }
                                     case luramas::il::arch::opcodes::OP_MEMREAD: {
@@ -471,19 +473,19 @@ namespace luramas::ir::closures::lifter {
                                     /* Bit */
                                     case luramas::il::arch::opcodes::OP_BITREAD: {
 
-                                          const auto obj = luramas::ir::tools::exprs::generate::non_native(i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val, i->lex->operand_kind<luramas::il::lexer::operand_kinds::boolean>().front()->dis.boolean, 0u);
-                                          code.emplace_back(luramas::ir::tools::stat::generate::assignment(getl(i, dests.back()), luramas::ir::tools::exprs::generate::bitread(getr(sources.front()), getr(sources[1u]), getr(sources[2u]), obj)));
+                                          const auto obj = luramas::ir::tools::exprs::generate::non_native(i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val, i->lex->operand_kind<luramas::il::lexer::operand_kinds::boolean>().front()->dis.boolean, 0U);
+                                          code.emplace_back(luramas::ir::tools::stat::generate::assignment(getl(i, dests.back()), luramas::ir::tools::exprs::generate::bitread(getr(sources.front()), getr(sources[1U]), getr(sources[2U]), obj)));
                                           break;
                                     }
                                     case luramas::il::arch::opcodes::OP_BITWRITE: {
 
-                                          const auto obj = luramas::ir::tools::exprs::generate::non_native(i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val, i->lex->operand_kind<luramas::il::lexer::operand_kinds::boolean>().front()->dis.boolean, 0u);
-                                          code.emplace_back(luramas::ir::tools::stat::generate::assignment(getl(i, dests.back()), luramas::ir::tools::exprs::generate::bitwrite(getr(sources.front()), getr(sources[1u]), getr(sources[2u]), getr(sources[3u]), obj)));
+                                          const auto obj = luramas::ir::tools::exprs::generate::non_native(i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val, i->lex->operand_kind<luramas::il::lexer::operand_kinds::boolean>().front()->dis.boolean, 0U);
+                                          code.emplace_back(luramas::ir::tools::stat::generate::assignment(getl(i, dests.back()), luramas::ir::tools::exprs::generate::bitwrite(getr(sources.front()), getr(sources[1U]), getr(sources[2U]), getr(sources[3U]), obj)));
                                           break;
                                     }
                                     case luramas::il::arch::opcodes::OP_BITWRITEA: {
 
-                                          code.emplace_back(luramas::ir::tools::stat::generate::bitwrite(getl(i, dests.back()), getr(sources.front()), getr(sources[1u]), getr(sources.back())));
+                                          code.emplace_back(luramas::ir::tools::stat::generate::bitwrite(getl(i, dests.back()), getr(sources.front()), getr(sources[1U]), getr(sources.back())));
                                           break;
                                     }
 
@@ -503,13 +505,13 @@ namespace luramas::ir::closures::lifter {
                         }
                         case luramas::il::lexer::inst_kinds::arith: {
                               code.emplace_back(luramas::ir::tools::stat::generate::assignment(getl(i, dests.back()),
-                                  luramas::ir::tools::exprs::generate::arith(getr(sources.front()), sources.size() == 1u ? extract_v(i) : getr(sources.back()), i->lex->disassembly->bin_kind)));
+                                  luramas::ir::tools::exprs::generate::arith(getr(sources.front()), sources.size() == 1U ? extract_v(i) : getr(sources.back()), i->lex->disassembly->bin_kind)));
                               break;
                         }
                         case luramas::il::lexer::inst_kinds::capture: {
 
                               if (const auto kind = i->lex->operand_kind<luramas::il::lexer::operand_kinds::upvalue_kind>().front()->dis.upvalue_kind; kind != luramas::il::arch::operand::upvalue_kind::upvalues) {
-                                    captures.emplace_back(std::make_pair(getr(sources.back()), kind));
+                                    captures.emplace_back(getr(sources.back()), kind);
                               }
                               break;
                         }
@@ -520,7 +522,7 @@ namespace luramas::ir::closures::lifter {
                                     luramas::error::error("Branch does not have a compare");
                               }
                               const auto c = std::make_shared<ir_stat>();
-                              const auto jmp_loc = i->lex->jump() + 1u;
+                              const auto jmp_loc = i->lex->jump() + 1U;
                               c->emit_cond_goto(it->second.first, i->lex->disassembly->bin_kind, jmp_loc, it->second.second);
                               code.emplace_back(c);
                               break;
@@ -528,7 +530,7 @@ namespace luramas::ir::closures::lifter {
                         case luramas::il::lexer::inst_kinds::branch: {
 
                               enter_scope(false, false);
-                              code.emplace_back(luramas::ir::tools::stat::generate::goto_label(i->lex->jump() + 1u));
+                              code.emplace_back(luramas::ir::tools::stat::generate::goto_label(i->lex->jump() + 1U));
                               break;
                         }
                         case luramas::il::lexer::inst_kinds::compare_dest: {
@@ -542,9 +544,9 @@ namespace luramas::ir::closures::lifter {
                               const auto l = (!sources.empty()) ? getl(i, sources.front()) : extract_v(i);
 
                               std::shared_ptr<ir_stat::ir_expr> r = nullptr;
-                              if (sources.size() > 1u) {
+                              if (sources.size() > 1U) {
                                     r = getl(i, sources.back());
-                              } else if (i->lex->operands.size() > 1u || i->lex->disassembly->op == luramas::il::arch::opcodes::OP_CMPNONE) {
+                              } else if (i->lex->operands.size() > 1U || i->lex->disassembly->op == luramas::il::arch::opcodes::OP_CMPNONE) {
                                     r = extract_v(i);
                               }
                               cmp_flag[segregated] = std::make_pair(l, r);
@@ -554,7 +556,7 @@ namespace luramas::ir::closures::lifter {
                         case luramas::il::lexer::inst_kinds::get_global: {
 
                               const auto rvalue = sources.empty() ? extract_v(i) : getr(sources.front());
-                              if (std::find(flags.begin(), flags.end(), luramas::il::arch::data::flags::fnative_global) != flags.end()) {
+                              if (std::ranges::find(flags, luramas::il::arch::data::flags::fnative_global) != flags.end()) {
                                     rvalue->flags.fnative_global = true;
                               }
                               code.emplace_back(luramas::ir::tools::stat::generate::assignment(getl(i, dests.back()), rvalue));
@@ -563,7 +565,7 @@ namespace luramas::ir::closures::lifter {
                         case luramas::il::lexer::inst_kinds::set_global: {
 
                               const auto lvalue = extract_v(i);
-                              if (std::find(flags.begin(), flags.end(), luramas::il::arch::data::flags::fnative_global) != flags.end()) {
+                              if (std::ranges::find(flags, luramas::il::arch::data::flags::fnative_global) != flags.end()) {
                                     lvalue->flags.fnative_global = true;
                               }
                               code.emplace_back(luramas::ir::tools::stat::generate::assignment(lvalue, getr(sources.front())));
@@ -625,7 +627,7 @@ namespace luramas::ir::closures::lifter {
                               }
                               for (const auto &d : dests) {
                                     const auto l = getl(i, d);
-                                    if (dests.size() == 1u) {
+                                    if (dests.size() == 1U) {
                                           c->l = l;
                                     } else {
                                           c->emit_mul_lv(l);
@@ -635,7 +637,7 @@ namespace luramas::ir::closures::lifter {
                                     c->emit_call(call);
                               } else {
                                     r->emit_call(call);
-                                    if (std::find(flags.begin(), flags.end(), luramas::il::arch::data::flags::ffunc) != flags.end()) {
+                                    if (std::ranges::find(flags, luramas::il::arch::data::flags::ffunc) != flags.end()) {
                                           r->flags.fbuiltin = true;
                                     }
                                     c->emit_assignment(c->l, r);
@@ -760,7 +762,7 @@ namespace luramas::ir::closures::lifter {
                         flags.clear();
                   }
 
-                  segregated = (i->lex->disassembly->op == luramas::il::arch::opcodes::OP_SEGREGATE) ? i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val : 0u;
+                  segregated = (i->lex->disassembly->op == luramas::il::arch::opcodes::OP_SEGREGATE) ? i->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val : 0U;
             }
 
             /* Add return if not */

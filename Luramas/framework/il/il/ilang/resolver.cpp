@@ -4,7 +4,7 @@ namespace luramas::il {
 
       void ilang::resolve_addresses() {
 
-            luramas_address addr = 0u;
+            luramas_address addr = 0U;
             for (const auto &i : this->dis) {
                   i->addr = addr++;
             }

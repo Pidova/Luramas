@@ -1,29 +1,31 @@
+#include <algorithm>
+
 #include "../../lifter/tools/tools.hpp"
 #include "../common.hpp"
 
 namespace luramas::ir::parser::stats {
 
-      struct associate {
+      struct Associate {
 
             luramas_flag fdefined = false;                    /* Defined? */
             luramas_flag fexpecting_rvalue = false;           /* Expecting rvalues */
             std::vector<std::shared_ptr<ir_stat::ir_expr>> l; /* Lvalues */
 
             void clear() {
-                  *this = associate();
+                  *this = Associate();
                   return;
             }
       };
 
-      template <errors k>
-      void error(error::result<std::vector<std::shared_ptr<ir_stat>>, errors> &err, const std::string &str, const luramas_index idx) {
-            err.emit<k>(error::generation::index(idx, str, parser::str(k)));
+      template <errors K>
+      static void error(error::result<std::vector<std::shared_ptr<ir_stat>>, errors> &err, const std::string &str, const luramas_index idx) {
+            err.emit<K>(error::generation::index(idx, str, parser::str(K)));
             return;
       }
 
       namespace extract {
 
-            std::pair<std::string, luramas_index> name(error::result<std::vector<std::shared_ptr<ir_stat>>, errors> &err, const std::string &str, const luramas_index idx) {
+            static std::pair<std::string, luramas_index> name(error::result<std::vector<std::shared_ptr<ir_stat>>, errors> & /*err*/, const std::string &str, const luramas_index idx) {
 
                   auto i = idx;
                   const auto n = str.size();
@@ -37,11 +39,11 @@ namespace luramas::ir::parser::stats {
       namespace token {
 
             /* Expr token */
-            std::pair<std::string, luramas_index> exprs(error::result<std::vector<std::shared_ptr<ir_stat>>, errors> &err, const std::string &str, const luramas_index idx, const bool expecting_end = false) {
+            static std::pair<std::string, luramas_index> exprs(error::result<std::vector<std::shared_ptr<ir_stat>>, errors> &err, const std::string &str, const luramas_index idx, const bool expecting_end = false) {
 
                   std::pair<std::string, luramas_index> result;
 
-                  luramas_count encapsulation = 0u;
+                  luramas_count encapsulation = 0U;
                   auto expr_idx_start = idx;
 
                   auto i = idx;
@@ -99,7 +101,7 @@ namespace luramas::ir::parser::stats {
       namespace generate {
 
             /* Set flags from manager to expr */
-            void set_flags(manager &m, const std::shared_ptr<ir_stat::ir_expr> &expr) {
+            static void set_flags(manager &m, const std::shared_ptr<ir_stat::ir_expr> &expr) {
                   if (!expr) {
                         return;
                   }
@@ -108,7 +110,7 @@ namespace luramas::ir::parser::stats {
             }
 
             /* Generate expr from name */
-            std::shared_ptr<ir_stat::ir_expr> name(manager &m, const std::string &str) {
+            static std::shared_ptr<ir_stat::ir_expr> name(manager &m, const std::string &str) {
 
                   const auto v = m.get(str);
                   if (!v) {
@@ -123,11 +125,11 @@ namespace luramas::ir::parser::stats {
 
       error::result<std::vector<std::shared_ptr<ir_stat>>, errors> parse(manager &m, const std::string &str) {
 
-            associate curr;
+            Associate curr;
             std::vector<keywords> scope_stack;
             error::result<std::vector<std::shared_ptr<ir_stat>>, errors> result;
 
-            luramas_index idx = 0u;
+            luramas_index idx = 0U;
             for (; idx < str.size();) {
 
                   const auto &i = str[idx];
@@ -145,9 +147,9 @@ namespace luramas::ir::parser::stats {
                   }
 
                   /* Eol */
-                  if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_EOL); i) {
+                  if (const auto ei = str::match_substr(str, idx, LURAMAS_PARSING_STAT_EOL); ei) {
                         curr.clear();
-                        idx += i;
+                        idx += ei;
                         continue;
                   }
 
@@ -179,20 +181,20 @@ namespace luramas::ir::parser::stats {
                   {
 
                         /* Defined */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_VAR); i) {
+                        if (const auto vi = str::match_substr(str, idx, LURAMAS_PARSING_STAT_VAR); vi) {
                               if (curr.fdefined) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
                               curr.fdefined = true;
-                              idx += i;
+                              idx += vi;
                               continue;
                         }
 
                         /* While start */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_WHILE); i) {
+                        if (const auto wi = str::match_substr(str, idx, LURAMAS_PARSING_STAT_WHILE); wi) {
 
-                              idx += i;
+                              idx += wi;
                               scope_stack.emplace_back(keywords::while_);
                               const auto [expr, ix] = token::exprs(result, str, idx);
                               if (result) {
@@ -213,9 +215,9 @@ namespace luramas::ir::parser::stats {
                         }
 
                         /* Until */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_UNTIL); i) {
+                        if (const auto ui = str::match_substr(str, idx, LURAMAS_PARSING_STAT_UNTIL); ui) {
 
-                              idx += i;
+                              idx += ui;
                               if (scope_stack.empty() || scope_stack.back() != keywords::repeat) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
@@ -240,9 +242,9 @@ namespace luramas::ir::parser::stats {
                         }
 
                         /* If */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_IF); i) {
+                        if (const auto fi = str::match_substr(str, idx, LURAMAS_PARSING_STAT_IF); fi) {
 
-                              idx += i;
+                              idx += fi;
                               if (scope_stack.empty() || scope_stack.back() != keywords::repeat) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
@@ -267,58 +269,58 @@ namespace luramas::ir::parser::stats {
                         }
 
                         /* Repeat */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_REPEAT); i) {
+                        if (const auto ri = str::match_substr(str, idx, LURAMAS_PARSING_STAT_REPEAT); ri) {
 
-                              idx += i;
+                              idx += ri;
                               scope_stack.emplace_back(keywords::repeat);
                               result.d.emplace_back(tools::stat::generate::repeat());
                               continue;
                         }
 
                         /* Else */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_ELSE); i) {
+                        if (const auto ei = str::match_substr(str, idx, LURAMAS_PARSING_STAT_ELSE); ei) {
 
                               if (scope_stack.empty() || scope_stack.back() != keywords::condition) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
-                              idx += i;
+                              idx += ei;
                               result.d.emplace_back(tools::stat::generate::else_stat());
                               continue;
                         }
 
                         /* Break */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_BREAK); i) {
+                        if (const auto bi = str::match_substr(str, idx, LURAMAS_PARSING_STAT_BREAK); bi) {
 
-                              if (scope_stack.empty() || std::find_if(scope_stack.begin(), scope_stack.end(), [&](const auto &i) { return i == keywords::while_ || i == keywords::repeat; }) == scope_stack.end()) {
+                              if (scope_stack.empty() || std::ranges::find_if(scope_stack, [&](const auto &i) { return i == keywords::while_ || i == keywords::repeat; }) == scope_stack.end()) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
-                              idx += i;
+                              idx += bi;
                               result.d.emplace_back(tools::stat::generate::break_stat());
                               continue;
                         }
 
                         /* Continue */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_CONTINUE); i) {
+                        if (const auto ci = str::match_substr(str, idx, LURAMAS_PARSING_STAT_CONTINUE); ci) {
 
-                              if (scope_stack.empty() || std::find_if(scope_stack.begin(), scope_stack.end(), [&](const auto &i) { return i == keywords::while_ || i == keywords::repeat; }) == scope_stack.end()) {
+                              if (scope_stack.empty() || std::ranges::find_if(scope_stack, [&](const auto &i) { return i == keywords::while_ || i == keywords::repeat; }) == scope_stack.end()) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
-                              idx += i;
+                              idx += ci;
                               result.d.emplace_back(tools::stat::generate::continue_stat());
                               continue;
                         }
 
                         /* End */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_SCOPE_END); i) {
+                        if (const auto ei = str::match_substr(str, idx, LURAMAS_PARSING_STAT_SCOPE_END); ei) {
 
                               if (scope_stack.empty() || scope_stack.back() == keywords::repeat) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
-                              idx += i;
+                              idx += ei;
                               scope_stack.pop_back();
                               result.d.emplace_back(tools::stat::generate::end());
                               continue;
@@ -328,38 +330,38 @@ namespace luramas::ir::parser::stats {
                   /* Defined */
                   {
                         /* Global/Register */
-                        if (const auto &[s, i] = extract::name(result, str, idx); i) {
+                        if (const auto &[ns, ni] = extract::name(result, str, idx); ni) {
                               if (curr.fdefined) {
-                                    auto p = m.get(s);
+                                    auto p = m.get(ns);
                                     if (!p) {
                                           p = tools::exprs::generate::reg(m.get_reg());
-                                          m.set(s, p);
+                                          m.set(ns, p);
                                     }
                                     curr.l.emplace_back(p);
                               } else {
-                                    curr.l.emplace_back(tools::exprs::generate::global(s));
+                                    curr.l.emplace_back(tools::exprs::generate::global(ns));
                               }
-                              idx += i;
+                              idx += ni;
                               continue;
                         }
 
                         /* Delimiter */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_MULVAR_DELIMITER); i) {
+                        if (const auto di = str::match_substr(str, idx, LURAMAS_PARSING_STAT_MULVAR_DELIMITER); di) {
                               if (curr.l.empty()) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
-                              idx += i;
+                              idx += di;
                               continue;
                         }
 
                         /* Equal */
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_STAT_EQ); i) {
+                        if (const auto ei = str::match_substr(str, idx, LURAMAS_PARSING_STAT_EQ); ei) {
                               if (curr.fexpecting_rvalue || curr.l.empty()) {
                                     error<errors::invalid_keyword>(result, str, idx);
                                     return result;
                               }
-                              idx += i;
+                              idx += ei;
                               curr.fexpecting_rvalue = true;
                               continue;
                         }

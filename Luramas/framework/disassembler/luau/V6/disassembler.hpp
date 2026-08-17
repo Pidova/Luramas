@@ -9,6 +9,7 @@
 
 namespace luau_v6_disassembler {
 
+      /* Lua-V6 disassembler operand */
       struct operand {
 
             op_table::operands encoding = op_table::operands::A; /* (A) default, Operand encoding type */
@@ -32,14 +33,14 @@ namespace luau_v6_disassembler {
                   double integer;             /* Integer */
             };
             std::uint32_t code = 0;                     /* Raw code value */
-            luramas_address ref_addr = 0u;              /* Reference address (Calculated as Jmp + Addr + 1) */
+            luramas_address ref_addr = 0U;              /* Reference address (Calculated as Jmp + Addr + 1) */
             std::string k_value = "";                   /* Seperate value to represent as a string and idx. Will also serve as import str. */
             lua_Type k_value_type = lua_Type::LUA_TNIL; /* If operand references kvalue index this will be its type. */
       };
 
       struct disassembly {
 
-            luramas_address addr = 0u;
+            luramas_address addr = 0U;
 
             LuauOpcode op;
 
@@ -47,7 +48,7 @@ namespace luau_v6_disassembler {
             const char *hint = "";
 
             std::string data = "";
-            std::uint8_t len = 0u;
+            std::uint8_t len = 0U;
 
             Instruction *code;
 

@@ -9,7 +9,7 @@ namespace luramas::tools {
 
             boost::unordered_flat_map<T, luramas_address> result;
             result.reserve(vect.size());
-            for (auto i = 0u; i < vect.size(); ++i) {
+            for (auto i = 0U; i < vect.size(); ++i) {
                   result.try_emplace(vect[i], i);
             }
             return result;
@@ -24,7 +24,7 @@ namespace luramas::tools {
                   return result;
             }
             result.reserve(size);
-            for (auto i = 0u; i < size; ++i) {
+            for (auto i = 0U; i < size; ++i) {
                   result.emplace_back(dism[i]);
             }
             return result;

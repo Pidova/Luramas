@@ -109,7 +109,7 @@ namespace luramas::ir {
                   this->non_native->load(is);
             }
 
-            luramas_count v_size = 0u;
+            luramas_count v_size = 0U;
             is.read(reinterpret_cast<char *>(&v_size), sizeof(v_size));
             this->v.resize(v_size);
             is.read(reinterpret_cast<char *>(this->v.data()), v_size);
@@ -128,35 +128,35 @@ namespace luramas::ir {
             load_expr(this->ev);
             load_expr(this->xv);
 
-            luramas_count members_size = 0u;
+            luramas_count members_size = 0U;
             is.read(reinterpret_cast<char *>(&members_size), sizeof(members_size));
             this->members.resize(members_size);
             for (auto &i : this->members) {
                   load_expr(i);
             }
 
-            luramas_count captures_size = 0u;
+            luramas_count captures_size = 0U;
             is.read(reinterpret_cast<char *>(&captures_size), sizeof(captures_size));
             this->captures.resize(captures_size);
             for (auto &i : this->captures) {
                   load_expr(i);
             }
 
-            luramas_count tmembers_size = 0u;
+            luramas_count tmembers_size = 0U;
             is.read(reinterpret_cast<char *>(&tmembers_size), sizeof(tmembers_size));
             this->tmembers.reserve(tmembers_size);
-            for (auto i = 0u; i < tmembers_size; ++i) {
+            for (auto i = 0U; i < tmembers_size; ++i) {
                   auto idx = std::make_shared<ir_expr>();
                   auto val = std::make_shared<ir_expr>();
                   load_expr(idx);
                   load_expr(val);
-                  this->tmembers.emplace_back(std::make_pair(idx, val));
+                  this->tmembers.emplace_back(idx, val);
             }
 
-            luramas_count closure_size = 0u;
+            luramas_count closure_size = 0U;
             is.read(reinterpret_cast<char *>(&closure_size), sizeof(closure_size));
             this->closure.reserve(closure_size);
-            for (auto i = 0u; i < closure_size; ++i) {
+            for (auto i = 0U; i < closure_size; ++i) {
                   bool valid = false;
                   is.read(reinterpret_cast<char *>(&valid), sizeof(valid));
                   if (valid) {

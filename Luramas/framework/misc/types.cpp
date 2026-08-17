@@ -1,4 +1,5 @@
 #include "types.hpp"
+#include <algorithm>
 #include <istream>
 #include <ostream>
 
@@ -8,7 +9,7 @@ namespace luramas::types {
             return this->is<read_type::bytes>() && this->storage_size == memsize;
       }
       bool underlying_type::compare(const luramas_bitwidth bits, const bool unsign) const {
-            return this->is<read_type::bits>() && this->storage_size == bits && this->unsign == unsign && !this->precision;
+            return this->is<read_type::bits>() && this->storage_size == bits && this->unsign == unsign && (this->precision == 0u);
       }
       bool underlying_type::weak_compare(const underlying_type &other) const {
             return std::tie(this->read, this->storage_size) == std::tie(other.read, other.storage_size);
@@ -18,12 +19,8 @@ namespace luramas::types {
       }
 
       void underlying_type::dominant(const underlying_type &other, const signess dom) {
-            if (this->storage_size < other.storage_size) {
-                  this->storage_size = other.storage_size;
-            }
-            if (this->precision < other.precision) {
-                  this->precision = other.precision;
-            }
+            this->storage_size = std::max(this->storage_size, other.storage_size);
+            this->precision = std::max(this->precision, other.precision);
             if (other.read == read_type::bytes && this->read == read_type::bits) {
                   this->read = other.read;
             }
@@ -32,14 +29,14 @@ namespace luramas::types {
             }
             return;
       }
-      underlying_type underlying_type::dominant_t(const underlying_type &other, const signess dom) const {
+      underlying_type underlying_type::dominant_t(const underlying_type &other, const signess /*dom*/) const {
             auto result = underlying_type(*this);
             result.dominant(other);
             return result;
       }
 
       luramas_bitwidth underlying_type::bits() const {
-            return this->read == read_type::bits ? this->storage_size : this->storage_size * 8u;
+            return this->read == read_type::bits ? this->storage_size : this->storage_size * 8U;
       }
       bool underlying_type::empty() const {
             return *this == underlying_type();
@@ -98,16 +95,16 @@ namespace luramas::types {
       }
       std::string underlying_type::str() const {
 
-            std::string result("");
+            std::string result;
 
             if (this->is<read_type::bytes>()) {
                   result += "int8_t[" + std::to_string(this->storage_size) + "]";
-            } else if (this->storage_size == 32u && this->precision == 7u) {
+            } else if (this->storage_size == 32U && this->precision == 7U) {
                   if (this->unsign) {
                         result = "unsigned ";
                   }
                   result += "float";
-            } else if (this->storage_size == 64u && this->precision == 15u) {
+            } else if (this->storage_size == 64U && this->precision == 15U) {
                   if (this->unsign) {
                         result = "unsigned ";
                   }
@@ -126,7 +123,7 @@ namespace luramas::types {
             os.write(reinterpret_cast<const char *>(&this->precision), sizeof(this->precision));
             os.write(reinterpret_cast<const char *>(&this->storage_size), sizeof(this->storage_size));
       }
-      underlying_type underlying_type::load(std::istream &is) const {
+      underlying_type underlying_type::load(std::istream &is) {
             underlying_type result;
             is.read(reinterpret_cast<char *>(result.unsign), sizeof(result.unsign));
             is.read(reinterpret_cast<char *>(result.read), sizeof(result.read));
@@ -137,18 +134,18 @@ namespace luramas::types {
       bool underlying_type::has_native() const {
             auto size = this->storage_size;
             if (this->read == read_type::bytes) {
-                  size *= 8u;
+                  size *= 8U;
             }
             if (!this->precision) {
                   switch (size) {
-                        case 1u:
-                        case 8u:
-                        case 16u:
-                        case 32u:
-                        case 64u:
-                        case 128u:
-                        case 256u:
-                        case 512u: {
+                        case 1U:
+                        case 8U:
+                        case 16U:
+                        case 32U:
+                        case 64U:
+                        case 128U:
+                        case 256U:
+                        case 512U: {
                               return true;
                         }
                         default: {
@@ -157,12 +154,12 @@ namespace luramas::types {
                   }
             }
             switch (this->precision) {
-                  case 6u:
-                  case 7u:
-                  case 9u:
-                  case 15u:
-                  case 16u:
-                  case 17u: {
+                  case 6U:
+                  case 7U:
+                  case 9U:
+                  case 15U:
+                  case 16U:
+                  case 17U: {
                         return true;
                   }
                   default: {
@@ -192,7 +189,7 @@ namespace luramas::types {
       namespace native::compiler {
 
             std::string object::str() const {
-                  std::string result("");
+                  std::string result;
                   if (this->synthetic_type) {
                         result += "[SYNTHETIC] ";
                   }
@@ -203,7 +200,7 @@ namespace luramas::types {
                         result += this->name + std::string(" ");
                   }
                   result += this->type.str();
-                  for (auto i = 0u; i < this->ptrs; ++i) {
+                  for (auto i = 0U; i < this->ptrs; ++i) {
                         result += "*";
                   }
 
@@ -217,12 +214,12 @@ namespace luramas::types {
                   return;
             }
             bool object::empty() const {
-                  return !std::strlen(this->name);
+                  return std::strlen(this->name) == 0u;
             }
       } // namespace native::compiler
 
       std::size_t hash_value(const underlying_type &u) {
-            std::size_t seed = 0u;
+            std::size_t seed = 0U;
             boost::hash_combine(seed, u.unsign);
             boost::hash_combine(seed, static_cast<std::underlying_type_t<decltype(u.read)>>(u.read));
             boost::hash_combine(seed, u.precision);

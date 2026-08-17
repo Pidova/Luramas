@@ -19,12 +19,12 @@ namespace luramas::il::lifter::builder::libraries::math {
       build::expr mod(function_handler def, const build::expr &a, const build::expr &b);
       build::expr pow(function_handler def, const build::expr &base, const build::expr &exp);
       build::expr sqrt(function_handler def, const build::expr &n);
-      build::expr sin(function_handler def, const build::expr &x);
-      build::expr cos(function_handler def, const build::expr &x);
-      build::expr tan(function_handler def, const build::expr &x);
+      build::expr sin(const function_handler &def, const build::expr &x);
+      build::expr cos(const function_handler &def, const build::expr &x);
+      build::expr tan(const function_handler &def, const build::expr &x);
       build::expr atan(function_handler def, const build::expr &x);
       build::expr log(function_handler def, const build::expr &x);
-      build::expr log(function_handler def, const build::expr &x, const build::expr &base);
+      build::expr log(const function_handler &def, const build::expr &x, const build::expr &base);
       build::expr floor(function_handler def, const build::expr &x);
       build::expr ceil(function_handler def, const build::expr &x);
       build::expr truncate(function_handler def, const build::expr &x);

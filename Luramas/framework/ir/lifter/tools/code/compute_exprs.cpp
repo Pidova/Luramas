@@ -1,9 +1,11 @@
+#include <algorithm>
+
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
 
 namespace luramas::ir::tools::compute::exprs {
 
-      std::shared_ptr<ir_stat::ir_expr> wrap(const std::shared_ptr<ir_stat::ir_expr> &e, const luramas_int &n) {
+      static std::shared_ptr<ir_stat::ir_expr> wrap(const std::shared_ptr<ir_stat::ir_expr> &e, const luramas_int &n) {
 
             return tools::exprs::generate::integral(n.wrap(e->non_native->under.storage_size, e->non_native->under.unsign, e->non_native->under.precision));
       }
@@ -47,7 +49,7 @@ namespace luramas::ir::tools::compute::exprs {
             }
       } // namespace representations
 
-      bool simplify(passes::pass_manager &pm, std::shared_ptr<ir_stat::ir_expr> &e, const bool singleton, const bool mutate_pm, const std::optional<generation::ssa::ssa> &ssa, const std::optional<types::map> &tmap) {
+      bool simplify(passes::pass_manager &pm, std::shared_ptr<ir_stat::ir_expr> &e, const bool singleton, const bool mutate_pm, const std::optional<generation::ssa::ssa> & /*ssa*/, const std::optional<types::map> &tmap) {
 
             if (!e) {
                   return false;
@@ -337,7 +339,7 @@ namespace luramas::ir::tools::compute::exprs {
 
                                     const auto min = e->r->extract_integral();
                                     const auto max = e->ev->extract_integral();
-                                    if (!min && max > min && max + 1u == e->non_native->under.bits()) {
+                                    if (!min && max > min && max + 1U == e->non_native->under.bits()) {
 
                                           e = tools::exprs::generate::cast(e->l, e->non_native);
                                           if (mutate_pm) {
@@ -415,7 +417,7 @@ namespace luramas::ir::tools::compute::exprs {
 
                               /* Cast == Evaluated cast */
                               const auto types = tools::types::extract(e->l);
-                              if (types.size() == 1u) {
+                              if (types.size() == 1U) {
                                     if (const auto &f = types.front(); f.t == tools::types::extraction_kind::type && e->non_native->compare(*f.type)) {
                                           e = e->l;
                                           if (mutate_pm) {
@@ -431,10 +433,10 @@ namespace luramas::ir::tools::compute::exprs {
                                           /* Extract dominant then promote it keeps types the same */
                                           if (pm.env_flags.options.ounarith_operands_signess_no_side_effects.contains(e->l->b)) {
 
-                                                if (types.size() == 2u) {
+                                                if (types.size() == 2U) {
 
-                                                      const auto l = types.front();
-                                                      const auto r = types.back();
+                                                      const auto &l = types.front();
+                                                      const auto &r = types.back();
                                                       if (l.basic() && r.basic() && luramas::types::is::diff_signess(l.type->under, r.type->under)) {
 
                                                             const auto dom = tools::types::dominant(pm, l.type->under, r.type->under);
@@ -469,7 +471,7 @@ namespace luramas::ir::tools::compute::exprs {
 
                                     /* BOOLEAN */
                                     if (tools::exprs::values::is_boolean(e->l)) {
-                                          e = wrap(e, e->l->bv);
+                                          e = wrap(e, static_cast<const std::int32_t>(e->l->bv));
                                           if (mutate_pm) {
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
@@ -502,7 +504,7 @@ namespace luramas::ir::tools::compute::exprs {
                                     }
 
                                     /* ALL THE SAME TO CAST */
-                                    if (!types.empty() && std::all_of(types.begin(), types.end(), [&](const auto &i) { return i.basic() && i.type->compare(*e->non_native); })) {
+                                    if (!types.empty() && std::ranges::all_of(types, [&](const auto &i) { return i.basic() && i.type->compare(*e->non_native); })) {
                                           e = e->l;
                                           if (mutate_pm) {
                                                 pm.mut(LURAMAS_DEBUG_LINE);
@@ -585,7 +587,8 @@ namespace luramas::ir::tools::compute::exprs {
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                                     return r;
-                              } else if (tools::exprs::values::test::is_comparative_integral(r, false)) {
+                              }
+                              if (tools::exprs::values::test::is_comparative_integral(r, false)) {
 
                                     if (mutate_pm) {
                                           pm.mut(LURAMAS_DEBUG_LINE);
@@ -603,7 +606,8 @@ namespace luramas::ir::tools::compute::exprs {
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                                     return l;
-                              } else if (tools::exprs::values::test::is_comparative_integral(r, false) && !l->contains_volatile()) {
+                              }
+                              if (tools::exprs::values::test::is_comparative_integral(r, false) && !l->contains_volatile()) {
 
                                     if (mutate_pm) {
                                           pm.mut(LURAMAS_DEBUG_LINE);
@@ -758,18 +762,18 @@ namespace luramas::ir::tools::compute::exprs {
 
                   /* (((?? - 1) % 2) - 1) != 0 */
                   if (b == il::arch::data::bin_kinds::ne_ && r->is_integral(0) &&
-                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::sub_>(l, 1u) &&
-                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::mod_>(l->l, 2u) &&
-                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::sub_>(l->l->l, 1u)) {
+                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::sub_>(l, 1U) &&
+                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::mod_>(l->l, 2U) &&
+                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::sub_>(l->l->l, 1U)) {
 
                         if (mutate_pm) {
                               pm.mut(LURAMAS_DEBUG_LINE);
                         }
-                        return tools::exprs::generate::cond(tools::exprs::generate::arith(l->l->l->l, tools::exprs::generate::integral(2u), il::arch::data::bin_kinds::mod_), il::arch::data::bin_kinds::ne_, r);
+                        return tools::exprs::generate::cond(tools::exprs::generate::arith(l->l->l->l, tools::exprs::generate::integral(2U), il::arch::data::bin_kinds::mod_), il::arch::data::bin_kinds::ne_, r);
                   }
 
                   /* (??[SINGLE TYPE NO UNSIGNED] - INT) != 0 */
-                  if (b == il::arch::data::bin_kinds::ne_ && tools::exprs::values::is_integer(r, 0u) &&
+                  if (b == il::arch::data::bin_kinds::ne_ && tools::exprs::values::is_integer(r, 0U) &&
                       tools::exprs::values::is_arith<il::arch::data::bin_kinds::sub_>(l) && tools::exprs::values::is_integer(l->r)) {
 
                         auto t = pm.env_flags.options.odefault_type;
@@ -796,7 +800,7 @@ namespace luramas::ir::tools::compute::exprs {
             return nullptr;
       }
 
-      bool reorder(passes::pass_manager &pm, std::shared_ptr<ir_stat::ir_expr> &expr) {
+      bool reorder(passes::pass_manager & /*pm*/, std::shared_ptr<ir_stat::ir_expr> &expr) {
 
             if (!expr) {
                   return false;

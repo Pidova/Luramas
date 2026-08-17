@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <vector>
 
-luramas::il::arch::data::kval_kinds kv(lua_Type t) {
+static luramas::il::arch::data::kval_kinds kv(lua_Type t) {
       switch (t) {
             case lua_Type::LUA_TNIL: {
                   return luramas::il::arch::data::kval_kinds::none;
@@ -57,12 +57,12 @@ namespace luau_v6_parsers {
 
       void instructions(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
-            luramas_address pc = 0u;
-            luramas_register override_top = 0u;
-            luramas_register stack_top = 0u;
-            luramas_register prev_stack_top = 0u;
+            luramas_address pc = 0U;
+            luramas_register override_top = 0U;
+            luramas_register stack_top = 0U;
+            luramas_register prev_stack_top = 0U;
             std::vector<std::shared_ptr<luau_v6_disassembler::operand>> sorted_operands;
-            for (auto idx = 0u; idx < pm.dism.size(); ++idx) {
+            for (auto idx = 0U; idx < pm.dism.size(); ++idx) {
 
                   const auto i = pm.dism[idx];
                   auto ptr = std::make_shared<luramas::il::disassembly>();
@@ -70,7 +70,7 @@ namespace luau_v6_parsers {
 
                   auto op = luramas::il::arch::opcodes::OP_NOP;
 
-                  luramas_register append_top = 0u; /* Append top at the end of operands. */
+                  luramas_register append_top = 0U; /* Append top at the end of operands. */
 
                   /* Set data (Can not be optable because some stuff may need too resolved dynamically) */
                   switch (i->op) {
@@ -337,21 +337,21 @@ namespace luau_v6_parsers {
                         }
                         case LuauOpcode::LOP_FORNPREP: {
                               const auto limit = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg);
-                              const auto step = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1u);
-                              const auto start = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2u);
+                              const auto step = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1U);
+                              const auto start = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2U);
                               op = luramas::il::arch::opcodes::OP_INITFORLOOPN;
                               sorted_operands = {start, limit, step, i->operands.back()};
                               break;
                         }
                         case LuauOpcode::LOP_FORGPREP_NEXT: {
                               const auto start = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg);
-                              const auto end = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1u);
-                              const auto step = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2u);
+                              const auto end = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1U);
+                              const auto step = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2U);
 
                               std::shared_ptr<luau_v6_disassembler::disassembly> jb = nullptr;
                               for (auto x = idx; x < pm.dism.size(); ++x) {
                                     const auto &xi = pm.dism[x];
-                                    if (xi->op == LuauOpcode::LOP_FORGLOOP && (xi->operands[1u]->ref_addr - 1u) == i->addr) {
+                                    if (xi->op == LuauOpcode::LOP_FORGLOOP && (xi->operands[1U]->ref_addr - 1U) == i->addr) {
                                           jb = xi;
                                           break;
                                     }
@@ -360,18 +360,18 @@ namespace luau_v6_parsers {
                                     luramas::error::error("Could not find forgprep jumpback.");
                               }
                               op = luramas::il::arch::opcodes::OP_INITFORLOOPG;
-                              sorted_operands = {i->operands.front(), luau_v6_disassembler::make_operand::make_operand_val(2u), luau_v6_disassembler::make_operand::make_operand_jump(jb->operands[1]->jmp, i->addr)};
+                              sorted_operands = {i->operands.front(), luau_v6_disassembler::make_operand::make_operand_val(2U), luau_v6_disassembler::make_operand::make_operand_jump(jb->operands[1]->jmp, i->addr)};
                               break;
                         }
                         case LuauOpcode::LOP_FORGPREP_INEXT: {
                               const auto start = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg);
-                              const auto end = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1u);
-                              const auto step = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2u);
+                              const auto end = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1U);
+                              const auto step = luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2U);
 
                               std::shared_ptr<luau_v6_disassembler::disassembly> jb = nullptr;
                               for (auto x = idx; x < pm.dism.size(); ++x) {
                                     const auto &xi = pm.dism[x];
-                                    if (xi->op == LuauOpcode::LOP_FORGLOOP && (xi->operands[1u]->ref_addr - 1u) == i->addr) {
+                                    if (xi->op == LuauOpcode::LOP_FORGLOOP && (xi->operands[1U]->ref_addr - 1U) == i->addr) {
                                           jb = xi;
                                           break;
                                     }
@@ -380,12 +380,12 @@ namespace luau_v6_parsers {
                                     luramas::error::error("Could not find forgprep jumpback.");
                               }
                               op = luramas::il::arch::opcodes::OP_INITFORLOOPSPECIAL;
-                              sorted_operands = {start, end, step, luau_v6_disassembler::make_operand::make_operand_val(2u), luau_v6_disassembler::make_operand::make_operand_jump(jb->operands[1]->jmp, i->addr)};
+                              sorted_operands = {start, end, step, luau_v6_disassembler::make_operand::make_operand_val(2U), luau_v6_disassembler::make_operand::make_operand_jump(jb->operands[1]->jmp, i->addr)};
                               break;
                         }
                         case LuauOpcode::LOP_FORGPREP: {
                               std::shared_ptr<luau_v6_disassembler::operand> amount = nullptr;
-                              const auto target = i->addr + i->operands.back()->jmp + 1u;
+                              const auto target = i->addr + i->operands.back()->jmp + 1U;
                               for (auto x = idx; x < pm.dism.size(); ++x) {
                                     if (const auto &xi = pm.dism[x]; xi->addr == target) {
                                           amount = luau_v6_disassembler::make_operand::make_operand_val(xi->operands.back()->val);
@@ -402,17 +402,17 @@ namespace luau_v6_parsers {
                         case LuauOpcode::LOP_FORNLOOP: {
                               /* CONTAINS STATICALLY TYPED OPERANDS (FOLLOWS FORMAT) */
                               op = luramas::il::arch::opcodes::OP_FORLOOPN;
-                              sorted_operands = {luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2u), i->operands.front(), luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1u), i->operands.back()};
+                              sorted_operands = {luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 2U), i->operands.front(), luau_v6_disassembler::make_operand::make_operand_reg(i->operands.front()->reg + 1U), i->operands.back()};
                               break;
                         }
                         case LuauOpcode::LOP_FORGLOOP: {
                               op = luramas::il::arch::opcodes::OP_FORLOOPG;
-                              sorted_operands = {i->operands.front(), i->operands.back(), i->operands[1u]};
+                              sorted_operands = {i->operands.front(), i->operands.back(), i->operands[1U]};
                               break;
                         }
                         case LuauOpcode::LOP_GETIMPORT: {
                               op = luramas::il::arch::opcodes::OP_GETTABUPVALUE;
-                              sorted_operands = {i->operands.front(), i->operands[1u]};
+                              sorted_operands = {i->operands.front(), i->operands[1U]};
                               break;
                         }
                         case LuauOpcode::LOP_JUMPBACK: {
@@ -490,7 +490,7 @@ namespace luau_v6_parsers {
                               }
                               case op_table::type::boolean: {
                                     operand_ptr->type = luramas::il::arch::operand::operand_kind::boolean;
-                                    operand_ptr->dis.boolean = oper->val;
+                                    operand_ptr->dis.boolean = (oper->val != 0);
                                     break;
                               }
                               case op_table::type::val_multret: {
@@ -565,10 +565,10 @@ namespace luau_v6_parsers {
                         prev_stack_top = stack_top;
                         stack_top = append_top;
                   }
-                  if (sorted_operands.size() >= 2u) {
-                        for (auto it = sorted_operands.begin(); it != sorted_operands.end() - 1u; ++it) {
+                  if (sorted_operands.size() >= 2U) {
+                        for (auto it = sorted_operands.begin(); it != sorted_operands.end() - 1U; ++it) {
                               if ((*it)->type == op_table::type::val_multret && (*it)->val == LUA_MULTRET) {
-                                    override_top = 0u;
+                                    override_top = 0U;
                               }
                         }
                         if (sorted_operands.front()->type == op_table::type::dest && sorted_operands.back()->type == op_table::type::val_multret && sorted_operands.back()->val == LUA_MULTRET) {
@@ -582,12 +582,12 @@ namespace luau_v6_parsers {
 
       void compares(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
-            for (auto i = 0u; i < pm.dism.size(); ++i) {
+            for (auto i = 0U; i < pm.dism.size(); ++i) {
 
                   const auto &curr = pm.dism[i];
 
                   /* Jump with compare == logical compare. */
-                  const auto setcmp = (pm.dism.back() != curr && pm.dism[i + 1u]->op == LuauOpcode::LOP_LOADB && pm.dism[i + 1u]->operands.back()->jmp && pm.dism[i + 2u]->op == LuauOpcode::LOP_LOADB);
+                  const auto setcmp = (pm.dism.back() != curr && pm.dism[i + 1U]->op == LuauOpcode::LOP_LOADB && (pm.dism[i + 1U]->operands.back()->jmp != 0) && pm.dism[i + 2U]->op == LuauOpcode::LOP_LOADB);
                   switch (curr->op) {
                         case LuauOpcode::LOP_JUMPIF: {
 
@@ -597,10 +597,10 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIF>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIF>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
                                     ptr->ref = pm.il->visit(curr->operands.back()->ref_addr);
@@ -618,10 +618,10 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOT>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOT>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
                                     ptr->ref = pm.il->visit(curr->operands.back()->ref_addr);
@@ -638,13 +638,13 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     pm.il->insert(i, ptr);
                               }
@@ -658,13 +658,13 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFLESSEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFLESSEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFLESSEQUAL>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     pm.il->insert(i, ptr);
                               }
@@ -678,13 +678,13 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFLESS>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFLESS>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFLESS>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     pm.il->insert(i, ptr);
                               }
@@ -698,13 +698,13 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     pm.il->insert(i, ptr);
                               }
@@ -718,13 +718,13 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFGREATEREQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFGREATEREQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFGREATEREQUAL>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     pm.il->insert(i, ptr);
                               }
@@ -738,13 +738,13 @@ namespace luau_v6_parsers {
 
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFGREATER>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                    luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFGREATER>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFGREATER>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     pm.il->insert(i, ptr);
                               }
@@ -756,24 +756,24 @@ namespace luau_v6_parsers {
                               luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPNONE>(pm.il, curr->addr, ptr, curr->operands.front()->reg);
                               pm.il->insert(i, ptr);
 
-                              const bool opposite = curr->operands.back()->code >> 31;
+                              const bool opposite = (curr->operands.back()->code >> 31) != 0U;
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
                               }
@@ -782,27 +782,27 @@ namespace luau_v6_parsers {
                         case LuauOpcode::LOP_JUMPXEQKB: {
 
                               auto ptr = std::make_shared<luramas::il::disassembly>();
-                              luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPB>(pm.il, curr->addr, ptr, curr->operands.front()->reg, bool(curr->operands.back()->val));
+                              luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPB>(pm.il, curr->addr, ptr, curr->operands.front()->reg, static_cast<std::int64_t>(static_cast<bool>(curr->operands.back()->val)));
                               pm.il->insert(i, ptr);
 
-                              const bool opposite = curr->operands.back()->code >> 31;
+                              const bool opposite = (curr->operands.back()->code >> 31) != 0U;
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
                               }
@@ -814,24 +814,24 @@ namespace luau_v6_parsers {
                               luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPN>(pm.il, curr->addr, ptr, curr->operands.front()->reg, pm.il->kval[curr->operands.back()->k_idx]->integer.i);
                               pm.il->insert(i, ptr);
 
-                              const bool opposite = curr->operands.back()->code >> 31;
+                              const bool opposite = (curr->operands.back()->code >> 31) != 0U;
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
                               }
@@ -843,20 +843,20 @@ namespace luau_v6_parsers {
                               luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPK>(pm.il, curr->addr, ptr, curr->operands.front()->reg, curr->operands.back()->k_idx);
                               pm.il->insert(i, ptr);
 
-                              const bool opposite = curr->operands.back()->code >> 31;
+                              const bool opposite = (curr->operands.back()->code >> 31) != 0U;
                               if (setcmp) {
                                     ptr = std::make_shared<luramas::il::disassembly>();
                                     if (opposite) {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFNOTEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     } else {
-                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1u]->operands.front()->reg);
+                                          luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_SETIFEQUAL>(pm.il, curr->addr, ptr, pm.dism[i + 1U]->operands.front()->reg);
                                     }
                                     pm.il->insert(i, ptr);
-                                    pm.il->remove(pm.il->dis[i + 1u]);
-                                    pm.il->remove(pm.il->dis[i + 2u]);
+                                    pm.il->remove(pm.il->dis[i + 1U]);
+                                    pm.il->remove(pm.il->dis[i + 2U]);
                               } else {
                                     ptr = std::make_shared<luramas::il::disassembly>();
-                                    ptr->ref = pm.il->visit(curr->operands[1u]->ref_addr);
+                                    ptr->ref = pm.il->visit(curr->operands[1U]->ref_addr);
                                     if (opposite) {
                                           luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, curr->addr, ptr, ptr->ref->addr);
                                     } else {
@@ -890,7 +890,7 @@ namespace luau_v6_parsers {
 
       void boolean_jumps(luramas::il::lifter::parser::parser_manager<std::shared_ptr<luau_v6_disassembler::disassembly>> &pm) {
 
-            for (auto i = 0u; i < pm.dism.size(); ++i) {
+            for (auto i = 0U; i < pm.dism.size(); ++i) {
 
                   const auto &curr = pm.dism[i];
                   if (curr->op == LuauOpcode::LOP_LOADB && curr->operands.back()->jmp && !pm.il->is_remove(pm.il->dis[i])) {

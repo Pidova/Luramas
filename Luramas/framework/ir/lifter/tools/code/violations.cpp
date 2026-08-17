@@ -18,7 +18,8 @@ namespace luramas::ir::tools::violations {
 
             auto o = start;
             bool hit = false;
-            auto end_cond_stack = 0, until_cond_stack = 0;
+            auto end_cond_stack = 0;
+            auto until_cond_stack = 0;
             for (; o < end; flags.fbackwards ? --o : ++o) {
 
                   const auto &d = pm[o];
@@ -33,15 +34,15 @@ namespace luramas::ir::tools::violations {
                   }
                   if (paging) {
                         if (stat::is_page_function_start(d)) {
-                              auto &[s, e] = (*paging)[d->r->extract_integral_base()];
-                              if (s) {
+                              auto &[ps, e] = (*paging)[d->r->extract_integral_base()];
+                              if (ps) {
                                     result.make_exception<block_violation_exceptions::invalid_page_start>(o);
                                     return result;
                               }
-                              s = true;
+                              ps = true;
                         }
                         if (stat::is_page_function_end(d)) {
-                              auto &[s, e] = (*paging)[d->r->extract_integral_base()];
+                              auto &[ps, e] = (*paging)[d->r->extract_integral_base()];
                               if (e) {
                                     result.make_exception<block_violation_exceptions::invalid_page_start>(o);
                                     return result;
@@ -105,7 +106,7 @@ namespace luramas::ir::tools::violations {
                   }
             }
             if (!flags.fbackwards) {
-                  result.ending_loc = o - (o == pm.amount());
+                  result.ending_loc = o - static_cast<luramas_address>(o == pm.amount());
             }
             if (paging) {
                   for (const auto &[id, p] : (*paging)) {
@@ -152,7 +153,7 @@ namespace luramas::ir::tools::violations {
                         }
                         const auto jmp = common::safe_take_jump(pm, violation.ending_loc);
                         if (start = jmp ? jmp : violation.ending_loc; start > end) {
-                              result.emplace_back(block_violation_results());
+                              result.emplace_back();
                         }
                   }
                   return result;

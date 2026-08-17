@@ -18,7 +18,7 @@ namespace luramas::ir::code::generation::tools {
 
             /* Alphabetic suffix given n, concats more if n is avaliable */
             inline std::string alpha_suffix(std::size_t n) {
-                  std::string result("");
+                  std::string result;
                   do {
                         result += 'a' + (n % 26);
                         n /= 26;

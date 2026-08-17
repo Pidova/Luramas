@@ -12,7 +12,7 @@ namespace luramas::ir::tools::compute {
                   }
 
                   luramas_flag fmutated = false;
-                  if (tools::count::is(expr->members, data::concatable) > 1u) {
+                  if (tools::count::is(expr->members, data::concatable) > 1U) {
 
                         /* Perform concatables */
                         luramas_flag flast_str_member = false;
@@ -37,7 +37,7 @@ namespace luramas::ir::tools::compute {
                               fmutated = true;
                         }
                   }
-                  if (expr->members.size() == 1u) {
+                  if (expr->members.size() == 1U) {
                         expr = expr->members.front();
                         return true;
                   }
@@ -87,7 +87,7 @@ namespace luramas::ir::tools::compute {
 
                   /* ~(x(NO VOLATILES) & 1) == n */
                   if (r->is_integral() && tools::exprs::values::is_unary<il::arch::data::bin_kinds::bitnot_>(l) &&
-                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::and_>(l->l) && l->l->r && l->l->r->extract_integral() == 1u &&
+                      tools::exprs::values::is_arith<il::arch::data::bin_kinds::and_>(l->l) && l->l->r && l->l->r->extract_integral() == 1U &&
                       l->l->l && !l->l->l->contains_volatile()) {
 
                         /* EXPR & will either be 0 or 1 test it */

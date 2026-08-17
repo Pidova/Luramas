@@ -44,7 +44,7 @@ namespace luramas::ir {
             };
             return this->tmembers.size() == other.tmembers.size() && (!nest || std::equal(this->tmembers.begin(), this->tmembers.end(), other.tmembers.begin(), t_eql));
       }
-      bool ir_stat::ir_expr::compare(const std::shared_ptr<ir_expr> &other, const bool safe, const bool nest) const {
+      bool ir_stat::ir_expr::compare(const std::shared_ptr<ir_expr> &other, const bool safe, const bool /*nest*/) const {
             return other.get() == this || (other && this->compare(*other, safe));
       }
       bool ir_stat::ir_expr::operator==(const ir_expr &other) const {

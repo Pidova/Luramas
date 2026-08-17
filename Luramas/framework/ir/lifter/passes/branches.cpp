@@ -1,6 +1,8 @@
+#include <algorithm>
+
 #include "includes/common.hpp"
 
-void luramas::ir::passes::branch_simplification(pass_manager &pm, shared &s) {
+void luramas::ir::passes::branch_simplification(pass_manager &pm, shared & /*s*/) {
 
       for (const auto &i : pm.iter()) {
 
@@ -8,9 +10,9 @@ void luramas::ir::passes::branch_simplification(pass_manager &pm, shared &s) {
             switch (p->k) {
                   case keywords::condition: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
-                              const auto &prev = pm[i - 1u];
+                              const auto &prev = pm[i - 1U];
                               if (tools::stat::branch::is_else_cond(prev)) {
 
                                     /* 
@@ -23,8 +25,8 @@ void luramas::ir::passes::branch_simplification(pass_manager &pm, shared &s) {
                                     */
                                     const auto end_loc = pm.processed.end_labels[p->end_label].second;
                                     const auto &end = pm[end_loc];
-                                    if (pm.valid_prev<1u>(end_loc) && pm.valid_next<1u>(end_loc) &&
-                                        !pm[end_loc - 1u]->is_flow_interrupt() && tools::stat::is_end(pm[end_loc + 1u]) && pm.safe(end, p)) {
+                                    if (pm.valid_prev<1U>(end_loc) && pm.valid_next<1U>(end_loc) &&
+                                        !pm[end_loc - 1U]->is_flow_interrupt() && tools::stat::is_end(pm[end_loc + 1U]) && pm.safe(end, p)) {
                                           p->c = condition_kind::elseif_;
                                           pm.remove(end, prev);
                                           pm.mut(LURAMAS_DEBUG_LINE);
@@ -41,7 +43,7 @@ void luramas::ir::passes::branch_simplification(pass_manager &pm, shared &s) {
       return;
 }
 
-void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
+void luramas::ir::passes::branch_optimization(pass_manager &pm, shared & /*s*/) {
 
       std::optional<generation::cfg::cfg> cfg;
       for (const auto &i : pm.iter()) {
@@ -51,9 +53,9 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                   case keywords::condition_goto: {
 
                         const auto label = tools::common::safe_take_jump(pm, i);
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /*
                                     if (?) then goto l end
@@ -63,11 +65,11 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               if (pm.is_safe(p)) {
 
                                     auto valid = std::make_shared<luramas_addresses>();
-                                    tools::violations::block_violates(pm, i + 1u, pm.amount(), tools::violations::block_violates_flags({.valid_extract = valid}));
+                                    tools::violations::block_violates(pm, i + 1U, pm.amount(), tools::violations::block_violates_flags({.valid_extract = valid}));
                                     for (const auto &vi : *valid) {
                                           if (tools::stat::branch::same_cond_goto_goto_labels(p, pm[vi])) {
 
-                                                if (!tools::violations::block_violates(pm, i + 1u, vi).valid) {
+                                                if (!tools::violations::block_violates(pm, i + 1U, vi).valid) {
                                                       continue;
                                                 }
 
@@ -109,20 +111,20 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               if (pm.is_safe(p) && tools::stat::branch::is_if_cond(next) && tools::stat::future(i, label)) {
 
                                     bool valid = true;
-                                    const auto prev_label = pm[label - 1u];
+                                    const auto prev_label = pm[label - 1U];
                                     if (prev_label->is_k<keywords::goto_label>()) {
 
                                           const auto back = tools::backtrack(pm, pm.processed.end_labels[next->end_label].second, valid, prev_label->jlabel);
                                           if (valid && tools::stat::branch::is_goto_label(prev_label, pm[back])) {
 
-                                                const auto cond_stack = tools::stack_validate(pm, label, back - 1u);
+                                                const auto cond_stack = tools::stack_validate(pm, label, back - 1U);
                                                 if (cond_stack.valid || cond_stack.reason == tools::cond_stack_reason::closing) {
 
-                                                      const auto closing_end = cond_stack.reason == tools::cond_stack_reason::closing ? cond_stack.closing_index - 1u : cond_stack.closing_index;
+                                                      const auto closing_end = cond_stack.reason == tools::cond_stack_reason::closing ? cond_stack.closing_index - 1U : cond_stack.closing_index;
 
                                                       tools::stat::mutate::if_stat_cleared(p);
 
-                                                      pm.move(p, {label + 1u, closing_end});
+                                                      pm.move(p, {label + 1U, closing_end});
                                                       pm.insert(p, tools::stat::generate::goto_label(pm[back]->label), tools::stat::generate::end());
                                                       pm.set_safe(p);
                                                       pm.mut(LURAMAS_DEBUG_LINE);
@@ -139,7 +141,7 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                  /::l::/
                                  /[VALID REST]/
                               */
-                              if (pm.is_safe(p) && pm.valid_prev<1u>(label) && pm[label - 1u]->is_terminal() && tools::common::is_rest_safe_block_end(pm, label) &&
+                              if (pm.is_safe(p) && pm.valid_prev<1U>(label) && pm[label - 1U]->is_terminal() && tools::common::is_rest_safe_block_end(pm, label) &&
                                   !tools::contains::refs(pm, tools::transform::address_to_range(i + 1, label), pm.range(label)) && pm.is_safe(label, pm.amount())) {
 
                                     tools::stat::mutate::if_stat_cleared(p);
@@ -159,8 +161,8 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               */
                               if (tools::stat::branch::is_if_cond(next)) {
 
-                                    const auto end_label = tools::common::safe_take_jump(pm, i + 1u);
-                                    if (tools::stat::future(i, end_label) && pm.valid_next<1u>(end_label) && tools::stat::branch::is_cond_goto_label(p, pm[tools::trackers::next_safe_executable(pm, end_label, true)]) && pm.safe(p, next)) {
+                                    const auto end_label = tools::common::safe_take_jump(pm, i + 1U);
+                                    if (tools::stat::future(i, end_label) && pm.valid_next<1U>(end_label) && tools::stat::branch::is_cond_goto_label(p, pm[tools::trackers::next_safe_executable(pm, end_label, true)]) && pm.safe(p, next)) {
 
                                           next->append_cond<expr_logical::and_>(p->l, p->b, p->r);
                                           pm.remove(p);
@@ -203,16 +205,16 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                 [SAFE BLOCK]
                                 [OR SAFE NEXT EXECUTABLE]
                              */
-                              luramas_address parent_loop_loc = 0u;
+                              luramas_address parent_loop_loc = 0U;
                               if (pm.is_safe(p) && tools::visitors::parent_loop(pm, i, parent_loop_loc) && tools::stat::branch::is_while_true(pm[parent_loop_loc])) {
 
                                     const auto end = tools::common::safe_take_jump(pm, parent_loop_loc);
-                                    if (pm.valid_next<2u>(end) &&
-                                        pm.is_safe(pm[end + 1u]) &&
+                                    if (pm.valid_next<2U>(end) &&
+                                        pm.is_safe(pm[end + 1U]) &&
                                         !tools::contains::implicit::any_to(pm, tools::transform::range_to_addresses(tools::transform::address_to_range(i, parent_loop_loc)), parent_loop_loc) &&
-                                        tools::stat::is_end(pm[end + 1u]) && !pm[tools::common::reverse_safe_take_jump(pm, end + 1u)]->is_loop()) {
+                                        tools::stat::is_end(pm[end + 1U]) && !pm[tools::common::reverse_safe_take_jump(pm, end + 1U)]->is_loop()) {
 
-                                          const auto block = tools::violations::block_violates(pm, end + 2u, pm.amount(), tools::violations::block_violates_flags({.close_on = pm[tools::common::safe_take_jump(pm, i)]}));
+                                          const auto block = tools::violations::block_violates(pm, end + 2U, pm.amount(), tools::violations::block_violates_flags({.close_on = pm[tools::common::safe_take_jump(pm, i)]}));
                                           const auto ending = (block.reason != tools::violations::block_violation_exceptions::hit_closing_on) ? tools::visitors::next_safe_executable(pm, block.ending_loc) : block.ending_loc;
 
                                           if (tools::stat::branch::is_cond_goto_label(p, pm[ending])) {
@@ -220,8 +222,8 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                                 tools::stat::mutate::if_stat_cleared(p);
                                                 pm.insert(p, tools::stat::generate::break_stat(), tools::stat::generate::end());
 
-                                                pm.insert(pm[end + 1u], tools::stat::generate::else_stat());
-                                                pm.move(pm[block.ending_loc - 1u], pm[end + 1u]);
+                                                pm.insert(pm[end + 1U], tools::stat::generate::else_stat());
+                                                pm.move(pm[block.ending_loc - 1U], pm[end + 1U]);
                                                 pm.set_safe(p);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
@@ -236,11 +238,11 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               */
                               if (pm.is_safe(p) &&
                                   (violation.reason == tools::violations::block_violation_exceptions::invalid_else_conditional || violation.reason == tools::violations::block_violation_exceptions::invalid_end) &&
-                                  tools::stat::branch::is_cond_goto_label(p, pm[tools::trackers::next_safe_executable(pm, violation.ending_loc - 1u, true)])) {
+                                  tools::stat::branch::is_cond_goto_label(p, pm[tools::trackers::next_safe_executable(pm, violation.ending_loc - 1U, true)])) {
 
                                     tools::stat::mutate::if_stat_cleared(p);
                                     pm.set_safe(p);
-                                    pm.insert(pm[violation.ending_loc - 1u], tools::stat::generate::end());
+                                    pm.insert(pm[violation.ending_loc - 1U], tools::stat::generate::end());
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
 
@@ -253,10 +255,10 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               */
                               if (pm.is_safe(p, next) && tools::stat::is_end(next)) {
 
-                                    const auto if_stat = tools::common::reverse_safe_take_jump(pm, i + 1u);
-                                    if (pm.is_safe(pm[if_stat]) && pm.valid_prev<1u>(if_stat) &&
-                                        tools::stat::branch::is_cond_goto_label(p, pm[if_stat - 1u]) && tools::common::basic_if_stat(pm, if_stat) &&
-                                        !tools::contains::orphans::implicit_goto(pm, tools::transform::address_to_range(if_stat, i + 1u))) {
+                                    const auto if_stat = tools::common::reverse_safe_take_jump(pm, i + 1U);
+                                    if (pm.is_safe(pm[if_stat]) && pm.valid_prev<1U>(if_stat) &&
+                                        tools::stat::branch::is_cond_goto_label(p, pm[if_stat - 1U]) && tools::common::basic_if_stat(pm, if_stat) &&
+                                        !tools::contains::orphans::implicit_goto(pm, tools::transform::address_to_range(if_stat, i + 1U))) {
 
                                           tools::stat::mutate::while_stat_cleared(pm[if_stat]);
                                           tools::stat::mutate::if_stat_cleared<true>(p);
@@ -275,19 +277,19 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                     /.../
                                     /::label_20:: [SAME SCOPE AS THIS]/
                               */
-                              if (pm.valid_next<2u>(i) && pm.is_safe(p)) {
+                              if (pm.valid_next<2U>(i) && pm.is_safe(p)) {
                                     if (tools::stat::is_return(next)) {
 
-                                          const auto end = i + 2u;
+                                          const auto end = i + 2U;
                                           if (pm.is_safe(next, pm[end]) &&
                                               tools::stat::is_end(pm[end]) &&
                                               tools::common::basic_if_stat(pm, tools::common::reverse_safe_take_jump(pm, end)) &&
-                                              tools::contains::safe_label(pm, end + 1u, pm[label])) {
+                                              tools::contains::safe_label(pm, end + 1U, pm[label])) {
 
                                                 tools::stat::mutate::if_stat_cleared<true>(p);
                                                 pm.insert(next, tools::stat::generate::end());
                                                 pm.insert(pm[end], tools::stat::generate::else_stat());
-                                                pm.move(pm[label - 1u], pm[end]);
+                                                pm.move(pm[label - 1U], pm[end]);
                                                 pm.set_safe(p, next, pm[end]);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
@@ -318,12 +320,12 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                             /goto l2;/
                             /::l::/ [ONE REF]
                        */
-                        if (pm.is_safe(p) && tools::stat::future(i, label) && tools::count::refs(pm, label) == 1u &&
-                            pm.valid_prev<1u>(label) && tools::stat::branch::is_goto(pm[label - 1u])) {
+                        if (pm.is_safe(p) && tools::stat::future(i, label) && tools::count::refs(pm, label) == 1U &&
+                            pm.valid_prev<1U>(label) && tools::stat::branch::is_goto(pm[label - 1U])) {
 
-                              if (const auto end = tools::common::safe_block_end(pm, label + 1u); label != end) {
+                              if (const auto end = tools::common::safe_block_end(pm, label + 1U); label != end) {
                                     tools::stat::mutate::if_stat_cleared(p);
-                                    pm.move(p, {label + 1u, end + 1u});
+                                    pm.move(p, {label + 1U, end + 1U});
                                     pm.insert(p, tools::stat::generate::goto_label(pm[label]->label), tools::stat::generate::end());
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
@@ -354,14 +356,14 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                         if (pm.is_safe(p, pm[label])) {
 
                               const auto end = tools::violations::block_violates(pm, i, label);
-                              if (pm.valid_prev<1u>(end.ending_loc) && end.reason == tools::violations::block_violation_exceptions::invalid_end &&
-                                  pm[end.ending_loc - 1u]->is_terminal() && tools::common::basic_if_stat(pm, tools::common::reverse_safe_take_jump(pm, end.ending_loc)) &&
-                                  tools::violations::block_violates(pm, end.ending_loc + 1u, label).valid) {
+                              if (pm.valid_prev<1U>(end.ending_loc) && end.reason == tools::violations::block_violation_exceptions::invalid_end &&
+                                  pm[end.ending_loc - 1U]->is_terminal() && tools::common::basic_if_stat(pm, tools::common::reverse_safe_take_jump(pm, end.ending_loc)) &&
+                                  tools::violations::block_violates(pm, end.ending_loc + 1U, label).valid) {
 
                                     tools::stat::mutate::if_stat_cleared<true>(p);
                                     pm.set_safe(p, pm[label]);
                                     pm.insert_front(end.ending_loc, tools::stat::generate::end(), tools::stat::generate::else_stat());
-                                    pm.move(pm[label - 1u], pm[end.ending_loc]);
+                                    pm.move(pm[label - 1U], pm[end.ending_loc]);
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
                         }
@@ -370,9 +372,9 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                   case keywords::goto_label: {
 
                         const auto label = pm.processed.labels[p->jlabel];
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /*
                                     goto l;
@@ -395,15 +397,15 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                     /[VALID ELSE]/
                                     /l:/
                               */
-                              if (pm.is_safe(i, label + 1u) && tools::stat::is_end(next)) {
+                              if (pm.is_safe(i, label + 1U) && tools::stat::is_end(next)) {
 
-                                    const auto if_stat = tools::common::reverse_safe_take_jump(pm, i + 1u);
-                                    if (pm.is_safe(if_stat, label) && tools::stat::branch::is_if_cond(pm[if_stat]) && !tools::condition_has_else(pm, if_stat, i + 1u) &&
-                                        tools::violations::block_violates(pm, i + 2u, label).valid) {
+                                    const auto if_stat = tools::common::reverse_safe_take_jump(pm, i + 1U);
+                                    if (pm.is_safe(if_stat, label) && tools::stat::branch::is_if_cond(pm[if_stat]) && !tools::condition_has_else(pm, if_stat, i + 1U) &&
+                                        tools::violations::block_violates(pm, i + 2U, label).valid) {
 
                                           pm.insert(next, tools::stat::generate::else_stat());
-                                          pm.insert(pm[label - 1u], next);
-                                          pm.set_safe(if_stat, label + 1u);
+                                          pm.insert(pm[label - 1U], next);
+                                          pm.set_safe(if_stat, label + 1U);
 
                                           pm.remove(p, next);
                                           pm.mut(LURAMAS_DEBUG_LINE);
@@ -420,10 +422,10 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               */
                               if (pm.is_safe(p, next) && tools::stat::is_end(next)) {
 
-                                    const auto if_loc = tools::common::reverse_safe_take_jump(pm, i + 1u);
+                                    const auto if_loc = tools::common::reverse_safe_take_jump(pm, i + 1U);
                                     if (pm.is_safe(pm[if_loc]) && tools::common::basic_if_stat(pm, if_loc)) {
 
-                                          const auto end = tools::common::safe_block_end(pm, i + 2u);
+                                          const auto end = tools::common::safe_block_end(pm, i + 2U);
                                           if (end > i && label > end) {
 
                                                 const auto hit = *pm[end] == *p;
@@ -494,17 +496,17 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                /.../
                                ::l::
                         */
-                        if (pm.valid_next<4u>(i) && pm.is_safe(p)) {
+                        if (pm.valid_next<4U>(i) && pm.is_safe(p)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
                               if (tools::stat::is_end(n1) && tools::stat::is_return(n2) && tools::stat::is_end(n3) &&
-                                  tools::common::basic_if_stat(pm, tools::common::reverse_safe_take_jump(pm, i + 3u)) &&
-                                  tools::contains::safe_label(pm, i + 4u, pm[label])) {
+                                  tools::common::basic_if_stat(pm, tools::common::reverse_safe_take_jump(pm, i + 3U)) &&
+                                  tools::contains::safe_label(pm, i + 4U, pm[label])) {
 
                                     pm.insert(n1, tools::stat::generate::else_stat());
                                     pm.move(n2, n1);
                                     pm.insert(n3, tools::stat::generate::else_stat());
-                                    pm.move(pm[label - 1u], n3);
+                                    pm.move(pm[label - 1U], n3);
                                     pm.remove(p);
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
@@ -513,9 +515,9 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                   }
                   case keywords::label: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
-                              const auto &prev = pm[i - 1u];
+                              const auto &prev = pm[i - 1U];
 
                               /*
                                  /[IF STAT, NO ELSE]/
@@ -532,12 +534,12 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                   tools::common::basic_if_stat(pm, prev_cond_loc) && !tools::contains::refs(pm, {prev_cond_loc, i}, p->label)) {
 
                                     const auto end_block = tools::common::safe_cond_block_end<true>(pm, prev_cond_loc);
-                                    if (pm.contains(prev_cond_loc + 1u, end_block, i) && tools::common::fall_loop_end(pm, end_block) && pm.is_safe(prev_cond_loc + 1u, end_block)) {
+                                    if (pm.contains(prev_cond_loc + 1U, end_block, i) && tools::common::fall_loop_end(pm, end_block) && pm.is_safe(prev_cond_loc + 1U, end_block)) {
 
                                           pm.set_safe(prev_cond);
                                           tools::stat::mutate::flip_cmp(prev_cond);
                                           pm.insert(prev_cond, tools::stat::generate::continue_stat());
-                                          pm.move(pm[end_block], {prev_cond_loc + 1u, end_block});
+                                          pm.move(pm[end_block], {prev_cond_loc + 1U, end_block});
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                               }
@@ -562,7 +564,7 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
                               /*
                                      [NO GOTO L]
@@ -573,16 +575,16 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                      TERMINATOR
                                      end
                               */
-                              const auto unfinished = tools::stack_validate(pm, i + 1u, pm.amount());
-                              if (unfinished.reason == tools::cond_stack_reason::termination && pm.valid_next<3u>(unfinished.closing_index)) {
+                              const auto unfinished = tools::stack_validate(pm, i + 1U, pm.amount());
+                              if (unfinished.reason == tools::cond_stack_reason::termination && pm.valid_next<3U>(unfinished.closing_index)) {
 
-                                    const auto &[end_stat, terminator, else_stat] = std::tie(pm[unfinished.closing_index + 3u], pm[unfinished.closing_index + 2u], pm[unfinished.closing_index + 1u]);
-                                    if (tools::stat::branch::is_else_cond(else_stat) && terminator->is_terminator() && pm.is_safe(i, unfinished.closing_index + 1u)) {
+                                    const auto &[end_stat, terminator, else_stat] = std::tie(pm[unfinished.closing_index + 3U], pm[unfinished.closing_index + 2U], pm[unfinished.closing_index + 1U]);
+                                    if (tools::stat::branch::is_else_cond(else_stat) && terminator->is_terminator() && pm.is_safe(i, unfinished.closing_index + 1U)) {
 
-                                          if (const auto end_label = end_stat->end_label; end_label && std::ranges::none_of(std::views::iota(pm.processed.end_labels[end_label].first, unfinished.closing_index + 1u), [&](const auto s) { return tools::stat::branch::is_goto_label(pm[s], p); })) {
+                                          if (const auto end_label = end_stat->end_label; (end_label != 0u) && std::ranges::none_of(std::views::iota(pm.processed.end_labels[end_label].first, unfinished.closing_index + 1U), [&](const auto s) { return tools::stat::branch::is_goto_label(pm[s], p); })) {
 
-                                                pm.move(end_stat, {i, unfinished.closing_index + 1u});
-                                                pm.set_safe(i, unfinished.closing_index + 1u);
+                                                pm.move(end_stat, {i, unfinished.closing_index + 1U});
+                                                pm.set_safe(i, unfinished.closing_index + 1U);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
                                     }
@@ -592,9 +594,9 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                   }
                   case keywords::while_: {
 
-                        if (pm.valid_next<3u>(i)) {
+                        if (pm.valid_next<3U>(i)) {
 
-                              auto &next = pm[i + 1u];
+                              auto &next = pm[i + 1U];
 
                               /*
                                     while (true) do
@@ -605,12 +607,12 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                         /break;/
                                     /end/
                               */
-                              if (tools::stat::branch::is_while_true(p) && tools::common::basic_if_stat(pm, i + 1u)) {
+                              if (tools::stat::branch::is_while_true(p) && tools::common::basic_if_stat(pm, i + 1U)) {
 
-                                    const auto end = tools::common::safe_take_jump(pm, i + 1u);
-                                    if (pm.valid_prev<1u>(end) && pm.valid_next<2u>(end) && pm.is_safe(p, next)) {
+                                    const auto end = tools::common::safe_take_jump(pm, i + 1U);
+                                    if (pm.valid_prev<1U>(end) && pm.valid_next<2U>(end) && pm.is_safe(p, next)) {
 
-                                          const auto &[continue_stat, break_stat, loop_end] = std::tie(pm[end - 1u], pm[end + 1u], pm[end + 2u]);
+                                          const auto &[continue_stat, break_stat, loop_end] = std::tie(pm[end - 1U], pm[end + 1U], pm[end + 2U]);
                                           if (pm.is_safe(continue_stat, break_stat, loop_end) &&
                                               tools::stat::is_continue(continue_stat) && tools::stat::is_continue(break_stat) && tools::stat::branch::is_while_end(p, loop_end)) {
 
@@ -622,9 +624,9 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                     }
                               }
                         }
-                        if (pm.valid_next<4u>(i)) {
+                        if (pm.valid_next<4U>(i)) {
 
-                              auto &next = pm[i + 1u];
+                              auto &next = pm[i + 1U];
 
                               /*
                                    while (true) do
@@ -638,9 +640,9 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               if (tools::stat::branch::is_while_true(p) && tools::stat::branch::is_if_cond(next)) {
 
                                     const auto end = pm.processed.end_labels[next->end_label].second;
-                                    if (!tools::condition_has_else(pm, i + 1u, pm.amount()) && pm.valid_next<2u>(end) && pm.valid_prev<1u>(end)) {
+                                    if (!tools::condition_has_else(pm, i + 1U, pm.amount()) && pm.valid_next<2U>(end) && pm.valid_prev<1U>(end)) {
 
-                                          const auto &[n1, n2, p1] = std::tie(pm[end + 1u], pm[end + 2u], pm[end - 1u]);
+                                          const auto &[n1, n2, p1] = std::tie(pm[end + 1U], pm[end + 2U], pm[end - 1U]);
                                           if (tools::stat::is_continue(p1) && tools::stat::is_break(n1) && tools::stat::branch::is_loop_end(p, n2)) {
 
                                                 tools::stat::mutate::mimic_compare(p, next);
@@ -662,16 +664,16 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               if (tools::stat::branch::is_while_true(p) && tools::stat::branch::is_if_cond(next) && pm.is_safe(p, next)) {
 
                                     const auto end = pm.processed.end_labels[next->end_label].second;
-                                    if (pm.valid_next<1u>(end) && tools::stat::branch::is_while_end(p, pm[end + 1u])) {
+                                    if (pm.valid_next<1U>(end) && tools::stat::branch::is_while_end(p, pm[end + 1U])) {
 
-                                          const auto blocks = tools::extract::blocks(pm, i + 1u);
-                                          if (blocks.size() == 2u) {
+                                          const auto blocks = tools::extract::blocks(pm, i + 1U);
+                                          if (blocks.size() == 2U) {
 
-                                                if (const auto else_block = blocks.back(); tools::count::insts(else_block) == 1u && tools::stat::is_break(pm[else_block.first])) {
+                                                if (const auto else_block = blocks.back(); tools::count::insts(else_block) == 1U && tools::stat::is_break(pm[else_block.first])) {
 
                                                       tools::stat::mutate::while_stat_cleared(next);
                                                       pm.remove(p);
-                                                      pm.remove(else_block.first, else_block.first + 3u);
+                                                      pm.remove(else_block.first, else_block.first + 3U);
                                                       pm.mut(LURAMAS_DEBUG_LINE);
                                                 }
                                           }
@@ -683,7 +685,7 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                   case keywords::condition: {
 
                         const auto basic_if = tools::common::basic_if_stat(pm, i);
-                        if (pm.valid_next<3u>(i)) {
+                        if (pm.valid_next<3U>(i)) {
 
                               /*
 
@@ -701,18 +703,18 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                               if (basic_if) {
 
                                     const auto end = tools::common::safe_take_jump(pm, i);
-                                    if (pm.valid_prev<1u>(end) && pm.valid_next<2u>(end)) {
+                                    if (pm.valid_prev<1U>(end) && pm.valid_next<2U>(end)) {
 
-                                          const auto &[continue_stat, break_stat, loop_end] = std::tie(pm[end - 1u], pm[end + 1u], pm[end + 2u]);
+                                          const auto &[continue_stat, break_stat, loop_end] = std::tie(pm[end - 1U], pm[end + 1U], pm[end + 2U]);
                                           if (pm.is_safe(continue_stat, break_stat, loop_end) &&
                                               tools::stat::is_continue(continue_stat) && tools::stat::is_break(break_stat) && tools::stat::branch::is_loop_end(pm, loop_end)) {
 
                                                 const auto loop_loc = pm.processed.end_labels[loop_end->end_label].first;
-                                                const auto breaks = tools::accumulate::keyword(pm, loop_loc, end - 1u, keywords::break_);
+                                                const auto breaks = tools::accumulate::keyword(pm, loop_loc, end - 1U, keywords::break_);
 
-                                                if (pm.valid_prev<1u>(loop_loc) && !tools::contains::implicit::break_to(pm, breaks, loop_loc)) {
+                                                if (pm.valid_prev<1U>(loop_loc) && !tools::contains::implicit::break_to(pm, breaks, loop_loc)) {
 
-                                                      const auto &[while_stat, repeat_stat] = std::tie(pm[loop_loc], pm[loop_loc - 1u]);
+                                                      const auto &[while_stat, repeat_stat] = std::tie(pm[loop_loc], pm[loop_loc - 1U]);
                                                       if (pm.is_safe(while_stat) && tools::stat::branch::is_while_true(while_stat) && tools::stat::is_repeat(repeat_stat)) {
 
                                                             pm.remove(while_stat, loop_end, break_stat);
@@ -732,11 +734,11 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                                /TERMINATOR/
                             /end/
                         */
-                        if (basic_if && pm.valid_prev<1u>(i)) {
+                        if (basic_if && pm.valid_prev<1U>(i)) {
 
-                              const auto &prev = pm[i - 1u];
+                              const auto &prev = pm[i - 1U];
                               const auto block_end = tools::common::safe_take_jump(pm, i);
-                              const auto &prev_end = pm[block_end - 1u];
+                              const auto &prev_end = pm[block_end - 1U];
                               if (pm.is_safe(prev, prev_end) && tools::stat::is_label(prev) && prev_end->is_terminal() && tools::contains::refs(pm, {i, block_end}, prev->label)) {
 
                                     tools::stat::mutate::while_stat_cleared(p);
@@ -761,7 +763,7 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                         if (const auto loop_end = tools::common::traces_to_loop_end(pm, end); loop_end && pm.is_safe(p, pm[loop_end])) {
 
                               const auto blocks = tools::extract::blocks(pm, i);
-                              if (blocks.size() > 1u) {
+                              if (blocks.size() > 1U) {
                                     for (const auto &[bstart, bend] : blocks) {
 
                                           auto &cond = pm[bstart];
@@ -787,14 +789,14 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
                            [SAFE ENDS]
                            break
                         */
-                        if (pm.is_safe(p) && basic_if && !pm[i + 1u]->is_implicit_flow_interrupt()) {
+                        if (pm.is_safe(p) && basic_if && !pm[i + 1U]->is_implicit_flow_interrupt()) {
 
                               const auto jend = tools::common::safe_take_jump(pm, i);
                               if (tools::stat::is_break(tools::visitors::next_safe_executable_stat(pm, jend))) {
 
                                     tools::stat::mutate::if_stat_cleared<true>(p);
                                     pm.insert(p, tools::stat::generate::break_stat());
-                                    pm.move(pm[jend], {i + 1u, jend});
+                                    pm.move(pm[jend], {i + 1U, jend});
                                     pm.set_safe(p);
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
@@ -809,16 +811,16 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared &s) {
       return;
 }
 
-void luramas::ir::passes::branch_redirection(pass_manager &pm, shared &s) {
+void luramas::ir::passes::branch_redirection(pass_manager &pm, shared & /*s*/) {
 
       for (const auto &i : pm.ir.data) {
 
             if (i->jlabel) {
 
                   const auto lab = pm.processed.labels[i->jlabel];
-                  if (pm.valid_next<1u>(lab)) {
+                  if (pm.valid_next<1U>(lab)) {
 
-                        const auto &next = pm[lab + 1u];
+                        const auto &next = pm[lab + 1U];
                         if (next->is_k<keywords::goto_label>() && pm.safe(i)) {
                               i->jlabel = next->jlabel;
                         }
@@ -828,9 +830,9 @@ void luramas::ir::passes::branch_redirection(pass_manager &pm, shared &s) {
       return;
 }
 
-void luramas::ir::passes::branch_threading(pass_manager &pm, shared &s) {
+void luramas::ir::passes::branch_threading(pass_manager &pm, shared & /*s*/) {
 
-      for (auto i = 0u; i < pm.amount(); ++i) {
+      for (auto i = 0U; i < pm.amount(); ++i) {
 
             auto &p = pm[i];
             switch (p->k) {
@@ -845,7 +847,7 @@ void luramas::ir::passes::branch_threading(pass_manager &pm, shared &s) {
                                  ::l::
                                  [GET VALIDITY TO COND ESCAPE]
                         */
-                        if (tools::stat::future(i, label_loc) && pm.processed.jlabels_refs[p->jlabel].size() == 1u && pm.valid_prev<1u>(label_loc) && pm[label_loc - 1u]->is_terminator()) {
+                        if (tools::stat::future(i, label_loc) && pm.processed.jlabels_refs[p->jlabel].size() == 1U && pm.valid_prev<1U>(label_loc) && pm[label_loc - 1U]->is_terminator()) {
 
                               const auto valid = tools::stack_validate(pm, label_loc, pm.amount());
                               if ((valid.reason == tools::cond_stack_reason::closing || valid.reason == tools::cond_stack_reason::nothing) && pm.is_safe(label_loc, valid.closing_index)) {
@@ -853,8 +855,8 @@ void luramas::ir::passes::branch_threading(pass_manager &pm, shared &s) {
                                     const auto goto_loc = tools::next_valid_jump(pm);
 
                                     tools::stat::mutate::if_stat_cleared(p);
-                                    pm.move(p, {label_loc, valid.closing_index - 1u});
-                                    pm.insert(p, tools::stat::generate::goto_label(goto_loc), pm[valid.closing_index - 1u]->clone(), tools::stat::generate::end());
+                                    pm.move(p, {label_loc, valid.closing_index - 1U});
+                                    pm.insert(p, tools::stat::generate::goto_label(goto_loc), pm[valid.closing_index - 1U]->clone(), tools::stat::generate::end());
                                     pm.insert(tools::visitors::last_safe_end_stat(pm, valid.closing_index), tools::stat::generate::label(goto_loc));
                                     pm.set_safe(label_loc, valid.closing_index);
                                     pm.mut(LURAMAS_DEBUG_LINE);
@@ -878,26 +880,26 @@ void luramas::ir::passes::branch_threading(pass_manager &pm, shared &s) {
                         if (pm.is_safe(p) && basic_if) {
 
                               if (const auto end = tools::common::safe_take_jump(pm, i);
-                                  pm.valid_next<1u>(end) && pm.valid_prev<1u>(end) && pm[end - 1u]->is_terminal() && pm.is_safe(pm[end])) {
+                                  pm.valid_next<1U>(end) && pm.valid_prev<1U>(end) && pm[end - 1U]->is_terminal() && pm.is_safe(pm[end])) {
 
-                                    const auto next = pm[end + 1u];
+                                    const auto next = pm[end + 1U];
                                     const auto gotos = tools::accumulate::keyword(pm, i, end, keywords::condition_goto, keywords::goto_label);
 
                                     auto base_end = pm.amount();
                                     for (const auto &g : gotos) {
-                                          if (const auto jmp = tools::common::safe_take_jump(pm, g); jmp > end + 1u && base_end > jmp) {
+                                          if (const auto jmp = tools::common::safe_take_jump(pm, g); jmp > end + 1U && base_end > jmp) {
                                                 base_end = jmp;
                                           }
                                     }
 
-                                    if (std::any_of(gotos.begin(), gotos.end(), [&](const auto &g) { return tools::common::safe_take_jump(pm, g) > end + 1u; }) &&
-                                        (!tools::stat::is_label(next) || std::none_of(gotos.begin(), gotos.end(), [&](const auto &g) { return tools::common::safe_take_jump(pm, g) == end + 1u; }))) {
+                                    if (std::ranges::any_of(gotos, [&](const auto &g) { return tools::common::safe_take_jump(pm, g) > end + 1U; }) &&
+                                        (!tools::stat::is_label(next) || std::ranges::none_of(gotos, [&](const auto &g) { return tools::common::safe_take_jump(pm, g) == end + 1U; }))) {
 
-                                          if (auto block_end = tools::violations::block_violates(pm, end + 1u, base_end).ending_loc;
-                                              block_end != end + 1u && block_end - 1u != end) {
+                                          if (auto block_end = tools::violations::block_violates(pm, end + 1U, base_end).ending_loc;
+                                              block_end != end + 1U && block_end - 1U != end) {
 
-                                                auto end_lab = (block_end - 1u);
-                                                end_lab += !pm[end_lab]->is_goto_label();
+                                                auto end_lab = (block_end - 1U);
+                                                end_lab += static_cast<luramas_address>(!pm[end_lab]->is_goto_label());
 
                                                 pm.insert(pm[end], tools::stat::generate::else_stat());
                                                 pm.insert_front(end_lab, tools::stat::generate::end());

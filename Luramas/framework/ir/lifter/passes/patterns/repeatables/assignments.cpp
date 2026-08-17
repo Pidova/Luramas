@@ -1,21 +1,21 @@
 #include "../private.hpp"
 #include "repeatables.hpp"
 
-bool luramas::ir::passes::patterns::repeatables::assignments::pattern_1(pass_manager &pm, shared &s, const luramas_address start, luramas_address &buffer_disp) {
+bool luramas::ir::passes::patterns::repeatables::assignments::pattern_1(pass_manager &pm, shared & /*s*/, const luramas_address start, luramas_address &buffer_disp) {
 
-      if (pm.valid_next<2u>(start)) {
+      if (pm.valid_next<2U>(start)) {
 
-            const auto &[p, n1] = std::tie(pm[start], pm[start + 1u]);
+            const auto &[p, n1] = std::tie(pm[start], pm[start + 1U]);
             if (tools::stat::assignment::is_single_assignment(p) && tools::stat::branch::is_cond_goto(n1, p->l)) {
 
-                  repeatable_manager<2u> rm(pm);
+                  repeatable_manager<2U> rm(pm);
                   if (!rm.init(start, buffer_disp)) {
                         return true;
                   }
 
                   while (rm.immutable_valid_next(start, buffer_disp)) {
 
-                        const auto &[assignment, cond_goto] = std::tie(pm[start + buffer_disp], pm[start + buffer_disp + 1u]);
+                        const auto &[assignment, cond_goto] = std::tie(pm[start + buffer_disp], pm[start + buffer_disp + 1U]);
 
                         if (!tools::stat::is_assignment(assignment) ||
                             !tools::stat::branch::is_cond_goto(cond_goto)) {

@@ -8,7 +8,6 @@ gmp/6.3.0
 mpfr/4.2.1
 cli11/2.6.2
 lz4/1.10.0
-libprotobuf-mutator/1.5
 
 [generators]
 CMakeDeps

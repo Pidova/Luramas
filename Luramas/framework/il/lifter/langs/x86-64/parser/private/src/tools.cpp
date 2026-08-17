@@ -96,11 +96,11 @@ namespace tools {
             std::vector<luramas::il::lifter::builder::build::expr> canonicalize_insert(const std::shared_ptr<luramas::il::lifter::builder::build> &build, const luramas_address pc, const luramas_length inst_len, const cs_x86 &dis, const flags &f) {
 
                   std::vector<luramas::il::lifter::builder::build::expr> result;
-                  for (auto i = 0u; i < dis.op_count; ++i) {
+                  for (auto i = 0U; i < dis.op_count; ++i) {
 
                         luramas::il::lifter::builder::build::expr expr;
                         const auto res = tools::canonicalize_to_reg(build, pc, inst_len, dis.operands[i], f);
-                        const auto reg = luramas::il::lifter::builder::reg(res.reg, dis.operands[i].size * 8u, f.unsign);
+                        const auto reg = luramas::il::lifter::builder::reg(res.reg, dis.operands[i].size * 8U, f.unsign);
                         if (res.mem) {
                               expr.emit_mem(build, reg);
                         } else {
@@ -119,7 +119,7 @@ namespace tools {
 
             void explicit_cast(std::shared_ptr<luramas::il::disassembly> &buffer, const std::shared_ptr<luramas::il::ilang> &il, const x86_reg reg, const luramas_address loc, const bool unsign) {
 
-                  luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_BITCAST>(il, loc, buffer, highest(reg), highest(reg), reg_bits(reg), 0u, unsign);
+                  luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_BITCAST>(il, loc, buffer, highest(reg), highest(reg), reg_bits(reg), 0U, static_cast<std::int64_t>(unsign));
                   return;
             }
             std::shared_ptr<luramas::il::disassembly> explicit_cast(const std::shared_ptr<luramas::il::ilang> &il, const x86_reg reg, const luramas_address loc, const bool unsign) {
@@ -131,7 +131,7 @@ namespace tools {
             std::shared_ptr<luramas::il::disassembly> cast(const std::shared_ptr<luramas::il::ilang> &il, const luramas_register reg, const luramas_bitwidth bits, const luramas_address loc, const bool unsign) {
 
                   auto result = std::make_shared<luramas::il::disassembly>();
-                  luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_BITCAST>(il, loc, result, reg, reg, bits, 0u, unsign);
+                  luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_BITCAST>(il, loc, result, reg, reg, bits, 0U, static_cast<std::int64_t>(unsign));
                   return result;
             }
       } // namespace generate

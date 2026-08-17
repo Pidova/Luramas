@@ -20,7 +20,7 @@ namespace lua_53_resolvers {
                               if (i->operands[1]->multret && i->operands[1]->dis.reg >= reg) {
                                     i->operands[1]->dis.reg -= reg;
                                     if (!i->operands[1]->dis.reg) {
-                                          i->operands[1]->dis.reg = 1u;
+                                          i->operands[1]->dis.reg = 1U;
                                     }
                               }
 
@@ -28,7 +28,7 @@ namespace lua_53_resolvers {
                               if (i->operands.back()->multret && i->operands.back()->dis.reg >= reg) {
                                     i->operands.back()->dis.reg -= reg;
                                     if (!i->operands.back()->dis.reg) {
-                                          i->operands.back()->dis.reg = 1u;
+                                          i->operands.back()->dis.reg = 1U;
                                     }
                               }
                               break;
@@ -48,7 +48,7 @@ namespace lua_53_resolvers {
                   for (const auto &operand : i->operands) {
                         if (operand->type == luramas::il::arch::operand::operand_kind::jmp) {
                               operand->ref_addr = i->ref->addr;
-                              operand->dis.jmp = signed(operand->ref_addr) - signed(i->addr);
+                              operand->dis.jmp = static_cast<signed>(operand->ref_addr) - static_cast<signed>(i->addr);
                               break;
                         }
                   }

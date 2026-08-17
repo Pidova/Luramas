@@ -5,7 +5,7 @@ namespace luramas::ir::pass::process {
       void values(const ir_stat::space &data, boost::unordered_flat_map<std::shared_ptr<ir_stat>, definitions::exprs> &buffer) {
 
             buffer.reserve(data.size());
-            for (auto loc = 0u; loc < data.size(); ++loc) {
+            for (auto loc = 0U; loc < data.size(); ++loc) {
 
                   const auto &i = data[loc];
                   definitions::exprs exprs;

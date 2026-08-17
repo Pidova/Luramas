@@ -3,7 +3,7 @@
 
 namespace luramas::ir::tools::simulate {
 
-      basic_block_results basic_block(luramas::ir::passes::pass_manager &pm, const boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> &input, const luramas_blockrange &range, const std::uint32_t limit, const bool undefine_zero, const bool include_order_of_operations) {
+      basic_block_results basic_block(luramas::ir::passes::pass_manager &pm, const boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> &input, const luramas_blockrange &range, const std::uint32_t limit, const bool /*undefine_zero*/, const bool include_order_of_operations) {
 
             basic_block_results result;
 
@@ -12,13 +12,13 @@ namespace luramas::ir::tools::simulate {
                   result.hit_count.reserve(amt);
                   if (include_order_of_operations) {
                         result.order_of_operations.value() = luramas_addresses();
-                        result.order_of_operations.value().reserve((amt * (std::ceil(limit / 350u) + 1u)));
+                        result.order_of_operations.value().reserve((amt * (std::ceil(limit / 350U) + 1U)));
                   }
             }
 
             /* Propagate count */
             for (auto i = range.first; i < range.second; ++i) {
-                  result.hit_count.try_emplace(i, 0u);
+                  result.hit_count.try_emplace(i, 0U);
             }
 
             auto regs = input;

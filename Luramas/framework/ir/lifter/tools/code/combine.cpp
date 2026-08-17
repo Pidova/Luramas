@@ -117,7 +117,7 @@ namespace luramas::ir::tools::combine {
 
                               if (tools::exprs::values::is_string(expr->l)) {
 
-                                    return tools::exprs::generate::integral(expr->l->v.length() - 2u);
+                                    return tools::exprs::generate::integral(expr->l->v.length() - 2U);
                               }
                         }
                         break;
@@ -138,11 +138,11 @@ namespace luramas::ir::tools::combine {
             /* BOOLEAN ARITH? */
             if (!pm.env_flags.fprimitive_object) {
                   if (exprs::values::is_boolean(expr->l)) {
-                        expr->l = exprs::generate::integral(expr->l->bv);
+                        expr->l = exprs::generate::integral(static_cast<const std::int32_t>(expr->l->bv));
                         return expr;
                   }
                   if (exprs::values::is_boolean(expr->r)) {
-                        expr->r = exprs::generate::integral(expr->r->bv);
+                        expr->r = exprs::generate::integral(static_cast<const std::int32_t>(expr->r->bv));
                         return expr;
                   }
             }
@@ -226,7 +226,7 @@ namespace luramas::ir::tools::combine {
                         if (tools::exprs::values::is_arith<il::arch::data::bin_kinds::shl_>(expr->l) && expr->l->r->is_integral() && *expr->l->l == *expr->r) {
 
                               expr->l->b = luramas::il::arch::data::bin_kinds::mul_;
-                              expr->l->r->n = luramas::math::pow(2u, expr->l->r->n) + 1u;
+                              expr->l->r->n = luramas::math::pow(2U, expr->l->r->n) + 1U;
                               return expr->l;
                         }
                         break;
@@ -331,11 +331,11 @@ namespace luramas::ir::tools::combine {
                         }
 
                         /* (cast<Tn>(a) >> {n - 1}) & 1 */
-                        if (exprs::values::is_arith<il::arch::data::bin_kinds::shr_>(expr->l) && expr->r->is_integral(1u) &&
-                            exprs::values::is_cast(expr->l->l, luramas::types::signess::sign) && expr->l->l->non_native->under.bits() &&
-                            expr->l->r->is_integral(expr->l->l->non_native->under.bits() - 1u)) {
+                        if (exprs::values::is_arith<il::arch::data::bin_kinds::shr_>(expr->l) && expr->r->is_integral(1U) &&
+                            exprs::values::is_cast(expr->l->l, luramas::types::signess::sign) && (expr->l->l->non_native->under.bits() != 0u) &&
+                            expr->l->r->is_integral(expr->l->l->non_native->under.bits() - 1U)) {
 
-                              return exprs::generate::cond(expr->l->l, luramas::il::arch::data::bin_kinds::lt_, exprs::generate::integral(0u));
+                              return exprs::generate::cond(expr->l->l, luramas::il::arch::data::bin_kinds::lt_, exprs::generate::integral(0U));
                         }
 
                         /* (SIZE & bitmask(n) */
@@ -345,8 +345,8 @@ namespace luramas::ir::tools::combine {
 
                                     if (auto n = expr->r->extract_integral(); !n.precise()) {
 
-                                          std::uint16_t s = 0u;
-                                          std::uint16_t e = 0u;
+                                          std::uint16_t s = 0U;
+                                          std::uint16_t e = 0U;
                                           if (n = n.extend(type.type->under.bits(), type.type->under.unsign); math::is::range_mask(n, s, e)) {
 
                                                 return exprs::generate::bitread(expr->l, exprs::generate::integral(s), exprs::generate::integral(e), type.type);
@@ -356,9 +356,9 @@ namespace luramas::ir::tools::combine {
                         }
 
                         /* a & 1 */
-                        if (expr->r->is_integral(1u)) {
+                        if (expr->r->is_integral(1U)) {
                               expr->b = il::arch::data::bin_kinds::mod_;
-                              expr->r->n = luramas_int(2u);
+                              expr->r->n = luramas_int(2U);
                         }
                         break;
                   }
@@ -499,7 +499,7 @@ namespace luramas::ir::tools::combine {
 
                                           if (!pm.env_flags.fcast_power_of_2 || math::is::power_of_2(byte_count)) {
 
-                                                return exprs::generate::unary(tools::guarantee::exprs::cast(r, luramas::types::underlying_type(false, luramas::types::read_type::bits, 0u, byte_count * 8u), true), luramas::il::arch::data::bin_kinds::bitnot_);
+                                                return exprs::generate::unary(tools::guarantee::exprs::cast(r, luramas::types::underlying_type(false, luramas::types::read_type::bits, 0U, byte_count * 8U), true), luramas::il::arch::data::bin_kinds::bitnot_);
                                           }
                                     }
                               }
@@ -543,7 +543,7 @@ namespace luramas::ir::tools::combine {
                         /* ((?? * CONSTANT) << CONSTANT) */
                         if (tools::exprs::values::is_arith<il::arch::data::bin_kinds::mul_>(expr->l) && expr->l->r->is_integral() && expr->r->is_integral()) {
 
-                              expr->l->r->n *= luramas::math::pow(2u, expr->r->n);
+                              expr->l->r->n *= luramas::math::pow(2U, expr->r->n);
                               return expr->l;
                         }
                         break;
@@ -566,30 +566,30 @@ namespace luramas::ir::tools::combine {
                               /* R >> INT */
                               if (tools::exprs::values::is_general_purpose_register(expr->l) && expr->r->is_integral()) {
 
-                                    if (const auto types = tools::types::get_types(expr->l, *tmap); types && types->size() == 1u) {
+                                    if (const auto types = tools::types::get_types(expr->l, *tmap); types && types->size() == 1U) {
 
                                           /* int8_t >> 7 */
-                                          if (*types->front() == luramas::types::native::t_int8 && expr->r->extract_integral() == 7u) {
+                                          if (*types->front() == luramas::types::native::t_int8 && expr->r->extract_integral() == 7U) {
 
-                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0u));
+                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0U));
                                           }
 
                                           /* int16_t >> 15 */
-                                          if (*types->front() == luramas::types::native::t_int16 && expr->r->extract_integral() == 15u) {
+                                          if (*types->front() == luramas::types::native::t_int16 && expr->r->extract_integral() == 15U) {
 
-                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0u));
+                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0U));
                                           }
 
                                           /* int32_t >> 31 */
-                                          if (*types->front() == luramas::types::native::t_int32 && expr->r->extract_integral() == 31u) {
+                                          if (*types->front() == luramas::types::native::t_int32 && expr->r->extract_integral() == 31U) {
 
-                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0u));
+                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0U));
                                           }
 
                                           /* int64_t >> 63 */
-                                          if (*types->front() == luramas::types::native::t_int64 && expr->r->extract_integral() == 63u) {
+                                          if (*types->front() == luramas::types::native::t_int64 && expr->r->extract_integral() == 63U) {
 
-                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0u));
+                                                return tools::exprs::generate::cond(expr->l, il::arch::data::bin_kinds::lt_, tools::exprs::generate::integral(0U));
                                           }
                                     }
                               }
@@ -599,9 +599,9 @@ namespace luramas::ir::tools::combine {
                   case luramas::il::arch::data::bin_kinds::mod_: {
 
                         /* (a[NO VOLATILES] * 2) % 2 */
-                        if (expr->r->is_integral(2u) && tools::exprs::values::is_arith<il::arch::data::bin_kinds::mul_>(expr->l) && expr->l->r->is_integral(2u) &&
+                        if (expr->r->is_integral(2U) && tools::exprs::values::is_arith<il::arch::data::bin_kinds::mul_>(expr->l) && expr->l->r->is_integral(2U) &&
                             !expr->l->l->contains_volatile()) {
-                              return tools::exprs::generate::integral(0u);
+                              return tools::exprs::generate::integral(0U);
                         }
                         break;
                   }
@@ -667,7 +667,7 @@ namespace luramas::ir::tools::combine {
 
                         /* BOOLEAN ?? INTEGRAL */
                         if (expr->l->is_tk<tkind::boolean>() && expr->r->is_integral() && !expr->r->n.is_nan()) {
-                              const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(luramas_int(expr->l->bv), expr->r->n, expr->b);
+                              const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(luramas_int(static_cast<std::int32_t>(expr->l->bv)), expr->r->n, expr->b);
                               expr->l->clear();
                               expr->l->emit_boolean(bv);
                               return expr->l;
@@ -675,7 +675,7 @@ namespace luramas::ir::tools::combine {
 
                         /* INTEGRAL ?? BOOLEAN */
                         if (expr->l->is_integral() && expr->r->is_tk<tkind::boolean>() && !expr->l->n.is_nan()) {
-                              const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(expr->l->n, luramas_int(expr->r->bv), expr->b);
+                              const auto bv = tools::compute::compute<luramas_int, luramas_int, bool>(expr->l->n, luramas_int(static_cast<std::int32_t>(expr->r->bv)), expr->b);
                               expr->l->clear();
                               expr->l->emit_boolean(bv);
                               return expr->l;
@@ -730,7 +730,7 @@ namespace luramas::ir::tools::combine {
 
                   /* (x >> 56) & 0xFF == 0 */
                   /* (x[x_T.bits() > b] >> b) & ([~((x_T.bits() - b)_t(0))])  == 0 */
-                  if (expr->b == il::arch::data::bin_kinds::eq_ && expr->r->is_integral(0u) && exprs::values::is_arith<il::arch::data::bin_kinds::and_>(expr->l) && expr->l->r->is_integral() &&
+                  if (expr->b == il::arch::data::bin_kinds::eq_ && expr->r->is_integral(0U) && exprs::values::is_arith<il::arch::data::bin_kinds::and_>(expr->l) && expr->l->r->is_integral() &&
                       exprs::values::is_arith<il::arch::data::bin_kinds::shr_>(expr->l->l) && expr->l->l->r->is_integral()) {
 
                         const auto b = expr->l->l->r->extract_integral_base();
@@ -738,7 +738,7 @@ namespace luramas::ir::tools::combine {
 
                         if (x_t.basic()) {
 
-                              if (const auto bits = x_t.type->under.bits(); bits > b && expr->l->r->extract_integral() == luramas_int(0u).mask(bits - b)) {
+                              if (const auto bits = x_t.type->under.bits(); bits > b && expr->l->r->extract_integral() == luramas_int(0U).mask(bits - b)) {
 
                                     x_t.type->under.unsign = true;
                                     expr->l = expr->l->l;

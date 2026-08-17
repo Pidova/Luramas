@@ -1,5 +1,6 @@
 #include "../../passes/process/process.hpp"
 #include "../tools.hpp"
+#include <algorithm>
 #include <stack>
 
 namespace luramas::ir::tools::paging {
@@ -10,14 +11,14 @@ namespace luramas::ir::tools::paging {
       luramas_blockrange details::page::code_range(const ir_stat::space &p) const {
             if (this->fvalid) {
                   auto result = this->range;
-                  result.first += tools::stat::is_definition(p[++result.first]);
+                  result.first += static_cast<unsigned long long>(tools::stat::is_definition(p[++result.first]));
                   --result.second;
                   return result;
             }
             return this->range;
       }
       luramas_count details::page::count_references() const {
-            luramas_count result = 0u;
+            luramas_count result = 0U;
             for (const auto &[_, i] : this->references) {
                   result += i.size();
             }
@@ -26,8 +27,8 @@ namespace luramas::ir::tools::paging {
 
       std::optional<luramas_id> details::get_page(const luramas_address &loc, const std::shared_ptr<ir_stat::ir_expr> &parent_closure_expr) const {
 
-            luramas_id result = 0u;
-            auto [found, dominant_start] = std::make_pair(false, static_cast<luramas_address>(0u));
+            luramas_id result = 0U;
+            auto [found, dominant_start] = std::make_pair(false, static_cast<luramas_address>(0U));
 
             if (const auto it = this->pages.find(parent_closure_expr); it != this->pages.end()) {
                   for (const auto &[id, page] : it->second) {
@@ -116,15 +117,15 @@ namespace luramas::ir::tools::paging {
                                           page.parent_id = page_stack.top();
                                           map[*page.parent_id].encapsulating_pages.emplace_back(idx);
                                     }
-                                    if (closure.size() > i + 1u && tools::stat::is_definition(closure[i + 1u])) {
-                                          page.definition = closure[i + 1u];
+                                    if (closure.size() > i + 1U && tools::stat::is_definition(closure[i + 1U])) {
+                                          page.definition = closure[i + 1U];
                                     }
                                     page_stack.push(idx);
                                     break;
                               }
                               case keywords::page_function_end: {
                                     if (auto it = map.find(p->r->extract_integral_base()); it != map.end()) {
-                                          it->second.range.second = i + 1u;
+                                          it->second.range.second = i + 1U;
                                           if (!page_stack.empty()) {
                                                 page_stack.pop();
                                           }
@@ -154,7 +155,7 @@ namespace luramas::ir::tools::paging {
                         /* Extract expr calls */
                         for (const auto &e : p->extract_ordered_exprs()) {
                               if (tools::exprs::values::is_page_function_call(e) && e->r->is_integral()) {
-                                    map[e->r->extract_integral_base()].references[expr].emplace_back(addr_expr(i, e));
+                                    map[e->r->extract_integral_base()].references[expr].emplace_back(i, e);
                               }
                         }
                   }
@@ -162,7 +163,7 @@ namespace luramas::ir::tools::paging {
 
             for (auto &[expr, map] : result.pages) {
                   for (auto &[id, page] : map) {
-                        page.fvalid = page.range.second;
+                        page.fvalid = (page.range.second != 0u);
                   }
             }
             return result;
@@ -192,9 +193,9 @@ namespace luramas::ir::tools::paging {
             }
 
             /* Accumulate call refs and jump refs */
-            luramas_count call_refs = 0u;
-            luramas_count jump_refs = 0u;
-            luramas_count retn_refs = 0u;
+            luramas_count call_refs = 0U;
+            luramas_count jump_refs = 0U;
+            luramas_count retn_refs = 0U;
             for (const auto &[expr, a_es] : target.references) {
 
                   const auto &data = (!expr ? pm.ir.data : expr->closure);
@@ -202,11 +203,11 @@ namespace luramas::ir::tools::paging {
 
                         if (a_e.stat) {
                               const auto &stat = data[a_e.n];
-                              call_refs += tools::stat::is_page_function_call(stat);
-                              jump_refs += tools::stat::is_page_function_jump(stat);
-                              retn_refs += tools::stat::is_return(stat) && stat->flags.fpage_keyword;
+                              call_refs += static_cast<luramas_count>(tools::stat::is_page_function_call(stat));
+                              jump_refs += static_cast<luramas_count>(tools::stat::is_page_function_jump(stat));
+                              retn_refs += static_cast<luramas_count>(tools::stat::is_return(stat) && stat->flags.fpage_keyword);
                         } else {
-                              call_refs += tools::exprs::values::is_page_function_call(a_e.e);
+                              call_refs += static_cast<luramas_count>(tools::exprs::values::is_page_function_call(a_e.e));
                         }
                   }
             }
@@ -215,7 +216,7 @@ namespace luramas::ir::tools::paging {
                   return promotion_kind::immutable;
             }
 
-            if (jump_refs == 1u) {
+            if (jump_refs == 1U) {
                   const auto first_id = target.references.begin()->first;
                   return std::ranges::all_of(target.references, [&](const auto &i) { return i.first == first_id; }) ? promotion_kind::page_label : promotion_kind::immutable;
             }
@@ -230,7 +231,7 @@ namespace luramas::ir::tools::paging {
                   return std::nullopt;
             }
 
-            auto result = page.range.first + 1u;
+            auto result = page.range.first + 1U;
             const auto entry = cfg.visit(result);
             if (!entry) {
                   return std::nullopt;
@@ -245,7 +246,7 @@ namespace luramas::ir::tools::paging {
                   const auto b = pending.back();
                   pending.pop_back();
 
-                  if (!b || visited.contains(b) || contains::address({0u, page.range.first}, b->get_front())) {
+                  if (!b || visited.contains(b) || contains::address({0U, page.range.first}, b->get_front())) {
                         continue;
                   }
                   visited.insert(b);
@@ -256,9 +257,9 @@ namespace luramas::ir::tools::paging {
                   }
 
                   if (b->get_end() > result) {
-                        result = b->get_end() ? b->get_end() - 1u : result;
+                        result = b->get_end() ? b->get_end() - 1U : result;
                   }
-                  if (pending.empty() && (control_flow::block::is_jump(b) || pm[b->get_end() - 1u]->is_terminator())) {
+                  if (pending.empty() && (control_flow::block::is_jump(b) || pm[b->get_end() - 1U]->is_terminator())) {
                         break;
                   }
 
@@ -294,7 +295,7 @@ namespace luramas::ir::tools::paging {
 
             std::vector<std::optional<luramas_address>> result;
             std::vector<std::pair<luramas_address, luramas_id>> stack;
-            for (auto i = 0u; i < pm.ir.data.size(); ++i) {
+            for (auto i = 0U; i < pm.ir.data.size(); ++i) {
                   const auto &stat = pm[i];
                   result.emplace_back(!stack.empty() ? std::optional<luramas_address>(stack.back().first) : std::nullopt);
                   if (tools::stat::is_page_function_start(stat)) {
@@ -322,7 +323,7 @@ namespace luramas::ir::tools::paging {
 
                         if (page.fvalid) {
 
-                              if (const auto it = std::find_if(parent_pages.begin(), parent_pages.end(), [&](const auto &opt) { return opt && (*opt == page.range.first); }); it != parent_pages.end()) {
+                              if (const auto it = std::ranges::find_if(parent_pages, [&](const auto &opt) { return opt && (*opt == page.range.first); }); it != parent_pages.end()) {
 
                                     visited = {it->value()};
 
@@ -446,7 +447,7 @@ namespace luramas::ir::tools::paging {
 
                         result.ffalls_into = control_flow::next_instruction_executed(pm, *addr);
                         if (result.ffalls_into) {
-                              for (auto i = *addr + 1u; i < target.range.first; ++i) {
+                              for (auto i = *addr + 1U; i < target.range.first; ++i) {
                                     if (const auto &e = pm[i]; tools::stat::is_page_function_end(e)) {
                                           result.dependant_pages_into.emplace_back(e->r->extract_integral_base());
                                     }
@@ -457,11 +458,11 @@ namespace luramas::ir::tools::paging {
 
             /* Fall out */
             if (target.fvalid) {
-                  if (const auto addr = find::stat(pm, LURAMAS_IR_DIRECTION_KINDS::backward, target.range.second - 2u, f); addr) {
+                  if (const auto addr = find::stat(pm, LURAMAS_IR_DIRECTION_KINDS::backward, target.range.second - 2U, f); addr) {
 
                         result.ffalls_out = control_flow::next_instruction_executed(pm, *addr);
                         if (result.ffalls_out) {
-                              for (auto i = *addr + 1u; i < target.range.second - 2u; ++i) {
+                              for (auto i = *addr + 1U; i < target.range.second - 2U; ++i) {
                                     if (const auto &e = pm[i]; tools::stat::is_page_function_end(e)) {
                                           result.dependant_pages_out.emplace_back(e->r->extract_integral_base());
                                     }
@@ -479,10 +480,10 @@ namespace luramas::ir::tools::paging {
                   return std::nullopt;
             }
             if (pm[page.range.first]->flags.fpage_main) {
-                  return pm.amount() - 1u;
+                  return pm.amount() - 1U;
             }
             const auto result = violations::block_violates(pm, page.range.first, pm.amount(), violations::block_violates_flags({.finclude_gotos = true, .finclude_terminals = true, .ovalid_cb = [](const std::shared_ptr<ir_stat> &stat) { return stat->is_paging_control_flow_transfer(); }, .finclude_implicit = true}));
-            auto res = result.valid ? result.ending_loc : result.ending_loc - 1u;
+            auto res = result.valid ? result.ending_loc : result.ending_loc - 1U;
             while (stat::is_page_function_start(pm[res])) {
                   --res;
             }
@@ -495,7 +496,7 @@ namespace luramas::ir::tools::paging {
 
                   if (const auto page = det.index_page(*pid); page) {
 
-                        if (const auto l = (*page).second.range.first + 1u; l < parent_pages.size()) {
+                        if (const auto l = (*page).second.range.first + 1U; l < parent_pages.size()) {
 
                               return parent_pages[l] == tid;
                         }
@@ -527,8 +528,8 @@ namespace luramas::ir::tools::paging {
 
             const auto label = pm.ir.avaliable_label();
             auto entry = pm[LURAMAS_IR_ENTRY];
-            if (pm.valid_next<1u>(LURAMAS_IR_ENTRY) && tools::stat::branch::is_goto(pm[LURAMAS_IR_ENTRY + 1u])) {
-                  entry = pm[LURAMAS_IR_ENTRY + 1u];
+            if (pm.valid_next<1U>(LURAMAS_IR_ENTRY) && tools::stat::branch::is_goto(pm[LURAMAS_IR_ENTRY + 1U])) {
+                  entry = pm[LURAMAS_IR_ENTRY + 1U];
             }
             if (!entry->flags.fpage_seperator) {
                   pm.insert(entry, tools::stat::generate::flags::paging::seperator(tools::stat::generate::goto_label(label)));
@@ -539,19 +540,19 @@ namespace luramas::ir::tools::paging {
             {
                   boost::unordered_flat_map<luramas_address, luramas_index> addr_range;
 
-                  for (auto i = 0u; i < organized_pages.size(); ++i) {
+                  for (auto i = 0U; i < organized_pages.size(); ++i) {
 
                         const auto &page = organized_pages[i];
                         for (auto n = page.range.first; n < page.range.second; ++n) {
 
-                              if (page.range.first == n || page.range.second == n - 1u) {
+                              if (page.range.first == n || page.range.second == n - 1U) {
                                     addr_range[n] = i;
                               } else if (const auto it = addr_range.find(n); it == addr_range.end() || (page.range.second - page.range.first) < (organized_pages[it->second].range.second - organized_pages[it->second].range.first)) {
                                     addr_range[n] = i;
                               }
                         }
                   }
-                  for (auto i = 0u; i < organized_pages.size(); ++i) {
+                  for (auto i = 0U; i < organized_pages.size(); ++i) {
 
                         luramas_flag fmuted = false;
                         const auto &page = organized_pages[i];
@@ -564,7 +565,7 @@ namespace luramas::ir::tools::paging {
                         }
                         if (fmuted) {
                               pm[page.range.first]->flags.fpage_seperated = true;
-                              pm[page.range.second - 1u]->flags.fpage_seperated = true;
+                              pm[page.range.second - 1U]->flags.fpage_seperated = true;
                               pm.mut(LURAMAS_DEBUG_LINE);
                         }
                   }
@@ -646,9 +647,9 @@ namespace luramas::ir::tools::paging {
 
                         if (const auto it = pm.processed.jlabels_refs.find(p->label); it != pm.processed.jlabels_refs.end()) {
 
-                              for (const auto &i : it->second) {
+                              for (const auto &jref : it->second) {
 
-                                    if (!parent_pages[i] || *parent_pages[i] != page.range.first) {
+                                    if (!parent_pages[jref] || *parent_pages[jref] != page.range.first) {
                                           return false;
                                     }
                               }

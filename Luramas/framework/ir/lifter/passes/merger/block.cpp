@@ -4,7 +4,7 @@
 
 namespace luramas::ir::passes {
 
-      void block_merger(pass_manager &pm, shared &s) {
+      void block_merger(pass_manager &pm, shared & /*s*/) {
 
             const auto cfg = generation::cfg::generate(pm.ir, LURAMAS_IR_ENTRY, pm.env_flags.fhas_pages);
             for (const auto &i : pm.iter()) {
@@ -13,7 +13,7 @@ namespace luramas::ir::passes {
                   switch (p->k) {
                         case keywords::goto_label: {
 
-                              if (pm.valid_prev<1u>(i)) {
+                              if (pm.valid_prev<1U>(i)) {
 
                                     /*
                                             \l:\
@@ -29,15 +29,15 @@ namespace luramas::ir::passes {
 
                                           if (const auto &block = cfg::iterate::visit::visit(cfg.blocks, label); block) {
 
-                                                if (const auto &jump = cfg::traverse::extract::jump_block(block, i); jump->get_end() - 1u != i && jump->get_end() - 1u != label && tools::violations::block_violates(pm, label, jump->get_end() - 1u).valid && pm.is_safe(label + 1u, jump->get_end())) {
+                                                if (const auto &jump = cfg::traverse::extract::jump_block(block, i); jump->get_end() - 1U != i && jump->get_end() - 1U != label && tools::violations::block_violates(pm, label, jump->get_end() - 1U).valid && pm.is_safe(label + 1U, jump->get_end())) {
 
                                                       const auto loc = pm.ir.avaliable_end_label();
 
                                                       pm.remove(p);
                                                       pm.insert(pm[label], tools::stat::generate::goto_label(loc));
-                                                      pm.insert(pm[i - 1u], tools::stat::generate::label(loc));
-                                                      pm.move(pm[i - 1u], {label + 1u, jump->get_end()});
-                                                      pm.set_safe(label + 1u, jump->get_end());
+                                                      pm.insert(pm[i - 1U], tools::stat::generate::label(loc));
+                                                      pm.move(pm[i - 1U], {label + 1U, jump->get_end()});
+                                                      pm.set_safe(label + 1U, jump->get_end());
                                                       pm.mut(LURAMAS_DEBUG_LINE);
                                                 }
                                           }
@@ -53,7 +53,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void label_flatten(pass_manager &pm, shared &s) {
+      void label_flatten(pass_manager &pm, shared & /*s*/) {
 
             for (const auto &i : pm.iter()) {
 
@@ -61,7 +61,7 @@ namespace luramas::ir::passes {
                   switch (p->k) {
                         case keywords::label: {
 
-                              if (auto next = tools::trackers::next_safe_executable(pm, i); next > i + 1u) {
+                              if (auto next = tools::trackers::next_safe_executable(pm, i); next > i + 1U) {
                                     if (!tools::stat::branch::is_loop_end(pm, pm[next]) && tools::stat::is_end(pm[next])) {
                                           ++next;
                                     }

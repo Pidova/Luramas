@@ -14,11 +14,11 @@ namespace lua_53_parsers {
       namespace gen {
 
             /* RK to register */
-            luramas_register rk_to_r_reg(const std::intptr_t v, const luramas_address addr, luramas::il::lifter::parser::parser_manager<std::shared_ptr<lua_53_disassembler::disassembly>> &pm) {
+            static luramas_register rk_to_r_reg(const std::intptr_t v, const luramas_address addr, luramas::il::lifter::parser::parser_manager<std::shared_ptr<lua_53_disassembler::disassembly>> &pm) {
 
                   if (helpers::rk_is_k(v)) {
                         const auto reg = pm.il->get_temp_reg();
-                        pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADKVAL>(pm.il, 0u, reg, helpers::rk_idx(v)));
+                        pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADKVAL>(pm.il, 0U, reg, helpers::rk_idx(v)));
                         return reg;
                   }
                   return v;
@@ -27,16 +27,16 @@ namespace lua_53_parsers {
 
       void instructions(luramas::il::lifter::parser::parser_manager<std::shared_ptr<lua_53_disassembler::disassembly>> &pm) {
 
-            luramas_address pc = 0u;
-            luramas_register override_top = 0u;
-            luramas_register stack_top = 0u;
-            luramas_register prev_stack_top = 0u;
-            for (auto idx = 0u; idx < pm.dism.size(); ++idx) {
+            luramas_address pc = 0U;
+            luramas_register override_top = 0U;
+            luramas_register stack_top = 0U;
+            luramas_register prev_stack_top = 0U;
+            for (auto idx = 0U; idx < pm.dism.size(); ++idx) {
 
                   const auto i = pm.dism[idx];
                   auto ptr = std::make_shared<luramas::il::disassembly>();
                   auto op = luramas::il::arch::opcodes::OP_NOP;
-                  luramas_register append_top = 0u; /* Append top at the end of operands. */
+                  luramas_register append_top = 0U; /* Append top at the end of operands. */
                   const auto val_mulret = override_top ? override_top : (prev_stack_top > stack_top) ? prev_stack_top
                                                                                                      : stack_top;
 
@@ -56,7 +56,7 @@ namespace lua_53_parsers {
                         }
                         case OpCode::OP_LOADKX: {
                               op = luramas::il::arch::opcodes::OP_LOADKVAL;
-                              sorted_operands = {i->operands.front(), pm.dism[idx + 1u]->operands.front()};
+                              sorted_operands = {i->operands.front(), pm.dism[idx + 1U]->operands.front()};
                               break;
                         }
                         case OpCode::OP_LOADBOOL: {
@@ -110,19 +110,19 @@ namespace lua_53_parsers {
                               break;
                         }
                         case OpCode::OP_SETLIST: {
-                              auto b = i->operands[1u]->val;
-                              if (b == 0u) {
+                              auto b = i->operands[1U]->val;
+                              if (b == 0U) {
                                     b = val_mulret;
                               }
                               auto c = i->operands.back()->val;
-                              if (c == 0u) {
-                                    c = pm.dism[idx + 1u]->operands.front()->val;
+                              if (c == 0U) {
+                                    c = pm.dism[idx + 1U]->operands.front()->val;
                               }
                               op = luramas::il::arch::opcodes::OP_SETLIST;
                               sorted_operands = {i->operands.front(),
-                                  lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 1u),
-                                  lua_53_disassembler::make_operand::val(b + 1u),
-                                  lua_53_disassembler::make_operand::val((c - 1u) * LFIELDS_PER_FLUSH + 1u)};
+                                  lua_53_disassembler::make_operand::reg(i->operands.front()->reg + 1U),
+                                  lua_53_disassembler::make_operand::val(b + 1U),
+                                  lua_53_disassembler::make_operand::val(((c - 1U) * LFIELDS_PER_FLUSH) + 1U)};
                               break;
                         }
                         case OpCode::OP_ADD: {
@@ -207,7 +207,7 @@ namespace lua_53_parsers {
                         }
                         case OpCode::OP_CONCAT: {
                               op = luramas::il::arch::opcodes::OP_CONCAT;
-                              sorted_operands = {i->operands.front(), i->operands[1u], i->operands.back()};
+                              sorted_operands = {i->operands.front(), i->operands[1U], i->operands.back()};
                               break;
                         }
                         case OpCode::OP_JMP: {
@@ -257,16 +257,16 @@ namespace lua_53_parsers {
                         }
                         case OpCode::OP_FORLOOP: {
                               const auto r = i->operands.front()->reg;
-                              const auto limit = lua_53_disassembler::make_operand::reg(r + 1u);
-                              const auto step = lua_53_disassembler::make_operand::reg(r + 2u);
-                              const auto index = lua_53_disassembler::make_operand::reg(r + 3u);
+                              const auto limit = lua_53_disassembler::make_operand::reg(r + 1U);
+                              const auto step = lua_53_disassembler::make_operand::reg(r + 2U);
+                              const auto index = lua_53_disassembler::make_operand::reg(r + 3U);
                               op = luramas::il::arch::opcodes::OP_FORLOOPN;
                               sorted_operands = {index, limit, step, i->operands.back()};
                               break;
                         }
                         case OpCode::OP_TFORLOOP: {
                               std::shared_ptr<lua_53_disassembler::disassembly> call = nullptr;
-                              for (auto x = idx; x-- > 0u;) {
+                              for (auto x = idx; x-- > 0U;) {
                                     if (pm.dism[x]->op == OpCode::OP_TFORCALL) {
                                           call = pm.dism[x];
                                           break;
@@ -332,7 +332,7 @@ namespace lua_53_parsers {
                               }
                               case op_table::type::boolean: {
                                     operand_ptr->type = luramas::il::arch::operand::operand_kind::boolean;
-                                    operand_ptr->dis.boolean = oper->val;
+                                    operand_ptr->dis.boolean = (oper->val != 0);
                                     break;
                               }
                               case op_table::type::val_multret: {
@@ -383,14 +383,14 @@ namespace lua_53_parsers {
                         prev_stack_top = stack_top;
                         stack_top = append_top;
                   }
-                  if (sorted_operands.size() >= 2u) {
-                        for (auto it = sorted_operands.begin(); it != sorted_operands.end() - 1u; ++it) {
+                  if (sorted_operands.size() >= 2U) {
+                        for (auto it = sorted_operands.begin(); it != sorted_operands.end() - 1U; ++it) {
                               if ((*it)->type == op_table::type::val_multret && (*it)->val == LUA_MULTRET) {
-                                    override_top = 0u;
+                                    override_top = 0U;
                               }
                         }
                         if (sorted_operands.front()->type == op_table::type::dest && sorted_operands.back()->type == op_table::type::val_multret && sorted_operands.back()->val == LUA_MULTRET) {
-                              override_top = sorted_operands.front()->reg + 1u;
+                              override_top = sorted_operands.front()->reg + 1U;
                         }
                   }
                   pc += LURAMAS_INST_LEN;
@@ -403,7 +403,7 @@ namespace lua_53_parsers {
             boost::unordered_flat_map<std::shared_ptr<lua_53_disassembler::disassembly>, std::shared_ptr<luramas::il::disassembly>> tforcall_to_init;
 
             /* Go through for inits */
-            for (auto i = 0u; i < pm.il->dis.size(); ++i) {
+            for (auto i = 0U; i < pm.il->dis.size(); ++i) {
 
                   auto &dis = pm.il->dis[i];
                   const auto &org = pm.dism[i];
@@ -414,8 +414,8 @@ namespace lua_53_parsers {
                         case luramas::il::arch::opcodes::OP_FORLOOPN: {
                               const auto base = org->operands.front()->reg;
                               const auto start = dis->operands.front()->dis.reg;
-                              const auto max = dis->operands[1u]->dis.reg;
-                              const auto inc = dis->operands[2u]->dis.reg;
+                              const auto max = dis->operands[1U]->dis.reg;
+                              const auto inc = dis->operands[2U]->dis.reg;
                               const auto jmp = dis->operands.back()->dis.jmp;
                               const auto loc = org->operands.back()->ref_addr;
                               pm.il->insert_front(loc, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MOVE>(pm.il, loc, start, base));
@@ -430,7 +430,7 @@ namespace lua_53_parsers {
                         }
                         case luramas::il::arch::opcodes::OP_FORLOOPG: {
                               const auto start = dis->operands.front()->dis.reg;
-                              const auto c = dis->operands[1u]->dis.reg;
+                              const auto c = dis->operands[1U]->dis.reg;
                               const auto jmp = dis->operands.back()->dis.jmp;
                               const auto loc = org->operands.back()->ref_addr;
                               const auto init = luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_INITFORLOOPG>(pm.il, loc, start, c, jmp);
@@ -438,7 +438,7 @@ namespace lua_53_parsers {
 
                               /* Get tforcall */
                               std::shared_ptr<lua_53_disassembler::disassembly> call = nullptr;
-                              for (auto x = i; x-- > 0u;) {
+                              for (auto x = i; x-- > 0U;) {
                                     if (pm.dism[x]->op == OpCode::OP_TFORCALL) {
                                           call = pm.dism[x];
                                           break;
@@ -458,7 +458,7 @@ namespace lua_53_parsers {
             }
 
             /* Pending */
-            for (auto i = 0u; i < pm.il->dis.size(); ++i) {
+            for (auto i = 0U; i < pm.il->dis.size(); ++i) {
 
                   auto &dis = pm.il->dis[i];
                   const auto &org = pm.dism[i];
@@ -471,27 +471,27 @@ namespace lua_53_parsers {
                   pm.il->reset_temp_reg();
 
                   /* Change to arith R = RK OP RK */
-                  const auto arith = [&]<auto op>() {
+                  const auto arith = [&]<auto Op>() {
                         const auto a = dis->operands.front()->dis.reg;
-                        const auto b = gen::rk_to_r_reg(dis->operands[1u]->dis.val, addr, pm);
+                        const auto b = gen::rk_to_r_reg(dis->operands[1U]->dis.val, addr, pm);
                         const auto c = gen::rk_to_r_reg(dis->operands.back()->dis.val, addr, pm);
-                        pm.il->insert(addr, luramas::il::emitter::generate_opcode<op>(pm.il, addr, a, b, c));
+                        pm.il->insert(addr, luramas::il::emitter::generate_opcode<Op>(pm.il, addr, a, b, c));
                         return;
                   };
 
                   switch (org->op) {
                         case OpCode::OP_LOADBOOL: {
 
-                              luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_LOADBOOL>(pm.il, addr, dis, org->operands.front()->val, bool(org->operands[1u]->val));
+                              luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_LOADBOOL>(pm.il, addr, dis, org->operands.front()->val, static_cast<std::int64_t>(static_cast<bool>(org->operands[1U]->val)));
                               /* if (C) JMP next instruction */
                               if (org->operands.back()->val) {
-                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMP>(pm.il, addr, 2u));
+                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMP>(pm.il, addr, 2U));
                               }
                               break;
                         }
                         case OpCode::OP_LOADNIL: {
                               auto r = org->operands.front()->val;
-                              for (auto j = 0u; j <= org->operands.back()->val; ++j) {
+                              for (auto j = 0U; j <= org->operands.back()->val; ++j) {
                                     pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADNONE>(pm.il, addr, r++));
                               }
                               break;
@@ -499,7 +499,7 @@ namespace lua_53_parsers {
                         case OpCode::OP_GETTABUP: {
 
                               const auto a = org->operands.front()->reg;
-                              const auto b = org->operands[1u]->val;
+                              const auto b = org->operands[1U]->val;
                               const auto upv = pm.il->get_temp_reg();
                               const auto c = gen::rk_to_r_reg(org->operands.back()->val, addr, pm);
                               pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_GETUPVALUE>(pm.il, addr, upv, b));
@@ -510,7 +510,7 @@ namespace lua_53_parsers {
 
                               const auto a = org->operands.front()->reg;
                               const auto upv = pm.il->get_temp_reg();
-                              const auto b = gen::rk_to_r_reg(org->operands[1u]->val, addr, pm);
+                              const auto b = gen::rk_to_r_reg(org->operands[1U]->val, addr, pm);
                               const auto c = gen::rk_to_r_reg(org->operands.back()->val, addr, pm);
                               pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_GETUPVALUE>(pm.il, addr, upv, a));
                               pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_SETTABLE>(pm.il, addr, c, upv, b));
@@ -518,14 +518,14 @@ namespace lua_53_parsers {
                         }
                         case OpCode::OP_GETTABLE: {
                               const auto a = dis->operands.front()->dis.reg;
-                              const auto b = dis->operands[1u]->dis.reg;
+                              const auto b = dis->operands[1U]->dis.reg;
                               const auto c = gen::rk_to_r_reg(dis->operands.back()->dis.val, addr, pm);
                               pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_GETTABLE>(pm.il, addr, a, b, c));
                               break;
                         }
                         case OpCode::OP_SETTABLE: {
                               const auto a = dis->operands.front()->dis.reg;
-                              const auto b = gen::rk_to_r_reg(dis->operands[1u]->dis.val, addr, pm);
+                              const auto b = gen::rk_to_r_reg(dis->operands[1U]->dis.val, addr, pm);
                               const auto c = gen::rk_to_r_reg(dis->operands.back()->dis.val, addr, pm);
                               pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_SETTABLE>(pm.il, addr, c, a, b));
                               break;
@@ -580,9 +580,9 @@ namespace lua_53_parsers {
                         }
                         case OpCode::OP_SELF: {
                               const auto a = dis->operands.front()->dis.reg;
-                              const auto b = dis->operands[1u]->dis.reg;
+                              const auto b = dis->operands[1U]->dis.reg;
                               const auto c = dis->operands.back()->dis.val;
-                              pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MOVE>(pm.il, addr, a + 1u, b));
+                              pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MOVE>(pm.il, addr, a + 1U, b));
                               if (helpers::rk_is_k(c)) {
                                     pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_SELF>(pm.il, addr, a, b, helpers::rk_idx(c)));
                               } else {
@@ -612,31 +612,31 @@ namespace lua_53_parsers {
 
                               dis->op = luramas::il::arch::opcodes::OP_CMP;
                               const auto a = org->operands.front()->val;
-                              const auto b = gen::rk_to_r_reg(dis->operands[1u]->dis.val, addr, pm);
+                              const auto b = gen::rk_to_r_reg(dis->operands[1U]->dis.val, addr, pm);
                               const auto c = gen::rk_to_r_reg(dis->operands.back()->dis.val, addr, pm);
                               pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CMP>(pm.il, addr, b, c));
                               switch (org->op) {
                                     case OpCode::OP_EQ: {
                                           if (a) {
-                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, addr, 2u));
+                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOTEQUAL>(pm.il, addr, 2U));
                                           } else {
-                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, addr, 2u));
+                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFEQUAL>(pm.il, addr, 2U));
                                           }
                                           break;
                                     }
                                     case OpCode::OP_LT: {
                                           if (a) {
-                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFGREATEREQUAL>(pm.il, addr, 2u));
+                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFGREATEREQUAL>(pm.il, addr, 2U));
                                           } else {
-                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFLESS>(pm.il, addr, 2u));
+                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFLESS>(pm.il, addr, 2U));
                                           }
                                           break;
                                     }
                                     case OpCode::OP_LE: {
                                           if (a) {
-                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFGREATER>(pm.il, addr, 2u));
+                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFGREATER>(pm.il, addr, 2U));
                                           } else {
-                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFLESSEQUAL>(pm.il, addr, 2u));
+                                                pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFLESSEQUAL>(pm.il, addr, 2U));
                                           }
                                           break;
                                     }
@@ -650,21 +650,21 @@ namespace lua_53_parsers {
 
                               luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPS>(pm.il, addr, dis, org->operands.front()->reg);
                               if (org->operands.back()->val) {
-                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIF>(pm.il, addr, 2u));
+                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIF>(pm.il, addr, 2U));
                               } else {
-                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOT>(pm.il, addr, 2u));
+                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOT>(pm.il, addr, 2U));
                               }
                               break;
                         }
                         case OpCode::OP_TESTSET: {
 
-                              luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPS>(pm.il, addr, dis, org->operands[1u]->val);
+                              luramas::il::emitter::emit_opcode<luramas::il::arch::opcodes::OP_CMPS>(pm.il, addr, dis, org->operands[1U]->val);
                               if (org->operands.back()->val) {
-                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIF>(pm.il, addr, 2u));
+                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIF>(pm.il, addr, 2U));
                               } else {
-                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOT>(pm.il, addr, 2u));
+                                    pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_JUMPIFNOT>(pm.il, addr, 2U));
                               }
-                              pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MOVE>(pm.il, addr, org->operands.front()->val, org->operands[1u]->val));
+                              pm.il->insert(addr, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_MOVE>(pm.il, addr, org->operands.front()->val, org->operands[1U]->val));
                               break;
                         }
                         case OpCode::OP_CLOSURE: {

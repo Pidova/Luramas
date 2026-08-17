@@ -12,11 +12,11 @@ namespace luramas::ir::parser::exprs {
             il::arch::data::bin_kinds b = il::arch::data::bin_kinds::nothing;
             il::arch::data::bin_kinds u = il::arch::data::bin_kinds::nothing;
 
-            inline void clear() {
+            void clear() {
                   *this = associate();
                   return;
             }
-            inline void clear_weak() {
+            void clear_weak() {
                   auto p = this->l;
                   auto extra = this->extra;
                   this->clear();
@@ -26,16 +26,16 @@ namespace luramas::ir::parser::exprs {
             }
       };
 
-      template <errors k>
-      void error(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx) {
-            err.emit<k>(nullptr, error::generation::index(idx, str, parser::str(k)));
+      template <errors K>
+      static void error(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx) {
+            err.emit<K>(nullptr, error::generation::index(idx, str, parser::str(K)));
             return;
       }
 
       namespace extract {
 
             /* Returns 0 index if no number found */
-            std::pair<luramas_int, luramas_index> number(const std::string &str, const luramas_index idx) {
+            static std::pair<luramas_int, luramas_index> number(const std::string &str, const luramas_index idx) {
 
                   auto i = idx;
                   bool neg = false;
@@ -57,30 +57,30 @@ namespace luramas::ir::parser::exprs {
                         }
                   }
                   if (start == i) {
-                        return {luramas_int(luramas_int_base(0u)), 0u};
+                        return {luramas_int(static_cast<luramas_int_base>(0U)), 0U};
                   }
 
-                  std::string lit("");
+                  std::string lit;
                   if (neg) {
                         lit.push_back('-');
                   }
                   lit.append(str.data() + start, i - start);
 
                   if (frac) {
-                        return {luramas_int(luramas_int_pbase(std::strtod(lit.c_str(), nullptr))), i - idx};
+                        return {luramas_int(static_cast<luramas_int_pbase>(std::strtod(lit.c_str(), nullptr))), i - idx};
                   }
-                  luramas_int_base v = 0u;
+                  luramas_int_base v = 0U;
                   std::from_chars(lit.data(), lit.data() + lit.size(), v);
-                  return {luramas_int(luramas_int_base(v)), i - idx};
+                  return {luramas_int(v), i - idx};
             }
 
-            std::pair<std::string, luramas_index> str(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx) {
+            static std::pair<std::string, luramas_index> str(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx) {
 
                   auto i = idx;
                   const auto n = str.size();
                   const auto quote = (i < n ? str[i] : '\0');
                   if (quote != '"' && quote != '\'') {
-                        return {"", 0u};
+                        return {"", 0U};
                   }
 
                   const auto start = ++i;
@@ -89,12 +89,12 @@ namespace luramas::ir::parser::exprs {
                   }
                   if (i >= n) {
                         error<errors::unclosed_string>(err, str, idx);
-                        return {"", 0u};
+                        return {"", 0U};
                   }
-                  return {str.substr(start, i - start), i - idx + 1u};
+                  return {str.substr(start, i - start), i - idx + 1U};
             }
 
-            std::pair<std::string, luramas_index> name(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx) {
+            static std::pair<std::string, luramas_index> name(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> & /*err*/, const std::string &str, const luramas_index idx) {
 
                   auto i = idx;
                   const auto n = str.size();
@@ -108,7 +108,7 @@ namespace luramas::ir::parser::exprs {
       namespace token {
 
             /* Arithmetic token */
-            il::arch::data::bin_kinds arith(const std::string &str, luramas_index &idx) {
+            static il::arch::data::bin_kinds arith(const std::string &str, luramas_index &idx) {
 
                   for (const auto &[token_str, bin] : {
                            std::make_pair(LURAMAS_PARSING_EXPR_ARITH_ADD, il::arch::data::bin_kinds::add_),
@@ -132,7 +132,7 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Condition token */
-            il::arch::data::bin_kinds cond(const std::string &str, luramas_index &idx) {
+            static il::arch::data::bin_kinds cond(const std::string &str, luramas_index &idx) {
 
                   for (const auto &[token_str, bin] : {
                            std::make_pair(LURAMAS_PARSING_EXPR_COND_EQ, il::arch::data::bin_kinds::eq_),
@@ -150,7 +150,7 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Unary token */
-            std::pair<luramas_index, il::arch::data::bin_kinds> unary(const std::string &str, const luramas_index idx) {
+            static std::pair<luramas_index, il::arch::data::bin_kinds> unary(const std::string &str, const luramas_index idx) {
 
                   for (const auto &[token_str, bin] : {
                            std::make_pair(LURAMAS_PARSING_EXPR_UNARY_BITNOT, il::arch::data::bin_kinds::bitnot_),
@@ -166,7 +166,7 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Logical token */
-            expr_logical logical(const std::string &str, luramas_index &idx) {
+            static expr_logical logical(const std::string &str, luramas_index &idx) {
 
                   for (const auto &[token_str, bin] : {
                            std::make_pair(LURAMAS_PARSING_EXPR_COND_OR, expr_logical::or_),
@@ -180,18 +180,18 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Encapsulation token */
-            luramas_count encapsulate(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx, std::vector<associate> &stack) {
+            static luramas_count encapsulate(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx, std::vector<associate> &stack) {
 
                   if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_EXPR_OPEN); i) {
 
-                        stack.emplace_back(associate());
+                        stack.emplace_back();
                         return i;
                   }
                   if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_EXPR_CLOSE); i) {
 
-                        if (stack.size() <= 1u) {
+                        if (stack.size() <= 1U) {
                               error<errors::encapsulation_close>(err, str, idx);
-                              return 0u;
+                              return 0U;
                         }
 
                         const auto top = stack.back();
@@ -199,7 +199,7 @@ namespace luramas::ir::parser::exprs {
 
                         if (top.fexpecting_rvalue) {
                               error<errors::encapsulation_close>(err, str, idx);
-                              return 0u;
+                              return 0U;
                         }
 
                         auto &b = stack.back();
@@ -209,7 +209,7 @@ namespace luramas::ir::parser::exprs {
                         } else {
                               if (b.l) {
                                     error<errors::encapsulation_close>(err, str, idx);
-                                    return 0u;
+                                    return 0U;
                               }
                               b.l = top.l;
                         }
@@ -232,11 +232,11 @@ namespace luramas::ir::parser::exprs {
                         }
                         return i;
                   }
-                  return 0u;
+                  return 0U;
             }
 
             /* Tokent that countains left and right values */
-            il::arch::data::bin_kinds lr_values(const std::string &str, luramas_index &idx) {
+            static il::arch::data::bin_kinds lr_values(const std::string &str, luramas_index &idx) {
                   const auto a = token::arith(str, idx);
                   return a != il::arch::data::bin_kinds::nothing ? a : token::cond(str, idx);
             }
@@ -245,7 +245,7 @@ namespace luramas::ir::parser::exprs {
       namespace generate {
 
             /* Set flags from manager to expr */
-            void set_flags(manager &m, const std::shared_ptr<ir_stat::ir_expr> &expr) {
+            static void set_flags(manager &m, const std::shared_ptr<ir_stat::ir_expr> &expr) {
                   if (!expr) {
                         return;
                   }
@@ -254,7 +254,7 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Generate expr from name */
-            std::shared_ptr<ir_stat::ir_expr> name(manager &m, const std::string &str) {
+            static std::shared_ptr<ir_stat::ir_expr> name(manager &m, const std::string &str) {
 
                   const auto v = m.get(str);
                   if (!v) {
@@ -267,7 +267,7 @@ namespace luramas::ir::parser::exprs {
             }
       } // namespace generate
 
-      void add_value(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const std::shared_ptr<ir_stat::ir_expr> &expr, const luramas_index idx, std::vector<associate> &stack) {
+      static void add_value(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const std::shared_ptr<ir_stat::ir_expr> &expr, const luramas_index idx, std::vector<associate> &stack) {
 
             if (!expr || stack.empty()) {
                   error<errors::invalid_keyword>(err, str, idx);
@@ -299,10 +299,10 @@ namespace luramas::ir::parser::exprs {
       error::result<std::shared_ptr<ir_stat::ir_expr>, errors> parse(manager &m, const std::string &str) {
 
             std::vector<associate> stack = {associate()};
-            stack.reserve(5u);
+            stack.reserve(5U);
             error::result<std::shared_ptr<ir_stat::ir_expr>, errors> result = nullptr;
 
-            luramas_index idx = 0u;
+            luramas_index idx = 0U;
             for (; idx < str.size();) {
 
                   const auto &i = str[idx];
@@ -316,7 +316,7 @@ namespace luramas::ir::parser::exprs {
                   /* Parenthesis */
                   {
 
-                        if (const auto i = token::encapsulate(result, str, idx, stack); i && (idx += i)) {
+                        if (const auto es = token::encapsulate(result, str, idx, stack); es && (idx += es)) {
                               continue;
                         }
                         if (result) {
@@ -327,7 +327,7 @@ namespace luramas::ir::parser::exprs {
                   /* Keywords */
                   {
 
-                        if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_EXPR_TERNARY_START); i) {
+                        if (const auto ts = str::match_substr(str, idx, LURAMAS_PARSING_EXPR_TERNARY_START); ts) {
 
                               if (stack.empty()) {
                                     error<errors::invalid_keyword>(result, str, idx);
@@ -395,18 +395,18 @@ namespace luramas::ir::parser::exprs {
                   {
 
                         /* Number */
-                        if (const auto [i, ix] = extract::number(str, idx); ix && (idx += ix)) {
-                              add_value(result, str, tools::exprs::generate::integral(i), idx, stack);
+                        if (const auto [ni, nix] = extract::number(str, idx); nix && (idx += nix)) {
+                              add_value(result, str, tools::exprs::generate::integral(ni), idx, stack);
                               continue;
                         }
 
                         /* String */
-                        auto [i, ix] = extract::str(result, str, idx);
+                        auto [si, six] = extract::str(result, str, idx);
                         if (result) {
                               return result;
                         }
-                        if (ix && (idx += ix)) {
-                              add_value(result, str, tools::exprs::generate::string(i), idx, stack);
+                        if (six && (idx += six)) {
+                              add_value(result, str, tools::exprs::generate::string(si), idx, stack);
                               if (result) {
                                     return result;
                               }
@@ -414,12 +414,12 @@ namespace luramas::ir::parser::exprs {
                         }
 
                         /* Name */
-                        std::tie(i, ix) = extract::name(result, str, idx);
+                        std::tie(si, six) = extract::name(result, str, idx);
                         if (result) {
                               return result;
                         }
-                        if (ix && (idx += ix)) {
-                              add_value(result, str, generate::name(m, i), idx, stack);
+                        if (six && (idx += six)) {
+                              add_value(result, str, generate::name(m, si), idx, stack);
                               if (result) {
                                     return result;
                               }
@@ -433,7 +433,7 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Unclosed */
-            if (stack.size() != 1u) {
+            if (stack.size() != 1U) {
                   error<errors::encapsulation_unclosed>(result, str, idx);
                   return result;
             }

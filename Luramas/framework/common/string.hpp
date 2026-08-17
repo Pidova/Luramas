@@ -43,9 +43,9 @@ inline void luramas_str_escape(std::string &buffer) {
       if (buffer.empty()) {
             return;
       }
-      std::string result("");
+      std::string result;
       result.reserve(buffer.size());
-      for (auto i = 0u; i < buffer.size(); ++i) {
+      for (auto i = 0U; i < buffer.size(); ++i) {
 
             const auto &c = buffer[i];
             switch (c) {
@@ -160,7 +160,7 @@ inline bool luramas_str_valid_index(const std::string &str) {
 }
 inline std::string luramas_str_concat_qouted(std::string l, std::string r) {
 
-      std::string result("");
+      std::string result;
       result.reserve(l.size() + r.size());
 
       bool qouted = false;
@@ -189,7 +189,7 @@ inline void luramas_str_case_snakify(std::string &buffer) {
       if (std::all_of(buffer.begin(), buffer.end(), [](const auto c) { return c == '_'; })) {
             return;
       }
-      std::string result("");
+      std::string result;
       result.reserve(buffer.size());
 
       bool last = false;
@@ -224,7 +224,7 @@ inline void luramas_str_case_camelify(std::string &buffer) {
       if (std::all_of(buffer.begin(), buffer.end(), [](const auto c) { return c == '_'; })) {
             return;
       }
-      std::string result("");
+      std::string result;
       result.reserve(buffer.size());
 
       bool next = false;

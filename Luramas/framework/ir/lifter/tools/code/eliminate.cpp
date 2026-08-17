@@ -35,10 +35,10 @@ namespace luramas::ir::tools::eliminate {
                   }
             }
 
-            if (const auto &def = pm[p.range.first + 1u]; tools::stat::is_definition(def)) {
+            if (const auto &def = pm[p.range.first + 1U]; tools::stat::is_definition(def)) {
                   pm.remove(def);
             }
-            pm.remove(pm[p.range.first], pm[p.range.second - 1u]);
+            pm.remove(pm[p.range.first], pm[p.range.second - 1U]);
             pm.mut(LURAMAS_DEBUG_LINE);
             return;
       }

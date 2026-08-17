@@ -1,4 +1,5 @@
 #include "../builder.hpp"
+#include <print>
 #include <ranges>
 
 namespace luramas::il::lifter::builder {
@@ -57,7 +58,7 @@ namespace luramas::il::lifter::builder {
             this->r = r;
             return;
       }
-      void build::expr::emit_global(const std::shared_ptr<build> &b, const std::string &global) {
+      void build::expr::emit_global(const std::shared_ptr<build> & /*b*/, const std::string &global) {
             this->tk = expr_tkind::global;
             this->id = this->b->set_global(global);
             return;
@@ -69,8 +70,8 @@ namespace luramas::il::lifter::builder {
             return;
       }
 
-      template <arch::data::bin_kinds b>
-      build::expr evaluate(const build::expr &l, const build::expr &r = build::expr(), const bool setcond = true) {
+      template <arch::data::bin_kinds B>
+      static build::expr evaluate(const build::expr &l, const build::expr &r = build::expr(), const bool setcond = true) {
             build::expr lv;
             build::expr rv;
             build::expr result(l.b, l.b->get_temp());
@@ -122,7 +123,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         rv.emit(l.b, l.b->get_temp());
                         l.b->make<arch::opcodes::OP_FLAGREAD>(rv.r.r, r.integral);
-                        rv.cast(1u, true);
+                        rv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::global: {
@@ -157,7 +158,7 @@ namespace luramas::il::lifter::builder {
             }
             switch (r.tk) {
                   case expr_tkind::integral: {
-                        switch (b) {
+                        switch (B) {
                               case arch::data::bin_kinds::add_: {
                                     l.b->make<arch::opcodes::OP_ADDN>(result.r.r, lv.r.r, rv.integral);
                                     break;
@@ -207,73 +208,73 @@ namespace luramas::il::lifter::builder {
                                     break;
                               }
                               case arch::data::bin_kinds::eq_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFEQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::ne_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFNOTEQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::lt_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFLESS>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::lte_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFLESSEQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::gt_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFGREATER>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::gte_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFGREATEREQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::nt_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFNOT>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::et_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMPN>(lv.r.r, rv.integral);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIF>(result.r.r);
                                     }
                                     break;
@@ -285,7 +286,7 @@ namespace luramas::il::lifter::builder {
                         break;
                   }
                   default: {
-                        switch (b) {
+                        switch (B) {
                               case arch::data::bin_kinds::add_: {
                                     l.b->make<arch::opcodes::OP_ADD>(result.r.r, lv.r.r, rv.r.r);
                                     break;
@@ -359,73 +360,73 @@ namespace luramas::il::lifter::builder {
                                     break;
                               }
                               case arch::data::bin_kinds::eq_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFEQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::ne_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFNOTEQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::lt_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFLESS>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::lte_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFLESSEQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::gt_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFGREATER>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::gte_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFGREATEREQUAL>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::nt_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIFNOT>(result.r.r);
                                     }
                                     break;
                               }
                               case arch::data::bin_kinds::et_: {
-                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                    l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                     l.b->make<arch::opcodes::OP_CMP>(lv.r.r, rv.r.r);
                                     if (setcond) {
-                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1u);
+                                          l.b->make<arch::opcodes::OP_SEGREGATE>(1U);
                                           l.b->make<arch::opcodes::OP_SETIF>(result.r.r);
                                     }
                                     break;
@@ -503,7 +504,7 @@ namespace luramas::il::lifter::builder {
             return evaluate<arch::data::bin_kinds::plus_>(*this);
       }
       build::expr build::expr::operator[](const build::expr &offset) const {
-            return this->read(offset, offset + 1u);
+            return this->read(offset, offset + 1U);
       }
 
       build::expr build::expr::operator=(const expr &other) const {
@@ -512,7 +513,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         rv.emit(other.b, other.b->get_temp());
                         rv.b->make<arch::opcodes::OP_FLAGREAD>(other.r.r, other.integral);
-                        rv.cast(1u, true);
+                        rv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::integral: {
@@ -633,7 +634,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         lv.emit(this->b, this->b->get_temp());
                         lv.b->make<arch::opcodes::OP_FLAGREAD>(this->r.r, this->integral);
-                        lv.cast(1u, true);
+                        lv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::integral: {
@@ -652,7 +653,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         rv.emit(other.b, other.b->get_temp());
                         rv.b->make<arch::opcodes::OP_FLAGREAD>(other.r.r, other.integral);
-                        rv.cast(1u, true);
+                        rv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::integral: {
@@ -677,7 +678,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         lv.emit(this->b, this->b->get_temp());
                         lv.b->make<arch::opcodes::OP_FLAGREAD>(this->r.r, this->integral);
-                        lv.cast(1u, true);
+                        lv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::integral: {
@@ -696,7 +697,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         rv.emit(other.b, other.b->get_temp());
                         rv.b->make<arch::opcodes::OP_FLAGREAD>(other.r.r, other.integral);
-                        rv.cast(1u, true);
+                        rv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::integral: {
@@ -765,7 +766,7 @@ namespace luramas::il::lifter::builder {
             return this->operator>=(expr(this->b, other));
       }
       build::expr build::expr::operator[](const std::intptr_t offset) const {
-            return (*this >> offset) & 1u;
+            return (*this >> offset) & 1U;
       }
 
       build::expr build::expr::operator=(const std::intptr_t other) const {
@@ -819,7 +820,7 @@ namespace luramas::il::lifter::builder {
 
             switch (this->tk) {
                   case expr_tkind::reg: {
-                        this->b->make<arch::opcodes::OP_BITCAST>(this->r.r, this->r.r, s.storage_size, s.precision, s.unsign);
+                        this->b->make<arch::opcodes::OP_BITCAST>(this->r.r, this->r.r, s.storage_size, s.precision, static_cast<std::int64_t>(s.unsign));
                         this->r.size = s;
                         break;
                   }
@@ -831,7 +832,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         auto temp = build::expr(this->b, this->b->get_temp());
                         temp = *this;
-                        return temp.cast(1u, true);
+                        return temp.cast(1U, true);
                   }
                   default: {
                         break;
@@ -866,7 +867,7 @@ namespace luramas::il::lifter::builder {
             return this->b->make_bitread(*this, min, max);
       }
       build::expr build::expr::read(const expr &bit_index) const {
-            return this->b->make_bitread(*this, bit_index, bit_index + 1u);
+            return this->b->make_bitread(*this, bit_index, bit_index + 1U);
       }
       build::expr build::expr::read(const luramas_bitwidth bit_index) const {
             if (bit_index >= this->bits()) {
@@ -881,7 +882,7 @@ namespace luramas::il::lifter::builder {
             if (min == max) {
                   return (*this)[min];
             }
-            if (!min && max + 1u == this->bits()) {
+            if (!min && max + 1U == this->bits()) {
                   return *this;
             }
             return this->read(expr(this->b, min), expr(this->b, max));
@@ -894,7 +895,7 @@ namespace luramas::il::lifter::builder {
             if (min > max) {
                   return *this;
             }
-            if (!min && max + 1u == this->bits()) {
+            if (!min && max + 1U == this->bits()) {
                   return (*this = value);
             }
             return write(expr(this->b, min), expr(this->b, max), value);
@@ -912,11 +913,11 @@ namespace luramas::il::lifter::builder {
             return this->write(min, expr(this->b, max), value);
       }
       build::expr build::expr::write(const expr &value) const {
-            return this->write(0u, this->bits() - 1u, value);
+            return this->write(0U, this->bits() - 1U, value);
       }
 
       build::expr build::expr::fill(const luramas_bitwidth start, const std::intptr_t value) const {
-            return this->write(start, this->bits() - 1u, value);
+            return this->write(start, this->bits() - 1U, value);
       }
       bool build::expr::empty() const {
             return !this->b && this->tk == expr_tkind::nothing;
@@ -929,7 +930,7 @@ namespace luramas::il::lifter::builder {
                         return this->r.size.bits();
                   }
                   case expr_tkind::flag: {
-                        return 1u;
+                        return 1U;
                   }
                   default: {
                         break;
@@ -954,30 +955,30 @@ namespace luramas::il::lifter::builder {
             return luramas::types::signess::sign;
       }
       luramas::types::underlying_type build::expr::type() const {
-            return luramas::types::underlying_type(this->signess() == luramas::types::signess::unsign, luramas::types::read_type::bits, 0u, this->bits());
+            return luramas::types::underlying_type(this->signess() == luramas::types::signess::unsign, luramas::types::read_type::bits, 0U, this->bits());
       }
 
       void build::expr::dump() const {
             switch (this->tk) {
                   case expr_tkind::integral: {
-                        std::printf("[integral] %lld\n", this->integral);
+                        std::println("[integral] {}", this->integral);
                         break;
                   }
                   case expr_tkind::flag: {
-                        std::printf("[flag] %lld\n", this->integral);
+                        std::println("[flag] {}", this->integral);
                         break;
                   }
                   case expr_tkind::reg: {
-                        std::printf("[reg] %d\n", this->r.r);
-                        std::printf("   [bit] %d\n", this->bits());
-                        std::printf("   [precision] %d\n", this->r.size.precision);
-                        std::printf("   [unsign] %d\n", this->r.size.unsign);
+                        std::println("[reg] {}", this->r.r);
+                        std::println("   [bit] {}", this->bits());
+                        std::println("   [precision] {}", this->r.size.precision);
+                        std::println("   [unsign] {:d}", static_cast<int>(this->r.size.unsign));
                         break;
                   }
                   case expr_tkind::memory: {
-                        std::printf("[Memory]:\n");
-                        std::printf("   [bit] %d\n", this->bits());
-                        std::printf("   [unsign] %d\n", this->r.size.unsign);
+                        std::println("[Memory]:");
+                        std::println("   [bit] {}", this->bits());
+                        std::println("   [unsign] {:d}", static_cast<int>(this->r.size.unsign));
                         break;
                   }
                   default: {

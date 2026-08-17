@@ -27,7 +27,7 @@ namespace luramas::closures {
       /* Wrap lex to help simplify things */
       struct node : std::enable_shared_from_this<node> {
 
-            luramas_address address = 0u;           /* Address of lexed */
+            luramas_address address = 0U;           /* Address of lexed */
             std::shared_ptr<il::lexer::lexeme> lex; /* Linked lexed data */
 
             /* Extra information for flag instructions. */
@@ -46,10 +46,10 @@ namespace luramas::closures {
             [[noreturn]] void error(const std::string &what) const;
 
             /* Extract all dest registers. (All registers that get overwritten, not only from "dest" operand) */
-            luramas_registers extract_dest_regs();
+            luramas_registers extract_dest_regs() const;
 
             /* Extract all source registers. (All registers that get read but not overwritten, not only from "source" operand) */
-            luramas_registers extract_source_regs();
+            luramas_registers extract_source_regs() const;
 
             /* Prints out node */
             void dump(const char *const comment = nullptr) const;

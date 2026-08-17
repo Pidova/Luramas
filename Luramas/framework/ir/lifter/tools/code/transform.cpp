@@ -29,17 +29,17 @@ namespace luramas::ir::tools::transform {
 
       luramas_blockrange addresses_to_range(const luramas_addresses &addresses) {
 
-            return std::make_pair(addresses.front(), addresses.back() + 1u);
+            return std::make_pair(addresses.front(), addresses.back() + 1U);
       }
 
       luramas_blockrange address_to_range(const luramas_address start, const luramas_address inclusive_end) {
 
-            return std::make_pair(start, inclusive_end + 1u);
+            return std::make_pair(start, inclusive_end + 1U);
       }
 
       namespace isolate {
 
-            void labels(luramas::ir::passes::pass_manager &pm, const luramas_blockrange &range) {
+            void labels(luramas::ir::passes::pass_manager & /*pm*/, const luramas_blockrange & /*range*/) {
 
                   return;
             }

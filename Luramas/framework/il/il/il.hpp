@@ -62,7 +62,7 @@ namespace luramas::il {
                   }
 
                   /* Gets the variable name associated with a register at a specific address location */
-                  const char *const get(const luramas_register reg, luramas_address loc) const;
+                  const char *get(const luramas_register reg, luramas_address loc) const;
 
                   /* Registers a variable name for a specified register over instruction scope: [start, end] */
                   void add(const luramas_register reg, const std::shared_ptr<disassembly> &start, const std::shared_ptr<disassembly> &end, const std::string &name);

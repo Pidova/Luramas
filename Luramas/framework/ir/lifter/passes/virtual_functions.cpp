@@ -2,9 +2,9 @@
 
 namespace luramas::ir::passes {
 
-      void virtual_function_inline(pass_manager &pm, shared &s) {
+      void virtual_function_inline(pass_manager &pm, shared & /*s*/) {
 
-            for (auto i = 0ull; i < pm.amount(); ++i) {
+            for (auto i = 0ULL; i < pm.amount(); ++i) {
 
                   auto &p = pm[i];
                   switch (p->k) {
@@ -30,7 +30,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void virtual_function_reconstruction(pass_manager &pm, shared &s) {
+      void virtual_function_reconstruction(pass_manager &pm, shared & /*s*/) {
 
             if (pm.env_flags.options.oexpr_virtual_functions.empty() || pm.env_flags.options.ostat_virtual_functions.empty()) {
                   return;
@@ -100,12 +100,12 @@ namespace luramas::ir::passes {
 
                   if (auto &p = pm[i]; pm.is_safe(p)) {
 
-                        for (auto *i : {&p->l, &p->r, &p->v}) {
-                              if (!*i) {
+                        for (auto *v : {&p->l, &p->r, &p->v}) {
+                              if (!*v) {
                                     continue;
                               }
-                              if (auto j = compute_expr(*i); j) {
-                                    *i = std::move(j);
+                              if (auto j = compute_expr(*v); j) {
+                                    *v = std::move(j);
                               }
                         }
 

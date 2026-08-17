@@ -2,98 +2,99 @@
 #include "../lifter/tools/tools.hpp"
 #include <random>
 
-#define SEED_RANDOMNESS(seed) seed *= seed + 2u
-#define SEED_UNIFORM_U8(seed) (std::uint8_t(seed / 7u) + 8u) * 2u
-#define ASGN_SEED_UNIFORM_U8(seed) (seed = SEED_UNIFORM_U8(seed))
-#define ASGN_SEED_UNIFORM_SMALL_U8(seed) (seed = SEED_UNIFORM_U8(seed) / 4u)
+#define SEED_RANDOMNESS(seed) (seed *= (seed) + 2u)
+#define SEED_UNIFORM_U8(seed) ((std::uint8_t((seed) / 7u) + 8u) * 2u)
+#define ASGN_SEED_UNIFORM_U8(seed) ((seed) = SEED_UNIFORM_U8(seed))
+#define ASGN_SEED_UNIFORM_SMALL_U8(seed) ((seed) = SEED_UNIFORM_U8(seed) / 4u)
 
-class seed_state {
+class SeedState {
     public:
-      constexpr seed_state() noexcept = default;
-      constexpr explicit seed_state(const std::uint64_t value) noexcept
-          : mvalue(value) {
+      constexpr SeedState() noexcept = default;
+      constexpr explicit SeedState(const std::uint64_t value) noexcept
+          : m_mvalue(value) {
       }
 
       [[nodiscard]] constexpr std::uint64_t value() const noexcept {
-            return this->mvalue;
+            return this->m_mvalue;
       }
 
       /* seed *= seed + 2 (wrap-around is intended) */
-      constexpr seed_state &randomize() noexcept {
-            this->mvalue *= this->mvalue + 2u;
+      constexpr SeedState &randomize() noexcept {
+            this->m_mvalue *= this->m_mvalue + 2U;
             return *this;
       }
 
       /* (u8(seed / 7) + 8) * 2 -> [16, 526] */
       [[nodiscard]] constexpr std::uint32_t uniform_u8() const noexcept {
-            return (static_cast<std::uint32_t>(static_cast<std::uint8_t>(this->mvalue / 7u)) + 8u) * 2u;
+            return (static_cast<std::uint32_t>(static_cast<std::uint8_t>(this->m_mvalue / 7U)) + 8U) * 2U;
       }
 
       /* uniform_u8() / 4 -> [4, 131] */
       [[nodiscard]] constexpr std::uint32_t uniform_small_u8() const noexcept {
-            return uniform_u8() / 4u;
+            return uniform_u8() / 4U;
       }
 
       /* ASGN_SEED_UNIFORM_U8: mutate, then hand out the new value */
       constexpr std::uint32_t next_uniform_u8() noexcept {
             const auto next = uniform_u8();
-            this->mvalue = next;
+            this->m_mvalue = next;
             return next;
       }
 
       /* ASGN_SEED_UNIFORM_SMALL_U8 */
       constexpr std::uint32_t next_uniform_small_u8() noexcept {
             const auto next = uniform_small_u8();
-            this->mvalue = next;
+            this->m_mvalue = next;
             return next;
       }
-      constexpr seed_state &operator++() noexcept {
-            ++this->mvalue;
+      constexpr SeedState &operator++() noexcept {
+            ++this->m_mvalue;
             return *this;
       }
 
     private:
-      std::uint64_t mvalue = 0u;
+      std::uint64_t m_mvalue = 0U;
 };
 namespace luramas::ir::fuzzer {
 
       namespace fuzz_data {
 
-            template <typename e>
-            e wrap_enum(const std::uint8_t n) {
-                  constexpr auto amt = static_cast<std::uint8_t>(e::amount);
-                  return static_cast<e>((n % amt + amt) % amt);
+            template <typename E>
+            static E wrap_enum(const std::uint8_t n) {
+                  constexpr auto kAmt = static_cast<std::uint8_t>(E::amount);
+                  return static_cast<E>((n % kAmt + kAmt) % kAmt);
             }
 
             /* Get first digit of a number */
-            inline std::uint8_t first_digit(std::uint64_t n) {
+            inline static std::uint8_t first_digit(std::uint64_t n) {
                   while (n >= 10) {
                         n /= 10;
                   }
                   return static_cast<std::uint8_t>(n);
             }
 
-            inline std::uint64_t range_size(std::uint64_t seed) {
+            inline static std::uint64_t range_size(std::uint64_t seed) {
 
-                  static constexpr std::uint8_t prob1 = 50u; /* 50% */
-                  static constexpr std::uint8_t prob2 = 85u; /* 50% + 35% = 85% */
+                  static constexpr std::uint8_t kProb1 = 50U; /* 50% */
+                  static constexpr std::uint8_t prob2 = 85U;  /* 50% + 35% = 85% */
 
-                  const auto scaled_seed = seed % 100u + 1u;
+                  const auto scaled_seed = (seed % 100U) + 1U;
 
-                  if (scaled_seed <= prob1) {
+                  if (scaled_seed <= kProb1) {
                         /* [1, 400] */
-                        return 1u + (scaled_seed % 400u);
-                  } else if (scaled_seed <= prob2) {
+                        return 1U + (scaled_seed % 400U);
+                  }
+                  if (scaled_seed <= prob2) {
                         /* [401, 1200] */
                         return 401u + (scaled_seed % 800u);
                   }
                   /* [1201, 4000] */
-                  return 1201u + (scaled_seed % 2800u);
+                  return 1201U + (scaled_seed % 2800U);
             }
-            inline std::shared_ptr<ir_stat::ir_expr> random_assignable(const boost::unordered_flat_map<std::uint64_t, std::shared_ptr<ir_stat::ir_expr>> &assignables, std::uint64_t seed) {
+            inline static std::shared_ptr<ir_stat::ir_expr> random_assignable(const boost::unordered_flat_map<std::uint64_t, std::shared_ptr<ir_stat::ir_expr>> &assignables, std::uint64_t seed) {
 
                   std::mt19937 rng(static_cast<std::uint32_t>(seed));
-                  std::uniform_int_distribution<std::size_t> dist(0u, assignables.size() - 1u);
+                  std::uniform_int_distribution<std::size_t> dist(0U, assignables.size() - 1U);
                   return std::next(assignables.begin(), dist(rng))->second;
             }
       } // namespace fuzz_data
@@ -105,13 +106,13 @@ namespace luramas::ir::fuzzer {
             boost::unordered_flat_map<std::uint64_t, std::shared_ptr<ir_stat::ir_expr>> assignables;
 
             const auto get_assignable = [&](const bool known_var = false) {
-                  if (assignables.empty() || seed % 3u) {
+                  if (assignables.empty() || seed % 3U) {
 
-                        luramas_register reg = static_cast<luramas_register>(seed);
+                        auto reg = static_cast<luramas_register>(seed);
                         if (auto it = assignables.find(reg); it != assignables.end()) {
                               return it->second;
                         }
-                        if (seed % 2u) {
+                        if (seed % 2U) {
                               assignables.emplace(reg, tools::exprs::generate::global("g_" + std::to_string(reg)));
                               return assignables[reg];
                         }
@@ -125,7 +126,7 @@ namespace luramas::ir::fuzzer {
             const auto fuzz_tkind = [&](const tkind tk = tkind::nothing) {
                   switch (tk) {
                         case tkind::boolean: {
-                              return tools::exprs::generate::boolean(seed % 2u);
+                              return tools::exprs::generate::boolean(seed % 2U);
                         }
                         case tkind::variadic: {
                               return tools::exprs::generate::variadic();
@@ -147,7 +148,7 @@ namespace luramas::ir::fuzzer {
                       if (perfered != tkind::nothing) {
                             return fuzz_tkind(perfered);
                       }
-                      pseed /= 2u;
+                      pseed /= 2U;
                       const auto uniform_pseed = SEED_UNIFORM_U8(pseed);
                       switch (fuzz_data::wrap_enum<expr_kinds>(uniform_pseed)) {
                             case expr_kinds::unary: {
@@ -170,7 +171,7 @@ namespace luramas::ir::fuzzer {
                                   return tools::exprs::generate::unary(fuzz_expr(pseed, tkind::nothing), b);
                             }
                             default: {
-                                  if (assignables.empty() || pseed % 2u) {
+                                  if (assignables.empty() || pseed % 2U) {
                                         return fuzz_tkind(fuzz_data::wrap_enum<tkind>(uniform_pseed));
                                   }
                                   break;
@@ -181,10 +182,10 @@ namespace luramas::ir::fuzzer {
 
             std::vector<std::pair<keywords, std::vector<condition_kind>>> pending;
 
-            const auto init_size = fuzz_data::range_size(seed) * 2u;
+            const auto init_size = fuzz_data::range_size(seed) * 2U;
             result.reserve(init_size);
 
-            for (auto o = 0u; o < init_size; ++o) {
+            for (auto o = 0U; o < init_size; ++o) {
 
                   auto uniform_pseed = SEED_UNIFORM_U8(seed);
                   switch (fuzz_data::wrap_enum<keywords>(uniform_pseed)) {
@@ -197,18 +198,18 @@ namespace luramas::ir::fuzzer {
                         }
                         case keywords::call: {
                               ir_stat::ir_expr::space params;
-                              for (auto c = 0u; c < ASGN_SEED_UNIFORM_SMALL_U8(uniform_pseed); ++c) {
+                              for (auto c = 0U; c < ASGN_SEED_UNIFORM_SMALL_U8(uniform_pseed); ++c) {
                                     params.emplace_back(fuzz_expr(ASGN_SEED_UNIFORM_U8(c), tkind::nothing));
                               }
                               result.emplace_back(tools::stat::generate::call(fuzz_expr(ASGN_SEED_UNIFORM_U8(uniform_pseed), tkind::nothing), params));
                               break;
                         }
                         case keywords::retn: {
-                              if (!(SEED_UNIFORM_U8(seed) % 9u)) {
+                              if (!(SEED_UNIFORM_U8(seed) % 9U)) {
                                     continue;
                               }
                               ir_stat::ir_expr::space params;
-                              for (auto c = 0u; c < ASGN_SEED_UNIFORM_SMALL_U8(uniform_pseed); ++c) {
+                              for (auto c = 0U; c < ASGN_SEED_UNIFORM_SMALL_U8(uniform_pseed); ++c) {
                                     params.emplace_back(fuzz_expr(ASGN_SEED_UNIFORM_U8(c), tkind::nothing));
                               }
                               result.emplace_back(tools::stat::generate::retn(params));

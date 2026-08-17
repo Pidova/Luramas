@@ -12,12 +12,12 @@ namespace luramas::debug {
                   return;
             }
             EmptyClipboard();
-            const auto h_global = GlobalAlloc(GMEM_MOVEABLE, str.size() + 1u);
+            auto *const h_global = GlobalAlloc(GMEM_MOVEABLE, str.size() + 1U);
             if (!h_global) {
                   CloseClipboard();
                   return;
             }
-            std::memcpy(static_cast<char *>(GlobalLock(h_global)), str.c_str(), str.size() + 1u);
+            std::memcpy(static_cast<char *>(GlobalLock(h_global)), str.c_str(), str.size() + 1U);
             GlobalUnlock(h_global);
             SetClipboardData(CF_TEXT, h_global);
             CloseClipboard();

@@ -165,13 +165,13 @@ namespace boost {
                         this->tranformed = true;
                   }
                   if (this->tranformed) {
-                        return std::make_pair(0u, this->data.value().insert(data).second);
+                        return std::make_pair(0U, this->data.value().insert(data).second);
                   }
                   if (this->contains(data)) {
-                        return std::make_pair(0u, false);
+                        return std::make_pair(0U, false);
                   }
                   this->vect.push_back(data);
-                  return std::make_pair(0u, true);
+                  return std::make_pair(0U, true);
             }
             template <class input_it>
             inline void insert(const input_it &begin, const input_it &end) {

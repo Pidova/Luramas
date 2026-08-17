@@ -35,7 +35,7 @@ namespace luramas::ir::cfg::iterate {
                         for (const auto &[k, b] : curr->get_successors()) {
 
                               if (k == target) {
-                                    result.emplace_back(std::make_pair(b, curr));
+                                    result.emplace_back(b, curr);
                               }
                         }
                   }

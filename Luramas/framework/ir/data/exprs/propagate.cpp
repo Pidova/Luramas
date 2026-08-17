@@ -35,7 +35,7 @@ namespace luramas::ir {
                         this->xv->propagate_flag(target, e, clone);
                   }
             }
-            for (auto idx = 0u; idx < this->members.size(); ++idx) {
+            for (auto idx = 0U; idx < this->members.size(); ++idx) {
                   auto &m = this->members[idx];
                   if (m != nullptr && (e == nullptr || *m != *e)) {
                         if (m->is_flag(target)) {
@@ -55,17 +55,17 @@ namespace luramas::ir {
             }
             removals.clear();
             if (this->k != expr_kinds::page_function_call) {
-                  for (auto idx = 0u; idx < this->tmembers.size(); ++idx) {
+                  for (auto idx = 0U; idx < this->tmembers.size(); ++idx) {
                         auto &[i, v] = this->tmembers[idx];
                         if (v && (e == nullptr || *v != *e)) {
                               if (v->is_flag(target)) {
                                     if (e == nullptr) {
                                           removals.emplace_back(idx);
                                           continue;
-                                    } else {
-                                          v = (clone) ? e->clone() : e;
-                                          clone = e != nullptr;
                                     }
+                                    v = (clone) ? e->clone() : e;
+                                    clone = e != nullptr;
+
                               } else {
                                     v->propagate_flag(target, e, clone);
                               }
@@ -119,7 +119,7 @@ namespace luramas::ir {
                         this->xv->propagate(target, e, clone);
                   }
             }
-            for (auto idx = 0u; idx < this->members.size(); ++idx) {
+            for (auto idx = 0U; idx < this->members.size(); ++idx) {
                   auto &m = this->members[idx];
                   if (m && (e == nullptr || *m != *e)) {
                         if (m->is_reg(target)) {
@@ -139,17 +139,17 @@ namespace luramas::ir {
             }
             removals.clear();
             if (this->k != expr_kinds::page_function_call) {
-                  for (auto idx = 0u; idx < this->tmembers.size(); ++idx) {
+                  for (auto idx = 0U; idx < this->tmembers.size(); ++idx) {
                         auto &[i, v] = this->tmembers[idx];
                         if (v && (e == nullptr || *v != *e)) {
                               if (v->is_reg(target)) {
                                     if (e == nullptr) {
                                           removals.emplace_back(idx);
                                           continue;
-                                    } else {
-                                          v = (clone) ? e->clone(true, false) : e;
-                                          clone = e != nullptr;
                                     }
+                                    v = (clone) ? e->clone(true, false) : e;
+                                    clone = e != nullptr;
+
                               } else {
                                     v->propagate(target, e, clone);
                               }
@@ -173,7 +173,8 @@ namespace luramas::ir {
             if (this->l) {
                   if (this->l->is_reg(target)) {
                         return this->is_primitive_kind_dest_violation();
-                  } else if (this->l->propagate_violates(target)) {
+                  }
+                  if (this->l->propagate_violates(target)) {
                         return true;
                   }
             }

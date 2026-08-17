@@ -1,6 +1,10 @@
 #include "closures.hpp"
 
-inline void set_nodes(std::shared_ptr<luramas::closures::closure> &closure) {
+#include <algorithm>
+
+#include <print>
+
+inline static void set_nodes(std::shared_ptr<luramas::closures::closure> &closure) {
 
       for (const auto &i : closure->il->dis) {
             auto node = std::make_shared<luramas::closures::node>();
@@ -16,7 +20,7 @@ namespace luramas::closures {
       void node::error(const std::string &what) const {
             luramas::error::error("Error on " + this->lex->disassembly->disassemble() + " Error " + what);
       }
-      luramas_registers node::extract_dest_regs() {
+      luramas_registers node::extract_dest_regs() const {
 
             luramas_registers result;
 
@@ -32,7 +36,7 @@ namespace luramas::closures {
                         }
 
                         const auto dest = regs.front()->dis.reg;
-                        if (auto amt = vals.front()->dis.val; amt) {
+                        if (auto amt = static_cast<luramas_register>(vals.front()->dis.val); amt) {
                               for (auto a = dest; a < (dest + amt); ++a) {
                                     result.emplace_back(a);
                               }
@@ -45,9 +49,9 @@ namespace luramas::closures {
                         auto amt = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val;
 
                         if (amt == 0) {
-                              amt = 1u;
+                              amt = 1U;
                         }
-                        for (auto a = 0u; a < amt; ++a) {
+                        for (auto a = 0U; a < amt; ++a) {
                               result.emplace_back(dest + a);
                         }
                         break;
@@ -61,17 +65,17 @@ namespace luramas::closures {
                         for (auto i = 0; i < call_result; ++i) {
 
                               const auto reg = call + i;
-                              if (std::find(result.begin(), result.end(), reg) == result.end()) {
+                              if (std::ranges::find(result, reg) == result.end()) {
                                     result.emplace_back(reg);
                               }
                         }
 
-                        if (std::find(result.begin(), result.end(), call) == result.end()) {
+                        if (std::ranges::find(result, call) == result.end()) {
                               if (this->lex->has_operand_kind<luramas::il::lexer::operand_kinds::dest>()) {
                                     result.emplace_back(call);
                               }
                         } else if (this->lex->has_operand_kind<luramas::il::lexer::operand_kinds::reg>()) {
-                              result.erase(std::remove(result.begin(), result.end(), call));
+                              result.erase(std::ranges::remove(result, call).begin(), result.end());
                         }
                         break;
                   }
@@ -79,15 +83,15 @@ namespace luramas::closures {
                         const auto start = this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>().front()->dis.reg;
                         const auto amt = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val;
 
-                        for (auto i = 0u; i < amt; ++i) {
-                              result.emplace_back(start + i + 3u);
+                        for (auto i = 0U; i < amt; ++i) {
+                              result.emplace_back(start + i + 3U);
                         }
                         break;
                   }
                   case luramas::il::arch::opcodes::OP_INITFORLOOPSPECIAL: {
                         const auto start = this->lex->operand_kind<luramas::il::lexer::operand_kinds::source>().back()->dis.reg;
-                        for (auto i = 0u; i < this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().back()->dis.val; ++i) {
-                              result.emplace_back(start + i + 1u);
+                        for (auto i = 0U; i < this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().back()->dis.val; ++i) {
+                              result.emplace_back(start + i + 1U);
                         }
                         break;
                   }
@@ -102,7 +106,7 @@ namespace luramas::closures {
             }
             return result;
       }
-      luramas_registers node::extract_source_regs() {
+      luramas_registers node::extract_source_regs() const {
 
             luramas_registers result;
 
@@ -133,7 +137,7 @@ namespace luramas::closures {
                   case luramas::il::arch::opcodes::OP_COMMAND: {
 
                         if (const auto amt = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val; amt) {
-                              for (auto i = 0u; i < amt; ++i) {
+                              for (auto i = 0U; i < amt; ++i) {
                                     result.emplace_back(i);
                               }
                         }
@@ -144,16 +148,18 @@ namespace luramas::closures {
                         auto args = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val;
                         const auto start = this->lex->disassembly->operands.front()->dis.reg;
 
+                        /* Call loc */
                         if (this->lex->has_operand_kind<luramas::il::lexer::operand_kinds::reg>()) {
                               result.emplace_back(this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>().front()->dis.reg);
                         } else {
                               result.emplace_back(this->lex->operand_kind<luramas::il::lexer::operand_kinds::dest>().front()->dis.reg);
                         }
 
+                        /* Go through arg count */
                         for (auto i = 0; i < args; ++i) {
 
                               /* Skip pop */
-                              const auto arg = i + start + 1u;
+                              const auto arg = i + start + 1U;
                               if (!this->flags.poparg_flag.call_pop.contains(arg)) {
                                     result.emplace_back(arg);
                               }
@@ -161,7 +167,7 @@ namespace luramas::closures {
 
                         /* Skip this */
                         if (this->flags.poparg_flag.pop_call_dest) {
-                              result.erase(std::remove(result.begin(), result.end(), start));
+                              result.erase(std::ranges::remove(result, start).begin(), result.end());
                         }
                         return result;
                   }
@@ -180,7 +186,7 @@ namespace luramas::closures {
                         const auto start = this->lex->operand_kind<luramas::il::lexer::operand_kinds::source>().front()->dis.reg;
                         const auto vals = this->lex->operand_kind<luramas::il::lexer::operand_kinds::value>().front()->dis.val;
 
-                        for (auto i = 0u; i < vals; ++i) {
+                        for (auto i = 0U; i < vals; ++i) {
                               result.emplace_back(start + i);
                         }
                         return result;
@@ -188,7 +194,7 @@ namespace luramas::closures {
                   case luramas::il::arch::opcodes::OP_INITFORLOOPG: {
 
                         const auto start = this->lex->operand_kind<luramas::il::lexer::operand_kinds::reg>().front()->dis.reg;
-                        for (auto i = start; i <= start + 2u; ++i) {
+                        for (auto i = start; i <= start + 2U; ++i) {
                               result.emplace_back(i);
                         }
                         return result;
@@ -232,13 +238,13 @@ namespace luramas::closures {
             return result;
       }
       void node::dump(const char *const comment) const {
-            std::printf("%s\n", this->lex->disassembly->disassemble(comment).c_str());
+            std::println("{}", this->lex->disassembly->disassemble(comment));
             return;
       }
 
       std::string closure::str() const {
 
-            std::string result("");
+            std::string result;
             for (const auto &node : this->nodes) {
                   result += node->lex->disassembly->disassemble() + "\n";
             }
@@ -246,7 +252,7 @@ namespace luramas::closures {
       }
       void closure::dump() const {
 
-            std::printf("Main Closure:\n");
+            std::println("Main Closure:");
             for (const auto &i : this->nodes) {
                   i->lex->disassembly->dump();
             }
@@ -261,7 +267,7 @@ namespace luramas::closures {
                         continue;
                   }
 
-                  std::printf("Closure (%p):\n", on.get());
+                  std::println("Closure ({}):", static_cast<const void *>(on.get()));
                   for (const auto &i : on->nodes) {
                         i->lex->disassembly->dump();
                   }
@@ -279,19 +285,19 @@ namespace luramas::closures {
                   std::string mnemonic = il::disassembler::mnemonic_string(i->lex->disassembly->op);
                   luramas_str_uppercase(mnemonic);
 
-                  std::string operands("");
+                  std::string operands;
                   const auto op_count = i->lex->disassembly->operands.size();
-                  for (auto j = 0u; j < op_count; ++j) {
+                  for (auto j = 0U; j < op_count; ++j) {
                         const auto oper = i->lex->disassembly->operands[j];
                         if (const auto it = reg.find(oper->dis.reg); it != reg.end() && oper->type == luramas::il::arch::operand::operand_kind::reg) {
                               operands += it->second;
                         } else {
                               operands += luramas::il::disassembler::operand_string(oper);
                         }
-                        operands += ((j + 1u) == op_count) ? "" : ", ";
+                        operands += ((j + 1U) == op_count) ? "" : ", ";
                   }
 
-                  std::printf("luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_%s>(il, pc, %s);\n", mnemonic.c_str(), operands.c_str());
+                  std::println("luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_{}>(il, pc, {});", mnemonic, operands);
             }
             return;
       }
@@ -307,7 +313,7 @@ namespace luramas::closures {
                               break;
                         }
                         case luramas::il::arch::opcodes::OP_CCALL: {
-                              i->flags.poparg_flag.call_pop = std::move(append_regs);
+                              i->flags.poparg_flag.call_pop = append_regs;
                               i->flags.poparg_flag.pop_call_dest = true;
                               append_regs.clear();
                               break;

@@ -1,3 +1,7 @@
+#include <algorithm>
+
+#include <algorithm>
+
 #include "../includes/common.hpp"
 
 namespace luramas::ir::passes {
@@ -5,14 +9,14 @@ namespace luramas::ir::passes {
       namespace analyze {
 
             /* Is expr basic enough to propgate without side effects no matter reference count? */
-            bool propable_basic(const std::shared_ptr<ir_stat::ir_expr> &expr) {
+            static bool propable_basic(const std::shared_ptr<ir_stat::ir_expr> &expr) {
 
                   const auto curr = tools::exprs::values::is_cast(expr) ? expr->l : expr;
                   return curr && (curr->is_primitive() || curr->is_register_reference() || tools::exprs::values::is_stack(curr));
             }
 
             /* Helpers for constant propagation or other promotions */
-            void helpers(pass_manager &pm, shared &s, generation::ssa::ssa &ssa, const generation::cfg::cfg &cfg) {
+            static void helpers(pass_manager &pm, shared &s, generation::ssa::ssa &ssa, const generation::cfg::cfg & /*cfg*/) {
 
                   if (pm.env_flags.fhas_types) {
                         if (pm.env_flags.fallow_definition_cast) {
@@ -56,7 +60,7 @@ namespace luramas::ir::passes {
 
             for (auto i = pm.amount(); i > 0; --i) {
 
-                  const auto &p = pm[i - 1u];
+                  const auto &p = pm[i - 1U];
 
                   packed.clear();
                   auto &rssa = ssa.nodes[p];
@@ -65,7 +69,7 @@ namespace luramas::ir::passes {
                         const auto &[assignment, data] = rssa.r.assigns[r];
                         const auto &tssa = *data.begin();
                         const auto is_phi = ssa.phis.contains(tssa);
-                        if (data.size() != 1u || tssa == generation::ssa::UNKNOWN_SSA_VERSION) {
+                        if (data.size() != 1U || tssa == generation::ssa::UNKNOWN_SSA_VERSION) {
                               continue;
                         }
 
@@ -82,7 +86,7 @@ namespace luramas::ir::passes {
 
                         const auto ref_count = rssa.r.refrence_regs[r];
                         const auto is_phi_not_primitive_complex = is_phi && ((!past.first->r->is_primitive()) || (assignment == generation::ssa::assignment_kind::phi && tools::stat::future(i, past.second.first)));
-                        const auto is_phi_not_complex_reg_cast = is_phi && tools::exprs::values::types::is_reg_cast(past.first->r) && past.second.second.first.size() == 2u && past.second.second.first.contains(past.second.first) && tools::stat::future(past.second.first, i);
+                        const auto is_phi_not_complex_reg_cast = is_phi && tools::exprs::values::types::is_reg_cast(past.first->r) && past.second.second.first.size() == 2U && past.second.second.first.contains(past.second.first) && tools::stat::future(past.second.first, i);
 
                         /* Ignore packed, references, and pasts */
                         if ((!is_phi_not_complex_reg_cast && is_phi_not_primitive_complex) || packed.contains(tssa) || ssa.referenced.contains(tssa) || !ssa.defs.contains(tssa) || pm.is_removed(p)) {
@@ -94,12 +98,12 @@ namespace luramas::ir::passes {
                         /* Check if propagations are possible */
                         const auto is_unsafe = !pm.is_safe(past.first);
                         const auto is_captured = ssa.captures.contains(tssa);
-                        auto is_complex_non_primitive = !is_phi_not_complex_reg_cast && (past.second.second.first.size() > 1u || ref_count > 1u) && !analyze::propable_basic(past.first->r);
+                        auto is_complex_non_primitive = !is_phi_not_complex_reg_cast && (past.second.second.first.size() > 1U || ref_count > 1U) && !analyze::propable_basic(past.first->r);
                         if (is_complex_non_primitive && !pm.fpmut) {
 
                               /* FOLDS, (REG ARITH INT) */
                               const auto folds = tools::propagations::constant_folds(pm, ssa, tssa);
-                              is_complex_non_primitive = !(folds && (folds == ref_count || folds + 1u == ref_count) && tools::exprs::values::is_general_purpose_register(past.first->r->l));
+                              is_complex_non_primitive = !((folds != 0u) && (folds == ref_count || folds + 1U == ref_count) && tools::exprs::values::is_general_purpose_register(past.first->r->l));
                         }
                         const auto is_table_assign_conflict = p->is_k<keywords::table_assign>() && p->l && p->l->l == past.first->l && past.first->r && tools::exprs::values::is_table(past.first->r);
                         const auto is_volatile_or_table_assign = past.first->flags.fvolatile || past.first->is_k<keywords::table_assign>();
@@ -133,13 +137,13 @@ namespace luramas::ir::passes {
                               continue;
                         }
 
-                        if (past.first->r && past.first->is_k<keywords::assignment>() && (rssa.r.regs.count(r) == 1u || !past.first->r->is_tk<tkind::nothing>() || past.first->r->is_register_reference())) {
+                        if (past.first->r && past.first->is_k<keywords::assignment>() && (rssa.r.regs.count(r) == 1U || !past.first->r->is_tk<tkind::nothing>() || past.first->r->is_register_reference())) {
 
                               /* Check if set and past it is used as an upvalue */
                               bool pass = true;
                               bool pack = false;
                               const auto &dests = ssa.nodes[past.first].l.regs;
-                              if (dests.size() > 1u) {
+                              if (dests.size() > 1U) {
 
                                     pass = pm.env_flags.fcan_pack_registers;
                                     if (pass) {
@@ -155,7 +159,7 @@ namespace luramas::ir::passes {
                                           tools::exprs::extractions::register_references(past.first->members, dest_list);
 
                                           /* Make sure list is contigious */
-                                          pass = std::any_of(list.begin(), list.end(), [&](const auto &list_vec) {
+                                          pass = std::ranges::any_of(list, [&](const auto &list_vec) {
                                                 if (dest_list.size() > list_vec.size()) {
                                                       return false;
                                                 }
@@ -177,7 +181,7 @@ namespace luramas::ir::passes {
                                                             pass = false;
                                                             break;
                                                       }
-                                                      if (ssa.defs[dlssa].second.second.first.size() > 1u) {
+                                                      if (ssa.defs[dlssa].second.second.first.size() > 1U) {
                                                             pass = false;
                                                             break;
                                                       }
@@ -190,8 +194,8 @@ namespace luramas::ir::passes {
 
                                           /* Ignore if dupes */
                                           if (pass) {
-                                                for (const auto &r : packed_ssa) {
-                                                      if (ssa.defs[r].second.second.second > 1u) {
+                                                for (const auto &pr : packed_ssa) {
+                                                      if (ssa.defs[pr].second.second.second > 1U) {
                                                             pass = false;
                                                             break;
                                                       }
@@ -200,15 +204,15 @@ namespace luramas::ir::passes {
 
                                           /* Propagate packables */
                                           if (pass) {
-                                                pass = pm.is_safe(past.first) && !std::any_of(packables.begin(), packables.end(), [&](const auto &w) { return p->propagate_violates(w) || luramas::ir::tools::mutates(pm, w, past.second.first + 1u, i - 1u); });
+                                                pass = pm.is_safe(past.first) && !std::ranges::any_of(packables, [&](const auto &w) { return p->propagate_violates(w) || luramas::ir::tools::mutates(pm, w, past.second.first + 1U, i - 1U); });
                                                 if (pass) {
                                                       pack = true;
                                                       bool clonable = false;
                                                       for (const auto &w : packables) {
                                                             p->propagate(w, nullptr, clonable);
                                                       }
-                                                      for (const auto &r : rssa.r.regs) {
-                                                            packed.insert(*rssa.r.assigns[r].second.begin());
+                                                      for (const auto &rr : rssa.r.regs) {
+                                                            packed.insert(*rssa.r.assigns[rr].second.begin());
                                                       }
                                                 }
                                           }
@@ -219,27 +223,25 @@ namespace luramas::ir::passes {
                                     propagation_targets.insert(p);
 
                                     /* Check if any of the sources in past rvalues get set between current and then. */
-                                    if (auto start = i - 1u; i) {
+                                    if (auto start = i - 1U; i) {
 
                                           for (const auto &e : past.second.second.first) {
-                                                if (e > start) {
-                                                      start = e;
-                                                }
+                                                start = std::max(e, start);
                                           }
 
-                                          if (start > past.second.first + 1u) {
+                                          if (start > past.second.first + 1U) {
 
                                                 const auto &srcs = pm.processed.values[past.first].rvalues_regs;
                                                 for (auto o = start; o > past.second.first; --o) {
                                                       const auto &n = pm[o];
-                                                      if (o == i - 1u) {
+                                                      if (o == i - 1U) {
                                                             continue;
                                                       }
                                                       if (past.first == n) {
                                                             break;
                                                       }
-                                                      const auto &dests = ssa.nodes[n].l.regs;
-                                                      pass = !std::any_of(srcs.begin(), srcs.end(), [&](const auto &k) { return dests.contains(k); });
+                                                      const auto &dests_nodes = ssa.nodes[n].l.regs;
+                                                      pass = !std::ranges::any_of(srcs, [&](const auto &k) { return dests_nodes.contains(k); });
                                                       if (!pass) {
                                                             break;
                                                       }
@@ -257,13 +259,13 @@ namespace luramas::ir::passes {
                                           /* Propagate */
                                           auto &t = past.first->r;
                                           if (pack) {
-                                                t = tools::exprs::generate::packed(t, packed.size() + 1u);
+                                                t = tools::exprs::generate::packed(t, packed.size() + 1U);
                                           }
 
-                                          auto clonable = propagation_targets.size() > 1u;
+                                          auto clonable = propagation_targets.size() > 1U;
                                           if (past.first->r->is_primitive()) {
 
-                                                if (std::none_of(propagation_targets.begin(), propagation_targets.end(), [&](const auto &stat) { return pm.is_removed(stat) || stat->propagate_violates(r); })) {
+                                                if (std::ranges::none_of(propagation_targets, [&](const auto &stat) { return pm.is_removed(stat) || stat->propagate_violates(r); })) {
                                                       for (const auto &stat : propagation_targets) {
                                                             stat->propagate(r, t, clonable);
                                                       }
@@ -274,7 +276,7 @@ namespace luramas::ir::passes {
                                                 }
                                           } else {
 
-                                                if (!luramas::ir::tools::mutates(pm, t, past.second.first + 1u, start)) {
+                                                if (!luramas::ir::tools::mutates(pm, t, past.second.first + 1U, start)) {
                                                       if (pm.is_safe(p) && pm.safe(past.first)) {
 
                                                             for (const auto &stat : propagation_targets) {
@@ -294,7 +296,7 @@ namespace luramas::ir::passes {
                                                 } else {
                                                       if (const auto &vec = pm.processed.values[past.first].rvalues;
                                                           !vec.empty() &&
-                                                          std::all_of(vec.begin(), vec.end(), [](const auto &s) { return s->is_unsafe_k(); })) {
+                                                          std::ranges::all_of(vec, [](const auto &s) { return s->is_unsafe_k(); })) {
                                                             pm.set_safe(past.first);
                                                       }
                                                 }

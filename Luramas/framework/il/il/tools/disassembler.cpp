@@ -2,15 +2,15 @@
 
 namespace luramas::il::disassembler {
 
-      const char *const mnemonic_string(const luramas::il::arch::opcodes op) {
+      const char *mnemonic_string(const luramas::il::arch::opcodes op) {
 
-            if (const auto it = arch::opcode_to_str.find(op); it != arch::opcode_to_str.end()) {
+            if (const auto *const it = arch::opcode_to_str.find(op); it != arch::opcode_to_str.end()) {
                   return it->second;
             }
             return "";
       }
 
-      const char *const mnemonic_hint_string(const luramas::il::arch::opcodes op) {
+      const char *mnemonic_hint_string(const luramas::il::arch::opcodes op) {
 
             switch (op) {
                   case luramas::il::arch::opcodes::OP_NOP: {
@@ -468,7 +468,7 @@ namespace luramas::il::disassembler {
 
       std::string operand_string(const std::shared_ptr<luramas::il::arch::operand::operand> &operand) {
 
-            std::string result("");
+            std::string result;
 
             switch (operand->type) {
                   case luramas::il::arch::operand::operand_kind::none: {

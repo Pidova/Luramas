@@ -47,7 +47,7 @@ namespace luramas::ir {
                   buffer->captures.emplace_back(deep && (regs || !m->is_register_reference()) ? m->clone(deep, regs) : m);
             }
             for (const auto &[i, v] : this->tmembers) {
-                  buffer->tmembers.emplace_back(std::make_pair(i ? (deep && (regs || !i->is_register_reference()) ? i->clone(deep, regs) : i) : nullptr, v ? (deep && (regs || !v->is_register_reference()) ? v->clone(deep, regs) : v) : nullptr));
+                  buffer->tmembers.emplace_back(i ? (deep && (regs || !i->is_register_reference()) ? i->clone(deep, regs) : i) : nullptr, v ? (deep && (regs || !v->is_register_reference()) ? v->clone(deep, regs) : v) : nullptr);
             }
             for (const auto &c : this->closure) {
                   buffer->closure.emplace_back(deep ? c->clone(deep, regs) : c);

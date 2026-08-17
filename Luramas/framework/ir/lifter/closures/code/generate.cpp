@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../common.hpp"
 
 namespace luramas::ir::closures::generate {
@@ -33,7 +35,7 @@ namespace luramas::ir::closures::generate {
                                           expr->emit_reg_arg(u);
                                     }
                                     if (closure->flags.finclude_annotations) {
-                                          managers::upvalues::emitter::closure_debug_name(u, expr, closure, closure->nodes[closure->nodes.size() / 2u]);
+                                          managers::upvalues::emitter::closure_debug_name(u, expr, closure, closure->nodes[closure->nodes.size() / 2U]);
                                     }
                               }
                               if (expr) {
@@ -47,28 +49,26 @@ namespace luramas::ir::closures::generate {
                               if (!upvalues->pre_defined.contains(r) && !defined_arg.contains(r)) {
                                     auto result = luramas::ir::tools::exprs::generate::reg_arg(r);
                                     if (closure->flags.finclude_annotations) {
-                                          managers::upvalues::emitter::closure_debug_name(r, result, closure, closure->nodes[closure->nodes.size() / 2u]);
+                                          managers::upvalues::emitter::closure_debug_name(r, result, closure, closure->nodes[closure->nodes.size() / 2U]);
                                     }
                                     c->emit_definition(r, result);
                               }
                         }
                   } else {
-                        std::size_t max_arg = 0u;
+                        std::size_t max_arg = 0U;
                         for (const auto &u : undefs) {
                               const auto it = upvalues->defined_upvs.find(u);
                               if (it != upvalues->defined_upvs.end()) {
-                                    if (it->second > max_arg) {
-                                          max_arg = it->second;
-                                    }
+                                    max_arg = std::max<size_t>(it->second, max_arg);
                               } else if (u > max_arg) {
                                     max_arg = u;
                               }
                         }
-                        for (auto arg = 0u; arg < max_arg; ++arg) {
+                        for (auto arg = 0U; arg < max_arg; ++arg) {
                               if (!upvalues->pre_defined.contains(arg) && !defined_arg.contains(arg)) {
                                     auto result = luramas::ir::tools::exprs::generate::reg_arg(arg);
                                     if (closure->flags.finclude_annotations) {
-                                          managers::upvalues::emitter::closure_debug_name(arg, result, closure, closure->nodes[closure->nodes.size() / 2u]);
+                                          managers::upvalues::emitter::closure_debug_name(arg, result, closure, closure->nodes[closure->nodes.size() / 2U]);
                                     }
                                     c->emit_definition(arg, result);
                               }

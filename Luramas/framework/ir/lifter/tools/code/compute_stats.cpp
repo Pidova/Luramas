@@ -28,7 +28,7 @@ namespace luramas::ir::tools::compute::stats {
                               }
                               case tools::compute::comparable::false_: {
 
-                                    pm.remove(addr, tools::common::safe_take_jump(pm, addr) + 1u);
+                                    pm.remove(addr, tools::common::safe_take_jump(pm, addr) + 1U);
                                     if (mutate_pm) {
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }

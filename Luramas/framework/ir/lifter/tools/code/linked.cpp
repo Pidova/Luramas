@@ -18,7 +18,7 @@ namespace luramas::ir::tools::linked {
                   }
 
                   /* Make definition for parent page */
-                  for (auto i = 0u; i < refed_out.size(); ++i) {
+                  for (auto i = 0U; i < refed_out.size(); ++i) {
 
                         const auto &out_ref = refed_out[i];
                         if (!out_ref) {
@@ -37,7 +37,7 @@ namespace luramas::ir::tools::linked {
                   boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat::ir_expr>> current_casts;
                   for (const auto &[addr, s] : pending_defs) {
 
-                        const auto def = tools::stat::generate::flags::paging::definition(tools::guarantee::stats::definition(pm, addr, addr + 1u));
+                        const auto def = tools::stat::generate::flags::paging::definition(tools::guarantee::stats::definition(pm, addr, addr + 1U));
                         for (const auto &e : def->meta) {
                               if (tools::exprs::values::is_cast_reg(e)) {
                                     current_casts[e->l->reg] = e;
@@ -86,11 +86,11 @@ namespace luramas::ir::tools::linked {
 
                               /* Add */
                               if (const auto it = defs.find(curr); it != defs.end()) {
-                                    luramas_index idx = 0u;
+                                    luramas_index idx = 0U;
                                     const auto has_types = it->second->args.size() == it->second->meta.size();
                                     for (const auto &[r, expr] : it->second->args) {
                                           args[r] = std::make_pair(expr, has_types ? it->second->meta[idx] ? it->second->meta[idx]->non_native : nullptr : nullptr);
-                                          idx += has_types;
+                                          idx += static_cast<luramas_index>(has_types);
                                     }
                               }
 
@@ -112,7 +112,7 @@ namespace luramas::ir::tools::linked {
                   return;
             }
 
-            void adjust_dead_removal(luramas::ir::passes::pass_manager &pm) {
+            static void adjust_dead_removal(luramas::ir::passes::pass_manager & /*pm*/) {
 
                   return;
             }
@@ -138,7 +138,7 @@ namespace luramas::ir::tools::linked {
 
                               if (page.fvalid) {
 
-                                    if (const auto &def = pm[page.range.first + 1u]; tools::stat::is_definition(def) && def->flags.fpage_keyword) {
+                                    if (const auto &def = pm[page.range.first + 1U]; tools::stat::is_definition(def) && def->flags.fpage_keyword) {
 
                                           for (const auto &[rexp, a_es] : page.references) {
 
@@ -150,7 +150,7 @@ namespace luramas::ir::tools::linked {
 
                                                                   auto copy = stat->members;
                                                                   stat->members.clear();
-                                                                  for (auto i = 0u; i < stat->smembers.size(); ++i) {
+                                                                  for (auto i = 0U; i < stat->smembers.size(); ++i) {
                                                                         if (const auto &e = stat->smembers[i]; exprs::values::is_general_purpose_register(e)) {
                                                                               already_set[e->reg] = i;
                                                                         }
@@ -172,7 +172,7 @@ namespace luramas::ir::tools::linked {
 
                                                             auto copy = a_e.e->members;
                                                             a_e.e->members.clear();
-                                                            for (auto i = 0u; i < a_e.e->tmembers.size(); ++i) {
+                                                            for (auto i = 0U; i < a_e.e->tmembers.size(); ++i) {
                                                                   if (const auto &[e, _] = a_e.e->tmembers[i]; exprs::values::is_general_purpose_register(e)) {
                                                                         already_set[e->reg] = i;
                                                                   }

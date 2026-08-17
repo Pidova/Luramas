@@ -20,7 +20,7 @@ namespace luramas::il::lifter {
                   }
                   auto result = std::make_shared<luramas::il::ilang>();
                   std::vector<std::shared_ptr<luau_v6_disassembler::disassembly>> vect_dism;
-                  for (auto pc = 0u; pc < unsigned(p->sizecode);) {
+                  for (auto pc = 0U; pc < static_cast<unsigned>(p->sizecode);) {
                         auto dism = std::make_shared<luau_v6_disassembler::disassembly>();
                         luau_v6_disassembler::disassemble(pc, p, dism);
                         vect_dism.emplace_back(dism);
@@ -43,7 +43,7 @@ namespace luramas::il::lifter {
                         }
                         case lua_Type::LUA_TBOOLEAN: {
                               ptr->type = luramas::il::arch::data::kval_kinds::boolean;
-                              ptr->boolean.b = kval.value.b;
+                              ptr->boolean.b = (kval.value.b != 0);
                               break;
                         }
                         case lua_Type::LUA_TLIGHTUSERDATA: {
@@ -63,11 +63,11 @@ namespace luramas::il::lifter {
                         }
                         case lua_Type::LUA_TVECTOR: {
 
-                              const auto vect = vvalue(&kval);
+                              const auto *const vect = vvalue(&kval);
                               if (!vect) {
                                     luramas::error::error("String is nullptr");
                               }
-                              for (auto vi = 0u; vi < LUA_VECTOR_SIZE; ++vi) {
+                              for (auto vi = 0U; vi < LUA_VECTOR_SIZE; ++vi) {
                                     ptr->vector.vector.emplace_back(vect[vi]);
                               }
                               ptr->type = luramas::il::arch::data::kval_kinds::vector;
@@ -76,7 +76,7 @@ namespace luramas::il::lifter {
                         case lua_Type::LUA_TSTRING: {
 
                               ptr->type = luramas::il::arch::data::kval_kinds::string;
-                              const auto data = gco2ts(kval.value.gc);
+                              auto *const data = gco2ts(kval.value.gc);
                               if (!data) {
                                     luramas::error::error("String is nullptr");
                               }
@@ -86,7 +86,7 @@ namespace luramas::il::lifter {
                         }
                         case lua_Type::LUA_TTABLE: {
 
-                              const auto t = gco2h(kval.value.gc);
+                              auto *const t = gco2h(kval.value.gc);
                               if (!t) {
                                     luramas::error::error("Table is nullptr");
                               }
@@ -110,7 +110,7 @@ namespace luramas::il::lifter {
                               break;
                         }
                         case lua_Type::LUA_TPROTO: {
-                              const auto lp = gco2p(kval.value.gc);
+                              auto *const lp = gco2p(kval.value.gc);
                               if (!lp) {
                                     luramas::error::error("Proto is nullptr");
                               }

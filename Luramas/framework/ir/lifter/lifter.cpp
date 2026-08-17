@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "closures/common.hpp"
 
 namespace luramas::ir {
@@ -44,18 +46,18 @@ namespace luramas::ir {
                         Make a new upvalue for child proto
                     }
                   */
-                  for (auto o = 0u; o != on->nodes.size(); ++o) {
+                  for (auto o = 0U; o != on->nodes.size(); ++o) {
 
                         const auto &i = on->nodes[o];
                         switch (i->lex->disassembly->op) {
                               case il::arch::opcodes::OP_NEWCLOSURE:
                               case il::arch::opcodes::OP_REFCLOSURE: {
 
-                                    luramas_index uv_idx = 0u;
+                                    luramas_index uv_idx = 0U;
 
                                     /* Get contigious start */
                                     const auto idx = (i->lex->has_operand_kind<luramas::il::lexer::operand_kinds::kvalue>()) ? i->lex->operand_kind<luramas::il::lexer::operand_kinds::kvalue>().front()->dis.kvalue_idx : i->lex->operand_kind<luramas::il::lexer::operand_kinds::closure>().front()->dis.closure_idx;
-                                    auto n_idx = o + 1u;
+                                    auto n_idx = o + 1U;
                                     auto next = on->nodes[n_idx];
                                     while (next && il::arch::is_op::psuedo(next->lex->disassembly->op)) {
                                           next = on->nodes[++n_idx];
@@ -106,7 +108,7 @@ namespace luramas::ir {
                   for (auto &[pend_closure, pend_closures] : pending) {
 
                         /* Check if it has been lifted before */
-                        if (lifted.contains(pend_closure) || std::any_of(pend_closures.begin(), pend_closures.end(), [&lifted](const auto &l) { return !lifted.contains(l); })) {
+                        if (lifted.contains(pend_closure) || std::ranges::any_of(pend_closures, [&lifted](const auto &l) { return !lifted.contains(l); })) {
                               continue;
                         }
 

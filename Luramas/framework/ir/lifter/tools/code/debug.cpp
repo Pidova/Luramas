@@ -32,7 +32,7 @@ namespace luramas::ir::tools::debug {
             /* Alive nodes */
             {
                   result += LURAMAS_DEBUG_HEADER("Alive", "\n");
-                  for (auto idx = 0u; idx < pm.ir.data.size(); ++idx) {
+                  for (auto idx = 0U; idx < pm.ir.data.size(); ++idx) {
                         result += (!cfg.interacted_nodes.contains(idx) ? "   [E] " : "   ") + pm[idx]->str() + "\n";
                   }
             }

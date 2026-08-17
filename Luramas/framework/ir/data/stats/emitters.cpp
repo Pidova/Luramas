@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../../ir.hpp"
 namespace luramas::ir {
 
@@ -21,7 +23,7 @@ namespace luramas::ir {
                         for (const auto &i : this->args) {
                               this->parameters.emplace_back(i.second);
                         }
-                        std::sort(this->parameters.begin(), this->parameters.end(), [](const auto &l, const auto &r) {
+                        std::ranges::sort(this->parameters, [](const auto &l, const auto &r) {
                               if (l->vreg != -1 && r->vreg != -1) {
                                     return l->vreg < r->vreg;
                               }

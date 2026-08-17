@@ -23,7 +23,7 @@ namespace luramas::ir::managers::upvalues {
 
             void closure_debug_name(const luramas_register reg, const std::shared_ptr<ir_stat::ir_expr> &expr, const std::shared_ptr<luramas::closures::closure> &closure, const std::shared_ptr<luramas::closures::node> &node) {
                   if (closure->il->debug.has_value()) {
-                        if (const auto v = closure->il->debug.value().get(reg, node->address); v) {
+                        if (const auto *const v = closure->il->debug.value().get(reg, node->address); v) {
                               expr->emit_register_annotation(v);
                         }
                   }

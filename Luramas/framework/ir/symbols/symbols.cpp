@@ -28,18 +28,18 @@ std::string luramas::ir::symbols::symbol::str() const {
 
       auto result = this->name + "(";
 
-      for (auto o = 0u; o < this->args.size(); ++o) {
+      for (auto o = 0U; o < this->args.size(); ++o) {
             result += this->args[o].str();
-            if (o - 1u != this->args.size()) {
+            if (o - 1U != this->args.size()) {
                   result += ", ";
             }
       }
       result += ")";
-      if (this->returns.size()) {
+      if (!this->returns.empty()) {
             result += " | ";
-            for (auto o = 0u; o < this->returns.size(); ++o) {
+            for (auto o = 0U; o < this->returns.size(); ++o) {
                   result += this->returns[o].str();
-                  if (o - 1u != this->returns.size()) {
+                  if (o - 1U != this->returns.size()) {
                         result += ", ";
                   }
             }

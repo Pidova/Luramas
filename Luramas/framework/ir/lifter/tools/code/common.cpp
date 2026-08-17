@@ -15,7 +15,7 @@ namespace luramas::ir::tools::common {
 
       luramas_address safe_take_jump(luramas::ir::passes::pass_manager &pm, const luramas_address n) {
             if (!pm.contains(n)) {
-                  return 0u;
+                  return 0U;
             }
             auto buff = n;
             tools::stat::safe_jump_end(pm, n, buff);
@@ -24,12 +24,12 @@ namespace luramas::ir::tools::common {
             }
             const auto &e = pm[n];
             const auto jmp = e->jlabel ? pm.processed.labels[e->jlabel] : e->underlying_jump;
-            return pm.contains(jmp) ? jmp : 0u;
+            return pm.contains(jmp) ? jmp : 0U;
       }
 
       luramas_address reverse_safe_take_jump(luramas::ir::passes::pass_manager &pm, const luramas_address n) {
             if (!pm.contains(n)) {
-                  return 0u;
+                  return 0U;
             }
             const auto &e = pm[n];
             return e->end_label ? pm.processed.end_labels[e->end_label].first : e->elif_end_label ? pm.processed.end_labels[e->elif_end_label].first
@@ -72,19 +72,19 @@ namespace luramas::ir::tools::common {
             return (pm.contains(start) && tools::stat::branch::is_else_conditional(pm[start])) ? trackers::else_end(pm, start) : start;
       }
 
-      bool continues_to_loop(luramas::ir::passes::pass_manager &pm, const std::shared_ptr<ir_stat> &continue_stat, const luramas_address loop) {
+      bool continues_to_loop(luramas::ir::passes::pass_manager & /*pm*/, const std::shared_ptr<ir_stat> &continue_stat, const luramas_address loop) {
 
-            return stat::is_continue(continue_stat) && luramas_address(continue_stat->underlying_jump) == loop;
+            return stat::is_continue(continue_stat) && static_cast<luramas_address>(continue_stat->underlying_jump) == loop;
       }
       bool breaks_to_loop(luramas::ir::passes::pass_manager &pm, const std::shared_ptr<ir_stat> &break_stat, const luramas_address loop) {
 
-            return stat::is_break(break_stat) && pm.processed.parent_loops[break_stat->underlying_jump - 1u] == loop;
+            return stat::is_break(break_stat) && pm.processed.parent_loops[break_stat->underlying_jump - 1U] == loop;
       }
 
       luramas_address traces_to_loop_end(luramas::ir::passes::pass_manager &pm, const luramas_address on) {
 
             const auto end = trackers::next_safe_executable(pm, on);
-            return stat::branch::is_loop_end(pm, pm[end]) ? end : 0u;
+            return stat::branch::is_loop_end(pm, pm[end]) ? end : 0U;
       }
 
       std::shared_ptr<ir_stat::ir_expr> get_reg_expr_assignment(const std::shared_ptr<ir_stat> &assignment, const luramas_register reg) {

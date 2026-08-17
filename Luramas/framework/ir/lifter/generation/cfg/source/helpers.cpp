@@ -4,11 +4,11 @@
 
 namespace luramas::ir::cfg::helpers {
 
-      struct edge_writer {
+      struct EdgeWriter {
             const boost::unordered_flat_map<boost::graph_traits<boost_graph::g_t>::edge_descriptor, generation::cfg::block_kind> &edge_kinds;
 
-            template <class edge>
-            void operator()(std::ostream &out, const edge &e) const {
+            template <class Edge>
+            void operator()(std::ostream &out, const Edge &e) const {
                   if (const auto it = edge_kinds.find(e); it != edge_kinds.end()) {
                         switch (it->second) {
                               case generation::cfg::block_kind::jump: {
@@ -39,14 +39,14 @@ namespace luramas::ir::cfg::helpers {
 
             boost::unordered_flat_map<boost_graph::g_t::vertex_descriptor, std::string> labels;
             for (const auto &[b, v] : graph.vertex_descriptor) {
-                  if (const auto &s = ir.data[b->get_end() - 1u]; s) {
+                  if (const auto &s = ir.data[b->get_end() - 1U]; s) {
                         labels[v] = !s->annotation.empty() ? s->annotation : s->str();
                   } else {
                         labels[v] = std::to_string(b->get_front());
                   }
             }
             std::ostringstream oss;
-            boost::write_graphviz(oss, graph.graph, boost::make_label_writer(boost::make_assoc_property_map(labels)), edge_writer{graph.edge_kinds});
+            boost::write_graphviz(oss, graph.graph, boost::make_label_writer(boost::make_assoc_property_map(labels)), EdgeWriter{graph.edge_kinds});
             return oss.str();
       }
 

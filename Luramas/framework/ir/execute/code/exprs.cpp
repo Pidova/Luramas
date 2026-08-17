@@ -2,7 +2,7 @@
 
 namespace luramas::ir::execution::exprs {
 
-      error::result<types::object, errors::kinds> execute(environment &env, const std::shared_ptr<ir_stat::ir_expr> &expr) {
+      static error::result<types::object, errors::kinds> execute(environment &env, const std::shared_ptr<ir_stat::ir_expr> &expr) {
 
             error::result<types::object, errors::kinds> result;
 

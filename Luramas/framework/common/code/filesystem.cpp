@@ -11,7 +11,7 @@ namespace luramas::fs {
       }
 
       void load(std::istream &is, std::string &str) {
-            std::size_t len = 0u;
+            std::size_t len = 0U;
             is.read(reinterpret_cast<char *>(&len), sizeof(len));
             str.resize(len);
             is.read(str.data(), len);

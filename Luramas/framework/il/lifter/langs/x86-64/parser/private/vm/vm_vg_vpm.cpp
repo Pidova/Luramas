@@ -4,117 +4,117 @@
 /* Instruction handlers: VGATHERDPD - VPMULUDQ */
 namespace vm {
 
-      void VGATHERDPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERDPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERDPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERDPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF0DPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF0DPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF0DPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF0DPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF0QPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF0QPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF0QPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF0QPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF1DPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF1DPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF1DPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF1DPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF1QPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF1QPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERPF1QPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERPF1QPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERQPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERQPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGATHERQPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGATHERQPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETEXPPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETEXPPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETEXPPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETEXPPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETEXPSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETEXPSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETEXPSS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETEXPSS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETMANTPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETMANTPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETMANTPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETMANTPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETMANTSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETMANTSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGETMANTSS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGETMANTSS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGF2P8AFFINEINVQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGF2P8AFFINEINVQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGF2P8AFFINEQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGF2P8AFFINEQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VGF2P8MULB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VGF2P8MULB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VHADDPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
-            switch (DEST.bits()) {
-                  case 128u: {
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
+            switch (dest.bits()) {
+                  case 128U: {
 
-                        DEST.write(0u, 63u, SRC1.read(64u, 127u) + SRC1.read(0u, 63u));
-                        DEST.write(64u, 127u, SRC2.read(64u, 127u) + SRC2.read(0u, 63u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 63U, sr_c1.read(64U, 127U) + sr_c1.read(0U, 63U));
+                        dest.write(64U, 127U, sr_c2.read(64U, 127U) + sr_c2.read(0U, 63U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
+                  case 256U: {
 
-                        DEST.write(0u, 63u, SRC1.read(64u, 127u) + SRC1.read(0u, 63u));
-                        DEST.write(64u, 127u, SRC2.read(64u, 127u) + SRC2.read(0u, 63u));
-                        DEST.write(128u, 191u, SRC1.read(192u, 255u) + SRC1.read(128u, 191u));
-                        DEST.write(192u, 255u, SRC2.read(192u, 255u) + SRC2.read(191u, 128u));
+                        dest.write(0U, 63U, sr_c1.read(64U, 127U) + sr_c1.read(0U, 63U));
+                        dest.write(64U, 127U, sr_c2.read(64U, 127U) + sr_c2.read(0U, 63U));
+                        dest.write(128U, 191U, sr_c1.read(192U, 255U) + sr_c1.read(128U, 191U));
+                        dest.write(192U, 255U, sr_c2.read(192U, 255U) + sr_c2.read(191U, 128U));
                         break;
                   }
                   default: {
@@ -126,29 +126,29 @@ namespace vm {
 
       void VHADDPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
-            switch (DEST.bits()) {
-                  case 128u: {
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
+            switch (dest.bits()) {
+                  case 128U: {
 
-                        DEST.write(0u, 31u, SRC1.read(32u, 63u) + SRC1.read(0u, 31u));
-                        DEST.write(32u, 63u, SRC1.read(96u, 127u) + SRC1.read(64u, 95u));
-                        DEST.write(64u, 95u, SRC2.read(32u, 63u) + SRC2.read(0u, 31u));
-                        DEST.write(96u, 127u, SRC2.read(96u, 127u) + SRC2.read(64u, 95u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 31U, sr_c1.read(32U, 63U) + sr_c1.read(0U, 31U));
+                        dest.write(32U, 63U, sr_c1.read(96U, 127U) + sr_c1.read(64U, 95U));
+                        dest.write(64U, 95U, sr_c2.read(32U, 63U) + sr_c2.read(0U, 31U));
+                        dest.write(96U, 127U, sr_c2.read(96U, 127U) + sr_c2.read(64U, 95U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
+                  case 256U: {
 
-                        DEST.write(0u, 31u, SRC1.read(32u, 63u) + SRC1.read(0u, 31u));
-                        DEST.write(32u, 63u, SRC1.read(96u, 127u) + SRC1.read(64u, 95u));
-                        DEST.write(64u, 95u, SRC2.read(32u, 63u) + SRC2.read(0u, 31u));
-                        DEST.write(96u, 127u, SRC2.read(96u, 127u) + SRC2.read(64u, 95u));
-                        DEST.write(128u, 159u, SRC1.read(160u, 191u) + SRC1.read(128u, 159u));
-                        DEST.write(160u, 191u, SRC1.read(224u, 255u) + SRC1.read(192u, 223u));
-                        DEST.write(192u, 223u, SRC2.read(160u, 191u) + SRC2.read(128u, 159u));
-                        DEST.write(224u, 255u, SRC2.read(224u, 255u) + SRC2.read(192u, 223u));
+                        dest.write(0U, 31U, sr_c1.read(32U, 63U) + sr_c1.read(0U, 31U));
+                        dest.write(32U, 63U, sr_c1.read(96U, 127U) + sr_c1.read(64U, 95U));
+                        dest.write(64U, 95U, sr_c2.read(32U, 63U) + sr_c2.read(0U, 31U));
+                        dest.write(96U, 127U, sr_c2.read(96U, 127U) + sr_c2.read(64U, 95U));
+                        dest.write(128U, 159U, sr_c1.read(160U, 191U) + sr_c1.read(128U, 159U));
+                        dest.write(160U, 191U, sr_c1.read(224U, 255U) + sr_c1.read(192U, 223U));
+                        dest.write(192U, 223U, sr_c2.read(160U, 191U) + sr_c2.read(128U, 159U));
+                        dest.write(224U, 255U, sr_c2.read(224U, 255U) + sr_c2.read(192U, 223U));
                         break;
                   }
                   default: {
@@ -160,23 +160,23 @@ namespace vm {
 
       void VHSUBPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
-            switch (DEST.bits()) {
-                  case 128u: {
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
+            switch (dest.bits()) {
+                  case 128U: {
 
-                        DEST.write(0u, 63u, SRC1.read(0u, 63u) - SRC1.read(64u, 127u));
-                        DEST.write(64u, 127u, SRC2.read(0u, 63u) - SRC2.read(64u, 127u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 63U, sr_c1.read(0U, 63U) - sr_c1.read(64U, 127U));
+                        dest.write(64U, 127U, sr_c2.read(0U, 63U) - sr_c2.read(64U, 127U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
+                  case 256U: {
 
-                        DEST.write(0u, 63u, SRC1.read(0u, 63u) - SRC1.read(64u, 127u));
-                        DEST.write(64u, 127u, SRC2.read(0u, 63u) - SRC2.read(64u, 127u));
-                        DEST.write(128u, 191u, SRC1.read(128u, 191u) - SRC1.read(192u, 255u));
-                        DEST.write(192u, 255u, SRC2.read(128u, 191u) - SRC2.read(192u, 255u));
+                        dest.write(0U, 63U, sr_c1.read(0U, 63U) - sr_c1.read(64U, 127U));
+                        dest.write(64U, 127U, sr_c2.read(0U, 63U) - sr_c2.read(64U, 127U));
+                        dest.write(128U, 191U, sr_c1.read(128U, 191U) - sr_c1.read(192U, 255U));
+                        dest.write(192U, 255U, sr_c2.read(128U, 191U) - sr_c2.read(192U, 255U));
                         break;
                   }
                   default: {
@@ -188,94 +188,53 @@ namespace vm {
 
       void VHSUBPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
-            switch (DEST.bits()) {
-                  case 128u: {
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
+            switch (dest.bits()) {
+                  case 128U: {
 
-                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC1.read(32u, 63u));
-                        DEST.write(32u, 63u, SRC1.read(64u, 95u) - SRC1.read(96u, 127u));
-                        DEST.write(64u, 95u, SRC2.read(0u, 31u) - SRC2.read(32u, 63u));
-                        DEST.write(96u, 127u, SRC2.read(64u, 95u) - SRC2.read(96u, 127u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 31U, sr_c1.read(0U, 31U) - sr_c1.read(32U, 63U));
+                        dest.write(32U, 63U, sr_c1.read(64U, 95U) - sr_c1.read(96U, 127U));
+                        dest.write(64U, 95U, sr_c2.read(0U, 31U) - sr_c2.read(32U, 63U));
+                        dest.write(96U, 127U, sr_c2.read(64U, 95U) - sr_c2.read(96U, 127U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
+                  case 256U: {
 
-                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC1.read(32u, 63u));
-                        DEST.write(32u, 63u, SRC1.read(64u, 95u) - SRC1.read(96u, 127u));
-                        DEST.write(64u, 95u, SRC2.read(0u, 31u) - SRC2.read(32u, 63u));
-                        DEST.write(96u, 127u, SRC2.read(64u, 95u) - SRC2.read(96u, 127u));
-                        DEST.write(128u, 159u, SRC1.read(128u, 159u) - SRC1.read(160u, 191u));
-                        DEST.write(160u, 191u, SRC1.read(192u, 223u) - SRC1.read(224u, 255u));
-                        DEST.write(192u, 223u, SRC2.read(128u, 159u) - SRC2.read(160u, 191u));
-                        DEST.write(224u, 255u, SRC2.read(192u, 223u) - SRC2.read(224u, 255u));
-                        break;
-                  }
-                  default: {
-                        break;
-                  }
-            }
-            return;
-      }
-
-      void VINSERTF128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-
-            const auto dest = operands.front();
-            const auto src1 = operands[1u];
-            const auto src2 = operands[2u];
-            const auto imm = operands.back();
-
-            auto temp = src1.read(0u, 255);
-            switch (static_cast<std::uint8_t>(imm.integral & 1u)) {
-                  case 0u: {
-                        temp.write(0u, 127u, src2.read(0u, 127u));
-                        break;
-                  }
-                  case 1u: {
-                        temp.write(128u, 255u, src2.read(0u, 127u));
+                        dest.write(0U, 31U, sr_c1.read(0U, 31U) - sr_c1.read(32U, 63U));
+                        dest.write(32U, 63U, sr_c1.read(64U, 95U) - sr_c1.read(96U, 127U));
+                        dest.write(64U, 95U, sr_c2.read(0U, 31U) - sr_c2.read(32U, 63U));
+                        dest.write(96U, 127U, sr_c2.read(64U, 95U) - sr_c2.read(96U, 127U));
+                        dest.write(128U, 159U, sr_c1.read(128U, 159U) - sr_c1.read(160U, 191U));
+                        dest.write(160U, 191U, sr_c1.read(192U, 223U) - sr_c1.read(224U, 255U));
+                        dest.write(192U, 223U, sr_c2.read(128U, 159U) - sr_c2.read(160U, 191U));
+                        dest.write(224U, 255U, sr_c2.read(192U, 223U) - sr_c2.read(224U, 255U));
                         break;
                   }
                   default: {
                         break;
                   }
             }
-            dest = temp;
             return;
       }
 
-      void VINSERTF32X4(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            return;
-      }
+      void VINSERTF128(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-      void VINSERTF32X8(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            return;
-      }
+            const auto &dest = operands.front();
+            const auto &src1 = operands[1U];
+            const auto &src2 = operands[2U];
+            const auto &imm = operands.back();
 
-      void VINSERTF64X2(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            return;
-      }
-
-      void VINSERTF64X4(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-            return;
-      }
-
-      void VINSERTI128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
-
-            const auto dest = operands.front();
-            const auto src1 = operands[1u];
-            const auto src2 = operands[2u];
-            const auto imm = operands.back();
-
-            auto temp = src1.read(0u, 255);
-            switch (static_cast<std::uint8_t>(imm.integral & 1u)) {
-                  case 0u: {
-                        temp.write(0u, 127u, src2.read(0u, 127u));
+            auto temp = src1.read(0U, 255);
+            switch (static_cast<std::uint8_t>(imm.integral & 1U)) {
+                  case 0U: {
+                        temp.write(0U, 127U, src2.read(0U, 127U));
                         break;
                   }
-                  case 1u: {
-                        temp.write(128u, 255u, src2.read(0u, 127u));
+                  case 1U: {
+                        temp.write(128U, 255U, src2.read(0U, 127U));
                         break;
                   }
                   default: {
@@ -286,41 +245,82 @@ namespace vm {
             return;
       }
 
-      void VINSERTI32X4(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VINSERTF32X4(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VINSERTI32X8(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VINSERTF32X8(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VINSERTI64X2(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VINSERTF64X2(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VINSERTI64X4(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VINSERTF64X4(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VINSERTPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VINSERTI128(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto &dest = operands.front();
+            const auto &src1 = operands[1U];
+            const auto &src2 = operands[2U];
+            const auto &imm = operands.back();
+
+            auto temp = src1.read(0U, 255);
+            switch (static_cast<std::uint8_t>(imm.integral & 1U)) {
+                  case 0U: {
+                        temp.write(0U, 127U, src2.read(0U, 127U));
+                        break;
+                  }
+                  case 1U: {
+                        temp.write(128U, 255U, src2.read(0U, 127U));
+                        break;
+                  }
+                  default: {
+                        break;
+                  }
+            }
+            dest = temp;
+            return;
+      }
+
+      void VINSERTI32X4(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+            return;
+      }
+
+      void VINSERTI32X8(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+            return;
+      }
+
+      void VINSERTI64X2(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+            return;
+      }
+
+      void VINSERTI64X4(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+            return;
+      }
+
+      void VINSERTPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VLDDQU(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto dest = operands.front();
-            const auto src = operands.back();
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
             switch (src.bits()) {
-                  case 128u: {
+                  case 128U: {
 
-                        dest.write(0u, 127u, src.read(0u, 127u));
-                        dest.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 127U, src.read(0U, 127U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
+                  case 256U: {
 
-                        dest.write(0u, 255u, src.read(0u, 255u));
-                        dest.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 255U, src.read(0U, 255U));
+                        dest.write(256U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
                   default: {
@@ -336,35 +336,35 @@ namespace vm {
             return;
       }
 
-      void VMASKMOVDQU(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMASKMOVDQU(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMASKMOVPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMASKMOVPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMASKMOVPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMASKMOVPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMAXPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMAXPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMAXPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMAXPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMAXSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMAXSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMAXSS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMAXSS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMCALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMCALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             klura_call(luramas::builtins::VM::CALL, REG_ALL_64_REGS, REG_ALL_64_REGS);
             return;
@@ -372,51 +372,51 @@ namespace vm {
 
       void VMCLEAR(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto manager = operands.front();
+            const auto &manager = operands.front();
 
             klura_call(luramas::builtins::VM::MANAGER::CLEAR, {manager});
             return;
       }
 
-      void VMFUNC(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMFUNC(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMINPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMINPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMINPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMINPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMINSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMINSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMINSS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMINSS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMLAUNCH(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMLAUNCH(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             klura_call(luramas::builtins::VM::LAUNCH, {}, {});
             return;
       }
 
-      void VMLOAD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMLOAD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMMCALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMMCALL(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVAPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVAPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
@@ -426,19 +426,19 @@ namespace vm {
             return;
       }
 
-      void VMOVDDUP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDDUP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVDQA32(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQA32(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVDQA64(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQA64(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
@@ -448,79 +448,79 @@ namespace vm {
             return;
       }
 
-      void VMOVDQU16(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQU16(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVDQU32(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQU32(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVDQU64(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQU64(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVDQU8(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQU8(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVDQU(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVDQU(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVHLPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVHLPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVHPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVHPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVHPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVHPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVLHPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVLHPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVLPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVLPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVLPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVLPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVMSKPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVMSKPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVMSKPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVMSKPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VMOVNTDQA(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto dest = operands.front();
-            const auto src = operands.back();
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
             switch (src.bits()) {
-                  case 128u: {
+                  case 128U: {
 
                         dest = src;
-                        dest.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
+                  case 256U: {
 
-                        dest.write(0u, 255u, src.read(0u, 255u));
-                        dest.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 255U, src.read(0U, 255U));
+                        dest.write(256U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 512u: {
+                  case 512U: {
 
-                        dest.write(0u, 511u, src.read(0u, 511u));
-                        dest.write(512u, registrar.hw_constants.MAXVL - 1u, 0u);
+                        dest.write(0U, 511U, src.read(0U, 511U));
+                        dest.write(512U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
                   default: {
@@ -530,101 +530,101 @@ namespace vm {
             return;
       }
 
-      void VMOVNTDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVNTDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVNTPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVNTPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVNTPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVNTPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVSHDUP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVSHDUP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVSLDUP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVSLDUP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVSS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVSS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVUPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVUPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMOVUPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMOVUPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMPSADBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMPSADBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMPTRLD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMPTRLD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMPTRST(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMPTRST(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VMREAD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto dest = operands.front();
-            const auto src = operands.back();
-            klura_call(luramas::builtins::VM::MANAGER::READ_FIELD, {klura_tint(0u), src}, {dest});
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
+            klura_call(luramas::builtins::VM::MANAGER::READ_FIELD, {klura_tint(0U), src}, {dest});
             return;
       }
 
-      void VMRESUME(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMRESUME(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             klura_call(luramas::builtins::VM::RESUME, {}, {});
             return;
       }
 
-      void VMRUN(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMRUN(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMSAVE(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMSAVE(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMULPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMULPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMULPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMULPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMULSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMULSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VMULSS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMULSS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VMWRITE(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto dest = operands.front();
-            const auto src = operands.back();
-            klura_call(luramas::builtins::VM::MANAGER::SET_FIELD, {klura_tint(0u), dest, src});
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
+            klura_call(luramas::builtins::VM::MANAGER::SET_FIELD, {klura_tint(0U), dest, src});
             return;
       }
 
-      void VMXOFF(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VMXOFF(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             klura_call(luramas::builtins::VM::DISABLE, {}, {});
             return;
@@ -632,553 +632,553 @@ namespace vm {
 
       void VMXON(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto src = operands.front();
+            const auto &src = operands.front();
             klura_call(luramas::builtins::VM::ENABLE, {src}, {});
             return;
       }
 
-      void VORPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VORPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VORPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VORPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VP4DPWSSDS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VP4DPWSSDS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VP4DPWSSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VP4DPWSSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPABSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPABSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPABSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPABSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPABSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPABSQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPABSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPABSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPACKSSDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPACKSSDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPACKSSWB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPACKSSWB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPACKUSDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPACKUSDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPACKUSWB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPACKUSWB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDUSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDUSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDUSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDUSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPADDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPADDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPALIGNR(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPALIGNR(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPANDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPANDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPANDND(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPANDND(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPANDNQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPANDNQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPANDN(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPANDN(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPANDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPANDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPAND(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPAND(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPAVGB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPAVGB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPAVGW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPAVGW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDMB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDMB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDMD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDMD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDMQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDMQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDMW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDMW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDVB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDVB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBLENDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBLENDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBROADCASTB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBROADCASTB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBROADCASTD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBROADCASTD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBROADCASTMB2Q(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBROADCASTMB2Q(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto dest = operands.front();
-            const auto src = operands.back();
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
 
             const auto vl = dest.bits();
-            const auto kl = vl / 64u;
+            const auto kl = vl / 64U;
 
-            for (auto j = 0u; j < kl; ++j) {
-                  const auto i = j * 64u;
-                  dest.write(i, i + 63u, luramas::il::lifter::builder::libraries::structure::zero_extend(src.read(0u, 7u), 64u));
+            for (auto j = 0U; j < kl; ++j) {
+                  const auto i = j * 64U;
+                  dest.write(i, i + 63U, luramas::il::lifter::builder::libraries::structure::zero_extend(src.read(0U, 7U), 64U));
             }
             return;
       }
 
-      void VPBROADCASTMW2D(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBROADCASTMW2D(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto dest = operands.front();
-            const auto src = operands.back();
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
 
             const auto vl = dest.bits();
-            const auto kl = vl / 32u;
+            const auto kl = vl / 32U;
 
-            for (auto j = 0u; j < kl; ++j) {
-                  const auto i = j * 32u;
-                  dest.write(i, i + 31u, luramas::il::lifter::builder::libraries::structure::zero_extend(src.read(0u, 15u), 32u));
+            for (auto j = 0U; j < kl; ++j) {
+                  const auto i = j * 32U;
+                  dest.write(i, i + 31U, luramas::il::lifter::builder::libraries::structure::zero_extend(src.read(0U, 15U), 32U));
             }
             return;
       }
 
-      void VPBROADCASTQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBROADCASTQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPBROADCASTW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPBROADCASTW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCLMULQDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCLMULQDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMOV(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMOV(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPEQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPEQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPEQD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPEQD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPEQQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPEQQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPEQW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPEQW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPESTRI(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPESTRI(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPESTRM(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPESTRM(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPGTB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPGTB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPGTD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPGTD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPGTQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPGTQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPGTW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPGTW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPISTRI(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPISTRI(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPISTRM(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPISTRM(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPUB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPUB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPUD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPUD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPUQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPUQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPUW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPUW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCMPW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCMPW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOM(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOM(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMPRESSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMPRESSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMPRESSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMPRESSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMPRESSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMPRESSQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMPRESSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMPRESSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMUB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMUB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMUD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMUD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMUQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMUQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMUW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMUW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCOMW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCOMW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCONFLICTD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCONFLICTD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPCONFLICTQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPCONFLICTQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPDPBUSDS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPDPBUSDS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPDPBUSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPDPBUSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPDPWSSDS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPDPWSSDS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPDPWSSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPDPWSSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERM2F128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERM2F128(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERM2I128(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERM2I128(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMI2B(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMI2B(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMI2D(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMI2D(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMI2PD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMI2PD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMI2PS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMI2PS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMI2Q(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMI2Q(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMI2W(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMI2W(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMIL2PD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMIL2PD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMILPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMILPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMIL2PS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMIL2PS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMILPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMILPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMPD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMPD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMPS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMPS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMT2B(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMT2B(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMT2D(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMT2D(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMT2PD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMT2PD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMT2PS(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMT2PS(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMT2Q(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMT2Q(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMT2W(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMT2W(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPERMW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPERMW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXPANDB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXPANDB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXPANDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXPANDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXPANDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXPANDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXPANDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXPANDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXTRB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXTRB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXTRD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXTRD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXTRQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXTRQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPEXTRW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPEXTRW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPGATHERDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPGATHERDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPGATHERDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPGATHERDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPGATHERQD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPGATHERQD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPGATHERQQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPGATHERQQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDBD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDBD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDBQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDBQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VPHADDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
 
-            switch (DEST.bits()) {
-                  case 128u: {
-                        DEST.write(0u, 31u, SRC1.read(0u, 31u) + SRC1.read(32u, 63u));
-                        DEST.write(32u, 63u, SRC1.read(64u, 95u) + SRC1.read(96u, 127u));
-                        DEST.write(64u, 95u, SRC2.read(0u, 31u) + SRC2.read(32u, 63u));
-                        DEST.write(96u, 127u, SRC2.read(64u, 95u) + SRC2.read(96u, 127u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+            switch (dest.bits()) {
+                  case 128U: {
+                        dest.write(0U, 31U, sr_c1.read(0U, 31U) + sr_c1.read(32U, 63U));
+                        dest.write(32U, 63U, sr_c1.read(64U, 95U) + sr_c1.read(96U, 127U));
+                        dest.write(64U, 95U, sr_c2.read(0U, 31U) + sr_c2.read(32U, 63U));
+                        dest.write(96U, 127U, sr_c2.read(64U, 95U) + sr_c2.read(96U, 127U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
-                        DEST.write(0u, 31u, SRC1.read(0u, 31u) + SRC1.read(32u, 63u));
-                        DEST.write(32u, 63u, SRC1.read(64u, 95u) + SRC1.read(96u, 127u));
-                        DEST.write(64u, 95u, SRC2.read(0u, 31u) + SRC2.read(32u, 63u));
-                        DEST.write(96u, 127u, SRC2.read(64u, 95u) + SRC2.read(96u, 127u));
-                        DEST.write(128u, 159u, SRC1.read(128u, 159u) + SRC1.read(160u, 191u));
-                        DEST.write(160u, 191u, SRC1.read(192u, 223u) + SRC1.read(224u, 255u));
-                        DEST.write(192u, 223u, SRC2.read(128u, 159u) + SRC2.read(160u, 191u));
-                        DEST.write(224u, 255u, SRC2.read(192u, 223u) + SRC2.read(224u, 255u));
+                  case 256U: {
+                        dest.write(0U, 31U, sr_c1.read(0U, 31U) + sr_c1.read(32U, 63U));
+                        dest.write(32U, 63U, sr_c1.read(64U, 95U) + sr_c1.read(96U, 127U));
+                        dest.write(64U, 95U, sr_c2.read(0U, 31U) + sr_c2.read(32U, 63U));
+                        dest.write(96U, 127U, sr_c2.read(64U, 95U) + sr_c2.read(96U, 127U));
+                        dest.write(128U, 159U, sr_c1.read(128U, 159U) + sr_c1.read(160U, 191U));
+                        dest.write(160U, 191U, sr_c1.read(192U, 223U) + sr_c1.read(224U, 255U));
+                        dest.write(192U, 223U, sr_c2.read(128U, 159U) + sr_c2.read(160U, 191U));
+                        dest.write(224U, 255U, sr_c2.read(192U, 223U) + sr_c2.read(224U, 255U));
                         break;
                   }
                   default: {
@@ -1190,42 +1190,42 @@ namespace vm {
 
       void VPHADDSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
             function_handler f(registrar.build);
 
-            switch (DEST.bits()) {
-                  case 128u: {
-                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(16u, 31u) + SRC1.read(0u, 15u)));
-                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(48u, 63u) + SRC1.read(32u, 47u)));
-                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(80u, 95u) + SRC1.read(64u, 79u)));
-                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(112u, 127u) + SRC1.read(96u, 111u)));
-                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(16u, 31u) + SRC2.read(0u, 15u)));
-                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(48u, 63u) + SRC2.read(32u, 47u)));
-                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(80u, 95u) + SRC2.read(64u, 79u)));
-                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(112u, 127u) + SRC2.read(96u, 111u)));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+            switch (dest.bits()) {
+                  case 128U: {
+                        dest.write(0U, 15U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(16U, 31U) + sr_c1.read(0U, 15U)));
+                        dest.write(16U, 31U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(48U, 63U) + sr_c1.read(32U, 47U)));
+                        dest.write(32U, 47U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(80U, 95U) + sr_c1.read(64U, 79U)));
+                        dest.write(48U, 63U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(112U, 127U) + sr_c1.read(96U, 111U)));
+                        dest.write(64U, 79U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(16U, 31U) + sr_c2.read(0U, 15U)));
+                        dest.write(80U, 95U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(48U, 63U) + sr_c2.read(32U, 47U)));
+                        dest.write(96U, 111U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(80U, 95U) + sr_c2.read(64U, 79U)));
+                        dest.write(112U, 127U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(112U, 127U) + sr_c2.read(96U, 111U)));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
-                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(16u, 31u) + SRC1.read(0u, 15u)));
-                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(48u, 63u) + SRC1.read(32u, 47u)));
-                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(80u, 95u) + SRC1.read(64u, 79u)));
-                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(112u, 127u) + SRC1.read(96u, 111u)));
-                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(16u, 31u) + SRC2.read(0u, 15u)));
-                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(48u, 63u) + SRC2.read(32u, 47u)));
-                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(80u, 95u) + SRC2.read(64u, 79u)));
-                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(112u, 127u) + SRC2.read(96u, 111u)));
-                        DEST.write(128u, 143u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(144u, 159u) + SRC1.read(128u, 143u)));
-                        DEST.write(144u, 159u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(176u, 191u) + SRC1.read(160u, 175u)));
-                        DEST.write(160u, 175u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(208u, 223u) + SRC1.read(192u, 207u)));
-                        DEST.write(176u, 191u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(240u, 255u) + SRC1.read(224u, 239u)));
-                        DEST.write(192u, 207u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(144u, 159u) + SRC2.read(128u, 143u)));
-                        DEST.write(208u, 223u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(176u, 191u) + SRC2.read(160u, 175u)));
-                        DEST.write(224u, 239u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(208u, 223u) + SRC2.read(192u, 207u)));
-                        DEST.write(240u, 255u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(240u, 255u) + SRC2.read(224u, 239u)));
-                        DEST.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
+                  case 256U: {
+                        dest.write(0U, 15U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(16U, 31U) + sr_c1.read(0U, 15U)));
+                        dest.write(16U, 31U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(48U, 63U) + sr_c1.read(32U, 47U)));
+                        dest.write(32U, 47U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(80U, 95U) + sr_c1.read(64U, 79U)));
+                        dest.write(48U, 63U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(112U, 127U) + sr_c1.read(96U, 111U)));
+                        dest.write(64U, 79U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(16U, 31U) + sr_c2.read(0U, 15U)));
+                        dest.write(80U, 95U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(48U, 63U) + sr_c2.read(32U, 47U)));
+                        dest.write(96U, 111U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(80U, 95U) + sr_c2.read(64U, 79U)));
+                        dest.write(112U, 127U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(112U, 127U) + sr_c2.read(96U, 111U)));
+                        dest.write(128U, 143U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(144U, 159U) + sr_c1.read(128U, 143U)));
+                        dest.write(144U, 159U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(176U, 191U) + sr_c1.read(160U, 175U)));
+                        dest.write(160U, 175U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(208U, 223U) + sr_c1.read(192U, 207U)));
+                        dest.write(176U, 191U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(240U, 255U) + sr_c1.read(224U, 239U)));
+                        dest.write(192U, 207U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(144U, 159U) + sr_c2.read(128U, 143U)));
+                        dest.write(208U, 223U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(176U, 191U) + sr_c2.read(160U, 175U)));
+                        dest.write(224U, 239U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(208U, 223U) + sr_c2.read(192U, 207U)));
+                        dest.write(240U, 255U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(240U, 255U) + sr_c2.read(224U, 239U)));
+                        dest.write(256U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
                   default: {
@@ -1235,74 +1235,74 @@ namespace vm {
             return;
       }
 
-      void VPHADDUBD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDUBD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDUBQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDUBQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDUBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDUBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDUDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDUDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDUWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDUWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDUWQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDUWQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHADDWQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHADDWQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VPHADDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
 
-            switch (DEST.bits()) {
-                  case 128u: {
-                        DEST.write(0u, 15u, SRC1.read(0u, 15u) + SRC1.read(16u, 31u));
-                        DEST.write(16u, 31u, SRC1.read(32u, 47u) + SRC1.read(48u, 63u));
-                        DEST.write(32u, 47u, SRC1.read(64u, 79u) + SRC1.read(80u, 95u));
-                        DEST.write(48u, 63u, SRC1.read(96u, 111u) + SRC1.read(112u, 127u));
-                        DEST.write(64u, 79u, SRC2.read(0u, 15u) + SRC2.read(16u, 31u));
-                        DEST.write(80u, 95u, SRC2.read(32u, 47u) + SRC2.read(48u, 63u));
-                        DEST.write(96u, 111u, SRC2.read(64u, 79u) + SRC2.read(80u, 95u));
-                        DEST.write(112u, 127u, SRC2.read(96u, 111u) + SRC2.read(112u, 127u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+            switch (dest.bits()) {
+                  case 128U: {
+                        dest.write(0U, 15U, sr_c1.read(0U, 15U) + sr_c1.read(16U, 31U));
+                        dest.write(16U, 31U, sr_c1.read(32U, 47U) + sr_c1.read(48U, 63U));
+                        dest.write(32U, 47U, sr_c1.read(64U, 79U) + sr_c1.read(80U, 95U));
+                        dest.write(48U, 63U, sr_c1.read(96U, 111U) + sr_c1.read(112U, 127U));
+                        dest.write(64U, 79U, sr_c2.read(0U, 15U) + sr_c2.read(16U, 31U));
+                        dest.write(80U, 95U, sr_c2.read(32U, 47U) + sr_c2.read(48U, 63U));
+                        dest.write(96U, 111U, sr_c2.read(64U, 79U) + sr_c2.read(80U, 95U));
+                        dest.write(112U, 127U, sr_c2.read(96U, 111U) + sr_c2.read(112U, 127U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
-                        DEST.write(0u, 15u, SRC1.read(0u, 15u) + SRC1.read(16u, 31u));
-                        DEST.write(16u, 31u, SRC1.read(32u, 47u) + SRC1.read(48u, 63u));
-                        DEST.write(32u, 47u, SRC1.read(64u, 79u) + SRC1.read(80u, 95u));
-                        DEST.write(48u, 63u, SRC1.read(96u, 111u) + SRC1.read(112u, 127u));
-                        DEST.write(64u, 79u, SRC2.read(0u, 15u) + SRC2.read(16u, 31u));
-                        DEST.write(80u, 95u, SRC2.read(32u, 47u) + SRC2.read(48u, 63u));
-                        DEST.write(96u, 111u, SRC2.read(64u, 79u) + SRC2.read(80u, 95u));
-                        DEST.write(112u, 127u, SRC2.read(96u, 111u) + SRC2.read(112u, 127u));
-                        DEST.write(128u, 143u, SRC1.read(128u, 143u) + SRC1.read(144u, 159u));
-                        DEST.write(144u, 159u, SRC1.read(160u, 175u) + SRC1.read(176u, 191u));
-                        DEST.write(160u, 175u, SRC1.read(192u, 207u) + SRC1.read(208u, 223u));
-                        DEST.write(176u, 191u, SRC1.read(224u, 239u) + SRC1.read(240u, 255u));
-                        DEST.write(192u, 207u, SRC2.read(128u, 143u) + SRC2.read(144u, 159u));
-                        DEST.write(208u, 223u, SRC2.read(160u, 175u) + SRC2.read(176u, 191u));
-                        DEST.write(224u, 239u, SRC2.read(192u, 207u) + SRC2.read(208u, 223u));
-                        DEST.write(240u, 255u, SRC2.read(224u, 239u) + SRC2.read(240u, 255u));
+                  case 256U: {
+                        dest.write(0U, 15U, sr_c1.read(0U, 15U) + sr_c1.read(16U, 31U));
+                        dest.write(16U, 31U, sr_c1.read(32U, 47U) + sr_c1.read(48U, 63U));
+                        dest.write(32U, 47U, sr_c1.read(64U, 79U) + sr_c1.read(80U, 95U));
+                        dest.write(48U, 63U, sr_c1.read(96U, 111U) + sr_c1.read(112U, 127U));
+                        dest.write(64U, 79U, sr_c2.read(0U, 15U) + sr_c2.read(16U, 31U));
+                        dest.write(80U, 95U, sr_c2.read(32U, 47U) + sr_c2.read(48U, 63U));
+                        dest.write(96U, 111U, sr_c2.read(64U, 79U) + sr_c2.read(80U, 95U));
+                        dest.write(112U, 127U, sr_c2.read(96U, 111U) + sr_c2.read(112U, 127U));
+                        dest.write(128U, 143U, sr_c1.read(128U, 143U) + sr_c1.read(144U, 159U));
+                        dest.write(144U, 159U, sr_c1.read(160U, 175U) + sr_c1.read(176U, 191U));
+                        dest.write(160U, 175U, sr_c1.read(192U, 207U) + sr_c1.read(208U, 223U));
+                        dest.write(176U, 191U, sr_c1.read(224U, 239U) + sr_c1.read(240U, 255U));
+                        dest.write(192U, 207U, sr_c2.read(128U, 143U) + sr_c2.read(144U, 159U));
+                        dest.write(208U, 223U, sr_c2.read(160U, 175U) + sr_c2.read(176U, 191U));
+                        dest.write(224U, 239U, sr_c2.read(192U, 207U) + sr_c2.read(208U, 223U));
+                        dest.write(240U, 255U, sr_c2.read(224U, 239U) + sr_c2.read(240U, 255U));
                         break;
                   }
                   default: {
@@ -1318,39 +1318,39 @@ namespace vm {
             return;
       }
 
-      void VPHSUBBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHSUBBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             return;
       }
 
-      void VPHSUBDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHSUBDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
       void VPHSUBD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
 
-            switch (DEST.bits()) {
-                  case 128u: {
-                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC1.read(32u, 63u));
-                        DEST.write(32u, 63u, SRC1.read(64u, 95u) - SRC1.read(96u, 127u));
-                        DEST.write(64u, 95u, SRC2.read(0u, 31u) - SRC2.read(32u, 63u));
-                        DEST.write(96u, 127u, SRC2.read(64u, 95u) - SRC2.read(96u, 127u));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+            switch (dest.bits()) {
+                  case 128U: {
+                        dest.write(0U, 31U, sr_c1.read(0U, 31U) - sr_c1.read(32U, 63U));
+                        dest.write(32U, 63U, sr_c1.read(64U, 95U) - sr_c1.read(96U, 127U));
+                        dest.write(64U, 95U, sr_c2.read(0U, 31U) - sr_c2.read(32U, 63U));
+                        dest.write(96U, 127U, sr_c2.read(64U, 95U) - sr_c2.read(96U, 127U));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
-                        DEST.write(0u, 31u, SRC1.read(0u, 31u) - SRC1.read(32u, 63u));
-                        DEST.write(32u, 63u, SRC1.read(64u, 95u) - SRC1.read(96u, 127u));
-                        DEST.write(64u, 95u, SRC2.read(0u, 31u) - SRC2.read(32u, 63u));
-                        DEST.write(96u, 127u, SRC2.read(64u, 95u) - SRC2.read(96u, 127u));
-                        DEST.write(128u, 159u, SRC1.read(128u, 159u) - SRC1.read(160u, 191u));
-                        DEST.write(160u, 191u, SRC1.read(192u, 223u) - SRC1.read(224u, 255u));
-                        DEST.write(192u, 223u, SRC2.read(128u, 159u) - SRC2.read(160u, 191u));
-                        DEST.write(224u, 255u, SRC2.read(192u, 223u) - SRC2.read(224u, 255u));
+                  case 256U: {
+                        dest.write(0U, 31U, sr_c1.read(0U, 31U) - sr_c1.read(32U, 63U));
+                        dest.write(32U, 63U, sr_c1.read(64U, 95U) - sr_c1.read(96U, 127U));
+                        dest.write(64U, 95U, sr_c2.read(0U, 31U) - sr_c2.read(32U, 63U));
+                        dest.write(96U, 127U, sr_c2.read(64U, 95U) - sr_c2.read(96U, 127U));
+                        dest.write(128U, 159U, sr_c1.read(128U, 159U) - sr_c1.read(160U, 191U));
+                        dest.write(160U, 191U, sr_c1.read(192U, 223U) - sr_c1.read(224U, 255U));
+                        dest.write(192U, 223U, sr_c2.read(128U, 159U) - sr_c2.read(160U, 191U));
+                        dest.write(224U, 255U, sr_c2.read(192U, 223U) - sr_c2.read(224U, 255U));
                         break;
                   }
                   default: {
@@ -1362,42 +1362,42 @@ namespace vm {
 
       void VPHSUBSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            const auto DEST = operands.front();
-            const auto SRC1 = operands[1u];
-            const auto SRC2 = operands.back();
+            const auto &dest = operands.front();
+            const auto &sr_c1 = operands[1U];
+            const auto &sr_c2 = operands.back();
             function_handler f(registrar.build);
 
-            switch (DEST.bits()) {
-                  case 128u: {
-                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(0u, 15u) - SRC1.read(16u, 31u)));
-                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(32u, 47u) - SRC1.read(48u, 63u)));
-                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(64u, 79u) - SRC1.read(80u, 95u)));
-                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(96u, 111u) - SRC1.read(112u, 127u)));
-                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(0u, 15u) - SRC2.read(16u, 31u)));
-                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(32u, 47u) - SRC2.read(48u, 63u)));
-                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(64u, 79u) - SRC2.read(80u, 95u)));
-                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(96u, 111u) - SRC2.read(112u, 127u)));
-                        DEST.write(128u, registrar.hw_constants.MAXVL - 1u, 0u);
+            switch (dest.bits()) {
+                  case 128U: {
+                        dest.write(0U, 15U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(0U, 15U) - sr_c1.read(16U, 31U)));
+                        dest.write(16U, 31U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(32U, 47U) - sr_c1.read(48U, 63U)));
+                        dest.write(32U, 47U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(64U, 79U) - sr_c1.read(80U, 95U)));
+                        dest.write(48U, 63U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(96U, 111U) - sr_c1.read(112U, 127U)));
+                        dest.write(64U, 79U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(0U, 15U) - sr_c2.read(16U, 31U)));
+                        dest.write(80U, 95U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(32U, 47U) - sr_c2.read(48U, 63U)));
+                        dest.write(96U, 111U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(64U, 79U) - sr_c2.read(80U, 95U)));
+                        dest.write(112U, 127U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(96U, 111U) - sr_c2.read(112U, 127U)));
+                        dest.write(128U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
-                  case 256u: {
-                        DEST.write(0u, 15u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(0u, 15u) - SRC1.read(16u, 31u)));
-                        DEST.write(16u, 31u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(32u, 47u) - SRC1.read(48u, 63u)));
-                        DEST.write(32u, 47u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(64u, 79u) - SRC1.read(80u, 95u)));
-                        DEST.write(48u, 63u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(96u, 111u) - SRC1.read(112u, 127u)));
-                        DEST.write(64u, 79u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(0u, 15u) - SRC2.read(16u, 31u)));
-                        DEST.write(80u, 95u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(32u, 47u) - SRC2.read(48u, 63u)));
-                        DEST.write(96u, 111u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(64u, 79u) - SRC2.read(80u, 95u)));
-                        DEST.write(112u, 127u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(96u, 111u) - SRC2.read(112u, 127u)));
-                        DEST.write(128u, 143u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(128u, 143u) - SRC1.read(144u, 159u)));
-                        DEST.write(144u, 159u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(160u, 175u) - SRC1.read(176u, 191u)));
-                        DEST.write(160u, 175u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(192u, 207u) - SRC1.read(208u, 223u)));
-                        DEST.write(176u, 191u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC1.read(224u, 239u) - SRC1.read(240u, 255u)));
-                        DEST.write(192u, 207u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(128u, 143u) - SRC2.read(144u, 159u)));
-                        DEST.write(208u, 223u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(160u, 175u) - SRC2.read(176u, 191u)));
-                        DEST.write(224u, 239u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(192u, 207u) - SRC2.read(208u, 223u)));
-                        DEST.write(240u, 255u, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, SRC2.read(224u, 239u) - SRC2.read(240u, 255u)));
-                        DEST.write(256u, registrar.hw_constants.MAXVL - 1u, 0u);
+                  case 256U: {
+                        dest.write(0U, 15U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(0U, 15U) - sr_c1.read(16U, 31U)));
+                        dest.write(16U, 31U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(32U, 47U) - sr_c1.read(48U, 63U)));
+                        dest.write(32U, 47U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(64U, 79U) - sr_c1.read(80U, 95U)));
+                        dest.write(48U, 63U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(96U, 111U) - sr_c1.read(112U, 127U)));
+                        dest.write(64U, 79U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(0U, 15U) - sr_c2.read(16U, 31U)));
+                        dest.write(80U, 95U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(32U, 47U) - sr_c2.read(48U, 63U)));
+                        dest.write(96U, 111U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(64U, 79U) - sr_c2.read(80U, 95U)));
+                        dest.write(112U, 127U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(96U, 111U) - sr_c2.read(112U, 127U)));
+                        dest.write(128U, 143U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(128U, 143U) - sr_c1.read(144U, 159U)));
+                        dest.write(144U, 159U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(160U, 175U) - sr_c1.read(176U, 191U)));
+                        dest.write(160U, 175U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(192U, 207U) - sr_c1.read(208U, 223U)));
+                        dest.write(176U, 191U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c1.read(224U, 239U) - sr_c1.read(240U, 255U)));
+                        dest.write(192U, 207U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(128U, 143U) - sr_c2.read(144U, 159U)));
+                        dest.write(208U, 223U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(160U, 175U) - sr_c2.read(176U, 191U)));
+                        dest.write(224U, 239U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(192U, 207U) - sr_c2.read(208U, 223U)));
+                        dest.write(240U, 255U, luramas::il::lifter::builder::libraries::structure::saturate_to_signed_word(f, sr_c2.read(224U, 239U) - sr_c2.read(240U, 255U)));
+                        dest.write(256U, registrar.hw_constants.MAXVL - 1U, 0U);
                         break;
                   }
                   default: {
@@ -1407,363 +1407,363 @@ namespace vm {
             return;
       }
 
-      void VPHSUBWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHSUBWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPHSUBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPHSUBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPINSRB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPINSRB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPINSRD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPINSRD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPINSRQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPINSRQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPINSRW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPINSRW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPLZCNTD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPLZCNTD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPLZCNTQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPLZCNTQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSDQH(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSDQH(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSDQL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSDQL(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSSDD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSSDD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSSDQH(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSSDQH(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSSDQL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSSDQL(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSSWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSSWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSSWW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSSWW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMACSWW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMACSWW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMADCSSWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMADCSSWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMADCSWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMADCSWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMADD52HUQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMADD52HUQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMADD52LUQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMADD52LUQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMADDUBSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMADDUBSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMADDWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMADDWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMASKMOVD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMASKMOVD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMASKMOVQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMASKMOVQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXSQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXUB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXUB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXUD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXUD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXUQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXUQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMAXUW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMAXUW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINSD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINSQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINUB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINUB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINUD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINUD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINUQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINUQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMINUW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMINUW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVB2M(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVB2M(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVD2M(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVD2M(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVDB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVDB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVM2B(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVM2B(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVM2D(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVM2D(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVM2Q(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVM2Q(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVM2W(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVM2W(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVMSKB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVMSKB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVQ2M(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVQ2M(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVQD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVQD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVQW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVQW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSDB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSDB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSQD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSQD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSQW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSQW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSWB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSWB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSXBD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSXBD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSXBQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSXBQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSXBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSXBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSXDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSXDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSXWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSXWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVSXWQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVSXWQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVUSDB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVUSDB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVUSDW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVUSDW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVUSQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVUSQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVUSQD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVUSQD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVUSQW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVUSQW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVUSWB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVUSWB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVW2M(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVW2M(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVWB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVWB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVZXBD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVZXBD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVZXBQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVZXBQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVZXBW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVZXBW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVZXDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVZXDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVZXWD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVZXWD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMOVZXWQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMOVZXWQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULHRSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULHRSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULHUW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULHUW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULHW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULHW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULLD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULLD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULLQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULLQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULLW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULLW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULTISHIFTQB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULTISHIFTQB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 
-      void VPMULUDQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+      void VPMULUDQ(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
             return;
       }
 } // namespace vm

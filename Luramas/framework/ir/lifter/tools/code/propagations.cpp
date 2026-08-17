@@ -5,7 +5,7 @@ namespace luramas::ir::tools::propagations {
 
       luramas_count constant_folds(luramas::ir::passes::pass_manager &pm, const generation::ssa::ssa &ssa, const luramas_xregister target_ssa) {
 
-            luramas_count result = 0u;
+            luramas_count result = 0U;
 
             const auto linked = ssa::extract::linked(ssa, target_ssa);
             if (!linked) {
@@ -27,7 +27,7 @@ namespace luramas::ir::tools::propagations {
 
                   for (const auto &e : pm[i]->extract_ordered_deep_exprs()) {
 
-                        result += (exprs::values::is_arith(e) && exprs::values::is_integer(e->r) && exprs::values::is_reg(e->l, *linked) && combine::can(e->b, defs->second.first->r->b));
+                        result += static_cast<luramas_count>(exprs::values::is_arith(e) && exprs::values::is_integer(e->r) && exprs::values::is_reg(e->l, *linked) && combine::can(e->b, defs->second.first->r->b));
                   }
             }
             return result;

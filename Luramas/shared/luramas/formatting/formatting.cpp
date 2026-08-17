@@ -56,7 +56,7 @@ namespace luramas::ir::data::format {
       }
 
       std::string format::spacing::format_parenthesis_ref(const char *const open, const std::string &str, const char *const close) const {
-            std::string result("");
+            std::string result;
             result += this->format_parenthesis_open(open);
             result += str;
             result += this->format_parenthesis_close(close);
@@ -78,7 +78,7 @@ namespace luramas::ir::data::format {
       }
 
       std::string format::spacing::format_index_ref(const char *const open, const std::string &str, const char *const close) const {
-            std::string result("");
+            std::string result;
             result += this->format_index_open(open);
             result += str;
             result += this->format_index_close(close);

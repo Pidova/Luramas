@@ -97,7 +97,7 @@ namespace luramas::ir::execution {
             };
 
             /* Get what string from kind */
-            const char *const what(const kinds k);
+            const char *what(const kinds k);
       } // namespace errors
 
       struct environment_flags {

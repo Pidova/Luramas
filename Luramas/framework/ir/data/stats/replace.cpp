@@ -13,7 +13,7 @@ namespace luramas::ir {
                         (*i)->replace(exprs);
                   }
             }
-            for (auto &v : {&this->parameters, &this->upvalues, &this->members, this->k != keywords::page_function_goto ? &this->smembers : nullptr, &this->tmembers}) {
+            for (const auto &v : {&this->parameters, &this->upvalues, &this->members, this->k != keywords::page_function_goto ? &this->smembers : nullptr, &this->tmembers}) {
                   if (!v) {
                         continue;
                   }
@@ -40,7 +40,7 @@ namespace luramas::ir {
                         }
                   }
             }
-            for (auto &v : {&this->parameters, &this->upvalues, &this->members, this->k != keywords::page_function_goto ? &this->smembers : nullptr, &this->tmembers}) {
+            for (const auto &v : {&this->parameters, &this->upvalues, &this->members, this->k != keywords::page_function_goto ? &this->smembers : nullptr, &this->tmembers}) {
                   if (!v) {
                         continue;
                   }

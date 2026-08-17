@@ -2,7 +2,7 @@
 
 namespace luramas::ir::builder {
 
-      ir_stat::ir_expr::space v(const std::vector<builder::ebuilder> &b) {
+      static ir_stat::ir_expr::space v(const std::vector<builder::ebuilder> &b) {
 
             ir_stat::ir_expr::space result;
             result.reserve(b.size());

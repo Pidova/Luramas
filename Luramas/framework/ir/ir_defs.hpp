@@ -6,14 +6,12 @@
 
 namespace luramas::ir {
 
+      /* IR Statement */
       struct ir_stat : std::enable_shared_from_this<ir_stat> {
 
             using space = std::vector<std::shared_ptr<ir_stat>>; /* Vector of stats */
 
-            /*   
-        IR EXPRESSION:
-          YOU SHOULD NOT CHANGE PRIMITIVE KINDS OR ADD ANY NEW ONES WILL MESS UP INTRINSICS     
-      */
+            /* IR EXPRESSION: YOU SHOULD NOT CHANGE PRIMITIVE KINDS OR ADD ANY NEW ONES WILL MESS UP INTRINSICS */
             struct ir_expr : std::enable_shared_from_this<ir_expr> {
 
                   using space = std::vector<std::shared_ptr<ir_expr>>; /* Vector of exprs */
@@ -53,8 +51,8 @@ namespace luramas::ir {
 
                   std::shared_ptr<ir_stat> transform() const; /* Transform expr into stat, returns nullptr if it can't */
 
-                  void clone(std::shared_ptr<ir_expr> &expr, const bool deep = true, const bool regs = true) const; /* Clone expr into a buffer */
-                  std::shared_ptr<ir_expr> clone(const bool deep = true, const bool regs = true) const;             /* Clone expr as the result */
+                  void clone(std::shared_ptr<ir_expr> &buffer, const bool deep = true, const bool regs = true) const; /* Clone expr into a buffer */
+                  std::shared_ptr<ir_expr> clone(const bool deep = true, const bool regs = true) const;               /* Clone expr as the result */
 
                   /* Emitters */
                   void emit_upvalue(const luramas_register r, const luramas_vregister vreg);
@@ -82,7 +80,7 @@ namespace luramas::ir {
                   void emit_arith(const std::shared_ptr<ir_expr> &l, const std::shared_ptr<ir_expr> &r, luramas::il::arch::data::bin_kinds b);
                   void emit_self(const std::shared_ptr<ir_expr> &l, const std::shared_ptr<ir_expr> &r);
                   void emit_ternary(const std::shared_ptr<ir_expr> &cond, const std::shared_ptr<ir_expr> &then_v, const std::shared_ptr<ir_expr> &else_v);
-                  void emit_ternary(const std::shared_ptr<ir_expr> &cond_l, const std::shared_ptr<ir_expr> &cond_r, luramas::il::arch::data::bin_kinds b, const std::shared_ptr<ir_expr> &thenv, const std::shared_ptr<ir_expr> &elsev);
+                  void emit_ternary(const std::shared_ptr<ir_expr> &cond_l, const std::shared_ptr<ir_expr> &cond_r, luramas::il::arch::data::bin_kinds b, const std::shared_ptr<ir_expr> &then_v, const std::shared_ptr<ir_expr> &else_v);
                   void emit_idx(const std::shared_ptr<ir_expr> &l, const std::shared_ptr<ir_expr> &r);
                   void emit_cond(const std::shared_ptr<ir_expr> &l, const luramas::il::arch::data::bin_kinds b, const std::shared_ptr<ir_expr> &r = nullptr);
                   void emit_concat(const std::shared_ptr<ir_expr> &v);
@@ -683,14 +681,14 @@ namespace luramas::ir {
       namespace passes {
 
             /* Defs */
-            using cb_ostr_stat = std::function<std::optional<std::string>(const std::shared_ptr<ir_stat> &)>;
-            using cb_ostr_expr = std::function<std::optional<std::string>(const std::shared_ptr<ir_stat::ir_expr> &)>;
-            using cb_valid_stat = std::function<bool(const std::shared_ptr<ir_stat> &)>;
-            using cb_valid_expr = std::function<bool(const std::shared_ptr<ir_stat::ir_expr> &)>;
-            using cb_stat_results = std::function<std::vector<std::shared_ptr<ir_stat>>(const std::shared_ptr<ir_stat> &)>;
-            using cb_expr_results = std::function<std::vector<std::shared_ptr<ir_stat>>(const std::shared_ptr<ir_stat::ir_expr> &)>;
-            using cb_stat_result = std::function<std::shared_ptr<ir_stat::ir_expr>(const std::shared_ptr<ir_stat> &)>;
-            using cb_gen_stats = std::function<std::vector<std::shared_ptr<ir_stat>>()>;
+            using cb_ostr_stat = std::function<std::optional<std::string>(const std::shared_ptr<ir_stat> &)>;                        /* Optional string (stat) */
+            using cb_ostr_expr = std::function<std::optional<std::string>(const std::shared_ptr<ir_stat::ir_expr> &)>;               /* Optional string (expr) */
+            using cb_valid_stat = std::function<bool(const std::shared_ptr<ir_stat> &)>;                                             /* bool(stat) */
+            using cb_valid_expr = std::function<bool(const std::shared_ptr<ir_stat::ir_expr> &)>;                                    /* bool(expr) */
+            using cb_stat_results = std::function<std::vector<std::shared_ptr<ir_stat>>(const std::shared_ptr<ir_stat> &)>;          /* stat::space(stat) */
+            using cb_expr_results = std::function<std::vector<std::shared_ptr<ir_stat>>(const std::shared_ptr<ir_stat::ir_expr> &)>; /* expr::space(expr) */
+            using cb_stat_result = std::function<std::shared_ptr<ir_stat::ir_expr>(const std::shared_ptr<ir_stat> &)>;               /* expr(stat) */
+            using cb_gen_stats = std::function<std::vector<std::shared_ptr<ir_stat>>()>;                                             /* stat::space() */
 
             /* Environment flags */
             struct environment_flags {

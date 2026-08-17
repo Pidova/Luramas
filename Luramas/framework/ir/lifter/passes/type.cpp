@@ -2,7 +2,7 @@
 
 namespace luramas::ir::passes {
 
-      void make_registers_unique(pass_manager &pm, shared &s) {
+      void make_registers_unique(pass_manager &pm, shared & /*s*/) {
 
             pass::process::values(pm);
 
@@ -81,7 +81,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void static_definition_inference(pass_manager &pm, shared &s) {
+      void static_definition_inference(pass_manager &pm, shared & /*s*/) {
 
             boost::unordered_flat_set<luramas_register> used;
             pass::process::values(pm);
@@ -104,7 +104,7 @@ namespace luramas::ir::passes {
                                     }
                               }
 
-                              if (ssa.assignments.count(r) == 1u) {
+                              if (ssa.assignments.count(r) == 1U) {
                                     if (const auto lv = p->visit_lvalue(r); lv) {
                                           lv->flags.fconstant = true;
                                     }
@@ -154,7 +154,7 @@ namespace luramas::ir::passes {
                                                 return false;
                                           }
 
-                                          if (regs.size() != 1u) {
+                                          if (regs.size() != 1U) {
                                                 if (!std::all_of(regs.begin(), regs.end(), [&](const auto &i) {const auto it = types.find(i); return it != types.end() && it->second && *it->second == *cit->second; })) {
                                                       return false;
                                                 }
@@ -211,7 +211,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void definition_types(pass_manager &pm, shared &s) {
+      void definition_types(pass_manager &pm, shared & /*s*/) {
 
             luramas::ir::pass::process::values(pm);
 
@@ -238,7 +238,7 @@ namespace luramas::ir::passes {
             for (const auto &[expr, map] : tools::paging::gen_details(pm).pages) {
                   for (const auto &[pid, page] : map) {
 
-                        if (const auto &def = pm[page.range.first + 1u]; tools::stat::is_definition(def)) {
+                        if (const auto &def = pm[page.range.first + 1U]; tools::stat::is_definition(def)) {
 
                               if (std::any_of(def->meta.begin(), def->meta.end(), [](const auto &i) { return !i; })) {
 
@@ -258,7 +258,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void set_descriptor_types(pass_manager &pm, shared &s) {
+      void set_descriptor_types(pass_manager &pm, shared & /*s*/) {
 
             pass::process::values(pm);
             auto ssa = generation::ssa::generate(pm.ir, generation::ssa::ssa_flags({.finclude_captures = true, .finclude_references = pm.env_flags.fhas_references}), pm.processed.values);
@@ -299,7 +299,7 @@ namespace luramas::ir::passes {
 
                               boost::unordered_flat_map<luramas_register, std::pair<luramas_id, std::shared_ptr<ir_stat::ir_expr>>> reg_to_index;
 
-                              luramas_id idx = 0u;
+                              luramas_id idx = 0U;
                               for (const auto &[r, expr] : p->args) {
                                     reg_to_index[r] = {idx++, expr};
                               }
@@ -334,7 +334,7 @@ namespace luramas::ir::passes {
 
                                     if (const auto &p = pm[i]; tools::stat::is_page_return(p)) {
 
-                                          for (auto mi = 0u; mi < p->members.size(); ++mi) {
+                                          for (auto mi = 0U; mi < p->members.size(); ++mi) {
 
                                                 if (const auto t = tools::types::dominant(tools::types::extract(p, p->members[mi], ssa, ssa_types)); mi >= def_retns.size()) {
                                                       def_retns.emplace_back(t ? t : pm.env_flags.options.odefault_type ? types::generate::basic(pm.env_flags.options.odefault_type)

@@ -64,12 +64,12 @@ namespace luramas::types {
             std::shared_ptr<underlying_type> clone() const;      /* Clone type into a shared pointer */
 
             /* Misc */
-            signess signess_t() const;                    /* Get signess type */
-            std::string str() const;                      /* String representation */
-            void serialize(std::ostream &os) const;       /* Serialize into ostream */
-            underlying_type load(std::istream &is) const; /* Load serialization */
-            bool has_native() const;                      /* Has a bitsize luramas can natively support? */
-            void clear();                                 /* Clear type */
+            signess signess_t() const;                     /* Get signess type */
+            std::string str() const;                       /* String representation */
+            void serialize(std::ostream &os) const;        /* Serialize into ostream */
+            static underlying_type load(std::istream &is); /* Load serialization */
+            bool has_native() const;                       /* Has a bitsize luramas can natively support? */
+            void clear();                                  /* Clear type */
       };
 
       namespace is {

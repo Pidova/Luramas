@@ -3,15 +3,15 @@
 #include <iostream>
 
 enum class set_action : std::uint8_t {
-      instruction, /* Sets all instruction info, op, mnenomic, hint. */
-      operands     /* Sets all operands including details about it. */
+      INSTRUCTION, /* Sets all instruction info, op, mnenomic, hint. */
+      OPERANDS     /* Sets all operands including details about it. */
 };
 
-template <set_action n>
-void set_data(std::shared_ptr<lua_53_disassembler::disassembly> &buffer, const Proto *p, const op_table::optable op_table) {
+template <set_action N>
+static void set_data(std::shared_ptr<lua_53_disassembler::disassembly> &buffer, const Proto *p, const op_table::optable &op_table) {
 
-      switch (n) {
-            case set_action::instruction: {
+      switch (N) {
+            case set_action::INSTRUCTION: {
 
                   buffer->op = op_table.op;
                   switch (op_table.op) {
@@ -256,11 +256,11 @@ void set_data(std::shared_ptr<lua_53_disassembler::disassembly> &buffer, const P
                   }
                   break;
             }
-            case set_action::operands: {
+            case set_action::OPERANDS: {
 
                   const auto op_count = op_table.operands.size();
 
-                  for (auto i = 0u; i < op_count; ++i) {
+                  for (auto i = 0U; i < op_count; ++i) {
 
                         auto current_operand = std::make_shared<lua_53_disassembler::operand>();
 
@@ -269,7 +269,7 @@ void set_data(std::shared_ptr<lua_53_disassembler::disassembly> &buffer, const P
                         const auto operand = op_table.operands[i];
                         const auto type = op_table.types[i];
 
-                        const auto split = ((i + 1u) == op_count) ? " " : ", ";
+                        const auto *const split = ((i + 1U) == op_count) ? " " : ", ";
 
                         /* Set operand value. */
                         switch (operand) {
@@ -323,13 +323,13 @@ void set_data(std::shared_ptr<lua_53_disassembler::disassembly> &buffer, const P
                               case op_table::type::jmp: {
                                     buffer->data += std::to_string(operand_value) + split;
                                     current_operand->jmp = operand_value;
-                                    current_operand->ref_addr = current_operand->jmp + buffer->addr + 1u;
+                                    current_operand->ref_addr = current_operand->jmp + buffer->addr + 1U;
                                     break;
                               }
                               case op_table::type::reg:
                               case op_table::type::dest: {
                                     buffer->data += 'r' + std::to_string(operand_value) + split;
-                                    current_operand->reg = luramas_register(operand_value);
+                                    current_operand->reg = static_cast<luramas_register>(operand_value);
                                     break;
                               }
                               case op_table::type::val: {
@@ -366,7 +366,7 @@ void set_data(std::shared_ptr<lua_53_disassembler::disassembly> &buffer, const P
                                                 break;
                                           }
                                           case LUA_TSTRING: {
-                                                const auto data = getstr(gco2ts(kv.value_.gc));
+                                                auto *const data = getstr(gco2ts(kv.value_.gc));
                                                 if (!data) {
                                                       luramas::error::error("String is nullptr");
                                                 }
@@ -422,10 +422,10 @@ namespace lua_53_disassembler {
 
             /* Get intruction and set instruction */
             const auto code = op_table::op_table[GET_OPCODE(p->code[addr])];
-            set_data<set_action::instruction>(buffer, p, code);
+            set_data<set_action::INSTRUCTION>(buffer, p, code);
 
             /* Set code */
-            const auto start_pc = p->code + addr;
+            auto *const start_pc = p->code + addr;
             buffer->code = start_pc;
             buffer->addr = addr;
 
@@ -434,14 +434,14 @@ namespace lua_53_disassembler {
 
             /* Init data */
             buffer->data = std::string(buffer->mnenomic) + ' ';
-            set_data<set_action::operands>(buffer, p, code);
+            set_data<set_action::OPERANDS>(buffer, p, code);
             buffer->p = p;
 
             /* Calculate lenght */
-            buffer->len = (std::uint8_t(reinterpret_cast<const luramas_address>(buffer->code) - reinterpret_cast<const luramas_address>(start_pc)) / sizeof(Instruction)) + 1u;
+            buffer->len = (static_cast<std::uint8_t>(reinterpret_cast<const luramas_address>(buffer->code) - reinterpret_cast<const luramas_address>(start_pc)) / sizeof(Instruction)) + 1U;
 
             /* Bytes */
-            for (auto i = 0u; i < buffer->len; ++i) {
+            for (auto i = 0U; i < buffer->len; ++i) {
                   buffer->bytes.emplace_back(p->code[buffer->addr + i]);
             }
             return;
@@ -449,7 +449,7 @@ namespace lua_53_disassembler {
 
       void disassemble(Proto *p, std::vector<std::shared_ptr<disassembly>> &buffer) {
 
-            for (auto pc = 0u; pc < unsigned(p->sizecode);) {
+            for (auto pc = 0U; pc < static_cast<unsigned>(p->sizecode);) {
                   auto dism = std::make_shared<disassembly>();
                   disassemble(pc, p, dism);
                   buffer.emplace_back(dism);

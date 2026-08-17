@@ -1,4 +1,5 @@
 #include "../traversal.hpp"
+#include <algorithm>
 #include <queue>
 #include <stack>
 
@@ -85,8 +86,8 @@ namespace luramas::ir::cfg::traverse {
                         return nullptr;
                   }
 
-                  const auto target_it = std::find(cfg.blocks.begin(), cfg.blocks.end(), target);
-                  const auto input_it = std::find(cfg.blocks.begin(), cfg.blocks.end(), curr);
+                  const auto target_it = std::ranges::find(cfg.blocks, target);
+                  const auto input_it = std::ranges::find(cfg.blocks, curr);
 
                   if (target_it == cfg.blocks.end() || input_it == cfg.blocks.end()) {
                         return nullptr;
@@ -112,12 +113,12 @@ namespace luramas::ir::cfg::traverse {
       } // namespace extract
       namespace pathing {
 
-            struct path_entry {
+            struct PathEntry {
 
                   std::shared_ptr<generation::cfg::block> current = nullptr;
-                  std::size_t cost = 0u;
+                  std::size_t cost = 0U;
 
-                  bool operator>(const path_entry &other) const {
+                  bool operator>(const PathEntry &other) const {
                         return cost > other.cost;
                   }
             };
@@ -129,12 +130,12 @@ namespace luramas::ir::cfg::traverse {
                         return path;
                   }
 
-                  std::priority_queue<path_entry, std::vector<path_entry>, std::greater<>> pq;
+                  std::priority_queue<PathEntry, std::vector<PathEntry>, std::greater<>> pq;
                   boost::unordered_flat_map<std::shared_ptr<generation::cfg::block>, std::size_t> dist;
                   boost::unordered_flat_map<std::shared_ptr<generation::cfg::block>, std::shared_ptr<generation::cfg::block>> prev;
 
-                  dist[start] = 0u;
-                  pq.push({start, 0u});
+                  dist[start] = 0U;
+                  pq.push({start, 0U});
 
                   while (!pq.empty()) {
 
@@ -149,7 +150,7 @@ namespace luramas::ir::cfg::traverse {
                               if (!next) {
                                     return;
                               }
-                              if (const auto new_cost = current_cost + 1u; dist.find(next) == dist.end() || new_cost < dist[next]) {
+                              if (const auto new_cost = current_cost + 1U; dist.find(next) == dist.end() || new_cost < dist[next]) {
                                     dist[next] = new_cost;
                                     prev[next] = current;
                                     pq.push({next, new_cost});
@@ -204,10 +205,10 @@ namespace luramas::ir::cfg::traverse {
                   std::vector<std::pair<keywords, std::shared_ptr<generation::cfg::block>>> result;
 
                   const auto pmap = luramas::tools::val_idx(path);
-                  for (auto i = 0ull; i < path.size(); ++i) {
+                  for (auto i = 0ULL; i < path.size(); ++i) {
 
                         auto curr = path[i];
-                        if (const auto next = (i + 1u < path.size()) ? path[i + 1u] : nullptr; next && curr->dominant_successor_edge(next) == generation::cfg::edge_kind::back && !ir.data[curr->get_end() - 1u]->is_goto_label()) {
+                        if (const auto next = (i + 1U < path.size()) ? path[i + 1U] : nullptr; next && curr->dominant_successor_edge(next) == generation::cfg::edge_kind::back && !ir.data[curr->get_end() - 1U]->is_goto_label()) {
 
                               /* Remove */
                               {
@@ -224,7 +225,7 @@ namespace luramas::ir::cfg::traverse {
 
                               /* Add */
                               {
-                                    const auto end = cfg.visit(curr->get_end() + 1u);
+                                    const auto end = cfg.visit(curr->get_end() + 1U);
 
                                     /* Should not really happen just incase */
                                     if (!end) {

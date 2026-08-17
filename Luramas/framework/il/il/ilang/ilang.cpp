@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../il.hpp"
 
 namespace luramas::il {
@@ -13,18 +15,16 @@ namespace luramas::il {
             this->resolve_xrefs();
 
             /* Apply mutations, insertions, and track highest temporary register */
-            luramas_address addr = 0u;
+            luramas_address addr = 0U;
             if (!this->front.empty() || !this->back.empty() || !this->ignore.empty() || !this->insertions.empty()) {
                   auto mutated = std::move(this->front);
-                  mutated.reserve(mutated.size() + this->dis.size() + this->insertions.size() * 2u);
+                  mutated.reserve(mutated.size() + this->dis.size() + (this->insertions.size() * 2U));
                   for (const auto &i : this->dis) {
                         if (!this->ignore.contains(i) && i) {
                               mutated.emplace_back(i);
                               for (const auto &operand : i->operands) {
-                                    if (operand->type == arch::operand::operand_kind::reg) {
-                                          if (const auto reg = operand->dis.reg; reg > this->ctemp_reg) {
-                                                this->ctemp_reg = reg;
-                                          }
+                                    if (const auto reg = operand->dis.reg; operand->type == arch::operand::operand_kind::reg) {
+                                          this->ctemp_reg = std::max(reg, this->ctemp_reg);
                                     }
                               }
                         }
@@ -83,8 +83,8 @@ namespace luramas::il {
       }
       void ilang::insert_front(const std::shared_ptr<disassembly> &where, const std::shared_ptr<disassembly> &v) {
             if (where && v) {
-                  luramas_address idx = 0u;
-                  for (auto i = 0u; i < this->dis.size(); ++i) {
+                  luramas_address idx = 0U;
+                  for (auto i = 0U; i < this->dis.size(); ++i) {
                         if (this->dis[i] == where) {
                               if (i) {
                                     --i;

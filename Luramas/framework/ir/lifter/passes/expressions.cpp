@@ -2,7 +2,7 @@
 
 namespace luramas::ir::passes {
 
-      void sub_expression_reordering(pass_manager &pm, shared &s) {
+      void sub_expression_reordering(pass_manager &pm, shared & /*s*/) {
 
             boost::unordered_flat_set<std::shared_ptr<ir_stat::ir_expr>> processed;
             for (const auto &i : pm.iter()) {

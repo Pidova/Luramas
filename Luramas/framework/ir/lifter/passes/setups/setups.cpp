@@ -6,7 +6,7 @@ namespace luramas::ir::passes::setups {
       namespace multpasses {
 
             /* Optimize all page args */
-            void page_linkage_optimizations(luramas::ir::passes::pass_manager &pm, luramas::ir::passes::flags &f) {
+            static void page_linkage_optimizations(luramas::ir::passes::pass_manager &pm, luramas::ir::passes::flags &f) {
                   pm.add(passes::page_adjust_linked, f, "Page adjust linkage");
                   pm.add(passes::page_return_params_adjust, f, "Page return params adjust");
                   return;

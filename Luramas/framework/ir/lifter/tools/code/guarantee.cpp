@@ -11,7 +11,7 @@ namespace luramas::ir::tools::guarantee {
                         return expr;
                   }
 
-                  if (const auto evaluated = tools::types::extract(expr); evaluated.size() == 1u) {
+                  if (const auto evaluated = tools::types::extract(expr); evaluated.size() == 1U) {
                         if (const auto &f = evaluated.front(); f.type && f.type->basic() && (f.type->under == t || (bits && f.type->under.bits() == t.bits()))) {
 
                               return expr;

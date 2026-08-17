@@ -1,11 +1,12 @@
 #include "generate.hpp"
 #include "../lifter/tools/extras/exprs.hpp"
 #include "tools/tools.hpp"
+#include <algorithm>
 #include <stack>
 
 namespace extra {
 
-      static constexpr std::array<const char *const, 22u> black_listed_idxs = {
+      static constexpr std::array<const char *const, 22U> kBlackListedIdxs = {
           "and",
           "break",
           "do",
@@ -36,12 +37,12 @@ namespace extra {
       };
 } // namespace extra
 
-struct itemization {
+struct Itemization {
 
-      std::string indent = "";
-      std::string pre_linebreak = "";
-      std::string stat = "";
-      std::string post_linebreak = "";
+      std::string indent;
+      std::string pre_linebreak;
+      std::string stat;
+      std::string post_linebreak;
 
       std::string compile() const {
             return this->indent + this->pre_linebreak + this->stat + this->post_linebreak;
@@ -57,9 +58,9 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
       param_variadic->emit_variadic();
 
       struct signature {
-            luramas_id id = 0u;
+            luramas_id id = 0U;
             luramas_flag fuses_controller = false;
-            std::string func_name = "";
+            std::string func_name;
             std::vector<std::string> args;
             std::vector<ir::types::signature> arg_types;
             std::vector<ir::types::signature> result_types;
@@ -69,8 +70,8 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
       /* Variable naming */
       {
 
-            luramas_xregister gvn = 0u;
-            luramas_xregister discriminator = 0u;
+            luramas_xregister gvn = 0U;
+            luramas_xregister discriminator = 0U;
             const auto valid = [&](const auto &str) {
                   if (!std::none_of(vars.begin(), vars.end(), [&](const auto &pair) { return pair.second.str() == str; })) {
                         ++gvn;
@@ -99,7 +100,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
             };
             const auto make_basic_name = [&](const auto &r, const auto &e, const auto &t) {
                   luramas_flag suffix = false;
-                  std::string result("");
+                  std::string result;
                   if (e == expr_kinds::upvalue) {
                         result = format->vars.naming_conventions.prefixes.upvalue;
                         suffix = format->vars.naming_conventions.suffix.upvalue;
@@ -194,7 +195,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     luramas_str_uppercase(copy_str);
                               }
                               if (format->vars.naming_conventions.smart.constant.include_prefix) {
-                                    copy_str.insert(0u, format->vars.naming_conventions.smart.prefixes.constant);
+                                    copy_str.insert(0U, format->vars.naming_conventions.smart.prefixes.constant);
                               }
                               str = make_valid(copy_str, expr->reg, format->vars.naming_conventions.smart.constant.discriminator_suffix, format->vars.naming_conventions.smart.constant.upper_case);
                         }
@@ -232,7 +233,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
       }
 
       std::function<std::string(const std::shared_ptr<ir_stat> &, std::intptr_t &, const bool)> stat = [&](const std::shared_ptr<ir_stat> &c, std::intptr_t &indent, const bool last) {
-            std::string result("");
+            std::string result;
 
             /* Indent pre */
             {
@@ -295,21 +296,21 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               }
                         }
                         if (indent > 0) {
-                              for (auto i = 0u; i < indent; ++i) {
+                              for (auto i = 0U; i < indent; ++i) {
                                     result += format->indent.indent_space;
                               }
                         }
                   }
 
                   if (!c->annotation.empty()) {
-                        ir::code::emitter::common::comment::comment(syn, result, c->annotation, format, 1u);
-                        for (auto i = 0u; i < indent; ++i) {
+                        ir::code::emitter::common::comment::comment(syn, result, c->annotation, format, 1U);
+                        for (auto i = 0U; i < indent; ++i) {
                               result += format->indent.indent_space;
                         }
                   }
 
                   /* Linebreak pre */
-                  if (std::uint8_t linebreak = 0u; format->linebreak.enabled) {
+                  if (std::uint8_t linebreak = 0U; format->linebreak.enabled) {
 
                         switch (c->k) {
                               case keywords::condition: {
@@ -380,7 +381,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
             /* Stats exprs */
             {
                   std::function<std::string(const std::shared_ptr<ir_stat::ir_expr> &, std::intptr_t &, const bool)> expr = [&](const std::shared_ptr<ir_stat::ir_expr> &e, std::intptr_t &indent, const bool from_stat) {
-                        std::string retn("");
+                        std::string retn;
                         if (!e) {
                               return retn;
                         }
@@ -399,7 +400,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                 case expr_kinds::self:
                                                 case expr_kinds::closure:
                                                 case expr_kinds::ternary: {
-                                                      std::string buffer("");
+                                                      std::string buffer;
                                                       luramas::ir::code::emitter::common::line::emit_parenthesize(syn, buffer, l, format);
                                                       l = buffer;
                                                       break;
@@ -413,7 +414,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                             case tkind::object:
                                                             case tkind::table:
                                                             case tkind::variadic: {
-                                                                  std::string buffer("");
+                                                                  std::string buffer;
                                                                   luramas::ir::code::emitter::common::line::emit_parenthesize(syn, buffer, l, format);
                                                                   l = buffer;
                                                                   break;
@@ -432,7 +433,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
 
                                     retn = expr(e->l, indent, false);
                                     if (e->l->is_tk<tkind::table>()) {
-                                          std::string buffer("");
+                                          std::string buffer;
                                           ir::code::emitter::common::line::emit_parenthesize(syn, buffer, retn, format);
                                           retn = buffer;
                                     }
@@ -447,7 +448,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                           args.emplace_back(expr(m, indent, false));
                                     }
                                     if (!e->l->is_register_reference() && !e->l->is_tk_register_reference() && !e->l->is_k<expr_kinds::idx>() && !e->l->is_k<expr_kinds::self>()) {
-                                          std::string buffer("");
+                                          std::string buffer;
                                           ir::code::emitter::common::line::emit_parenthesize(syn, buffer, l, format);
                                           l = buffer;
                                     }
@@ -459,7 +460,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     auto l = expr(e->l, indent, false);
                                     auto r = expr(e->r, indent, false);
                                     ir::code::emitter::common::arith::emit_arith_operation(syn, retn, e->b, l, r, format);
-                                    std::string buffer("");
+                                    std::string buffer;
                                     if (!from_stat) {
                                           ir::code::emitter::common::line::emit_parenthesize(syn, buffer, retn, format);
                                     } else {
@@ -475,15 +476,15 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               }
                               case expr_kinds::memoryread: {
 
-                                    std::string buffer("");
+                                    std::string value;
                                     auto t = expr(e->l, indent, false);
                                     if (e->r) {
                                           auto o = expr(e->r, indent, false);
-                                          ir::code::emitter::common::arith::emit_arith_operation(syn, buffer, il::arch::data::bin_kinds::add_, t, o, format);
+                                          ir::code::emitter::common::arith::emit_arith_operation(syn, value, il::arch::data::bin_kinds::add_, t, o, format);
                                     } else {
-                                          buffer = t;
+                                          value = t;
                                     }
-                                    ir::code::emitter::common::memory::emit_memread(syn, retn, e->non_native, buffer, format);
+                                    ir::code::emitter::common::memory::emit_memread(syn, retn, e->non_native, value, format);
                                     break;
                               }
                               case expr_kinds::bitread: {
@@ -496,14 +497,14 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     auto l = expr(e->l, indent, false);
                                     auto r = expr(e->r, indent, false);
                                     if (e->l && e->l->is_complex_tk()) {
-                                          std::string buffer("");
+                                          std::string buffer;
                                           ir::code::emitter::common::line::emit_parenthesize(syn, buffer, l, format);
                                           l = buffer;
                                     }
                                     if (e->r && e->r->is_tk<tkind::string>() && !e->r->is_register_reference()) {
                                           auto copy_r = r;
                                           luramas_str_sanitize(copy_r);
-                                          if (luramas_str_valid_index(copy_r) && !std::any_of(extra::black_listed_idxs.begin(), extra::black_listed_idxs.end(), [&](const auto &i) { return copy_r == i; })) {
+                                          if (luramas_str_valid_index(copy_r) && !std::ranges::any_of(extra::kBlackListedIdxs, [&](const auto &i) { return copy_r == i; })) {
                                                 ir::code::emitter::common::table::emit_index_generic(syn, retn, l, copy_r, format);
                                                 break;
                                           }
@@ -534,7 +535,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               }
                               case expr_kinds::ternary: {
 
-                                    std::string cond("");
+                                    std::string cond;
                                     auto l = expr(e->l, indent, false);
                                     auto r = expr(e->r, indent, false);
                                     if (e->e == expr_logical::or_) {
@@ -542,22 +543,22 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     } else if (e->e == expr_logical::and_) {
                                           e->b = il::arch::data::bin_kinds::and_;
                                     }
-                                    std::string else_prefix("");
+                                    std::string else_prefix;
                                     auto else_collapse = indent;
                                     if (format->indent.collapse.ternaries) {
                                           else_collapse += format->indent.collapse.indenting;
-                                          code::emitter::common::line::emit_linebreak(syn, else_prefix, 1u, format);
+                                          code::emitter::common::line::emit_linebreak(syn, else_prefix, 1U, format);
                                           if (else_collapse > 0) {
-                                                for (auto i = 0u; i < else_collapse; ++i) {
+                                                for (auto i = 0U; i < else_collapse; ++i) {
                                                       else_prefix += format->indent.indent_space;
                                                 }
                                           }
                                     }
-                                    std::string buffer("");
+                                    std::string buffer;
                                     ir::code::emitter::common::logical::emit_logical_compare(syn, cond, e->b, l, r, format);
                                     ir::code::emitter::common::ternary::emit_ternary(syn, buffer, cond, expr(e->ev, else_collapse, false), else_prefix + expr(e->xv, else_collapse, false), format);
                                     if (!from_stat) {
-                                          std::string parenthesize_buffer("");
+                                          std::string parenthesize_buffer;
                                           ir::code::emitter::common::line::emit_parenthesize(syn, parenthesize_buffer, buffer, format);
                                           retn = parenthesize_buffer;
                                     } else {
@@ -578,15 +579,15 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                           }
                                     }
                                     indent += format->indent.indent_anonymous_function_pre;
-                                    std::string data("");
-                                    for (auto i = 0u; i < e->closure.size(); ++i) {
+                                    std::string data;
+                                    for (auto i = 0U; i < e->closure.size(); ++i) {
                                           const auto &c = e->closure[i];
-                                          data += stat(c, indent, i == e->closure.size() - 1u);
+                                          data += stat(c, indent, i == e->closure.size() - 1U);
                                     }
                                     indent += format->indent.indent_anonymous_function_post;
                                     ir::code::emitter::common::function::emit_anonymous_function(syn, retn, params, data, format);
                                     if (format->indent.enabeled && indent > 0) {
-                                          for (auto i = 0u; i < indent; ++i) {
+                                          for (auto i = 0U; i < indent; ++i) {
                                                 retn += format->indent.indent_space;
                                           }
                                     }
@@ -615,7 +616,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                           }
                                           case tkind::table: {
 
-                                                std::intptr_t member_indent = 0u;
+                                                std::intptr_t member_indent = 0U;
                                                 if (!format->indent.collapse.disabled && format->indent.collapse.table && format->indent.collapse.table <= e->tmembers.size() && indent + format->indent.collapse.indenting >= 0) {
                                                       member_indent = indent + format->indent.collapse.indenting;
                                                 }
@@ -623,7 +624,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                 auto mem_indent = member_indent ? member_indent : indent;
                                                 std::vector<std::pair<std::string, std::string>> members;
                                                 for (const auto &m : e->tmembers) {
-                                                      members.emplace_back(std::make_pair(expr(m.first, mem_indent, false), expr(m.second, mem_indent, false)));
+                                                      members.emplace_back(expr(m.first, mem_indent, false), expr(m.second, mem_indent, false));
                                                 }
                                                 ir::code::emitter::common::table::emit_table(syn, retn, member_indent, members, format);
                                                 break;
@@ -701,7 +702,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                         }
                         case keywords::memoryset: {
 
-                              std::string buffer("");
+                              std::string buffer;
                               if (auto t = expr(c->l, indent, true); c->v) {
                                     ir::code::emitter::common::arith::emit_arith_operation(syn, buffer, il::arch::data::bin_kinds::add_, t, expr(c->v, indent, true), format);
                               } else {
@@ -715,15 +716,15 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               auto l = expr(c->l->l, indent, true);
                               auto r = expr(c->l->r, indent, true);
                               auto v = expr(c->r, indent, true);
-                              std::string index("");
+                              std::string index;
                               if (c->l->l && (c->l->l->is_complex_k() || c->l->l->is_complex_tk())) {
-                                    std::string buffer("");
+                                    std::string buffer;
                                     ir::code::emitter::common::line::emit_parenthesize(syn, buffer, l, format);
                                     l = buffer;
                               }
                               auto vi = r;
                               luramas_str_sanitize(vi);
-                              if (!c->l->r->is_register_reference() && luramas_str_valid_index(vi) && !std::any_of(extra::black_listed_idxs.begin(), extra::black_listed_idxs.end(), [&](const auto &i) { return vi == i; })) {
+                              if (!c->l->r->is_register_reference() && luramas_str_valid_index(vi) && !std::ranges::any_of(extra::kBlackListedIdxs, [&](const auto &i) { return vi == i; })) {
                                     ir::code::emitter::common::table::emit_index_generic(syn, index, l, vi, format);
                               } else {
                                     ir::code::emitter::common::table::emit_index(syn, index, l, r, format);
@@ -736,10 +737,10 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               auto l = expr(c->l, indent, true);
                               std::vector<std::pair<std::string, std::string>> members;
                               for (const auto &m : c->tmembers) {
-                                    members.emplace_back(std::make_pair("", expr(m, indent, true)));
+                                    members.emplace_back("", expr(m, indent, true));
                               }
 
-                              std::string data("");
+                              std::string data;
                               ir::code::emitter::common::table::emit_table(syn, data, indent, members, format);
                               ir::code::emitter::common::assignment::assignment(syn, result, {l}, {data}, format);
                               break;
@@ -750,7 +751,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               auto l = expr(c->l, indent, true);
                               auto r = expr(c->r, indent, true);
                               std::vector<std::string> iter({l, r});
-                              if (!ir::tools::exprs::is<std::int32_t>(c->v, 1u)) {
+                              if (!ir::tools::exprs::is<std::int32_t>(c->v, 1U)) {
                                     iter.emplace_back(expr(c->v, indent, true));
                               }
                               std::vector<std::string> vars({def});
@@ -780,7 +781,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                     }
                               }
                               if (!c->l->is_register_reference() && !c->l->is_tk_register_reference() && !c->l->is_k<expr_kinds::idx>() && !c->l->is_k<expr_kinds::self>()) {
-                                    std::string buffer("");
+                                    std::string buffer;
                                     ir::code::emitter::common::line::emit_parenthesize(syn, buffer, call, format);
                                     call = buffer;
                               }
@@ -830,7 +831,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                               if (c->v && c->v->is_integral()) {
                                     ctrl = c->v->extract_integral_base();
                               } else if (sig.fuses_controller) {
-                                    ctrl = 0u;
+                                    ctrl = 0U;
                               }
 
                               /* Emitter */
@@ -845,13 +846,12 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
 
                               if (last && format->stats.useless_return && c->members.empty()) {
                                     return std::string("");
-                              } else {
-                                    std::vector<std::string> members;
-                                    for (const auto &m : c->members) {
-                                          members.emplace_back(expr(m, indent, true));
-                                    }
-                                    ir::code::emitter::common::return_::emit_return(syn, result, members, format);
                               }
+                              std::vector<std::string> members;
+                              for (const auto &m : c->members) {
+                                    members.emplace_back(expr(m, indent, true));
+                              }
+                              ir::code::emitter::common::return_::emit_return(syn, result, members, format);
                               break;
                         }
                         case keywords::assignment: {
@@ -872,7 +872,8 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
 
                                           ir::code::emitter::common::assignment::arith::emit_arith_assignment(syn, result, c->r->b, vars, {expr(c->r->r, indent, true)}, format);
                                           break;
-                                    } else if (c->r->is_k<expr_kinds::closure>()) {
+                                    }
+                                    if (c->r->is_k<expr_kinds::closure>()) {
 
                                           /* Closure params */
                                           std::vector<std::string> params;
@@ -901,9 +902,9 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                       }
                                                 }
                                                 std::string data("");
-                                                for (auto i = 0u; i < c->r->closure.size(); ++i) {
+                                                for (auto i = 0U; i < c->r->closure.size(); ++i) {
                                                       const auto &x = c->r->closure[i];
-                                                      data += stat(x, indent, i == c->r->closure.size() - 1u);
+                                                      data += stat(x, indent, i == c->r->closure.size() - 1U);
                                                 }
                                                 switch (k) {
                                                       case extra::closure_kind::local: {
@@ -911,7 +912,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                             indent += format->indent.indent_scope_function_post;
                                                             ir::code::emitter::common::function::emit_local_function(syn, result, vars.front(), params, data, format);
                                                             if (format->indent.enabeled && indent > 0) {
-                                                                  for (auto i = 0u; i < indent; ++i) {
+                                                                  for (auto i = 0U; i < indent; ++i) {
                                                                         result += format->indent.indent_space;
                                                                   }
                                                             }
@@ -923,7 +924,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                             indent += format->indent.indent_global_function_post;
                                                             ir::code::emitter::common::function::emit_global_function(syn, result, vars.front(), params, data, format);
                                                             if (format->indent.enabeled && indent > 0) {
-                                                                  for (auto i = 0u; i < indent; ++i) {
+                                                                  for (auto i = 0U; i < indent; ++i) {
                                                                         result += format->indent.indent_space;
                                                                   }
                                                             }
@@ -1203,7 +1204,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
             return result;
       };
 
-      std::string result("");
+      std::string result;
 
       /* Add pages signature and main function */
       {
@@ -1215,31 +1216,31 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
 
                         for (auto i = LURAMAS_IR_ENTRY; i < code.size(); ++i) {
 
-                              if (const auto &p = code[i]; p->is_k<keywords::page_function_start>() && i + 1u < code.size()) {
+                              if (const auto &p = code[i]; p->is_k<keywords::page_function_start>() && i + 1U < code.size()) {
 
-                                    if (const auto &def = code[i + 1u]; def->is_k<keywords::definition>()) {
+                                    if (const auto &def = code[i + 1U]; def->is_k<keywords::definition>()) {
 
                                           signature sig;
                                           sig.id = p->r->extract_integral_base();
                                           sig.func_name = format->vars.naming_conventions.prefixes.page_function + std::to_string(sig.id);
                                           sig.fuses_controller = def->flags.fdef_uses_controller;
                                           if (sig.fuses_controller) {
-                                                std::string ctrl("");
+                                                std::string ctrl;
                                                 ir::code::emitter::common::datatype::emit_controller(syn, ctrl, format);
                                                 sig.args.emplace_back(ctrl);
-                                                sig.arg_types.emplace_back(ir::types::signature(types::common::i32, true));
+                                                sig.arg_types.emplace_back(types::common::i32, true);
                                           }
                                           for (const auto &[_, e] : def->args) {
                                                 sig.args.emplace_back(vars[e].str());
                                           }
                                           for (const auto &e : def->meta) {
                                                 if (e->is_k<expr_kinds::cast>()) {
-                                                      sig.arg_types.emplace_back(ir::types::signature(e->non_native, e->l && e->l->is_register_reference() ? e->l->flags.fconstant : false));
+                                                      sig.arg_types.emplace_back(e->non_native, e->l && e->l->is_register_reference() ? e->l->flags.fconstant : false);
                                                 }
                                           }
                                           for (const auto &e : def->smembers) {
                                                 if (e->is_k<expr_kinds::cast>()) {
-                                                      sig.result_types.emplace_back(ir::types::signature(e->non_native));
+                                                      sig.result_types.emplace_back(e->non_native);
                                                 }
                                           }
                                           signatures[sig.id] = sig;
@@ -1259,17 +1260,17 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                   for (const auto &s : sigs) {
                         ir::code::emitter::common::pages::emit_page_function_start_signature(syn, result, s.func_name, s.args, s.arg_types, s.result_types, format);
                         ir::code::emitter::common::line::emit_semicolon(syn, result, format);
-                        ir::code::emitter::common::line::emit_linebreak(syn, result, 1u, format);
+                        ir::code::emitter::common::line::emit_linebreak(syn, result, 1U, format);
                   }
 
                   /* Seperator */
-                  ir::code::emitter::common::line::emit_linebreak(syn, result, 2u, format);
+                  ir::code::emitter::common::line::emit_linebreak(syn, result, 2U, format);
             }
       }
 
       auto indent = static_cast<const std::intptr_t>(format->indent.indent_start);
-      for (auto i = 0u; i < code.size(); ++i) {
-            result += stat(code[i], indent, i == code.size() - 1u);
+      for (auto i = 0U; i < code.size(); ++i) {
+            result += stat(code[i], indent, i == code.size() - 1U);
       }
       return result;
 }

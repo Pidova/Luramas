@@ -1,9 +1,11 @@
 #include "ir_defs.hpp"
+
+#include <algorithm>
 namespace luramas::ir {
 
       luramas_address se_ir::avaliable_page(const ir_stat::space &data) {
 
-            luramas_address result = 0u;
+            luramas_address result = 0U;
             std::vector<ir_stat::space> spaces = {data};
             spaces.reserve(LURAMAS_PREDICTED_RECURSION);
 
@@ -25,49 +27,41 @@ namespace luramas::ir {
                         }
                   }
             }
-            return result + 1u;
+            return result + 1U;
       }
       luramas_address se_ir::avaliable_page() {
             if (this->ava_page) {
                   return ++ava_page;
             }
-            if (const auto ava = this->avaliable_page(this->data); this->ava_page < ava) {
-                  this->ava_page = ava;
-            }
+            this->ava_page = std::max(this->ava_page, this->avaliable_page(this->data));
             return (++this->ava_page);
       }
 
       luramas_address se_ir::avaliable_label(const ir_stat::space &data) {
-            luramas_address result = 0u;
+            luramas_address result = 0U;
             for (const auto &i : data) {
-                  if (i->label > result) {
-                        result = i->label;
-                  }
+                  result = std::max(i->label, result);
             }
-            return result + 1u;
+            return result + 1U;
       }
       luramas_address se_ir::avaliable_label() {
-            if (const auto ava = this->avaliable_label(this->data); this->ava_label < ava) {
-                  this->ava_label = ava;
-            }
+            this->ava_label = std::max(this->ava_label, this->avaliable_label(this->data));
             return (++this->ava_label);
       }
 
       luramas_address se_ir::avaliable_end_label(const ir_stat::space &data) {
-            luramas_address result = 0u;
+            luramas_address result = 0U;
             for (const auto &i : data) {
-                  if (i->end_label > result) {
-                        result = i->end_label;
-                  }
+                  result = std::max(i->end_label, result);
             }
-            return result + 1u;
+            return result + 1U;
       }
       luramas_address se_ir::avaliable_end_label() const {
-            return this->avaliable_end_label(this->data);
+            return luramas::ir::se_ir::avaliable_end_label(this->data);
       }
 
       luramas_register se_ir::avaliable_register(const ir_stat::space &data) {
-            luramas_register result = 0u;
+            luramas_register result = 0U;
             for (const auto &i : data) {
                   for (const auto &e : i->extract_ordered_deep_exprs()) {
                         if (e->is_register_reference() && e->reg > result) {
@@ -75,20 +69,20 @@ namespace luramas::ir {
                         }
                   }
             }
-            return result + 1u;
+            return result + 1U;
       }
       luramas_register se_ir::avaliable_register() const {
-            return this->avaliable_register(this->data);
+            return luramas::ir::se_ir::avaliable_register(this->data);
       }
 
       luramas_count se_ir::ref_count(const ir_stat::space &data, const luramas_address label) {
-            luramas_count result = 0u;
+            luramas_count result = 0U;
             for (const auto &i : data) {
-                  result += (i->jlabel == label);
+                  result += static_cast<luramas_count>(i->jlabel == label);
             }
             return result;
       }
       luramas_count se_ir::ref_count(const luramas_address label) const {
-            return this->ref_count(this->data, label);
+            return luramas::ir::se_ir::ref_count(this->data, label);
       }
 } // namespace luramas::ir

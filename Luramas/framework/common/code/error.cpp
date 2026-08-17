@@ -1,5 +1,7 @@
-#include "../error.hpp"
+#include <print>
+
 #include "../debug.hpp"
+#include "../error.hpp"
 
 namespace luramas::error {
 
@@ -7,11 +9,11 @@ namespace luramas::error {
 #if defined(DEBUG) && defined(LURAMAS_TARGET_BIGDATA) && defined(LURAMAS_DEBUG_ERROR_CLIPBOARD)
             debug::copy_to_clipboard(LURMAS_GLOBAL_PDUMP);
 #endif
-            std::printf("%s, " LURAMAS_ERROR_REMINDER "\n", what.c_str());
+            std::println("{}, Check env flags (for IR or IL passes)", what);
             throw std::runtime_error(what);
       }
       void error_dump(const std::string &what) {
-            std::printf("%s\n", what.c_str());
+            std::println("{}", what);
             return;
       }
 
@@ -23,14 +25,14 @@ namespace luramas::error {
       }
       void debug_print(const char *const str) {
             if (std::strlen(str)) {
-                  std::printf("%s\n", str);
+                  std::println("{}", str);
             }
             return;
       }
       void debug_callstack(const std::vector<std::string> &v) {
-            std::printf("CALLSTACK:\n");
+            std::println("CALLSTACK:");
             for (const auto &i : v) {
-                  std::printf("     %s\n", i.c_str());
+                  std::println("     {}", i);
             }
             return;
       }
@@ -52,12 +54,12 @@ namespace luramas::error {
                   std::string result("String Index (" + std::to_string(idx) + ") with: '" + what + "'\n");
                   if (idx < str.size()) {
 
-                        result += "   Error on char '" + std::string(1u, str[idx]) + "'\n";
+                        result += "   Error on char '" + std::string(1U, str[idx]) + "'\n";
 
-                        const auto start = (idx > window_threshold) ? idx - window_threshold : 0u;
+                        const auto start = (idx > window_threshold) ? idx - window_threshold : 0U;
                         const auto end = std::min(str.size(), idx + window_threshold);
-                        result += "   '" + str.substr(start, end > start ? end - start : 0u) + "'\n";
-                        result += "    " + std::string((idx >= start && idx < end) ? (idx - start) : 0u, ' ') + "~\n";
+                        result += "   '" + str.substr(start, end > start ? end - start : 0U) + "'\n";
+                        result += "    " + std::string((idx >= start && idx < end) ? (idx - start) : 0U, ' ') + "~\n";
                   }
                   return result;
             }

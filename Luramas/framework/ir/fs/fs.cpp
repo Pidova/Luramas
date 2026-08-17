@@ -42,11 +42,11 @@ namespace luramas::ir::fs {
       ir_stat::space load(std::istream &is) {
             ir_stat::space result;
 
-            std::size_t size = 0u;
+            std::size_t size = 0U;
             is.read(reinterpret_cast<char *>(&size), sizeof(size));
             result.reserve(size);
 
-            for (auto i = 0u; i < size; ++i) {
+            for (auto i = 0U; i < size; ++i) {
                   auto stat = std::make_shared<ir_stat>();
                   stat->load(is);
                   result.emplace_back(stat);

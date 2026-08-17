@@ -3,7 +3,7 @@
 
 namespace luramas::ir::passes::patterns::constant_folding::compilables {
 
-      std::shared_ptr<ir_stat::ir_expr> if_condition::pattern_1(pass_manager &pm, shared &s, const luramas_address start, const luramas_address end) {
+      std::shared_ptr<ir_stat::ir_expr> if_condition::pattern_1(pass_manager &pm, shared & /*s*/, const luramas_address start, const luramas_address end) {
 
             std::shared_ptr<ir_stat::ir_expr> current_cmp = nullptr;
             std::shared_ptr<ir_stat::ir_expr> compiled_cmp = nullptr;
@@ -21,7 +21,7 @@ namespace luramas::ir::passes::patterns::constant_folding::compilables {
             return compiled_cmp;
       }
 
-      std::shared_ptr<ir_stat::ir_expr> assignments::pattern_1(pass_manager &pm, shared &s, const luramas_address start, const luramas_address end) {
+      std::shared_ptr<ir_stat::ir_expr> assignments::pattern_1(pass_manager &pm, shared & /*s*/, const luramas_address start, const luramas_address end) {
 
             std::shared_ptr<ir_stat::ir_expr> current_cmp = nullptr;
             std::shared_ptr<ir_stat::ir_expr> compiled_cmp = nullptr;

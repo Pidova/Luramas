@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../../passes/process/process.hpp"
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
@@ -154,16 +156,16 @@ namespace luramas::ir::tools::ssa {
                   luramas_xregisters result;
 
                   boost::unordered_flat_set<luramas_xregister> ignore;
-                  for (const auto &[stat, node] : ssa.nodes) {
+                  for (const auto &[stat, snode] : ssa.nodes) {
 
-                        for (const auto &node : {node.l, node.r}) {
+                        for (const auto &node : {snode.l, snode.r}) {
 
                               for (const auto &[linked, reg] : node.assigns) {
 
                                     if (!reg.second.empty()) {
 
                                           /* Get dominant */
-                                          const auto skip = *std::min_element(reg.second.begin(), reg.second.end(), [&](const auto &a, const auto &b) {
+                                          const auto skip = *std::ranges::min_element(reg.second, [&](const auto &a, const auto &b) {
                                                 return ssa.high_level_scope_id[ssa.defs[a].second.first] < ssa.high_level_scope_id[ssa.defs[b].second.first];
                                           });
 
@@ -194,7 +196,7 @@ namespace luramas::ir::tools::ssa {
                   }
 
                   auto curr_id = ssa.high_level_scope_id[start];
-                  for (const auto &i : luramas_riter(luramas_blockrange(0u, start - 1u))) {
+                  for (const auto &i : luramas_riter(luramas_blockrange(0U, start - 1U))) {
 
                         const auto on_id = ssa.high_level_scope_id[i];
                         if (curr_id > on_id) {
@@ -240,7 +242,7 @@ namespace luramas::ir::tools::ssa {
             std::optional<luramas_address> next_assignment_same_scope_assignment(luramas::ir::passes::pass_manager &pm, generation::ssa::ssa &ssa, const luramas_address start, const luramas_register target) {
 
                   const auto curr_id = ssa.high_level_scope_id[start];
-                  for (auto i = start + 1u; i < pm.amount(); ++i) {
+                  for (auto i = start + 1U; i < pm.amount(); ++i) {
 
                         const auto id = ssa.high_level_scope_id[i];
                         if (curr_id != id) {
@@ -384,10 +386,9 @@ namespace luramas::ir::tools::ssa {
             }
 
             const auto &assigns = ssa.nodes[n].l.assigns;
-            for (auto it = assigns.begin(); it != assigns.end(); ++it) {
+            for (auto [reg, data] : assigns) {
 
-                  const auto &[reg, data] = *it;
-                  if (args.contains(reg) || (start && tools::ssa::defined_scope(pm, ssa, start - 1u, reg, false))) {
+                  if (args.contains(reg) || (start && tools::ssa::defined_scope(pm, ssa, start - 1U, reg, false))) {
                         continue;
                   }
 
@@ -401,7 +402,7 @@ namespace luramas::ir::tools::ssa {
             boost::unordered_flat_map<luramas_xregister, luramas_count> ndom_refs;
             std::vector<std::optional<boost::unordered_flat_map<luramas_xregister, std::optional<luramas_address>>>> result;
 
-            for (auto i = 0u; i < pm.ir.data.size(); ++i) {
+            for (auto i = 0U; i < pm.ir.data.size(); ++i) {
 
                   const auto &stat = pm[i];
                   std::optional<boost::unordered_flat_map<luramas_xregister, std::optional<luramas_address>>> curr = std::nullopt;
@@ -491,11 +492,11 @@ namespace luramas::ir::tools::ssa {
             if (!linked) {
                   return false;
             }
-            const auto end = tools::common::safe_block_end(pm, start + 1u);
+            const auto end = tools::common::safe_block_end(pm, start + 1U);
             const auto curr_id = ssa.high_level_scope_id[start];
 
             /* Check high level scop ID if changes back in return false */
-            for (const auto &i : luramas_iter(luramas_blockrange(start + 1u, end))) {
+            for (const auto &i : luramas_iter(luramas_blockrange(start + 1U, end))) {
 
                   if (tools::stat::is_assignment(pm[i], *linked)) {
                         return ssa.high_level_scope_id[i] != curr_id;

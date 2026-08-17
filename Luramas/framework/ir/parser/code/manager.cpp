@@ -25,7 +25,7 @@ namespace luramas::ir::parser {
             return this->avaliable_reg++;
       }
 
-      const char *const str(const errors &err) {
+      const char *str(const errors &err) {
             switch (err) {
                   case errors::none: {
                         return "none";

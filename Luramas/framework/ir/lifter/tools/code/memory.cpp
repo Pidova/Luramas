@@ -3,7 +3,7 @@
 
 namespace luramas::ir::tools::memory {
 
-      void mem2reg(luramas::ir::passes::pass_manager &pm, const generation::ssa::ssa &ssa, const luramas_address loc, const std::shared_ptr<ir_stat::ir_expr> &target) {
+      static void mem2reg(luramas::ir::passes::pass_manager & /*pm*/, const generation::ssa::ssa & /*ssa*/, const luramas_address /*loc*/, const std::shared_ptr<ir_stat::ir_expr> & /*target*/) {
 
             return;
       }

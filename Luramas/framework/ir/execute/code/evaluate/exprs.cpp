@@ -5,7 +5,7 @@ namespace luramas::ir::execution::evaluate::exprs {
       namespace can_cmp {
 
             /* Object can compare? */
-            inline constexpr bool object(const tkind k, const environment_flags &f) {
+            constexpr static bool object(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::object: {
                               return true;
@@ -17,7 +17,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Stack can compare? */
-            inline constexpr bool stack(const tkind k, const environment_flags &f) {
+            constexpr static bool stack(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::stack: {
                               return true;
@@ -29,7 +29,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Global can compare? */
-            inline constexpr bool global(const tkind k, const environment_flags &f) {
+            constexpr static bool global(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::global: {
                               return true;
@@ -41,7 +41,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Kvalue can compare? */
-            inline constexpr bool kvalue(const tkind k, const environment_flags &f) {
+            constexpr static bool kvalue(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::kvalue: {
                               return true;
@@ -53,7 +53,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* None obj can compare? */
-            inline constexpr bool none_obj(const tkind k, const environment_flags &f) {
+            constexpr static bool none_obj(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::none_obj: {
                               return true;
@@ -65,7 +65,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Variadic can compare? */
-            inline constexpr bool variadic(const tkind k, const environment_flags &f) {
+            constexpr static bool variadic(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::variadic: {
                               return true;
@@ -77,7 +77,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Table can compare? */
-            inline constexpr bool table(const tkind k, const environment_flags &f) {
+            constexpr static bool table(const tkind k, const environment_flags & /*f*/) {
                   switch (k) {
                         case tkind::table: {
                               return true;
@@ -89,7 +89,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* String can compare? */
-            inline constexpr bool string(const tkind k, const environment_flags &f) {
+            constexpr static bool string(const tkind k, const environment_flags &f) {
                   switch (k) {
                         case tkind::string: {
                               return true;
@@ -107,7 +107,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Integral can compare? */
-            inline constexpr bool integral(const tkind k, const environment_flags &f) {
+            constexpr static bool integral(const tkind k, const environment_flags &f) {
                   switch (k) {
                         case tkind::lura_int: {
                               return true;
@@ -125,7 +125,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /* Boolean can compare? */
-            inline constexpr bool boolean(const tkind k, const environment_flags &f) {
+            constexpr static bool boolean(const tkind k, const environment_flags &f) {
                   switch (k) {
                         case tkind::boolean: {
                               return true;
@@ -143,7 +143,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             }
 
             /*  Can values compare? */
-            inline constexpr bool cmp(const tkind l, const tkind r, const environment_flags &f) {
+            constexpr static bool cmp(const tkind l, const tkind r, const environment_flags &f) {
                   switch (l) {
                         case tkind::object: {
                               return object(r, f);
@@ -195,27 +195,27 @@ namespace luramas::ir::execution::evaluate::exprs {
                   case luramas::il::arch::data::bin_kinds::len_: {
                         switch (obj.k) {
                               case tkind::table: {
-                                    result.d.emit(std::get<types::object::table>(obj.v).map.size());
+                                    result.d.emit(!std::get<types::object::table>(obj.v).map.empty() != 0u);
                                     break;
                               }
                               case tkind::lura_int: {
                                     if (f.funary_len_int) {
                                           result.d.emit(math::count_digits(std::get<luramas_int>(obj.v)));
                                           break;
-                                    } else {
-                                          exe_error<errors::kinds::invalid_unary_operand>(result);
-                                          return result;
                                     }
+                                    exe_error<errors::kinds::invalid_unary_operand>(result);
+                                    return result;
+
                                     break;
                               }
                               case tkind::string: {
                                     if (f.funary_len_string) {
-                                          result.d.emit(std::get<std::string>(obj.v).length());
+                                          result.d.emit(!std::get<std::string>(obj.v).empty() != 0u);
                                           break;
-                                    } else {
-                                          exe_error<errors::kinds::invalid_unary_operand>(result);
-                                          return result;
                                     }
+                                    exe_error<errors::kinds::invalid_unary_operand>(result);
+                                    return result;
+
                                     break;
                               }
                               default: {
@@ -248,10 +248,10 @@ namespace luramas::ir::execution::evaluate::exprs {
                                     if (f.funary_not_int) {
                                           result.d.emit(!std::get<luramas_int>(obj.v));
                                           break;
-                                    } else {
-                                          exe_error<errors::kinds::invalid_unary_operand>(result);
-                                          return result;
                                     }
+                                    exe_error<errors::kinds::invalid_unary_operand>(result);
+                                    return result;
+
                                     break;
                               }
                               default: {
@@ -370,8 +370,8 @@ namespace luramas::ir::execution::evaluate::exprs {
                               return result;
                         }
 
-                        const auto lv = l.k == tkind::boolean ? luramas_int(std::get<bool>(l.v)) : std::get<luramas_int>(l.v);
-                        const auto rv = r.k == tkind::boolean ? luramas_int(std::get<bool>(r.v)) : std::get<luramas_int>(r.v);
+                        const auto lv = l.k == tkind::boolean ? luramas_int(static_cast<std::int32_t>(std::get<bool>(l.v))) : std::get<luramas_int>(l.v);
+                        const auto rv = r.k == tkind::boolean ? luramas_int(static_cast<std::int32_t>(std::get<bool>(r.v))) : std::get<luramas_int>(r.v);
 
                         switch (b) {
                               case luramas::il::arch::data::bin_kinds::lt_: {
@@ -379,7 +379,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
-                                          result.d.emit(luramas_int(res));
+                                          result.d.emit(luramas_int(static_cast<std::int32_t>(res)));
                                     }
                                     break;
                               }
@@ -388,7 +388,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
-                                          result.d.emit(luramas_int(res));
+                                          result.d.emit(luramas_int(static_cast<std::int32_t>(res)));
                                     }
                                     break;
                               }
@@ -397,7 +397,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
-                                          result.d.emit(luramas_int(res));
+                                          result.d.emit(luramas_int(static_cast<std::int32_t>(res)));
                                     }
                                     break;
                               }
@@ -406,7 +406,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
-                                          result.d.emit(luramas_int(res));
+                                          result.d.emit(luramas_int(static_cast<std::int32_t>(res)));
                                     }
                                     break;
                               }
@@ -424,24 +424,24 @@ namespace luramas::ir::execution::evaluate::exprs {
                               return result;
                         }
 
-                        const auto lv = l.k == tkind::boolean ? luramas_int(std::get<bool>(l.v)) : std::get<luramas_int>(l.v);
+                        const auto lv = l.k == tkind::boolean ? luramas_int(static_cast<std::int32_t>(std::get<bool>(l.v))) : std::get<luramas_int>(l.v);
 
                         switch (b) {
                               case luramas::il::arch::data::bin_kinds::et_: {
-                                    const auto res = lv == true;
+                                    const auto res = lv == 1u;
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
-                                          result.d.emit(luramas_int(res));
+                                          result.d.emit(luramas_int(static_cast<std::int32_t>(res)));
                                     }
                                     break;
                               }
                               case luramas::il::arch::data::bin_kinds::nt_: {
-                                    const auto res = lv != true;
+                                    const auto res = lv != 1u;
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
-                                          result.d.emit(luramas_int(res));
+                                          result.d.emit(luramas_int(static_cast<std::int32_t>(res)));
                                     }
                                     break;
                               }
@@ -471,8 +471,8 @@ namespace luramas::ir::execution::evaluate::exprs {
                   return result;
             }
 
-            const auto lv = l.k == tkind::boolean ? luramas_int(std::get<bool>(l.v)) : std::get<luramas_int>(l.v);
-            const auto rv = r.k == tkind::boolean ? luramas_int(std::get<bool>(r.v)) : std::get<luramas_int>(r.v);
+            const auto lv = l.k == tkind::boolean ? luramas_int(static_cast<std::int32_t>(std::get<bool>(l.v))) : std::get<luramas_int>(l.v);
+            const auto rv = r.k == tkind::boolean ? luramas_int(static_cast<std::int32_t>(std::get<bool>(r.v))) : std::get<luramas_int>(r.v);
 
             switch (b) {
                   case luramas::il::arch::data::bin_kinds::or_: {
@@ -492,7 +492,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                         break;
                   }
                   case luramas::il::arch::data::bin_kinds::div_: {
-                        if (rv == 0u) {
+                        if (rv == 0U) {
                               if (f.farithmetic_nan_zero) {
                                     result.d.emit(0u);
                               } else {
@@ -539,7 +539,7 @@ namespace luramas::ir::execution::evaluate::exprs {
             return result;
       }
 
-      types::object execute(environment &env, const std::shared_ptr<ir_stat::ir_expr> &expr) {
+      types::object execute(environment & /*env*/, const std::shared_ptr<ir_stat::ir_expr> &expr) {
 
             types::object result;
             if (!expr) {

@@ -64,7 +64,8 @@ namespace luramas::ir::cfg::sort {
       std::vector<std::shared_ptr<generation::cfg::block>> dominant(const generation::cfg::cfg &cfg) {
 
             std::vector<std::shared_ptr<generation::cfg::block>> result;
-            boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> visited, pending;
+            boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> visited;
+            boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> pending;
             result.reserve(cfg.blocks.size());
             visited.reserve(cfg.blocks.size());
             pending.reserve(cfg.blocks.size());
@@ -99,7 +100,8 @@ namespace luramas::ir::cfg::sort {
       std::vector<std::shared_ptr<generation::cfg::block>> traversal(const generation::cfg::cfg &cfg) {
 
             std::vector<std::shared_ptr<generation::cfg::block>> result;
-            boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> visited, pending;
+            boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> visited;
+            boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> pending;
             result.reserve(cfg.blocks.size());
             visited.reserve(cfg.blocks.size());
             pending.reserve(cfg.blocks.size());

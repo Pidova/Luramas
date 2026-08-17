@@ -19,7 +19,7 @@ namespace luramas::ir::tools::implicit {
                   if (!loop_end) {
                         break;
                   }
-                  curr = loop_end + 1u;
+                  curr = loop_end + 1U;
             }
             result.clear();
             return result;

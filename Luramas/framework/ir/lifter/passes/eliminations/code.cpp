@@ -2,7 +2,7 @@
 
 namespace luramas::ir::passes {
 
-      void dead_code_elimination(pass_manager &pm, shared &s) {
+      void dead_code_elimination(pass_manager &pm, shared & /*s*/) {
 
             std::optional<generation::ssa::ssa> ssa;
             for (const auto &i : pm.iter()) {
@@ -16,9 +16,9 @@ namespace luramas::ir::passes {
                                  [ends]
                                  ::l::
                               */
-                              if (pm.valid_next<2u>(i)) {
+                              if (pm.valid_next<2U>(i)) {
 
-                                    const auto &executable = tools::visitors::next_safe_executable_stat(pm, i + 1u);
+                                    const auto &executable = tools::visitors::next_safe_executable_stat(pm, i + 1U);
                                     if (tools::stat::branch::is_cond_goto_label(p, executable) && pm.safe(p)) {
 
                                           for (const auto &v : tools::stat::mutate::extract_volatiles_stats(p)) {
@@ -32,9 +32,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::goto_label: {
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &next = pm[i + 1u];
+                                    const auto &next = pm[i + 1U];
 
                                     /*
                                         goto l;
@@ -50,7 +50,7 @@ namespace luramas::ir::passes {
                                         end [NEXT SAFE EXECUTABLE]
                                         /::l::/
                                     */
-                                    const auto &executable = tools::visitors::next_safe_executable_stat(pm, i + 1u);
+                                    const auto &executable = tools::visitors::next_safe_executable_stat(pm, i + 1U);
                                     if (tools::stat::branch::is_goto_label(p, executable) && pm.safe(p)) {
                                           pm.remove(p);
                                           pm.mut(LURAMAS_DEBUG_LINE);
@@ -66,9 +66,9 @@ namespace luramas::ir::passes {
                                     }
                               }
 
-                              if (pm.valid_prev<1u>(i)) {
+                              if (pm.valid_prev<1U>(i)) {
 
-                                    const auto &prev = pm[i - 1u];
+                                    const auto &prev = pm[i - 1U];
 
                                     /*
                                         if (?) then goto l; end
@@ -93,7 +93,7 @@ namespace luramas::ir::passes {
                                     break;
                               }
 
-                              if (p->members.size() > 1u) {
+                              if (p->members.size() > 1U) {
 
                                     /*
                                             r(n), r(n1), ... = ?; (assignments only used once)
@@ -103,17 +103,17 @@ namespace luramas::ir::passes {
                                     */
                                     luramas_registers regs;
                                     boost::unordered_flat_set<luramas_register> un_regs;
-                                    for (const auto &i : p->members) {
-                                          if (!i->is_k<expr_kinds::reg>() && !i->is_k<expr_kinds::upvalue>()) {
+                                    for (const auto &m : p->members) {
+                                          if (!m->is_k<expr_kinds::reg>() && !m->is_k<expr_kinds::upvalue>()) {
                                                 break;
                                           }
-                                          regs.emplace_back(i->reg);
+                                          regs.emplace_back(m->reg);
                                           un_regs.insert(regs.back());
                                     }
 
                                     bool pass = true;
                                     boost::unordered_flat_map<luramas_register, std::shared_ptr<ir_stat>> assignments;
-                                    for (auto g = i + 1u; g < pm.amount(); ++g) {
+                                    for (auto g = i + 1U; g < pm.amount(); ++g) {
                                           const auto &rs = pm[g];
                                           if (assignments.size() == regs.size()) {
                                                 break;
@@ -126,9 +126,8 @@ namespace luramas::ir::passes {
                                           if (assignments.find(reg) != assignments.end() || un_regs.find(reg) == un_regs.end()) {
                                                 pass = false;
                                                 break;
-                                          } else {
-                                                assignments.try_emplace(reg, rs);
                                           }
+                                          assignments.try_emplace(reg, rs);
                                     }
                                     if (pass && !assignments.empty()) {
 
@@ -138,14 +137,14 @@ namespace luramas::ir::passes {
 
                                           for (const auto &rs : ssa->nodes[p].l.assigns) {
                                                 const auto rssa = *rs.second.second.begin();
-                                                if (ssa->defs[rssa].second.second.first.size() > 1u || ssa->phis.find(rssa) != ssa->phis.end()) {
+                                                if (ssa->defs[rssa].second.second.first.size() > 1U || ssa->phis.find(rssa) != ssa->phis.end()) {
                                                       pass = false;
                                                       break;
                                                 }
                                           }
                                           if (pass && pm.safe(p)) {
 
-                                                for (auto idx = 0u; idx < p->members.size(); ++idx) {
+                                                for (auto idx = 0U; idx < p->members.size(); ++idx) {
                                                       p->members[idx] = assignments[p->members[idx]->reg]->l;
                                                 }
                                                 for (const auto &g : assignments) {
@@ -167,13 +166,14 @@ namespace luramas::ir::passes {
                                           }
                                           bool checked = false;
                                           luramas_registers removals;
-                                          auto &rssa = ssa->nodes[p];
+                                          auto &rssa_node = ssa->nodes[p];
                                           for (const auto &m : regs) {
 
-                                                const auto &lssa = rssa.l.assigns[m];
+                                                const auto &lssa = rssa_node.l.assigns[m];
                                                 if (lssa.second.empty()) {
                                                       break;
                                                 }
+
                                                 const auto &rssa = *lssa.second.begin();
                                                 if (ssa->defs.find(rssa) == ssa->defs.end() || ssa->phis.find(rssa) != ssa->phis.end()) {
                                                       pass = false;
@@ -181,7 +181,7 @@ namespace luramas::ir::passes {
                                                 }
 
                                                 const auto &past = ssa->defs[rssa];
-                                                if (past.second.second.first.size()) {
+                                                if (!past.second.second.first.empty()) {
                                                       if (checked) {
                                                             pass = false;
                                                             break;
@@ -208,10 +208,10 @@ namespace luramas::ir::passes {
                                                       }
                                                 }
                                                 if (member) {
-                                                      p->members.erase(std::remove(p->members.begin(), p->members.end(), member));
+                                                      p->members.erase(std::remove(p->members.begin(), p->members.end(), member), p->members.end());
                                                 }
                                           } while (!removals.empty() && member);
-                                          if (p->members.size() == 1u) {
+                                          if (p->members.size() == 1U) {
                                                 p->l = p->members.front();
                                                 p->members.clear();
                                           }
@@ -243,13 +243,13 @@ namespace luramas::ir::passes {
                               p->smembers.erase(std::remove_if(p->smembers.begin(), p->smembers.end(), [](const auto &o) { return o->template is_tk<tkind::none_obj>(); }), p->smembers.end());
 
                               /* TODO: PERABLY DO IT IF ANY MEMBER HAS ANY META DATA THAT CAN BE INLINED */
-                              if (pm.valid_prev<1u>(i)) {
+                              if (pm.valid_prev<1U>(i)) {
 
                                     /*
                                         r(n), r = ?? (ALL IS META)
                                         for ? in r do 
                                     */
-                                    const auto &prev = pm[i - 1u];
+                                    const auto &prev = pm[i - 1U];
                                     if (!p->meta.empty() && prev->is_k<keywords::assignment>() && pm.safe(prev) && !prev->members.empty()) {
 
                                           if (!ssa.has_value()) {
@@ -258,7 +258,7 @@ namespace luramas::ir::passes {
 
                                           ir_stat::ir_expr::space targets;
                                           for (const auto &ls : ssa->nodes[prev].l.assigns) {
-                                                if (!ssa->defs[*ls.second.second.begin()].second.second.first.size()) {
+                                                if (ssa->defs[*ls.second.second.begin()].second.second.first.empty()) {
                                                       const auto expr = *prev->visit(ls.first).begin();
                                                       if (std::find(p->meta.begin(), p->meta.end(), expr) != p->meta.end()) {
                                                             targets.emplace_back(expr);
@@ -281,9 +281,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::end: {
 
-                              if (pm.valid_prev<1u>(i)) {
+                              if (pm.valid_prev<1U>(i)) {
 
-                                    const auto &prev = pm[i - 1u];
+                                    const auto &prev = pm[i - 1U];
 
                                     /*
                                          if (?) then
@@ -302,9 +302,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::condition: {
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &next = pm[i + 1u];
+                                    const auto &next = pm[i + 1U];
 
                                     /*
                                         else
@@ -350,9 +350,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::label: {
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &next = pm[i + 1u];
+                                    const auto &next = pm[i + 1U];
 
                                     /*
                                         ::l::
@@ -360,7 +360,7 @@ namespace luramas::ir::passes {
                                     */
                                     if (tools::stat::is_label(next) && pm.safe(p, next)) {
 
-                                          for (auto j = 0ull; j < pm.amount(); ++j) {
+                                          for (auto j = 0ULL; j < pm.amount(); ++j) {
 
                                                 auto &jp = pm[j];
                                                 if (tools::stat::common::is_ref(jp, next->label)) {
@@ -375,9 +375,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::retn: {
 
-                              if (pm.valid_prev<3u>(i)) {
+                              if (pm.valid_prev<3U>(i)) {
 
-                                    const auto &[p1, p2, p3] = std::tie(pm[i - 1u], pm[i - 2u], pm[i - 3u]);
+                                    const auto &[p1, p2, p3] = std::tie(pm[i - 1U], pm[i - 2U], pm[i - 3U]);
 
                                     /*
                                          if (??) then NO VOLATILES
@@ -396,9 +396,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::continue_: {
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &next = pm[i + 1u];
+                                    const auto &next = pm[i + 1U];
 
                                     /*
                                         continue;
@@ -408,7 +408,7 @@ namespace luramas::ir::passes {
                                     if (next->is_scope_end()) {
 
                                           bool hit = false;
-                                          tools::visitors::last_safe_end(pm, i + 1u, hit);
+                                          tools::visitors::last_safe_end(pm, i + 1U, hit);
                                           if (hit && pm.safe(p)) {
                                                 pm.remove(p);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
@@ -436,9 +436,9 @@ namespace luramas::ir::passes {
                                     }
                               }
 
-                              if (pm.valid_prev<1u>(i) && pm.valid_next<2u>(i)) {
+                              if (pm.valid_prev<1U>(i) && pm.valid_next<2U>(i)) {
 
-                                    const auto &[p1, n1, n2] = std::tie(pm[i - 1u], pm[i + 1u], pm[i + 2u]);
+                                    const auto &[p1, n1, n2] = std::tie(pm[i - 1U], pm[i + 1U], pm[i + 2U]);
 
                                     /*
                                          l:
@@ -459,9 +459,9 @@ namespace luramas::ir::passes {
                         }
                         case keywords::break_: {
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &next = pm[i + 1u];
+                                    const auto &next = pm[i + 1U];
 
                                     /*
                                             break;
@@ -495,7 +495,7 @@ namespace luramas::ir::passes {
                               if (tools::stat::is_anonfunction_call(p)) {
 
                                     const auto closure = p->l;
-                                    if (closure->closure.size() == 2u &&
+                                    if (closure->closure.size() == 2U &&
                                         tools::block::independent(closure->closure) &&
                                         !tools::contains::is(p->members, luramas::ir::data::volatile_)) {
 
@@ -520,9 +520,9 @@ namespace luramas::ir::passes {
 
                               if (tools::stat::is_page_function_jump(p)) {
 
-                                    if (pm.valid_next<1u>(i)) {
+                                    if (pm.valid_next<1U>(i)) {
 
-                                          const auto &n = pm[i + 1u];
+                                          const auto &n = pm[i + 1U];
 
                                           if (pm.env_flags.fallow_page_falls) {
 
@@ -532,15 +532,15 @@ namespace luramas::ir::passes {
                                                 */
                                                 if (tools::stat::is_page_function_start(n, p->r->extract_integral_base()) && pm.safe(p)) {
                                                       if (const auto it = pm.processed.pages.find(p->r->extract_integral_base()); it != pm.processed.pages.end()) {
-                                                            if (const auto &def = pm[it->second.first + 1u]; tools::stat::is_definition(def)) {
+                                                            if (const auto &def = pm[it->second.first + 1U]; tools::stat::is_definition(def)) {
 
-                                                                  for (auto i = 0u; i < def->args.size(); ++i) {
-                                                                        if (i > p->members.size()) {
+                                                                  for (auto a = 0U; a < def->args.size(); ++a) {
+                                                                        if (a > p->members.size()) {
                                                                               break;
                                                                         }
                                                                         auto arg = def->args.begin();
-                                                                        std::advance(arg, i);
-                                                                        pm.insert(p, tools::stat::generate::assignment(arg->second, p->members[i]));
+                                                                        std::advance(arg, a);
+                                                                        pm.insert(p, tools::stat::generate::assignment(arg->second, p->members[a]));
                                                                   }
                                                             }
                                                       }
@@ -569,9 +569,9 @@ namespace luramas::ir::passes {
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &n = pm[i + 1u];
+                                    const auto &n = pm[i + 1U];
 
                                     /* 
 									    SPUSH([n], {?? (NO STACK)});
@@ -615,9 +615,9 @@ namespace luramas::ir::passes {
 
                               const tools::find::find_expr_cb has_memread = [](const std::shared_ptr<ir_stat::ir_expr> &expr) { return expr->is_k<expr_kinds::memoryread>(); };
 
-                              if (pm.valid_next<1u>(i)) {
+                              if (pm.valid_next<1U>(i)) {
 
-                                    const auto &n = pm[i + 1u];
+                                    const auto &n = pm[i + 1U];
 
                                     /* 
                                         memset<i>(??) = ?
@@ -658,7 +658,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void dead_label_elimination(pass_manager &pm, shared &s) {
+      void dead_label_elimination(pass_manager &pm, shared & /*s*/) {
 
             boost::unordered_flat_set<luramas_address> refs;
             ir_stat::space labels;
@@ -691,7 +691,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void unreachable_code_elimination(pass_manager &pm, shared &s) {
+      void unreachable_code_elimination(pass_manager &pm, shared & /*s*/) {
 
             std::optional<tools::paging::details> page_details = std::nullopt;
             if (pm.env_flags.fhas_pages) {
@@ -718,7 +718,7 @@ namespace luramas::ir::passes {
                         }
                   }
                   if (tools::stat::branch::is_else_conditional(stat) && pm.is_removed(pm[tools::common::reverse_safe_take_jump(pm, i)])) {
-                        pm.remove(i, tools::common::safe_take_jump(pm, i) + 1u);
+                        pm.remove(i, tools::common::safe_take_jump(pm, i) + 1U);
                         pm.mut(LURAMAS_DEBUG_LINE);
                   } else if (tools::stat::is_end(stat) && pm.is_removed(pm[tools::common::reverse_safe_take_jump(pm, i)])) {
                         pm.remove(stat);
@@ -728,7 +728,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void psuedo_instruction_elimination(pass_manager &pm, shared &s) {
+      void psuedo_instruction_elimination(pass_manager &pm, shared & /*s*/) {
 
             for (const auto &i : pm.iter()) {
 
@@ -748,12 +748,12 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void dead_main_definition_elimination(pass_manager &pm, shared &s, generation::ssa::ssa &ssa) {
+      void dead_main_definition_elimination(pass_manager &pm, shared & /*s*/, generation::ssa::ssa &ssa) {
 
             std::vector<luramas_index> args;
 
             /* Remove */
-            const auto &def = pm[0u];
+            const auto &def = pm[0U];
             if (tools::stat::is_definition(def) && def->flags.flink_regs) {
 
                   for (const auto &[linked, data] : ssa.nodes[def].l.assigns) {

@@ -1,3 +1,7 @@
+#include <algorithm>
+
+#include <algorithm>
+
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
 
@@ -7,7 +11,7 @@ namespace luramas::ir::tools {
 
             const auto unfinished = tools::trackers::unfinished_condition(pm, start, label, tools::stat::iter(start, label) == 1);
 
-            return std::any_of(unfinished.begin(), unfinished.end(), [&](const auto &c) {
+            return std::ranges::any_of(unfinished, [&](const auto &c) {
                   return c.second->is_loop() || tools::stat::branch::is_loop_end(pm, c.second);
             });
       }
@@ -19,34 +23,34 @@ namespace luramas::ir::tools {
             }
 
             const auto unfinished = tools::trackers::unfinished_condition(pm, start, label);
-            if (std::count_if(unfinished.begin(), unfinished.end(), [&](const auto &i) { return tools::stat::branch::is_loop_end(pm, i.second); }) != 1u) {
+            if (std::count_if(unfinished.begin(), unfinished.end(), [&](const auto &i) { return tools::stat::branch::is_loop_end(pm, i.second); }) != 1U) {
                   return false;
             }
-            return std::any_of(unfinished.begin(), unfinished.end(), [&pm, label](const auto &i) { return tools::stat::branch::is_loop_end(pm, i.second) &&
-                                                                                                          tools::stat::branch::same_labels(tools::visitors::next_safe_executable_stat(pm, i.first + 1u), pm[label]); });
+            return std::ranges::any_of(unfinished, [&pm, label](const auto &i) { return tools::stat::branch::is_loop_end(pm, i.second) &&
+                                                                                        tools::stat::branch::same_labels(tools::visitors::next_safe_executable_stat(pm, i.first + 1U), pm[label]); });
       }
 
       bool can_continue(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address label, const bool pending_label_loop) {
 
-            luramas_address parent_loop = 0u;
-            if (!pm.valid_next<1u>(label) || tools::stat::future(start, label) || !tools::visitors::parent_loop(pm, start, parent_loop)) {
+            luramas_address parent_loop = 0U;
+            if (!pm.valid_next<1U>(label) || tools::stat::future(start, label) || !tools::visitors::parent_loop(pm, start, parent_loop)) {
                   return false;
             }
 
-            const auto &next = tools::visitors::next_safe_executable_stat(pm, label + 1u);
-            const auto end_loop = next->end_label && pm[pm.processed.end_labels[next->end_label].first]->is_loop();
+            const auto &next = tools::visitors::next_safe_executable_stat(pm, label + 1U);
+            const auto end_loop = (next->end_label != 0u) && pm[pm.processed.end_labels[next->end_label].first]->is_loop();
 
             if (!pending_label_loop && !next->is_loop() && !end_loop) {
                   return false;
             }
 
-            const auto unfinished = end_loop ? tools::trackers::unfinished_condition(pm, start, label) : tools::trackers::unfinished_condition(pm, label + 2u, start);
-            return std::none_of(unfinished.begin(), unfinished.end(), [](const auto &c) {
+            const auto unfinished = end_loop ? tools::trackers::unfinished_condition(pm, start, label) : tools::trackers::unfinished_condition(pm, label + 2U, start);
+            return std::ranges::none_of(unfinished, [](const auto &c) {
                   return c.second->is_loop();
             });
       }
 
-      struct condition_stack {
+      struct ConditionStack {
             std::intptr_t stack = 0;
             ir_stat::space c;
       };
@@ -56,7 +60,7 @@ namespace luramas::ir::tools {
             if (stat::past(start, end)) {
                   return result;
             }
-            condition_stack cs;
+            ConditionStack cs;
 
             result.closing_index = start;
             while (result.closing_index < end) {
@@ -98,13 +102,13 @@ namespace luramas::ir::tools {
 
             bool broke_out = false;
             auto i = scope_end_stat;
-            luramas_address else_label = 0u;
+            luramas_address else_label = 0U;
             while (i < pm.amount()) {
 
                   const auto &p = pm[i++];
                   if (p->is_k<keywords::label>() && p->label == break_label) {
                         valid = true;
-                        return i - 1u;
+                        return i - 1U;
                   }
                   if (!else_label && (tools::stat::branch::is_elseif_cond(p) || tools::stat::branch::is_else_cond(p))) {
                         else_label = p->elif_end_label;
@@ -113,14 +117,14 @@ namespace luramas::ir::tools {
                               if (p->end_label != else_label) {
                                     continue;
                               }
-                              else_label = 0u;
+                              else_label = 0U;
                         }
                         if (!broke_out) {
                               if (p->is_k<keywords::break_>()) {
                                     broke_out = true;
                               } else if ((!p->is_k<keywords::label>() && !p->is_scope_end()) || p->is_k<keywords::until>()) {
                                     valid = true;
-                                    return i - 1u;
+                                    return i - 1U;
                               }
                         } else if (p->end_label) {
 
@@ -130,19 +134,15 @@ namespace luramas::ir::tools {
                   }
             }
             valid = broke_out;
-            return i - 1u;
+            return i - 1U;
       }
 
       luramas_address next_valid_jump(luramas::ir::passes::pass_manager &pm) {
 
-            luramas_address result = 0u;
+            luramas_address result = 0U;
             for (const auto &i : pm.ir.data) {
-                  if (result < i->jlabel) {
-                        result = i->jlabel;
-                  }
-                  if (result < i->label) {
-                        result = i->label;
-                  }
+                  result = std::max(result, i->jlabel);
+                  result = std::max(result, i->label);
             }
             return result + (++pm.label_padding);
       }
@@ -153,8 +153,8 @@ namespace luramas::ir::tools {
                   return false;
             }
 
-            std::intptr_t s = 0u;
-            for (auto o = start + 1u; o < end; ++o) {
+            std::intptr_t s = 0U;
+            for (auto o = start + 1U; o < end; ++o) {
                   const auto &d = pm[o];
                   s += stat::branch::condition_stack(d);
                   if (!s && tools::stat::branch::is_else_stat(d)) {
@@ -208,8 +208,8 @@ namespace luramas::ir::tools {
                                                       break;
                                                 }
                                                 case violations::block_violation_exceptions::invalid_else_conditional: {
-                                                      for (auto i = violation.ending_loc; i < tools::common::safe_take_jump(pm, violation.ending_loc) + 1u; ++i) {
-                                                            result.emplace_back(pm[i]);
+                                                      for (auto vloc = violation.ending_loc; vloc < tools::common::safe_take_jump(pm, violation.ending_loc) + 1U; ++vloc) {
+                                                            result.emplace_back(pm[vloc]);
                                                       }
                                                       break;
                                                 }
@@ -258,23 +258,23 @@ namespace luramas::ir::tools {
                         return result;
                   }
 
-                  struct block {
-                        luramas_address incomming_end = 0u;
+                  struct Block {
+                        luramas_address incomming_end = 0U;
                         std::shared_ptr<generation::cfg::block> curr_block = nullptr;
                         generation::cfg::block_kind edge = generation::cfg::block_kind::jump;
                   };
 
                   boost::unordered_flat_set<std::shared_ptr<generation::cfg::block>> visited;
-                  std::vector<block> stack;
+                  std::vector<Block> stack;
 
                   if (entry->jump) {
-                        stack.emplace_back(block(entry->ending, entry->jump, generation::cfg::block_kind::jump));
+                        stack.emplace_back(Block(entry->ending, entry->jump, generation::cfg::block_kind::jump));
                   }
                   if (entry->then) {
-                        stack.emplace_back(block(entry->ending, entry->then, generation::cfg::block_kind::then));
+                        stack.emplace_back(Block(entry->ending, entry->then, generation::cfg::block_kind::then));
                   }
                   if (entry->fall) {
-                        stack.emplace_back(block(entry->ending, entry->fall, generation::cfg::block_kind::fall));
+                        stack.emplace_back(Block(entry->ending, entry->fall, generation::cfg::block_kind::fall));
                   }
                   while (!stack.empty()) {
 
@@ -291,13 +291,13 @@ namespace luramas::ir::tools {
                         }
 
                         if (curr.curr_block->jump) {
-                              stack.emplace_back(block(curr.curr_block->ending, curr.curr_block->jump, generation::cfg::block_kind::jump));
+                              stack.emplace_back(Block(curr.curr_block->ending, curr.curr_block->jump, generation::cfg::block_kind::jump));
                         }
                         if (curr.curr_block->then) {
-                              stack.emplace_back(block(curr.curr_block->ending, curr.curr_block->then, generation::cfg::block_kind::then));
+                              stack.emplace_back(Block(curr.curr_block->ending, curr.curr_block->then, generation::cfg::block_kind::then));
                         }
                         if (curr.curr_block->fall) {
-                              stack.emplace_back(block(curr.curr_block->ending, curr.curr_block->fall, generation::cfg::block_kind::fall));
+                              stack.emplace_back(Block(curr.curr_block->ending, curr.curr_block->fall, generation::cfg::block_kind::fall));
                         }
                   }
                   return result;
@@ -313,7 +313,7 @@ namespace luramas::ir::tools {
                               invalid.insert(b->then);
                         }
 
-                        for (const auto &ptr : std::array<std::shared_ptr<generation::cfg::block> *, 3u>({&b->jump, &b->fall, &b->then})) {
+                        for (const auto &ptr : std::array<std::shared_ptr<generation::cfg::block> *, 3U>({&b->jump, &b->fall, &b->then})) {
                               if (auto &edge = *ptr; edge && (contains::address(range, edge->get_front()) || (include_end && contains::address(range, edge->get_end())))) {
                                     invalid.insert(edge);
                                     edge = nullptr;
@@ -322,7 +322,8 @@ namespace luramas::ir::tools {
                   }
 
                   if (!invalid.empty()) {
-                        cfg.blocks.erase(std::remove_if(cfg.blocks.begin(), cfg.blocks.end(), [&](const auto &b) { return invalid.contains(b); }), cfg.blocks.end());
+                        const auto [rem_f, rem_l] = std::ranges::remove_if(cfg.blocks, [&](const auto &b) { return invalid.contains(b); });
+                        cfg.blocks.erase(rem_f, rem_l);
                   }
                   return;
             }
@@ -344,7 +345,7 @@ namespace luramas::ir::tools {
                         }
 
                         /* Add */
-                        if (!tools::contains::address(range, curr->get_front()) || !tools::contains::address(range, curr->get_end() - 1u)) {
+                        if (!tools::contains::address(range, curr->get_front()) || !tools::contains::address(range, curr->get_end() - 1U)) {
                               if (!on.empty() || finclude_end) {
                                     result.emplace_back(kind, curr);
                               }
@@ -386,7 +387,7 @@ namespace luramas::ir::tools {
                         result.emplace_back(kind, curr);
 
                         /* Skip */
-                        if (!tools::contains::address(range, curr->get_front()) || !tools::contains::address(range, curr->get_end() - 1u)) {
+                        if (!tools::contains::address(range, curr->get_front()) || !tools::contains::address(range, curr->get_end() - 1U)) {
                               continue;
                         }
 

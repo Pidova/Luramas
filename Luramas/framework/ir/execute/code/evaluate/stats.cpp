@@ -118,7 +118,7 @@ namespace luramas::ir::execution::evaluate::stats {
                               exe_error<errors::kinds::break_outside_loop>(result);
                               return result;
                         }
-                        result.d.emit_jump_loc(env.breakables.back().second + 1u);
+                        result.d.emit_jump_loc(env.breakables.back().second + 1U);
                         break;
                   }
                   case keywords::continue_: {

@@ -3,7 +3,7 @@
 
 namespace luramas::ir::code::emitter::luau::table {
 
-      static constexpr std::array<const char *const, 22u> black_listed_idxs = {
+      static constexpr std::array<const char *const, 22u> kBlackListedIdxs = {
           "and",
           "break",
           "do",
@@ -65,7 +65,7 @@ namespace luramas::ir::code::emitter::luau::table {
 
                         auto cleaned = data[i].first;
                         luramas_str_sanitize(cleaned);
-                        if (luramas_str_valid_index(cleaned) && !std::any_of(black_listed_idxs.begin(), black_listed_idxs.end(), [&](const auto &i) { return cleaned == i; })) {
+                        if (luramas_str_valid_index(cleaned) && !std::any_of(kBlackListedIdxs.begin(), kBlackListedIdxs.end(), [&](const auto &i) { return cleaned == i; })) {
                               buffer += format->spacing.format_table_index(luau_langkeyword_empty, cleaned, luau_langkeyword_empty, luau_langkeyword_table_index_assignment);
                         } else {
                               buffer += format->spacing.format_table_index(luau_langkeyword_table_index_start, data[i].first, luau_langkeyword_table_index_end, luau_langkeyword_table_index_assignment);

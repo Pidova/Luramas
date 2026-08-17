@@ -4,7 +4,7 @@ namespace luramas::il {
 
       std::string ilang::kvalue::str() const {
 
-            std::string result("");
+            std::string result;
 
             switch (this->type) {
                   case arch::data::kval_kinds::vector: {

@@ -12,7 +12,7 @@
 namespace luau_v6_resolvers {
 
       /* Resolves instructions operands. */
-      void instruction_operands(luramas::il::lifter::resolver::resolver_manager<Proto *> &rm);
+      void instruction_operands(luramas::il::lifter::resolver::resolver_manager<Proto *> &pm);
 
       /* Resolves jump locations operands. */
       void jump_operands(luramas::il::lifter::resolver::resolver_manager<Proto *> &rm);

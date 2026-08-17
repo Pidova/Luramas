@@ -20,7 +20,7 @@ namespace luau_v6_resolvers {
                               if (i->operands[1]->multret && i->operands[1]->dis.reg >= reg) {
                                     i->operands[1]->dis.reg -= reg;
                                     if (!i->operands[1]->dis.reg) {
-                                          i->operands[1]->dis.reg = 1u;
+                                          i->operands[1]->dis.reg = 1U;
                                     }
                               }
 
@@ -28,7 +28,7 @@ namespace luau_v6_resolvers {
                               if (i->operands.back()->multret && i->operands.back()->dis.reg >= reg) {
                                     i->operands.back()->dis.reg -= reg;
                                     if (!i->operands.back()->dis.reg) {
-                                          i->operands.back()->dis.reg = 1u;
+                                          i->operands.back()->dis.reg = 1U;
                                     }
                               }
                               break;
@@ -50,7 +50,7 @@ namespace luau_v6_resolvers {
 
                               const auto ret = i->operands.front()->dis.reg;
                               if (i->operands[1]->multret && i->operands[1]->dis.val >= ret) {
-                                    i->operands[1]->dis.val -= ret - 1u;
+                                    i->operands[1]->dis.val -= ret - 1U;
                                     if (i->operands[1]->dis.val <= 0) {
                                           i->operands[1]->dis.val = 1;
                                     }
@@ -83,7 +83,7 @@ namespace luau_v6_resolvers {
                   for (const auto &operand : i->operands) {
                         if (operand->type == luramas::il::arch::operand::operand_kind::jmp) {
                               operand->ref_addr = i->ref->addr;
-                              operand->dis.jmp = signed(operand->ref_addr) - signed(i->addr);
+                              operand->dis.jmp = static_cast<signed>(operand->ref_addr) - static_cast<signed>(i->addr);
                               break;
                         }
                   }
@@ -94,36 +94,36 @@ namespace luau_v6_resolvers {
       void instructions(luramas::il::lifter::resolver::resolver_manager<Proto *> &rm) {
 
             /* Emit instruction. */
-            for (auto i = 0u; i < rm.il->dis.size(); ++i) {
+            for (auto i = 0U; i < rm.il->dis.size(); ++i) {
 
                   auto &il = rm.il->dis[i];
                   rm.il->reset_temp_reg();
                   switch (il->op) {
                         case luramas::il::arch::opcodes::OP_SELF: {
-                              rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_POPARG>(rm.il, il->addr, il->operands.front()->dis.reg + 1u));
+                              rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_POPARG>(rm.il, il->addr, il->operands.front()->dis.reg + 1U));
                               break;
                         }
                         case luramas::il::arch::opcodes::OP_PEND: {
                               rm.il->remove(il);
                               switch (il->operands.back()->dis.val) {
                                     case LuauOpcode::LOP_AND: {
-                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_AND>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1u]->dis.val, il->operands[2u]->dis.val));
+                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_AND>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1U]->dis.val, il->operands[2U]->dis.val));
                                           break;
                                     }
                                     case LuauOpcode::LOP_OR: {
-                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_OR>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1u]->dis.val, il->operands[2u]->dis.val));
+                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_OR>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1U]->dis.val, il->operands[2U]->dis.val));
                                           break;
                                     }
                                     case LuauOpcode::LOP_ANDK: {
                                           const auto reg = rm.il->get_temp_reg();
-                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADKVAL>(rm.il, il->addr, reg, il->operands[2u]->dis.val));
-                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_AND>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1u]->dis.val, reg));
+                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADKVAL>(rm.il, il->addr, reg, il->operands[2U]->dis.val));
+                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_AND>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1U]->dis.val, reg));
                                           break;
                                     }
                                     case LuauOpcode::LOP_ORK: {
                                           const auto reg = rm.il->get_temp_reg();
-                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADKVAL>(rm.il, il->addr, reg, il->operands[2u]->dis.val));
-                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_OR>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1u]->dis.val, reg));
+                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_LOADKVAL>(rm.il, il->addr, reg, il->operands[2U]->dis.val));
+                                          rm.il->insert(il, luramas::il::emitter::generate_opcode<luramas::il::arch::opcodes::OP_CLOGIC_OR>(rm.il, il->addr, il->operands.front()->dis.reg, il->operands[1U]->dis.val, reg));
                                           break;
                                     }
                                     default: {

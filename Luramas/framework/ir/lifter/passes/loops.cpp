@@ -1,17 +1,21 @@
+#include <algorithm>
+
+#include <ranges>
+
 #include "includes/common.hpp"
 
-void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
+void luramas::ir::passes::loop_simplification(pass_manager &pm, shared & /*s*/) {
 
-      for (auto i = pm.amount() - 1u; i > 0ull; --i) {
+      for (auto i = pm.amount() - 1U; i > 0ULL; --i) {
 
             auto &p = pm[i];
             switch (p->k) {
                   case keywords::condition_goto: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
                               const auto label = pm.processed.labels[p->jlabel];
-                              if (tools::stat::past(i, label) && pm.valid_next<1u>(label)) {
+                              if (tools::stat::past(i, label) && pm.valid_next<1U>(label)) {
 
                                     const auto &label_stat = pm[label];
                                     auto unfinished = tools::trackers::unfinished_condition(pm, label, i);
@@ -23,7 +27,7 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
                                             ..
                                             if  ?? then goto(l) end
                                      */
-                                    if (tools::violations::block_violates(pm, label, i).valid && !std::any_of(unfinished.begin(), unfinished.end(), [](const auto &c) { return c.second->is_loop(); }) && pm.safe(p, label_stat)) {
+                                    if (tools::violations::block_violates(pm, label, i).valid && !std::ranges::any_of(unfinished, [](const auto &c) { return c.second->is_loop(); }) && pm.safe(p, label_stat)) {
 
                                           /*
                                                 ::l::
@@ -33,11 +37,11 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
                                                 \end\                                      
                                           */
                                           bool loop_while = false;
-                                          if (pm.valid_next<1u>(label) && pm.valid_next<1u>(i) &&
-                                              tools::stat::branch::is_if_end(pm[label + 1u], pm[i + 1u]) &&
-                                              tools::common::basic_if_stat(pm, label + 1u)) {
+                                          if (pm.valid_next<1U>(label) && pm.valid_next<1U>(i) &&
+                                              tools::stat::branch::is_if_end(pm[label + 1U], pm[i + 1U]) &&
+                                              tools::common::basic_if_stat(pm, label + 1U)) {
 
-                                                tools::stat::mutate::while_stat_cleared(pm[label + 1u]);
+                                                tools::stat::mutate::while_stat_cleared(pm[label + 1U]);
                                           } else {
 
                                                 loop_while = true;
@@ -58,12 +62,12 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
                                             ..
                                             if  ?? then goto(l) end
                                      */
-                                    if (pm.valid_next<2u>(label) && pm[label + 1u]->is_loop()) {
+                                    if (pm.valid_next<2U>(label) && pm[label + 1U]->is_loop()) {
 
                                           luramas_flag floop = false;
-                                          std::pair<std::size_t, std::shared_ptr<ir_stat>> cond = {0u, nullptr};
-                                          unfinished = tools::trackers::unfinished_condition(pm, label + 2u, i);
-                                          if (std::all_of(unfinished.rbegin(), unfinished.rend(), [&](const auto &c) {
+                                          std::pair<std::size_t, std::shared_ptr<ir_stat>> cond = {0U, nullptr};
+                                          unfinished = tools::trackers::unfinished_condition(pm, label + 2U, i);
+                                          if (std::ranges::all_of(std::ranges::reverse_view(unfinished), [&](const auto &c) {
                                                     if (!floop) {
                                                           floop = c.second->is_loop();
                                                     }
@@ -72,7 +76,8 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
                                                           if (!cond.second && !no_cond_loop) {
                                                                 cond = c;
                                                                 return true;
-                                                          } else if (cond.second) {
+                                                          }
+                                                          if (cond.second) {
                                                                 return no_cond_loop && c.first == --cond.first;
                                                           }
                                                           return no_cond_loop;
@@ -105,18 +110,18 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
             }
       }
 
-      for (auto i = 0ull; i < pm.amount(); ++i) {
+      for (auto i = 0ULL; i < pm.amount(); ++i) {
 
             auto &p = pm[i];
             switch (p->k) {
                   case keywords::condition: {
 
-                        if (pm.valid_prev<1u>(i)) {
+                        if (pm.valid_prev<1U>(i)) {
 
                               const auto end = pm.processed.end_labels[p->end_label].second;
-                              if (pm.valid_prev<1u>(end)) {
+                              if (pm.valid_prev<1U>(end)) {
 
-                                    const auto &[prev, pm_goto] = std::tie(pm[i - 1u], pm[end - 1u]);
+                                    const auto &[prev, pm_goto] = std::tie(pm[i - 1U], pm[end - 1U]);
 
                                     /*
                                         ::l::
@@ -135,9 +140,9 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
                               }
                         }
 
-                        if (pm.valid_next<3u>(i) && pm.valid_prev<1u>(i)) {
+                        if (pm.valid_next<3U>(i) && pm.valid_prev<1U>(i)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                               /*
                                 while (true)
@@ -166,9 +171,9 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
                         const auto until_pos = pm.processed.end_labels[p->end_label].second;
                         auto &until_stat = pm[until_pos];
 
-                        if (pm.valid_next<3u>(i)) {
+                        if (pm.valid_next<3U>(i)) {
 
-                              const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                              const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                               /*
                                  repeat
@@ -182,7 +187,7 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
 
                                     tools::stat::mutate::while_stat_cleared<true>(n1);
                                     tools::stat::mutate::if_stat_cleared<true>(until_stat);
-                                    pm.insert(pm[until_pos - 1u], until_stat, tools::stat::generate::break_stat(), tools::stat::generate::end(), tools::stat::generate::end());
+                                    pm.insert(pm[until_pos - 1U], until_stat, tools::stat::generate::break_stat(), tools::stat::generate::end(), tools::stat::generate::end());
                                     pm.remove(p, n2, n3, until_stat);
                                     pm.mut(LURAMAS_DEBUG_LINE);
                               }
@@ -198,18 +203,18 @@ void luramas::ir::passes::loop_simplification(pass_manager &pm, shared &s) {
       return;
 }
 
-void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
+void luramas::ir::passes::loop_winding(pass_manager &pm, shared & /*s*/) {
 
       for (auto i = pm.amount(); i > 0; --i) {
 
-            auto &p = pm[i - 1u];
+            auto &p = pm[i - 1U];
             switch (p->k) {
                   case keywords::goto_label: {
 
                         const auto label = pm.processed.labels[p->jlabel];
                         const auto &p_label = pm[label];
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
                               /*
                                           goto l;
@@ -232,7 +237,7 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
 
                               const auto unfinished = tools::trackers::unfinished_condition(pm, label, i);
                               if (!unfinished.empty()) {
-                                    if (!std::any_of(unfinished.begin(), unfinished.end(), [](const auto &c) { return c.second->is_loop(); })) {
+                                    if (!std::ranges::any_of(unfinished, [](const auto &c) { return c.second->is_loop(); })) {
 
                                           bool pass = true;
                                           boost::unordered_flat_set<luramas_address> end_labels;
@@ -255,9 +260,9 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
                                                 const auto jump_out_labels = tools::accumulate::goto_labels(pm, tools::accumulate::explicit_jump_past(pm, label, i));
                                                 const auto most_valid = tools::truncate::most_relative_valid_block(pm, label, jump_out_labels);
 
-                                                auto last_end = i - 1u;
+                                                auto last_end = i - 1U;
                                                 if (last_end < most_valid) {
-                                                      last_end = most_valid - 1u;
+                                                      last_end = most_valid - 1U;
                                                 }
                                                 for (const auto &end : end_labels) {
                                                       last_end = std::max(last_end, end);
@@ -292,7 +297,7 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
                   }
                   case keywords::condition_goto: {
 
-                        const auto label = tools::common::safe_take_jump(pm, i - 1u);
+                        const auto label = tools::common::safe_take_jump(pm, i - 1U);
 
                         /*
                             ::l::
@@ -312,7 +317,7 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
                               const auto last_end = tools::visitors::last_safe_end(pm, i, hit);
                               if (!hit && last_end != i) {
 
-                                    const auto violation = tools::violations::block_violates(pm, label, last_end + 1u);
+                                    const auto violation = tools::violations::block_violates(pm, label, last_end + 1U);
                                     if (tools::treshold_ei(violation.ending_loc, i, last_end) && !tools::contains::orphans::implicit_goto(pm, tools::transform::address_to_range(label, violation.ending_loc)) &&
                                         tools::common::basic_if_end_stat(pm, tools::transform::address_to_range(i, violation.ending_loc))) {
 
@@ -324,7 +329,7 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
                                                 pm.set_safe(if_stat);
                                           }
                                           tools::stat::mutate::until_stat_cleared(p);
-                                          pm.move(pm[violation.ending_loc - 1u], p);
+                                          pm.move(pm[violation.ending_loc - 1U], p);
                                           pm.set_safe(pm[label], p);
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
@@ -340,17 +345,17 @@ void luramas::ir::passes::loop_winding(pass_manager &pm, shared &s) {
       return;
 }
 
-void luramas::ir::passes::loop_unroll(pass_manager &pm, shared &s) {
+void luramas::ir::passes::loop_unroll(pass_manager &pm, shared & /*s*/) {
 
-      for (auto i = 0ull; i < pm.amount(); ++i) {
+      for (auto i = 0ULL; i < pm.amount(); ++i) {
 
             auto &p = pm[i];
             switch (p->k) {
                   case keywords::goto_label: {
 
-                        if (pm.valid_next<4u>(i)) {
+                        if (pm.valid_next<4U>(i)) {
 
-                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u], pm[i + 4u]);
+                              const auto &[n1, n2, n3, n4] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U], pm[i + 4U]);
 
                               /*
                                     goto l;
@@ -384,9 +389,9 @@ void luramas::ir::passes::loop_unroll(pass_manager &pm, shared &s) {
                   }
                   case keywords::repeat: {
 
-                        if (pm.valid_next<1u>(i)) {
+                        if (pm.valid_next<1U>(i)) {
 
-                              const auto &next = pm[i + 1u];
+                              const auto &next = pm[i + 1U];
 
                               /*
                                 repeat
@@ -411,7 +416,7 @@ void luramas::ir::passes::loop_unroll(pass_manager &pm, shared &s) {
       return;
 }
 
-void luramas::ir::passes::loop_canonicalize_exits(pass_manager &pm, shared &s) {
+void luramas::ir::passes::loop_canonicalize_exits(pass_manager &pm, shared & /*s*/) {
 
       for (const auto &i : pm.iter()) {
 
@@ -431,17 +436,17 @@ void luramas::ir::passes::loop_canonicalize_exits(pass_manager &pm, shared &s) {
                         if (tools::stat::branch::is_while_true(p)) {
 
                               const auto break_outs = tools::accumulate::break_outs(pm, i);
-                              if (break_outs.size() == 1u && (tools::stat::branch::is_goto(pm[break_outs.front()]) || tools::stat::branch::is_cond_goto(pm[break_outs.front()]))) {
+                              if (break_outs.size() == 1U && (tools::stat::branch::is_goto(pm[break_outs.front()]) || tools::stat::branch::is_cond_goto(pm[break_outs.front()]))) {
 
                                     auto &breakout = pm[break_outs.front()];
                                     const auto end = tools::common::safe_take_jump(pm, i);
-                                    const auto next_executable = tools::trackers::next_safe_executable(pm, end + 1u);
-                                    const auto safe_cond = tools::common::reverse_safe_take_jump(pm, next_executable - 1u);
-                                    if (tools::stat::branch::is_if_cond(pm[safe_cond]) && !tools::condition_has_else(pm, safe_cond, next_executable - 1u) && pm.is_safe(pm[safe_cond])) {
+                                    const auto next_executable = tools::trackers::next_safe_executable(pm, end + 1U);
+                                    const auto safe_cond = tools::common::reverse_safe_take_jump(pm, next_executable - 1U);
+                                    if (tools::stat::branch::is_if_cond(pm[safe_cond]) && !tools::condition_has_else(pm, safe_cond, next_executable - 1U) && pm.is_safe(pm[safe_cond])) {
 
                                           const auto violation = tools::violations::block_violates(pm, next_executable, pm.amount());
                                           if ((violation.reason == tools::violations::block_violation_exceptions::invalid_end || violation.reason == tools::violations::block_violation_exceptions::invalid_else_conditional) &&
-                                              tools::stat::branch::is_jlabel_target(pm[tools::trackers::next_safe_executable(pm, violation.ending_loc - 1u)], breakout)) {
+                                              tools::stat::branch::is_jlabel_target(pm[tools::trackers::next_safe_executable(pm, violation.ending_loc - 1U)], breakout)) {
 
                                                 if (tools::stat::branch::is_goto(breakout)) {
                                                       pm.insert(breakout, tools::stat::generate::break_stat());
@@ -450,8 +455,8 @@ void luramas::ir::passes::loop_canonicalize_exits(pass_manager &pm, shared &s) {
                                                       tools::stat::mutate::if_stat_cleared(breakout);
                                                       pm.insert(breakout, tools::stat::generate::break_stat(), tools::stat::generate::end());
                                                 }
-                                                pm.insert(pm[next_executable - 1u], tools::stat::generate::else_stat());
-                                                pm.move(pm[violation.ending_loc - 1u], pm[next_executable - 1u]);
+                                                pm.insert(pm[next_executable - 1U], tools::stat::generate::else_stat());
+                                                pm.move(pm[violation.ending_loc - 1U], pm[next_executable - 1U]);
                                                 pm.set_safe(pm[safe_cond]);
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }

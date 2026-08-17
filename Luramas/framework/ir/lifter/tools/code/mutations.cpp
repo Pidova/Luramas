@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../../passes/process/process.hpp"
 #include "../tools.hpp"
 
@@ -20,8 +22,8 @@ namespace luramas::ir::tools {
             }
 
             /* Check if target is volatile */
-            const auto marked_volatile = std::any_of(exprs.begin(), exprs.end(), [](const auto &curr_expr) { return curr_expr->is_unsafe(); });
-            const auto marked_volatile_flag = std::any_of(exprs.begin(), exprs.end(), [](const auto &curr_expr) { return curr_expr->is_flag(); });
+            const auto marked_volatile = std::ranges::any_of(exprs, [](const auto &curr_expr) { return curr_expr->is_unsafe(); });
+            const auto marked_volatile_flag = std::ranges::any_of(exprs, [](const auto &curr_expr) { return curr_expr->is_flag(); });
 
             boost::unordered_flat_set<luramas_register> upvalues;
             for (const auto &k : exprs) {

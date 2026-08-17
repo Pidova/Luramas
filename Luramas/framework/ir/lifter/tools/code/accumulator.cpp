@@ -17,7 +17,7 @@ namespace luramas::ir::tools::accumulate {
                   if (stat->is_terminal()) {
 
                         result.emplace_back(-1);
-                  } else if (i == block.second - 1u) {
+                  } else if (i == block.second - 1U) {
 
                         result.emplace_back(-2);
                   }
@@ -67,8 +67,9 @@ namespace luramas::ir::tools::accumulate {
       std::vector<luramas_addresses> dominant(luramas::ir::passes::pass_manager &pm, const std::vector<luramas_blockrange> &v) {
 
             std::vector<luramas_addresses> result;
+            result.reserve(v.size());
             for (const auto &[start, end] : v) {
-                  result.emplace_back(dominant(pm, start + 1u, end));
+                  result.emplace_back(dominant(pm, start + 1U, end));
             }
             return result;
       }
@@ -110,7 +111,7 @@ namespace luramas::ir::tools::accumulate {
       luramas_addresses reverse_dominant(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
             luramas_addresses result;
-            result.reserve(start / 2u);
+            result.reserve(start / 2U);
             for (auto i = start;; --i) {
 
                   const auto &e = pm[i];

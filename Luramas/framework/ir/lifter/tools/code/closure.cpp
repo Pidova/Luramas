@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
 
@@ -48,7 +50,7 @@ namespace luramas::ir::tools::closure {
                         }
                         for (const auto &[r, expr] : buffer->args) {
 
-                              const auto it = std::find_if(casts.begin(), casts.end(), [&](const auto &c) { return tools::exprs::values::is_cast_reg(c, r); });
+                              const auto it = std::ranges::find_if(casts, [&](const auto &c) { return tools::exprs::values::is_cast_reg(c, r); });
                               buffer->meta.emplace_back(it != casts.end() ? *it : nullptr);
                         }
                         return;
@@ -102,7 +104,7 @@ namespace luramas::ir::tools::closure {
             generation_result result;
 
             /* Does not contain or not valid */
-            if (!pm.contains(range.first) || !pm.contains(range.second) || !violations::block_violates(pm, range.first, range.second - 1u).valid) {
+            if (!pm.contains(range.first) || !pm.contains(range.second) || !violations::block_violates(pm, range.first, range.second - 1U).valid) {
                   return result;
             }
 

@@ -66,32 +66,32 @@ namespace luramas::ir {
                               }
                         }
                         result += "}, [UPVALUES]{";
-                        for (auto idx = 0u; idx < this->upvalues.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->upvalues.size(); ++idx) {
                               result += this->upvalues[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->upvalues.size()) {
+                              if ((idx + 1U) < this->upvalues.size()) {
                                     result += ", ";
                               }
                         }
                         result += "}, [FLAGS]{";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
                         result += "}, [CASTS]{";
-                        for (auto idx = 0u; idx < this->meta.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->meta.size(); ++idx) {
                               const auto p = this->meta[idx];
                               result += p ? p->str("", stat_prefix) : "nil";
-                              if ((idx + 1u) < this->meta.size()) {
+                              if ((idx + 1U) < this->meta.size()) {
                                     result += ", ";
                               }
                         }
                         result += "}, [RESULTS]{";
-                        for (auto idx = 0u; idx < this->smembers.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->smembers.size(); ++idx) {
                               const auto p = this->smembers[idx];
                               result += p ? p->str("", stat_prefix) : "nil";
-                              if ((idx + 1u) < this->smembers.size()) {
+                              if ((idx + 1U) < this->smembers.size()) {
                                     result += ", ";
                               }
                         }
@@ -100,9 +100,9 @@ namespace luramas::ir {
                   }
                   case keywords::table_setlist: {
                         result += "SETLIST([" + this->l->str("", stat_prefix) + ", " + std::to_string(this->table_index) + "], {";
-                        for (auto idx = 0u; idx < this->tmembers.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->tmembers.size(); ++idx) {
                               result += this->tmembers[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->tmembers.size()) {
+                              if ((idx + 1U) < this->tmembers.size()) {
                                     result += ", ";
                               }
                         }
@@ -111,9 +111,9 @@ namespace luramas::ir {
                   }
                   case keywords::stack_push: {
                         result += "SPUSH([" + this->v->str("", stat_prefix) + "], {";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
@@ -122,9 +122,9 @@ namespace luramas::ir {
                   }
                   case keywords::stack_pop: {
                         result += "SPOP([" + this->v->str("", stat_prefix) + "], {";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
@@ -137,16 +137,16 @@ namespace luramas::ir {
                   }
                   case keywords::forloop_generic: {
                         result += "for ";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
                         result += " in ";
-                        for (auto idx = 0u; idx < this->smembers.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->smembers.size(); ++idx) {
                               result += this->smembers[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->smembers.size()) {
+                              if ((idx + 1U) < this->smembers.size()) {
                                     result += ", ";
                               }
                         }
@@ -161,9 +161,9 @@ namespace luramas::ir {
                               result += " ";
                         }
                         result += this->l->str("", stat_prefix) + "(";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
@@ -175,16 +175,16 @@ namespace luramas::ir {
                               result += "[RT=" + this->l->str() + "] ";
                         }
                         result += "return ";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
                         result += "; ";
-                        for (auto idx = 0u; idx < this->smembers.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->smembers.size(); ++idx) {
                               result += this->smembers[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->smembers.size()) {
+                              if ((idx + 1U) < this->smembers.size()) {
                                     result += ", ";
                               }
                         }
@@ -194,9 +194,9 @@ namespace luramas::ir {
                         if (this->l) {
                               result += this->l->str("", stat_prefix);
                         } else {
-                              for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                              for (auto idx = 0U; idx < this->members.size(); ++idx) {
                                     result += this->members[idx]->str("", stat_prefix);
-                                    if ((idx + 1u) < this->members.size()) {
+                                    if ((idx + 1U) < this->members.size()) {
                                           result += ", ";
                                     }
                               }
@@ -314,7 +314,7 @@ namespace luramas::ir {
                         if (this->flags.fexternal_page_goto) {
                               result += "[EXTERNAL] ";
                         }
-                        std::string t("");
+                        std::string t;
                         switch (this->pfk) {
                               case page_function_goto_kind::call: {
                                     t = "page_function_call";
@@ -326,9 +326,9 @@ namespace luramas::ir {
                               }
                         }
                         result += t + "<" + this->r->str("", stat_prefix) + ">(";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }
@@ -388,9 +388,9 @@ namespace luramas::ir {
                               result += this->r->str("", stat_prefix);
                         }
                         result += !this->members.empty() ? "," : "";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               result += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     result += ", ";
                               }
                         }

@@ -4,7 +4,7 @@
 namespace luramas::il::lifter::builder::libraries::structure {
 
       void assign_pair(const build::expr &l, const build::expr &r, const build::expr &v) {
-            l = (v & ((1u << l.bits()) - 1u));
+            l = (v & ((1U << l.bits()) - 1U));
             r = (v >> l.bits());
             return;
       }
@@ -12,7 +12,7 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr least_significant_bit(function_handler def, const build::expr &x) {
 
             auto result = def.temp();
-            result = x & 1u;
+            result = x & 1U;
             return result;
       }
 
@@ -29,7 +29,7 @@ namespace luramas::il::lifter::builder::libraries::structure {
             if (x.bits() > t.bits()) {
                   return result.cast(t);
             }
-            const auto mask = (1ull << (x.bits() - 1u));
+            const auto mask = (1ULL << (x.bits() - 1U));
             result = (result.cast(t) ^ mask) - mask;
             return result;
       }
@@ -37,26 +37,26 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr concat(function_handler def, const build::expr &hi, const build::expr &lo) {
 
             auto result = def.temp();
-            result.cast(types::underlying_type(false, types::read_type::bits, 0u, hi.bits() + lo.bits()));
+            result.cast(types::underlying_type(false, types::read_type::bits, 0U, hi.bits() + lo.bits()));
             result = (hi << lo.bits()) | lo;
             return result;
       }
 
       build::expr zero_extend(const build::expr &expr, const luramas_bitwidth n) {
             auto result = expr;
-            return result.cast(types::underlying_type(false, types::read_type::bits, 0u, n));
+            return result.cast(types::underlying_type(false, types::read_type::bits, 0U, n));
       }
 
       build::expr saturate_to_unsigned_byte(function_handler def, const build::expr &expr) {
 
             auto result = def.temp().cast(true);
-            kif(expr < 0u);
+            kif(expr < 0U);
             {
-                  result = 0u;
+                  result = 0U;
             }
-            kelseif(expr > 255u);
+            kelseif(expr > 255U);
             {
-                  result = 255u;
+                  result = 255U;
             }
             kelse;
             {
@@ -71,13 +71,13 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr saturate_to_unsigned_word(function_handler def, const build::expr &expr) {
 
             auto result = def.temp().cast(true);
-            kif(expr < 0u);
+            kif(expr < 0U);
             {
-                  result = 0u;
+                  result = 0U;
             }
-            kelseif(expr > 65535u);
+            kelseif(expr > 65535U);
             {
-                  result = 65535u;
+                  result = 65535U;
             }
             kelse;
             {
@@ -92,13 +92,13 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr saturate_to_unsigned_dword(function_handler def, const build::expr &expr) {
 
             auto result = def.temp().cast(true);
-            kif(expr < 0u);
+            kif(expr < 0U);
             {
-                  result = 0u;
+                  result = 0U;
             }
-            kelseif(expr > 4294967295ll);
+            kelseif(expr > 4294967295LL);
             {
-                  result = 4294967295ll;
+                  result = 4294967295LL;
             }
             kelse;
             {
@@ -113,13 +113,13 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr saturate_to_unsigned_qword(function_handler def, const build::expr &expr) {
 
             auto result = def.temp().cast(true);
-            kif(expr < 0u);
+            kif(expr < 0U);
             {
-                  result = 0u;
+                  result = 0U;
             }
-            kelseif(expr > 18446744073709551615ull);
+            kelseif(expr > 18446744073709551615ULL);
             {
-                  result = 18446744073709551615ull;
+                  result = 18446744073709551615ULL;
             }
             kelse;
             {
@@ -176,13 +176,13 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr saturate_to_signed_dword(function_handler def, const build::expr &expr) {
 
             auto result = def.temp().cast(false);
-            kif(expr < -2147483648ll);
+            kif(expr < -2147483648LL);
             {
-                  result = -2147483648ll;
+                  result = -2147483648LL;
             }
-            kelseif(expr > 2147483647ll);
+            kelseif(expr > 2147483647LL);
             {
-                  result = 2147483647ll;
+                  result = 2147483647LL;
             }
             kelse;
             {
@@ -197,13 +197,13 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr saturate_to_signed_qword(function_handler def, const build::expr &expr) {
 
             auto result = def.temp().cast(false);
-            kif(expr < (-9223372036854775807ll - 1));
+            kif(expr < (-9223372036854775807LL - 1));
             {
-                  result = (-9223372036854775807ll - 1);
+                  result = (-9223372036854775807LL - 1);
             }
-            kelseif(expr > 9223372036854775807ll);
+            kelseif(expr > 9223372036854775807LL);
             {
-                  result = 9223372036854775807ll;
+                  result = 9223372036854775807LL;
             }
             kelse;
             {
@@ -218,16 +218,16 @@ namespace luramas::il::lifter::builder::libraries::structure {
       build::expr interleave_blocks(function_handler def, const build::expr &a, const build::expr &b, const luramas_bitwidth bit_width, const luramas_bitwidth block_size) {
 
             auto r = def.temp();
-            r.cast(types::underlying_type(false, types::read_type::bits, 0u, bit_width));
+            r.cast(types::underlying_type(false, types::read_type::bits, 0U, bit_width));
 
             const auto blocks = bit_width / block_size;
             for (auto i = 0; i < blocks; ++i) {
 
-                  const auto ab = a.read(i * block_size, i * block_size + block_size - 1);
-                  const auto bb = b.read(i * block_size, i * block_size + block_size - 1);
+                  const auto ab = a.read(i * block_size, (i * block_size) + block_size - 1);
+                  const auto bb = b.read(i * block_size, (i * block_size) + block_size - 1);
                   const auto out = i * block_size * 2;
                   r.write(out, out + block_size - 1, ab);
-                  r.write(out + block_size, out + block_size * 2 - 1, bb);
+                  r.write(out + block_size, out + (block_size * 2) - 1, bb);
             }
             return r;
       }

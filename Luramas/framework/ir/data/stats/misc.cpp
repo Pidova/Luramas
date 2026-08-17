@@ -3,9 +3,9 @@ namespace luramas::ir {
 
       /* Misc */
       void ir_stat::clear_underlying_labels() {
-            this->jlabel = 0u;
-            this->end_label = 0u;
-            this->underlying_jump = 0u;
+            this->jlabel = 0U;
+            this->end_label = 0U;
+            this->underlying_jump = 0U;
             return;
       }
       void ir_stat::clear() {
@@ -16,7 +16,7 @@ namespace luramas::ir {
       /* Count */
       luramas_count ir_stat::count(const std::shared_ptr<ir_stat::ir_expr> &expr) const {
 
-            luramas_count result = 0u;
+            luramas_count result = 0U;
             if (this->lba) {
                   result += this->lba->count(expr);
             }

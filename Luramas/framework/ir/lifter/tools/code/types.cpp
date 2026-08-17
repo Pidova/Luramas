@@ -1,4 +1,6 @@
 
+#include <algorithm>
+
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
 
@@ -107,8 +109,8 @@ namespace luramas::ir::tools::types {
                               }
                               for (const auto ssav : lit->second.second) {
 
-                                    if (const auto it = ssa_types.find(ssav); it != ssa_types.end() && it->second) {
-                                          result.emplace_back(it->second);
+                                    if (const auto sit = ssa_types.find(ssav); sit != ssa_types.end() && sit->second) {
+                                          result.emplace_back(sit->second);
                                     }
                               }
                               break;
@@ -159,7 +161,7 @@ namespace luramas::ir::tools::types {
             std::vector<std::shared_ptr<ir::types::object::type>> extracted;
             boost::unordered_flat_map<luramas_xregister, std::shared_ptr<ir::types::object::type>> result;
 
-            for (auto _ = 0u; _ < INT_MAX; ++_) {
+            for (auto _ = 0U; _ < INT_MAX; ++_) {
 
                   bool mutated = false;
                   for (const auto &[i, data] : ssa.defs) {
@@ -303,7 +305,7 @@ namespace luramas::ir::tools::types {
                   for (const auto &j : ssa::extract::exprs(pm, ssa, i)) {
 
                         auto &m = result[j];
-                        if (std::none_of(m.begin(), m.end(), [&](const auto &t) { return t->compare(*e); })) {
+                        if (std::ranges::none_of(m, [&](const auto &t) { return t->compare(*e); })) {
                               m.emplace_back(e);
                         }
                   }

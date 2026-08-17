@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include <print>
 
 #ifdef DEBUG
 #define LURAMAS_ASSERT(condition, message)                                    \
@@ -12,7 +13,7 @@
 #define LURAMAS_ASSERT_DBG(condition, message, debug_code) \
       if (condition) {                                     \
             {debug_code};                                  \
-            std::printf(message);                          \
+            std::print("{}", message);                     \
             LURAMAS_ASSERT(condition, message)             \
       }
 #else

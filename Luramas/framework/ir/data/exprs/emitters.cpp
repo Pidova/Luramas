@@ -178,12 +178,12 @@ namespace luramas::ir {
       }
       void ir_stat::ir_expr::emit_table_set(const std::shared_ptr<ir_expr> &v, const std::shared_ptr<ir_expr> &i) {
             this->tk = tkind::table;
-            this->tmembers.emplace_back(std::make_pair(i, v));
+            this->tmembers.emplace_back(i, v);
             return;
       }
       void ir_stat::ir_expr::emit_table_get(const std::shared_ptr<ir_expr> &v, const std::shared_ptr<ir_expr> &i) {
             this->k = expr_kinds::idx;
-            this->tmembers.emplace_back(std::make_pair(i, v));
+            this->tmembers.emplace_back(i, v);
             return;
       }
       void ir_stat::ir_expr::emit_table() {
@@ -230,7 +230,7 @@ namespace luramas::ir {
             this->k = expr_kinds::memoryread;
             this->l = target;
             this->r = offset;
-            this->non_native = luramas::ir::types::generate::basic(set_bits, false, 0u);
+            this->non_native = luramas::ir::types::generate::basic(set_bits, false, 0U);
             return;
       }
       void ir_stat::ir_expr::emit_cast(const std::shared_ptr<luramas::ir::types::object::type> &object, const std::shared_ptr<ir_expr> &value) {

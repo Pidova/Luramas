@@ -11,10 +11,10 @@
 extern std::string LURMAS_GLOBAL_PDUMP;
 #define LURAMAS_PRINTF(format, ...)                                                              \
       {                                                                                          \
-            std::vector<char> buffer(40000u);                                                    \
+            std::vector<char> buffer(40000U);                                                    \
             const auto len = std::snprintf(buffer.data(), buffer.size(), format, ##__VA_ARGS__); \
             if (len >= static_cast<std::int32_t>(buffer.size())) {                               \
-                  buffer.resize(len + 1u);                                                       \
+                  buffer.resize(len + 1U);                                                       \
                   std::snprintf(buffer.data(), buffer.size(), format, ##__VA_ARGS__);            \
             }                                                                                    \
             LURMAS_GLOBAL_PDUMP += buffer.data();                                                \

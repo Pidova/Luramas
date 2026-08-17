@@ -1,4 +1,6 @@
 
+#include <algorithm>
+
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
 
@@ -59,7 +61,7 @@ namespace luramas::ir::tools::contains {
 
       namespace orphans {
 
-            bool loop_orphan_manager(luramas::ir::passes::pass_manager &pm, const luramas_blockrange &range, auto &&predicate) {
+            static bool loop_orphan_manager(luramas::ir::passes::pass_manager &pm, const luramas_blockrange &range, auto &&predicate) {
 
                   boost::unordered_flat_set<luramas_address> loop_ends;
                   for (const auto &i : luramas_iter(range)) {
@@ -78,7 +80,7 @@ namespace luramas::ir::tools::contains {
 
             bool implicit_goto(luramas::ir::passes::pass_manager &pm, const luramas_blockrange &range) {
 
-                  return loop_orphan_manager(pm, range, [](luramas::ir::passes::pass_manager &pm, const auto &stat) { return stat->is_implicit_flow_interrupt(); });
+                  return loop_orphan_manager(pm, range, [](luramas::ir::passes::pass_manager & /*pm*/, const auto &stat) { return stat->is_implicit_flow_interrupt(); });
             }
 
             bool loop_end(luramas::ir::passes::pass_manager &pm, const luramas_blockrange &range) {
@@ -114,20 +116,20 @@ namespace luramas::ir::tools::contains {
       namespace implicit {
 
             bool break_to(luramas::ir::passes::pass_manager &pm, const luramas_addresses &data, const luramas_address target_loop) {
-                  return std::any_of(data.begin(), data.end(), [&](const auto &loc) { return tools::common::breaks_to_loop(pm, pm[loc], target_loop); });
+                  return std::ranges::any_of(data, [&](const auto &loc) { return tools::common::breaks_to_loop(pm, pm[loc], target_loop); });
             }
 
             bool continues_to(luramas::ir::passes::pass_manager &pm, const luramas_addresses &data, const luramas_address target_loop) {
-                  return std::any_of(data.begin(), data.end(), [&](const auto &loc) { return tools::common::continues_to_loop(pm, pm[loc], target_loop); });
+                  return std::ranges::any_of(data, [&](const auto &loc) { return tools::common::continues_to_loop(pm, pm[loc], target_loop); });
             }
 
             bool any_to(luramas::ir::passes::pass_manager &pm, const luramas_addresses &data, const luramas_address target_loop) {
-                  return std::any_of(data.begin(), data.end(), [&](const auto &loc) { return tools::common::continues_to_loop(pm, pm[loc], target_loop) || tools::common::breaks_to_loop(pm, pm[loc], target_loop); });
+                  return std::ranges::any_of(data, [&](const auto &loc) { return tools::common::continues_to_loop(pm, pm[loc], target_loop) || tools::common::breaks_to_loop(pm, pm[loc], target_loop); });
             }
       } // namespace implicit
 
       bool if_cond_else(luramas::ir::passes::pass_manager &pm, const luramas_address if_cond_loc) {
-            return pm.contains(if_cond_loc) && stat::branch::is_if_cond(pm[if_cond_loc]) && violations::block_violates(pm, if_cond_loc + 1u, pm.amount()).reason == violations::block_violation_exceptions::invalid_else_conditional;
+            return pm.contains(if_cond_loc) && stat::branch::is_if_cond(pm[if_cond_loc]) && violations::block_violates(pm, if_cond_loc + 1U, pm.amount()).reason == violations::block_violation_exceptions::invalid_else_conditional;
       }
 
       bool address(const luramas_blockrange &range, const luramas_address n) {

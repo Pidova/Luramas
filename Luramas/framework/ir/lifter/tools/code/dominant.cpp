@@ -5,7 +5,7 @@ namespace luramas::ir::tools::dominant {
 
       namespace extract {
 
-            std::optional<addr_expr> immediate_expr_in_expr_or_stat(luramas::ir::passes::pass_manager &pm, const luramas_address loc, const std::shared_ptr<ir_stat::ir_expr> &target) {
+            static std::optional<addr_expr> immediate_expr_in_expr_or_stat(luramas::ir::passes::pass_manager &pm, const luramas_address loc, const std::shared_ptr<ir_stat::ir_expr> &target) {
 
                   addr_expr result;
                   result.n = loc;
@@ -43,9 +43,9 @@ namespace luramas::ir::tools::dominant {
                   std::shared_ptr<ir_stat::ir_expr> result = nullptr;
                   for (const auto &i : pm[loc]->extract_shallow_ordered_exprs()) {
 
-                        for (const auto &i : tools::extract::exprs::path(i, target)) {
-                              if (i->is_volatile()) {
-                                    result = i;
+                        for (const auto &n : tools::extract::exprs::path(i, target)) {
+                              if (n->is_volatile()) {
+                                    result = n;
                               }
                         }
                         if (result) {
@@ -59,8 +59,8 @@ namespace luramas::ir::tools::dominant {
 
                   for (const auto &i : pm[loc]->extract_shallow_ordered_exprs()) {
 
-                        if (const auto path = tools::extract::exprs::path(i, target); path.size() > 1u) {
-                              return path[path.size() - 1u];
+                        if (const auto path = tools::extract::exprs::path(i, target); path.size() > 1U) {
+                              return path[path.size() - 1U];
                         }
                   }
                   return nullptr;

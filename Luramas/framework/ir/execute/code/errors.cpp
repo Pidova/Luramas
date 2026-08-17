@@ -2,7 +2,7 @@
 
 namespace luramas::ir::execution::errors {
 
-      const char *const what(const kinds k) {
+      const char *what(const kinds k) {
             switch (k) {
                   case kinds::none: {
                         return "No error";

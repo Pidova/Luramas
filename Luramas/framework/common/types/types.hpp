@@ -43,7 +43,7 @@ struct luramas_range_iter {
       luramas_blockrange range;
       struct iterator {
 
-            luramas_address value = 0u;
+            luramas_address value = 0U;
             inline constexpr auto operator*() const {
                   return this->value;
             }
@@ -73,7 +73,7 @@ struct luramas_range_reverse_iter {
       luramas_blockrange range;
       struct iterator {
 
-            luramas_address value = 0u;
+            luramas_address value = 0U;
             inline constexpr auto operator*() const {
                   return this->value;
             }

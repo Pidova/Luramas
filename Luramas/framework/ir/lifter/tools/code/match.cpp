@@ -31,7 +31,8 @@ namespace luramas::ir::tools::match {
                               return result;
                         }
                         continue;
-                  } else if (m->flags.fglobal_wild) {
+                  }
+                  if (m->flags.fglobal_wild) {
                         if (const auto [it, inserted] = result.second.try_emplace(m->str(), v); !inserted && *it->second != *v) {
                               return result;
                         }
@@ -47,10 +48,10 @@ namespace luramas::ir::tools::match {
                   stack.emplace_back(v->ev, m->ev);
                   stack.emplace_back(v->xv, m->xv);
 
-                  for (auto i = 0u; i < v->members.size(); ++i) {
+                  for (auto i = 0U; i < v->members.size(); ++i) {
                         stack.emplace_back(v->members[i], m->members[i]);
                   }
-                  for (auto i = 0u; i < v->tmembers.size(); ++i) {
+                  for (auto i = 0U; i < v->tmembers.size(); ++i) {
                         stack.emplace_back(v->tmembers[i].first, m->tmembers[i].first);
                         stack.emplace_back(v->tmembers[i].second, m->tmembers[i].second);
                   }

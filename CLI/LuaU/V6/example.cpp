@@ -11,23 +11,23 @@ static Proto *load_bytecode(const std::vector<std::uint8_t> &data, lua_State *ls
             const char *msg = lua_tolstring(ls, -1, &len);
             std::string error(msg, len);
             lua_pop(ls, 1);
-            return NULL;
+            return nullptr;
       }
       return gco2cl((ls->top - 1)->value.gc)->l.p;
 }
 
 /* Compile script data or load bytecode to lua state */
-static Proto *compile_script(const std::string &code, bool &error, lua_State *&buffer, const bool bytecode) {
+static Proto *compile_script(const std::string &code, lua_State *&buffer, const bool bytecode) {
 
       buffer = luaL_newstate();
       if (bytecode) {
             return load_bytecode(std::vector<std::uint8_t>(code.begin(), code.end()), buffer);
       }
-      std::size_t size = 0u; /* Size buffer of compiled code. */
+      std::size_t size = 0U; /* Size buffer of compiled code. */
       auto ops = std::make_shared<lua_CompileOptions>();
       ops->optimizationLevel = 0;
-      const auto compiled = luau_compile(code.c_str(), std::strlen(code.c_str()), ops.get(), &size);
-      return (!size) ? NULL : load_bytecode(std::vector<std::uint8_t>(compiled, compiled + size), buffer);
+      auto *const compiled = luau_compile(code.c_str(), std::strlen(code.c_str()), ops.get(), &size);
+      return (!size) ? nullptr : load_bytecode(std::vector<std::uint8_t>(compiled, compiled + size), buffer);
 }
 
 std::optional<std::string> luramas::decompile_luau_v6(const std::string &code, std::shared_ptr<luramas::ir::data::format::format> &format, const bool bytecode) {
@@ -35,7 +35,7 @@ std::optional<std::string> luramas::decompile_luau_v6(const std::string &code, s
       bool error = false;               /* Error buffer */
       lua_State *original_ls = nullptr; /* Buffer lua state */
 
-      auto proto = compile_script(code, error, original_ls, bytecode); /* Compile code. */
+      auto *proto = compile_script(code, original_ls, bytecode); /* Compile code. */
 
       /* Error in code compilation. */
       if (error || !proto) {

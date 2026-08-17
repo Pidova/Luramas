@@ -1,7 +1,11 @@
+#include <algorithm>
+
+#include <ranges>
+
 #include "includes/common.hpp"
 namespace luramas::ir::passes {
 
-      struct stack {
+      struct Stack {
 
             void push(const std::shared_ptr<ir_stat::ir_expr> &expr) {
                   this->internal_stack.emplace_back(expr);
@@ -11,13 +15,13 @@ namespace luramas::ir::passes {
                   if (this->internal_stack.size() < amt) {
                         return;
                   }
-                  for (auto i = 0u; i < amt; ++i) {
+                  for (auto i = 0U; i < amt; ++i) {
                         this->internal_stack.pop_back();
                   }
                   return;
             }
             void pop(const std::shared_ptr<ir_stat::ir_expr> &expr) {
-                  if (const auto it = std::find_if(this->internal_stack.rbegin(), this->internal_stack.rend(), [&](const auto &m) { return *m == *expr; }); it != this->internal_stack.rend()) {
+                  if (const auto it = std::ranges::find_if(std::ranges::reverse_view(this->internal_stack), [&](const auto &m) { return *m == *expr; }); it != this->internal_stack.rend()) {
                         this->internal_stack.erase(std::next(it).base());
                   }
                   return;
@@ -30,12 +34,12 @@ namespace luramas::ir::passes {
             std::vector<std::shared_ptr<ir_stat::ir_expr>> internal_stack;
       };
 
-      void stack_to_register_promote(pass_manager &pm, shared &s) {
+      void stack_to_register_promote(pass_manager &pm, shared & /*s*/) {
 
             if (!pm.env_flags.fsafe_stack) {
                   return;
             }
-            boost::unordered_flat_map<std::size_t, stack> map;
+            boost::unordered_flat_map<std::size_t, Stack> map;
 
             for (const auto &i : pm.iter()) {
 

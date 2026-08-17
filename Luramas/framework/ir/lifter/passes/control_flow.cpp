@@ -1,9 +1,11 @@
+#include <algorithm>
+
 #include "../generation/cfg/traversal.hpp"
 #include "includes/common.hpp"
 
 namespace luramas::ir::passes {
 
-      void control_flow_simplification(pass_manager &pm, shared &s) {
+      void control_flow_simplification(pass_manager &pm, shared & /*s*/) {
 
             for (const auto &i : pm.iter()) {
 
@@ -11,9 +13,9 @@ namespace luramas::ir::passes {
                   switch (p->k) {
                         case keywords::condition: {
 
-                              if (pm.valid_next<2u>(i)) {
+                              if (pm.valid_next<2U>(i)) {
 
-                                    const auto &[n1, n2] = std::tie(pm[i + 1u], pm[i + 2u]);
+                                    const auto &[n1, n2] = std::tie(pm[i + 1U], pm[i + 2U]);
 
                                     /*                       
                                             if  (r) then [OPPOSITE]
@@ -29,9 +31,9 @@ namespace luramas::ir::passes {
                                     }
                               }
 
-                              if (pm.valid_next<3u>(i)) {
+                              if (pm.valid_next<3U>(i)) {
 
-                                    const auto &[n1, n2, n3] = std::tie(pm[i + 1u], pm[i + 2u], pm[i + 3u]);
+                                    const auto &[n1, n2, n3] = std::tie(pm[i + 1U], pm[i + 2U], pm[i + 3U]);
 
                                     /*                       
                                                 if  (?) then [OPPOSITE, NO r REGS]
@@ -49,9 +51,9 @@ namespace luramas::ir::passes {
                                     }
                               }
 
-                              if (pm.valid_next<1u>(i) && pm.safe(p)) {
+                              if (pm.valid_next<1U>(i) && pm.safe(p)) {
 
-                                    auto &next = pm[i + 1u];
+                                    auto &next = pm[i + 1U];
 
                                     /*
                                         if  (??) then
@@ -63,10 +65,10 @@ namespace luramas::ir::passes {
                                     const auto end = tools::common::safe_take_jump(pm, i);
                                     if (next->is_k<keywords::condition_goto>()) {
 
-                                          const auto &prev = pm[end - 1u];
+                                          const auto &prev = pm[end - 1U];
                                           if (prev->is_k<keywords::goto_label>() && prev->jlabel == next->jlabel && pm.safe(next)) {
                                                 tools::stat::mutate::if_stat_cleared(next);
-                                                pm.insert(pm[end - 2u], tools::stat::generate::end());
+                                                pm.insert(pm[end - 2U], tools::stat::generate::end());
                                                 pm.mut(LURAMAS_DEBUG_LINE);
                                           }
                                     }
@@ -80,11 +82,11 @@ namespace luramas::ir::passes {
                                         /end/
                                      */
                                     auto term = i;
-                                    luramas_address end_label = 0u;
+                                    luramas_address end_label = 0U;
                                     for (auto o = end; o > i; --o) {
                                           const auto &e = pm[o];
                                           if (end_label && end_label == e->end_label) {
-                                                end_label = 0u;
+                                                end_label = 0U;
                                           } else if (!end_label) {
                                                 end_label = e->end_label;
                                                 if (e->is_terminator() || e->is_k<keywords::goto_label>()) {
@@ -110,7 +112,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void agressive_thread_out(pass_manager &pm, shared &s) {
+      void agressive_thread_out(pass_manager &pm, shared & /*s*/) {
 
             std::optional<generation::cfg::cfg> cfg;
             for (const auto &i : pm.iter()) {
@@ -126,7 +128,7 @@ namespace luramas::ir::passes {
                               }
 
                               /* Get path */
-                              const auto path = cfg::traverse::pathing::path_with_loop((*cfg).visit(i + 1u), (*cfg).visit(label), *cfg);
+                              const auto path = cfg::traverse::pathing::path_with_loop((*cfg).visit(i + 1U), (*cfg).visit(label), *cfg);
 
                               /* Propagate */
                               bool ss = false;
@@ -152,7 +154,7 @@ namespace luramas::ir::passes {
                               optimized_blocks.pop_back();
 
                               /* Unsafe */
-                              if (std::none_of(optimized_blocks.begin(), optimized_blocks.end(), [&](const auto &i) { return pm.is_safe(pm[i.second->get_front()]); })) {
+                              if (std::ranges::none_of(optimized_blocks, [&](const auto &i) { return pm.is_safe(pm[i.second->get_front()]); })) {
                                     continue;
                               }
 
@@ -162,8 +164,8 @@ namespace luramas::ir::passes {
                                     /* Insert */
                                     const auto flag = tools::stat::generate::flags::synthetic::flagable::pass_init_assign(pm);
 
-                                    if (tools::stat::is_definition(pm[0u])) {
-                                          pm.insert(pm[0u], flag);
+                                    if (tools::stat::is_definition(pm[0U])) {
+                                          pm.insert(pm[0U], flag);
                                     } else {
                                           pm.push_front(flag);
                                     }
@@ -177,7 +179,7 @@ namespace luramas::ir::passes {
 
                                     for (const auto &[keyword, block] : optimized_blocks) {
 
-                                          if (std::any_of(unsafe.begin(), unsafe.end(), [&](const auto &i) { return tools::treshold(block->get_front(), i); })) {
+                                          if (std::ranges::any_of(unsafe, [&](const auto &i) { return tools::treshold(block->get_front(), i); })) {
                                                 continue;
                                           }
 
@@ -203,7 +205,7 @@ namespace luramas::ir::passes {
                                                 }
                                                 default: {
 
-                                                      const auto curr = block->get_front() + 1u;
+                                                      const auto curr = block->get_front() + 1U;
                                                       if (const auto end = tools::violations::block_violates(pm, curr, label).ending_loc; curr != end) {
                                                             auto cond = tools::stat::generate::flags::synthetic::flagable::cond(flag->l);
                                                             tools::stat::mutate::flip_cmp(cond);
@@ -228,7 +230,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void redundant_condition_elimination(pass_manager &pm, shared &s) {
+      void redundant_condition_elimination(pass_manager &pm, shared & /*s*/) {
 
             const auto cfg = generation::cfg::generate(pm.ir, LURAMAS_IR_ENTRY, pm.env_flags.fhas_pages);
 

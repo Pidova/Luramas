@@ -52,7 +52,7 @@ namespace luramas::ir::generation::flag_ssa {
             ssa_builder::tools::global_version(ssa);
 
             /* Translate */
-            for (auto i = 0u; i < ssa.size(); ++i) {
+            for (auto i = 0U; i < ssa.size(); ++i) {
                   const auto &vssa = ssa[i];
                   for (const auto &[_, v] : vssa.lvalues) {
                         result.set[i] = v;
@@ -62,7 +62,7 @@ namespace luramas::ir::generation::flag_ssa {
                   }
                   for (const auto &[_, v] : vssa.rvalues) {
                         for (const auto &x : v.uv) {
-                              auto [it, inserted] = result.used.try_emplace(x, std::make_pair(0u, boost::unordered_flat_set<luramas_address>()));
+                              auto [it, inserted] = result.used.try_emplace(x, std::make_pair(0U, boost::unordered_flat_set<luramas_address>()));
                               ++it->second.first;
                               it->second.second.insert(i);
                               if (v.k == ssa_builder::kind::phi) {

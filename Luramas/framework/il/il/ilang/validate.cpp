@@ -2,7 +2,7 @@
 
 namespace luramas::il {
 
-      [[noreturn]] void throw_error(ilang *il, const errors::error &valid) {
+      [[noreturn]] static void throw_error(ilang * /*il*/, const errors::error &valid) {
             luramas::error::error(std::format("Uncommitted disassembly contains an error: {}, On address: {}\n", valid.h.what, std::to_string(valid.w->addr)));
       }
 

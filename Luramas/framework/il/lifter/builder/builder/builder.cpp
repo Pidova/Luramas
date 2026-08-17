@@ -8,7 +8,7 @@ namespace luramas::il::lifter::builder {
       if an input is not already a register (like an immediate value), it allocates a new temporary register from the builder, assigns the value to it, 
       applies a default size cast if it mssing one, and returns that temporary instead. */
       template <typename... T>
-      inline auto guaranteed_regs(const std::shared_ptr<build> &b, const T &...args) {
+      inline static auto guaranteed_regs(const std::shared_ptr<build> &b, const T &...args) {
             return std::make_tuple(
                 ([&b](auto &val) {
                       if (val.is_reg()) {
@@ -17,13 +17,13 @@ namespace luramas::il::lifter::builder {
                       auto temp = b->make_temp();
                       temp = val;
                       if (!temp.r.size) {
-                            temp = temp.cast(types::underlying_type(false, luramas::types::read_type::bits, 0u, b->suggested_bit_set));
+                            temp = temp.cast(types::underlying_type(false, luramas::types::read_type::bits, 0U, b->suggested_bit_set));
                       }
                       return temp;
                 }(args))...);
       }
 
-      void format_call_args(const std::shared_ptr<build> &builder, const std::vector<build::expr> &args) {
+      static void format_call_args(const std::shared_ptr<build> &builder, const std::vector<build::expr> &args) {
             for (const auto &i : args) {
                   if (!i.empty()) {
                         build::expr(builder, builder->get_temp()) = i;
@@ -31,9 +31,9 @@ namespace luramas::il::lifter::builder {
             }
             return;
       }
-      void format_call_returns(const std::shared_ptr<build> &builder, const build::expr &calle, const std::vector<build::expr> &results) {
-            for (auto i = 0u; i < results.size(); ++i) {
-                  if (auto &p = results[i]; !p.empty()) {
+      static void format_call_returns(const std::shared_ptr<build> &builder, const build::expr &calle, const std::vector<build::expr> &results) {
+            for (auto i = 0U; i < results.size(); ++i) {
+                  if (const auto &p = results[i]; !p.empty()) {
                         p = build::expr(builder, reg(calle.r.r + i));
                   }
             }
@@ -83,12 +83,12 @@ namespace luramas::il::lifter::builder {
             }
             this->make_scope();
             this->make<arch::opcodes::OP_NOP>();
-            this->close_scope(true, this->opened_conditions.size() - 2u);
+            this->close_scope(true, this->opened_conditions.size() - 2U);
             return;
       }
       void build::close_scope(const bool input, luramas_address loc) {
             if (!input) {
-                  loc = this->opened_conditions.size() - 1u;
+                  loc = this->opened_conditions.size() - 1U;
             }
             if (this->opened_conditions.empty()) {
                   luramas::error::error("Unclosed conditions");
@@ -130,7 +130,7 @@ namespace luramas::il::lifter::builder {
             return;
       }
       void build::make_cast(const luramas_register dest, const luramas_register src, const luramas_bitwidth bits, const bool unsign, const luramas_bitwidth precision) {
-            this->make<luramas::il::arch::opcodes::OP_BITCAST>(dest, src, bits, precision, unsign);
+            this->make<luramas::il::arch::opcodes::OP_BITCAST>(dest, src, bits, precision, static_cast<std::int64_t>(unsign));
             return;
       }
       build::expr build::make_temp(const expr &reg) {
@@ -157,8 +157,9 @@ namespace luramas::il::lifter::builder {
             return;
       }
       build::expr build::make_standard_call(const builtin::func &default_func, const std::vector<std::pair<types::native::compiler::object, build::expr>> &sources, const std::vector<std::pair<types::native::compiler::object, build::expr>> &dests) {
-            const auto func = default_func.name;
+            const auto *const func = default_func.name;
             std::vector<expr> args;
+            args.reserve(sources.size());
             for (const auto &[def, expr] : sources) {
                   args.emplace_back(expr);
             }
@@ -229,7 +230,7 @@ namespace luramas::il::lifter::builder {
             }
             for (const auto &[i, size] : valid) {
 
-                  if (!operands.size() || size != operands.size() - 1u) {
+                  if (operands.empty() || size != operands.size() - 1U) {
                         continue;
                   }
                   for (const auto &j : i.dests) {
@@ -267,19 +268,19 @@ namespace luramas::il::lifter::builder {
             return;
       }
 
-      void build::insertf(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) {
+      void build::insertf(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) const {
             this->il->insert_front(this->idx, v);
             return;
       }
-      void build::insertf(const std::shared_ptr<luramas::il::disassembly> &v) {
+      void build::insertf(const std::shared_ptr<luramas::il::disassembly> &v) const {
             this->il->insert_front(this->idx, v);
             return;
       }
-      void build::insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) {
+      void build::insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) const {
             this->il->insert(this->idx, v);
             return;
       }
-      void build::insert(const std::shared_ptr<luramas::il::disassembly> &v) {
+      void build::insert(const std::shared_ptr<luramas::il::disassembly> &v) const {
             this->il->insert(this->idx, v);
             return;
       }
@@ -295,7 +296,7 @@ namespace luramas::il::lifter::builder {
       }
       build::expr build::make_var(const luramas_register r, const luramas_bitwidth bits, const bool unsign, const std::uint8_t precision) {
             reg result(r, bits, unsign, precision);
-            this->make_cast(r, r, bits, precision, unsign);
+            this->make_cast(r, r, bits, precision != 0U, static_cast<luramas_bitwidth>(unsign));
             return expr(shared_from_this(), result);
       }
       reg build::get_temp() {
@@ -307,7 +308,7 @@ namespace luramas::il::lifter::builder {
             t = 0;
             return t;
       }
-      void build::violation(const expr &l) const {
+      void build::violation(const expr &l) {
             if (l.tk != expr_tkind::reg) {
                   luramas::error::error("Lvalue register");
             }
@@ -321,7 +322,7 @@ namespace luramas::il::lifter::builder {
       build::expr build::make_bitread(const expr &value, const expr &min, const expr &max) {
             const auto result = this->make_temp();
             const auto [rvalue, rmin, rmax] = guaranteed_regs(shared_from_this(), value, min, max);
-            this->make<luramas::il::arch::opcodes::OP_BITREAD>(result.r.r, rvalue.r.r, rmin.r.r, rmax.r.r, rvalue.bits(), rvalue.signess() == luramas::types::signess::unsign);
+            this->make<luramas::il::arch::opcodes::OP_BITREAD>(result.r.r, rvalue.r.r, rmin.r.r, rmax.r.r, rvalue.bits(), static_cast<std::int64_t>(rvalue.signess() == luramas::types::signess::unsign));
             return result;
       }
       build::expr build::make_bitwrite(const expr &dest, const expr &src, const expr &min, const expr &max) {
@@ -382,7 +383,7 @@ namespace luramas::il::lifter::builder {
                   case expr_tkind::flag: {
                         rv.emit(e.b, e.b->get_temp());
                         rv.b->make<arch::opcodes::OP_FLAGREAD>(e.r.r, e.integral);
-                        rv.cast(1u, true);
+                        rv.cast(1U, true);
                         break;
                   }
                   case expr_tkind::integral: {
@@ -413,11 +414,11 @@ namespace luramas::il::lifter::builder {
             return ref->second;
       }
       void build::page_retn() {
-            this->make<arch::opcodes::OP_PRETURN>(0u, 0u, 0u);
+            this->make<arch::opcodes::OP_PRETURN>(0U, 0U, 0U);
             return;
       }
       void build::page_retn(const luramas_register ret_reg, const luramas_raddress loc) {
-            this->make<arch::opcodes::OP_PRETURN>(1u, ret_reg, loc);
+            this->make<arch::opcodes::OP_PRETURN>(1U, ret_reg, loc);
             return;
       }
       void build::page_call(const luramas_raddress loc, const expr &r, const std::intptr_t v) {

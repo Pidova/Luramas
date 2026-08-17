@@ -10,9 +10,9 @@ namespace luramas::str {
       luramas_length match_substr(const std::string &str, const luramas_index idx, const char *const match) {
 
             if (!match) {
-                  return 0u;
+                  return 0U;
             }
             const auto len = std::strlen(match);
-            return (idx + len > str.size()) ? 0u : (!std::memcmp(str.data() + idx, match, len) ? len : 0u);
+            return (idx + len > str.size()) ? 0U : (!std::memcmp(str.data() + idx, match, len) ? len : 0U);
       }
 } // namespace luramas::str

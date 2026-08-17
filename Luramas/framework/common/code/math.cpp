@@ -20,7 +20,7 @@ namespace luramas::math {
       }
 
       luramas_int log2(luramas_int n) {
-            auto result = luramas_int(0u);
+            auto result = luramas_int(0U);
             while (n >>= 1) {
                   ++result;
             }
@@ -30,9 +30,8 @@ namespace luramas::math {
       luramas_int fmod(const luramas_int &a, const luramas_int &b) {
             if (a.precise() || b.precise()) {
                   return luramas_int(std::fmod(a.extract_double(), b.extract_double()));
-            } else {
-                  return luramas_int(a.extract_base() % b.extract_base());
             }
+            return luramas_int(a.extract_base() % b.extract_base());
       }
 
       luramas_int floor(const luramas_int &i) {
@@ -73,7 +72,7 @@ namespace luramas::math {
 
       luramas_int count_digits(luramas_int n) {
 
-            luramas_int count = 0u;
+            luramas_int count = 0U;
             if (n == 0) {
                   return 1;
             }
@@ -89,41 +88,41 @@ namespace luramas::math {
 
       std::uint8_t count_byte_max(const luramas_int &n) {
             if (n.precise()) {
-                  return 0u;
+                  return 0U;
             }
             switch (n.extract_base()) {
                   case 0xFF: {
-                        return 1u;
+                        return 1U;
                   }
                   case 0xFFFF: {
-                        return 2u;
+                        return 2U;
                   }
                   case 0xFFFFFF: {
-                        return 3u;
+                        return 3U;
                   }
                   case 0xFFFFFFFF: {
-                        return 4u;
+                        return 4U;
                   }
                   case 0xFFFFFFFFFF: {
-                        return 5u;
+                        return 5U;
                   }
                   case 0xFFFFFFFFFFFF: {
-                        return 6u;
+                        return 6U;
                   }
                   case 0xFFFFFFFFFFFFFF: {
-                        return 7u;
+                        return 7U;
                   }
                   default: {
-                        return n.is_max_integral() ? sizeof(luramas_int_base) : 0u;
+                        return n.is_max_integral() ? sizeof(luramas_int_base) : 0U;
                   }
             }
       }
 
       luramas_int_base get_n_bits(const luramas_int_base n) {
-            if (n >= sizeof(luramas_int_base) * 8u) {
-                  return ~static_cast<luramas_int_base>(0u);
+            if (n >= sizeof(luramas_int_base) * 8U) {
+                  return ~static_cast<luramas_int_base>(0U);
             }
-            return !n ? 0 : (static_cast<luramas_int_base>(1u) << n) - 1;
+            return !n ? 0 : (static_cast<luramas_int_base>(1U) << n) - 1;
       }
 
       namespace is {
@@ -151,11 +150,11 @@ namespace luramas::math {
             bool range_mask(const luramas_int &n, std::uint16_t &istart, std::uint16_t &iend) {
                   const auto width = n.bit_width();
                   std::tie(istart, iend) = n.first_trailing_ones();
-                  return (!istart || !n.read(0u, istart - 1u)) && (iend + 1u > width - 1u || !n.read(iend + 1u, width - 1u));
+                  return ((istart == 0U) || !n.read(0U, istart - 1U)) && (iend + 1U > width - 1U || !n.read(iend + 1U, width - 1U));
             }
             bool range_mask(const luramas_int &n) {
-                  [[maybe_unused]] std::uint16_t s = 0u;
-                  [[maybe_unused]] std::uint16_t e = 0u;
+                  [[maybe_unused]] std::uint16_t s = 0U;
+                  [[maybe_unused]] std::uint16_t e = 0U;
                   return range_mask(n, s, e);
             }
       } // namespace is

@@ -175,7 +175,7 @@ namespace luramas::ir::builder {
                   std::shared_ptr<builder> linked = nullptr;          /* Parent builder linked to */
             };
 
-            void lfunc(const std::vector<ebuilder> &args, const std::vector<ebuilder> &upvs, const std::vector<ebuilder> &flags, const std::vector<ebuilder> &casts);
+            static void lfunc(const std::vector<ebuilder> &args, const std::vector<ebuilder> &upvs, const std::vector<ebuilder> &flags, const std::vector<ebuilder> &casts);
 
             void lrepeat();
             void lif(const std::shared_ptr<ir_stat::ir_expr> &e);

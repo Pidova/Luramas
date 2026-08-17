@@ -12,7 +12,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
             namespace prefix {
 
                   /* Get prefix of expr K */
-                  std::string str(const std::shared_ptr<ir_stat::ir_expr> &expr, const std::shared_ptr<luramas::ir::data::format::format> &format) {
+                  static std::string str(const std::shared_ptr<ir_stat::ir_expr> &expr, const std::shared_ptr<luramas::ir::data::format::format> &format) {
 
                         if (expr) {
                               switch (expr->k) {
@@ -43,7 +43,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
             Extracts up to `num` segments from `str`, split by `module_delimiter` from the end.  
             Joins segments with `delimiter`, converts to lowercase, and returns the result.  
       */
-            std::string split_constants(const std::string &str, const std::string &delimiter, const char module_delimiter, const std::size_t num = 2u) {
+            static std::string split_constants(const std::string &str, const std::string &delimiter, const char module_delimiter, const std::size_t num = 2U) {
 
                   std::vector<std::string> segments;
                   auto end = str.size();
@@ -55,10 +55,10 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                   }
 
                   if (segments.size() < num && end) {
-                        segments.push_back(str.substr(0u, end));
+                        segments.push_back(str.substr(0U, end));
                   }
 
-                  std::string result("");
+                  std::string result;
                   for (auto it = segments.rbegin(); it != segments.rend(); ++it) {
                         if (!result.empty()) {
                               result += delimiter;
@@ -70,7 +70,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                   return result;
             }
 
-            const char *const str(const tkind k) {
+            const static char *str(const tkind k) {
                   switch (k) {
                         case tkind::none_obj: {
                               return "obj";
@@ -111,7 +111,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                   }
                   return nullptr;
             }
-            const char *const str(const expr_kinds k) {
+            const static char *str(const expr_kinds k) {
                   switch (k) {
                         case expr_kinds::call: {
                               return "res";
@@ -172,7 +172,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                   return nullptr;
             }
 
-            std::string str(boost::unordered_flat_map<std::shared_ptr<ir_stat::ir_expr>, luramas::ir::code::generation::tools::smart_variables::naming> &expr_map, const std::shared_ptr<ir_stat::ir_expr> &e, luramas_address &depth, luramas_address &valid_depth, const luramas_address max_depth, const char module_delimiter, const std::string &delimeter) {
+            static std::string str(boost::unordered_flat_map<std::shared_ptr<ir_stat::ir_expr>, luramas::ir::code::generation::tools::smart_variables::naming> &expr_map, const std::shared_ptr<ir_stat::ir_expr> &e, luramas_address &depth, luramas_address &valid_depth, const luramas_address max_depth, const char module_delimiter, const std::string &delimeter) {
 
                   if (e == nullptr || ++depth >= max_depth) {
                         return "";
@@ -229,7 +229,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                                     return l + "." + r;
                               }
 
-                              l = split_constants(l, delimeter, module_delimiter, valid + 1u);
+                              l = split_constants(l, delimeter, module_delimiter, static_cast<unsigned int>(valid) + 1U);
                               if (!l.empty()) {
                                     return (valid) ? l : (str(e->k) + delimeter + l);
                               }
@@ -238,7 +238,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                         case expr_kinds::call: {
 
                               /* STRING/KVALUE:[KNOWN]() */
-                              std::string v("");
+                              std::string v;
                               if (e->l && e->l->is_k<expr_kinds::self>() && e->l->r && e->l->r->is_name_qualifier()) {
 
                                     v = str(expr_map, e->l->r, depth, valid_depth, max_depth, module_delimiter, delimeter);
@@ -337,7 +337,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
             /* Map deep exprs */
             std::vector<std::pair<boost::unordered_flat_multiset<std::shared_ptr<ir_stat::ir_expr>> /* DESTS */, ir_stat::ir_expr::space /* EXPRS */>> exprs;
             for (const auto &c : code) {
-                  exprs.emplace_back(std::make_pair(c->extract_dests(), c->extract_ordered_deep_exprs()));
+                  exprs.emplace_back(c->extract_dests(), c->extract_ordered_deep_exprs());
             }
 
             /* Add annotations if specified */
@@ -354,7 +354,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
             /* Loop through stats */
             do {
                   new_var = false;
-                  for (auto i = 0u; i < code.size(); ++i) {
+                  for (auto i = 0U; i < code.size(); ++i) {
 
                         const auto &c = code[i];
 
@@ -365,10 +365,10 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                                           if (format->vars.naming_conventions.smart.common_libary_arg && e->l && e->l->is_name_qualifier()) {
 
                                                 const auto names = luramas::ir::code::generation::tools::smart_variables::data::functions::args::name(e->l->v);
-                                                for (auto n = 0u; n < names.size(); ++n) {
+                                                for (auto n = 0U; n < names.size(); ++n) {
 
-                                                      const auto str = names[n];
-                                                      if (!str || n >= e->members.size() || buffer.find(e->members[n]) != buffer.end() || !e->members[n]->is_register_reference()) {
+                                                      const auto *const str = names[n];
+                                                      if ((str == nullptr) || n >= e->members.size() || buffer.find(e->members[n]) != buffer.end() || !e->members[n]->is_register_reference()) {
                                                             break;
                                                       }
                                                       add_valid(str, e->members[n], format->vars.naming_conventions.delimeter);
@@ -423,10 +423,10 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                                           if (format->vars.naming_conventions.smart.common_library) {
 
                                                 const auto names = luramas::ir::code::generation::tools::smart_variables::data::functions::common_mulret(c->r->l->v);
-                                                for (auto n = 0u; n < names.size(); ++n) {
+                                                for (auto n = 0U; n < names.size(); ++n) {
 
-                                                      const auto str = names[n];
-                                                      if (!str || n >= c->members.size() || buffer.find(c->members[n]) != buffer.end()) {
+                                                      const auto *const str = names[n];
+                                                      if ((str == nullptr) || n >= c->members.size() || buffer.find(c->members[n]) != buffer.end()) {
                                                             break;
                                                       }
                                                       add_valid(naming_conventions::prefix::str(c->members[n], format) + str, c->members[n], format->vars.naming_conventions.delimeter);
@@ -439,7 +439,7 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                                                 add_valid(prefix + format->vars.naming_conventions.smart.prefixes.primitive + (c->r->tk != tkind::nothing ? naming_conventions::str(c->r->tk) : naming_conventions::str(c->r->k)), c->l, format->vars.naming_conventions.delimeter);
                                           }
 
-                                          luramas_address depth = 0ull;
+                                          luramas_address depth = 0ULL;
                                           const auto s = naming_conventions::str(buffer, c->r, depth, format->vars.naming_conventions.smart.valid_depth, format->vars.naming_conventions.smart.max_depth, format->vars.module_delimiter, "_");
                                           if (!s.empty()) {
 
@@ -454,16 +454,16 @@ namespace luramas::ir::code::generation::tools::smart_variables {
 
                                     /* Didn't construct a name for it yet, make one */
                                     if (c->l && !buffer.contains(c->l)) {
-                                          if (const auto str = naming_conventions::str(c->r->k); str) {
+                                          if (const auto *const str = naming_conventions::str(c->r->k); str) {
                                                 add_valid(str, c->l, format->vars.naming_conventions.delimeter);
                                           }
                                     }
                                     break;
                               }
                               case keywords::forloop_generic: {
-                                    if (c->members.size() >= 2u && buffer.find(c->members.front()) == buffer.end() && buffer.find(c->members[1u]) == buffer.end()) {
+                                    if (c->members.size() >= 2U && buffer.find(c->members.front()) == buffer.end() && buffer.find(c->members[1U]) == buffer.end()) {
                                           add_valid(format->vars.naming_conventions.smart.basic_naming.pair_key, c->members.front(), format->vars.naming_conventions.delimeter);
-                                          add_valid(format->vars.naming_conventions.smart.basic_naming.pair_value, c->members[1u], format->vars.naming_conventions.delimeter);
+                                          add_valid(format->vars.naming_conventions.smart.basic_naming.pair_value, c->members[1U], format->vars.naming_conventions.delimeter);
                                     }
                                     break;
                               }
@@ -478,10 +478,10 @@ namespace luramas::ir::code::generation::tools::smart_variables {
                                     if (c->l && c->l->is_name_qualifier()) {
 
                                           const auto names = luramas::ir::code::generation::tools::smart_variables::data::functions::args::name(c->l->v);
-                                          for (auto n = 0u; n < names.size(); ++n) {
+                                          for (auto n = 0U; n < names.size(); ++n) {
 
-                                                const auto str = names[n];
-                                                if (!str || n >= c->members.size() || buffer.find(c->members[n]) != buffer.end() || !c->members[n]->is_register_reference()) {
+                                                const auto *const str = names[n];
+                                                if ((str == nullptr) || n >= c->members.size() || buffer.find(c->members[n]) != buffer.end() || !c->members[n]->is_register_reference()) {
                                                       break;
                                                 }
                                                 add_valid(naming_conventions::prefix::str(c->members[n], format) + str, c->members[n], format->vars.naming_conventions.delimeter);

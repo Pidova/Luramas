@@ -50,7 +50,7 @@ namespace luramas::ir::execution {
                   /* Emitters */
                   void emit();
                   void emit(const bool b);
-                  void emit(const luramas_int i);
+                  void emit(const luramas_int &i);
                   void emit(const std::string &s);
                   void emit(const table &t);
                   void emit(const std::vector<std::shared_ptr<object>> &v);
@@ -63,7 +63,7 @@ namespace luramas::ir::execution {
                   bool operator<=(const luramas_int &i) const;
                   bool operator>=(const luramas_int &i) const;
                   bool operator==(const bool b) const;
-                  bool operator!=(const bool b) const;
+                  bool operator!=(const bool i) const;
                   bool operator==(const std::string &str) const;
                   bool operator!=(const std::string &str) const;
 

@@ -1,13 +1,14 @@
 #include "../passes.hpp"
 #include <chrono>
+#include <print>
 
-double profile_time = 0;
+static double profile_time = 0;
 
 namespace luramas::ir {
 
       /* Dump */
       void dump(const char *const prefix, const ir_stat::space &space, const bool indent, const bool force) {
-            luramas_count indenter = 0u;
+            luramas_count indenter = 0U;
             for (const auto &o : space) {
                   print_stat(o, indenter, prefix, indent, false, force);
             }
@@ -17,11 +18,11 @@ namespace luramas::ir {
             dump(nullptr, space, true, true);
             return;
       }
-      void print_stat(const std::shared_ptr<ir_stat> &stat, std::size_t &indenter, const char *const prefix, const bool indent, const bool mark, const bool force) {
+      void print_stat(const std::shared_ptr<ir_stat> &stat, std::size_t &indenter, const char *const prefix, const bool /*indent*/, const bool mark, const bool force) {
             if (!stat) {
                   return;
             }
-            std::string indenting("");
+            std::string indenting;
             switch (stat->k) {
                   case keywords::end:
                   case keywords::page_function_end:
@@ -29,7 +30,7 @@ namespace luramas::ir {
                   case keywords::until:
                   case keywords::switch_case:
                   case keywords::switch_default: {
-                        indenter -= (indenter && stat->c != condition_kind::if_);
+                        indenter -= static_cast<std::size_t>((indenter != 0u) && stat->c != condition_kind::if_);
                         break;
                   }
                   default: {
@@ -38,7 +39,7 @@ namespace luramas::ir {
             }
             const auto &str = stat->str();
             if (!str.empty()) {
-                  for (auto i = 0u; i < indenter; ++i) {
+                  for (auto i = 0U; i < indenter; ++i) {
                         indenting += "    ";
                   }
                   if (prefix) {
@@ -65,7 +66,7 @@ namespace luramas::ir {
                         break;
                   }
                   default: {
-                        indenter += stat->is_loop();
+                        indenter += static_cast<std::size_t>(stat->is_loop());
                         break;
                   }
             }
@@ -77,13 +78,13 @@ namespace luramas::ir {
             /* Add */
             void pass_manager::add(const pass_cb &callback, const flags &flag, const std::string &debug) {
                   if (callback) {
-                        this->cbs.emplace_back(std::make_pair(callback, std::make_pair(flag, debug)));
+                        this->cbs.emplace_back(callback, std::make_pair(flag, debug));
                   }
                   return;
             }
             void pass_manager::add(const pass_cb &callback, const std::string &debug) {
                   if (callback) {
-                        this->cbs.emplace_back(std::make_pair(callback, std::make_pair(flags(), debug)));
+                        this->cbs.emplace_back(callback, std::make_pair(flags(), debug));
                   }
                   return;
             }
@@ -92,7 +93,7 @@ namespace luramas::ir {
             void pass_manager::remove(const std::shared_ptr<ir_stat> &i, const bool safe) {
                   if (i) {
                         if (this->env_flags.fforce_debug_remove) {
-                              std::printf("REMOVING %s\n", i->str().c_str());
+                              std::println("REMOVING {}", i->str());
                         }
 #if !defined(LURAMAS_PROFILE)
                         LURAMAS_PRINTF("REMOVING %s\n", i->str().c_str());
@@ -123,7 +124,7 @@ namespace luramas::ir {
                   }
                   return;
             }
-            void pass_manager::remove(const luramas_blockrange &range, const bool safe) {
+            void pass_manager::remove(const luramas_blockrange &range, const bool /*safe*/) {
                   this->remove(range.first, range.second);
                   return;
             }
@@ -181,12 +182,12 @@ namespace luramas::ir {
             bool pass_manager::contains(const luramas_address n) const {
                   return this->valid(n);
             }
-            bool pass_manager::contains(const luramas_address start, const luramas_address end, const luramas_address n) const {
+            bool pass_manager::contains(const luramas_address start, const luramas_address end, const luramas_address n) {
                   return end >= start && std::clamp(n, start, end) == n;
             }
 
             /* Valid */
-            bool pass_manager::valid_prev(const std::size_t idx, std::size_t n) const {
+            bool pass_manager::valid_prev(const std::size_t idx, std::size_t n) {
                   return idx >= n;
             }
             bool pass_manager::valid_next(const std::size_t idx, std::size_t n) const {
@@ -197,12 +198,12 @@ namespace luramas::ir {
             }
 
             /* Is safe */
-            bool pass_manager::is_safe_flags(const std::shared_ptr<ir_stat> &se) const {
+            bool pass_manager::is_safe_flags(const std::shared_ptr<ir_stat> &se) {
                   return se && !se->flags.funsafe && !se->flags.fpage_export;
             }
             bool pass_manager::is_safe(const std::shared_ptr<ir_stat> &se) const {
                   if (this->env_flags.fforce_debug_issafe) {
-                        std::printf("IS SAFE ON %s\n", se->str().c_str());
+                        std::println("IS SAFE ON {}", se->str());
                   }
 #if !defined(LURAMAS_PROFILE)
                   // if (se) {
@@ -235,7 +236,7 @@ namespace luramas::ir {
             void pass_manager::set_safe(const std::shared_ptr<ir_stat> &se) {
                   if (se) {
                         if (this->env_flags.fforce_debug_setsafe) {
-                              std::printf("SET SAFE ON %s\n", se->str().c_str());
+                              std::println("SET SAFE ON {}", se->str());
                         }
 #if !defined(LURAMAS_PROFILE)
                         //        LURAMAS_PRINTF("SET SAFE ON %s\n", se->str().c_str());
@@ -266,7 +267,7 @@ namespace luramas::ir {
                         this->set_safe(se);
                         return true;
                   }
-                  return (ignore && ignore->contains(se));
+                  return ((ignore != nullptr) && ignore->contains(se));
             }
 
             /* Move */
@@ -296,7 +297,7 @@ namespace luramas::ir {
             /* Mutate */
             void pass_manager::mut(const char *const debug, const bool marked) {
                   if (this->env_flags.fforce_debug_mut) {
-                        std::printf("MUTATED ON %s\n", debug);
+                        std::println("MUTATED ON {}", debug);
                   }
 #if !defined(LURAMAS_PROFILE)
                   LURAMAS_PRINTF("MUTATED ON %s\n", debug);
@@ -347,7 +348,7 @@ namespace luramas::ir {
                                     if ((!callback.second.first.fsingle_pass || !callback.second.first.is_passed()) && !this->ir.data.empty()) {
 
 #if defined(DEBUG) || defined(LURAMAS_PROFILE)
-                                          std::printf("INTITIAL PASS ON %s, %zu\n", callback.second.second.c_str(), this->ir.data.size());
+                                          std::println("INTITIAL PASS ON {}, {}", callback.second.second, this->ir.data.size());
                                           const auto start = std::chrono::high_resolution_clock::now();
 #endif
                                           callback.first(*this, s);
@@ -410,7 +411,7 @@ namespace luramas::ir {
 
             /* Dump */
             void pass_manager::dump(const char *const prefix, const bool indent, const std::shared_ptr<ir_stat> &mark, const bool force, const bool trun_to_mark) const {
-                  luramas_count indenter = 0u;
+                  luramas_count indenter = 0U;
                   for (const auto &o : this->ir.data) {
                         print_stat(o, indenter, prefix, indent, mark && mark == o, force);
                         if (trun_to_mark && mark && mark == o) {
@@ -420,21 +421,21 @@ namespace luramas::ir {
                   return;
             }
             void pass_manager::dump(const char *const prefix, const bool indent, const boost::unordered_flat_set<std::shared_ptr<ir_stat>> &mark, const bool force) const {
-                  luramas_count indenter = 0u;
+                  luramas_count indenter = 0U;
                   for (const auto &o : this->ir.data) {
                         print_stat(o, indenter, prefix, indent, mark.contains(o), force);
                   }
                   return;
             }
             void pass_manager::dump(const luramas_address start, const luramas_address end, const char *const prefix, const bool indent, const bool force) const {
-                  luramas_count indenter = 0u;
+                  luramas_count indenter = 0U;
                   for (auto i = start; i < end; ++i) {
                         print_stat(this->ir.data[i], indenter, prefix, indent, force);
                   }
                   return;
             }
             std::string pass_manager::str(const luramas_blockrange &range, const char *const prefix) const {
-                  std::string result("");
+                  std::string result;
                   for (auto i = range.first; i < range.second; ++i) {
                         result += this->ir.data[i]->str(prefix ? prefix : "") + "\n";
                   }
@@ -473,7 +474,7 @@ namespace luramas::ir {
                   return true;
             }
             luramas_address pass_manager::safe_entry() const {
-                  return LURAMAS_IR_ENTRY + (this->ir.data[LURAMAS_IR_ENTRY]->is_k<keywords::definition>() && this->valid_next<1u>(LURAMAS_IR_ENTRY));
+                  return LURAMAS_IR_ENTRY + static_cast<luramas_address>(this->ir.data[LURAMAS_IR_ENTRY]->is_k<keywords::definition>() && this->valid_next<1U>(LURAMAS_IR_ENTRY));
             }
 
             luramas_blockrange pass_manager::range() const {
@@ -490,7 +491,7 @@ namespace luramas::ir {
             }
 
             void pass_manager::reset() {
-                  this->label_padding = 0u;
+                  this->label_padding = 0U;
                   this->mutate = false;
                   this->marked = false;
                   this->removals.clear();
@@ -506,7 +507,7 @@ namespace luramas::ir {
             void pass_manager::commit(const luramas_flag fignore_ecc, const char *const last_pass) {
                   if (!this->removals.empty() || !this->insertions.empty() || !this->front.empty() || !this->back.empty()) {
                         this->mutated = std::move(this->front);
-                        this->mutated.reserve(this->mutated.size() + this->ir.data.size() + this->insertions.size() * 2u);
+                        this->mutated.reserve(this->mutated.size() + this->ir.data.size() + (this->insertions.size() * 2U));
                         for (const auto &i : this->ir.data) {
                               if (!this->is_removed(i) && !i->is_k<keywords::nothing>()) {
                                     this->mutated.emplace_back(i);
@@ -555,7 +556,7 @@ namespace luramas::ir {
             }
 
             void pass_manager::repair() {
-                  std::size_t stack = 0u;
+                  std::size_t stack = 0U;
                   for (const auto &p : this->ir.data) {
                         switch (p->k) {
                               case keywords::condition: {
@@ -588,10 +589,10 @@ namespace luramas::ir {
                   return;
             }
 
-            void pass_manager::update(const luramas_flag fallow_ecc, const char *const last_pass) {
+            void pass_manager::update(const luramas_flag /*fallow_ecc*/, const char *const /*last_pass*/) {
 
                   this->processed.clear();
-                  std::size_t available = 1u;
+                  std::size_t available = 1U;
                   luramas_addresses breakable_stack;
                   luramas_addresses continueable_stack;
                   std::vector<ir_stat::space> pending_breaks;
@@ -646,7 +647,7 @@ namespace luramas::ir {
                         }
                         if (p->is_breakable()) {
                               breakable_stack.emplace_back(i);
-                              pending_breaks.emplace_back(ir_stat::space());
+                              pending_breaks.emplace_back();
                         }
                         if (p->is_continueable()) {
                               continueable_stack.emplace_back(i);
@@ -658,7 +659,7 @@ namespace luramas::ir {
                               case keywords::condition: {
                                     if (p->c != condition_kind::else_ && p->c != condition_kind::elseif_) {
                                           stack.emplace_back(p, i);
-                                          elif_stack.emplace_back(std::vector<std::pair<luramas_address, luramas_address *>>());
+                                          elif_stack.emplace_back();
                                     } else {
                                           if (!elif_stack.empty()) {
 
@@ -705,7 +706,7 @@ namespace luramas::ir {
                               case keywords::forloop_numeric:
                               case keywords::repeat:
                               case keywords::while_: {
-                                    stack.emplace_back(std::make_pair(p, i));
+                                    stack.emplace_back(p, i);
                                     break;
                               }
                               case keywords::end:
@@ -737,7 +738,7 @@ namespace luramas::ir {
                                           if (!breakable_stack.empty() && breakable_stack.back() == stack.back().second) {
                                                 this->processed.parent_loops.try_emplace(i, stack.back().second);
                                                 for (const auto &e : pending_breaks.back()) {
-                                                      e->underlying_jump = i + 1u;
+                                                      e->underlying_jump = i + 1U;
                                                 }
                                                 pending_breaks.pop_back();
                                                 breakable_stack.pop_back();

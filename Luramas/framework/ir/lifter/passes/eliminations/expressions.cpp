@@ -2,7 +2,7 @@
 
 namespace luramas::ir::passes {
 
-      void expression_canonicalization_elimination(pass_manager &pm, shared &s) {
+      void expression_canonicalization_elimination(pass_manager &pm, shared & /*s*/) {
 
             boost::unordered_flat_set<std::shared_ptr<ir_stat::ir_expr>> processed;
             processed.reserve(pm.amount() * LURAMAS_PREDICTED_EXPRS);
@@ -95,11 +95,11 @@ namespace luramas::ir::passes {
                   }
 
                   /* Unsafe memory reads? */
-                  if (pm.env_flags.fhas_memory && !pm.env_flags.fmemory_read_safe && rssa.l.assigns.size() == 1u) {
+                  if (pm.env_flags.fhas_memory && !pm.env_flags.fmemory_read_safe && rssa.l.assigns.size() == 1U) {
 
                         if (const tools::find::find_expr_cb has_memread = [](const std::shared_ptr<ir_stat::ir_expr> &expr) { return expr->is_k<expr_kinds::memoryread>(); }; tools::find::expr(has_memread, p->r)) {
 
-                              if (const auto b = rssa.l.assigns.begin(); b->second.second.size() == 1u && ssa.defs[*b->second.second.begin()].second.second.first.empty()) {
+                              if (const auto b = rssa.l.assigns.begin(); b->second.second.size() == 1U && ssa.defs[*b->second.second.begin()].second.second.first.empty()) {
                                     p->flags.fdead_sideeffects = true;
                                     continue;
                               }
@@ -107,9 +107,9 @@ namespace luramas::ir::passes {
                   }
 
                   /* Synthetic */
-                  if (p->flags.fsynthetic && pm.env_flags.fremove_dead_synthetics && rssa.l.assigns.size() == 1u) {
+                  if (p->flags.fsynthetic && pm.env_flags.fremove_dead_synthetics && rssa.l.assigns.size() == 1U) {
 
-                        if (const auto b = rssa.l.assigns.begin(); b->second.second.size() == 1u && ssa.defs[*b->second.second.begin()].second.second.first.empty() &&
+                        if (const auto b = rssa.l.assigns.begin(); b->second.second.size() == 1U && ssa.defs[*b->second.second.begin()].second.second.first.empty() &&
                                                                    !tools::ssa::is_placeholder_variable(pm, ssa, *b->second.second.begin(), i)) {
                               pm.remove(p);
                               pm.mut(LURAMAS_DEBUG_LINE);
@@ -147,7 +147,7 @@ namespace luramas::ir::passes {
                         }
                   }
 
-                  if (rssa.l.regs.size() != 1u) {
+                  if (rssa.l.regs.size() != 1U) {
 
                         /* Members */
                         while (!p->members.empty()) {
@@ -168,7 +168,8 @@ namespace luramas::ir::passes {
                               }
                         }
                         continue;
-                  } else if (rssa.l.regs.size() == 1u) {
+                  }
+                  if (rssa.l.regs.size() == 1u) {
 
                         const auto reg = *rssa.l.regs.begin();
                         if (pm.is_safe(p) && ssa.defs[*rssa.l.assigns[reg].second.begin()].second.second.first.empty()) {

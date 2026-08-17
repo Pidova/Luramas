@@ -2,7 +2,7 @@
 
 namespace luramas::ir::passes {
 
-      void variadic_function(pass_manager &pm, shared &s) {
+      void variadic_function(pass_manager &pm, shared & /*s*/) {
 
             if (pm.ir.data.empty() || !pm.ir.data.front()->is_k<keywords::definition>()) {
                   return;
@@ -60,7 +60,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void inline_functions(pass_manager &pm, shared &s) {
+      void inline_functions(pass_manager &pm, shared & /*s*/) {
 
             pass::process::values(pm);
 
@@ -75,11 +75,11 @@ namespace luramas::ir::passes {
                         */
                         if (tools::exprs::values::is_anonfunction_call(rs)) {
 
-                              if (const auto closure = rs->l; closure->closure.size() == 2u && tools::stat::is_return(closure->closure.back(), 1u) && tools::block::independent(closure->closure)) {
+                              if (const auto closure = rs->l; closure->closure.size() == 2U && tools::stat::is_return(closure->closure.back(), 1U) && tools::block::independent(closure->closure)) {
 
                                     if (const auto data = tools::inliner::inline_data(pm, closure->closure, {rs}, rs->members); !data.empty()) {
 
-                                          pm.insert(pm[values.where - 1u], data);
+                                          pm.insert(pm[values.where - 1U], data);
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                               }
@@ -89,7 +89,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void native_inline_function_reconstruction(pass_manager &pm, shared &s) {
+      static void native_inline_function_reconstruction(pass_manager &pm, shared & /*s*/) {
 
             pass::process::values(pm);
 
@@ -104,11 +104,11 @@ namespace luramas::ir::passes {
                         */
                         if (tools::exprs::values::is_anonfunction_call(rs)) {
 
-                              if (const auto closure = rs->l; closure->closure.size() == 2u && tools::stat::is_return(closure->closure.back(), 1u) && tools::block::independent(closure->closure)) {
+                              if (const auto closure = rs->l; closure->closure.size() == 2U && tools::stat::is_return(closure->closure.back(), 1U) && tools::block::independent(closure->closure)) {
 
                                     if (const auto data = tools::inliner::inline_data(pm, closure->closure, {rs}, rs->members); !data.empty()) {
 
-                                          pm.insert(pm[values.where - 1u], data);
+                                          pm.insert(pm[values.where - 1U], data);
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                               }

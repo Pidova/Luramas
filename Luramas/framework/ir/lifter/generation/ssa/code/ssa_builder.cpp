@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../ssa_builder.hpp"
 //#define LURAMAS_DEBUG_SSA_STEPS 1
 
@@ -105,7 +107,7 @@ namespace luramas::ir::ssa_builder {
                                     sorted_defs.push_back(x);
                               }
 
-                              std::sort(sorted_defs.begin(), sorted_defs.end(), [](const auto &a, const auto &b) {
+                              std::ranges::sort(sorted_defs, [](const auto &a, const auto &b) {
                                     return a->get_front() < b->get_front();
                               });
                               for (const auto &x : sorted_defs) {
@@ -172,11 +174,11 @@ namespace luramas::ir::ssa_builder {
                   for (const auto &[block, preds] : cfg.predecessors) {
 
                         std::vector<std::shared_ptr<generation::cfg::block>> sorted_preds(preds.begin(), preds.end());
-                        std::sort(sorted_preds.begin(), sorted_preds.end(), [](const auto &a, const auto &b) {
+                        std::ranges::sort(sorted_preds, [](const auto &a, const auto &b) {
                               return a->get_front() < b->get_front();
                         });
 
-                        luramas_index idx = 0u;
+                        luramas_index idx = 0U;
                         for (const auto &p : sorted_preds) {
                               phi_predecessor_idx[block][p] = idx++;
                         }
@@ -303,7 +305,7 @@ namespace luramas::ir::ssa_builder {
                               /* Walk dom tree */
                               if (auto it = dom_tree.find(block); it != dom_tree.end()) {
                                     std::vector<std::shared_ptr<generation::cfg::block>> sorted_children(it->second.begin(), it->second.end());
-                                    std::sort(sorted_children.begin(), sorted_children.end(), [](const auto &a, const auto &b) {
+                                    std::ranges::sort(sorted_children, [](const auto &a, const auto &b) {
                                           return a->get_front() < b->get_front();
                                     });
                                     for (const auto &child : sorted_children) {
@@ -318,14 +320,14 @@ namespace luramas::ir::ssa_builder {
                               /* Pop instruction lvalue first */
                               for (auto i = block->get_end(); i > block->get_front(); --i) {
 
-                                    for (const auto &v : nodes[i - 1u].lvalues) {
+                                    for (const auto &v : nodes[i - 1U].lvalues) {
                                           if (auto it = stacks.find(v); it != stacks.end() && !it->second.empty()) {
                                                 it->second.pop_back();
                                           }
                                     }
 
                                     /* Pop locals that were pushed during the rename phase to prevent stack leaks */
-                                    for (const auto &v : nodes[i - 1u].locals) {
+                                    for (const auto &v : nodes[i - 1U].locals) {
                                           if (auto it = stacks.find(v); it != stacks.end() && !it->second.empty()) {
                                                 it->second.pop_back();
                                           }
@@ -387,7 +389,7 @@ namespace luramas::ir::ssa_builder {
                         /* Remove no unknowns */
                         for (auto &[_, nssa] : ssa_n.rvalues) {
                               if (!nssa.fset_unknown || nssa.k == kind::phi) {
-                                    nssa.v.erase(std::remove(nssa.v.begin(), nssa.v.end(), generation::ssa::UNKNOWN_SSA_VERSION), nssa.v.end());
+                                    nssa.v.erase(std::ranges::remove(nssa.v, generation::ssa::UNKNOWN_SSA_VERSION).begin(), nssa.v.end());
                               }
                         }
                   }
@@ -500,11 +502,11 @@ namespace luramas::ir::ssa_builder {
             }
 
             /* Map */
-            struct mapped {
+            struct Mapped {
                   boost::unordered_flat_set<luramas_register> l;
                   boost::unordered_flat_set<luramas_register> r;
             };
-            std::vector<mapped> map;
+            std::vector<Mapped> map;
             {
 #ifdef LURAMAS_DEBUG_SSA_STEPS
                   std::printf("Maping");

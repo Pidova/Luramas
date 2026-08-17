@@ -32,8 +32,8 @@ namespace luramas::ir {
       /* Count */
       luramas_count ir_stat::ir_expr::count(const std::shared_ptr<ir_stat::ir_expr> &expr) const {
 
-            luramas_count result = 0u;
-            result += (*this == *expr);
+            luramas_count result = 0U;
+            result += static_cast<luramas_count>(*this == *expr);
             if (this->l) {
                   result += this->l->count(expr);
             }

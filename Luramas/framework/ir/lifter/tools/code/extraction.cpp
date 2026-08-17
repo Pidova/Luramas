@@ -1,6 +1,7 @@
 #include "../../generation/cfg/sort.hpp"
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
+#include <algorithm>
 #include <queue>
 
 namespace luramas::ir::tools::extract {
@@ -12,18 +13,18 @@ namespace luramas::ir::tools::extract {
                   return result;
             }
 
-            result.emplace_back(start, violations::block_violates(pm, start + 1u, pm.amount()).ending_loc);
+            result.emplace_back(start, violations::block_violates(pm, start + 1U, pm.amount()).ending_loc);
 
             while (tools::stat::branch::is_else_conditional(pm[result.back().second])) {
                   const auto bstart = result.back().second;
-                  result.emplace_back(bstart, violations::block_violates(pm, bstart + 1u, pm.amount()).ending_loc);
+                  result.emplace_back(bstart, violations::block_violates(pm, bstart + 1U, pm.amount()).ending_loc);
             }
             return result;
       }
 
       std::vector<luramas_blockrange> parent_ifcond_blocks(luramas::ir::passes::pass_manager &pm, const luramas_address loc) {
 
-            luramas_address buffer = 0u;
+            luramas_address buffer = 0U;
             return tools::visitors::parent_ifcond(pm, loc, buffer) ? extract::blocks(pm, buffer) : std::vector<luramas_blockrange>();
       }
 
@@ -31,7 +32,7 @@ namespace luramas::ir::tools::extract {
 
             std::vector<luramas_addresses> result;
             for (const auto &[bstart, bend] : extract::blocks(pm, start)) {
-                  result.emplace_back(accumulate::dominant(pm, bstart + 1u, bend));
+                  result.emplace_back(accumulate::dominant(pm, bstart + 1U, bend));
             }
             return result;
       }
@@ -75,7 +76,7 @@ namespace luramas::ir::tools::extract {
 
             luramas_addresses result;
             for (const auto &[bstart, bend] : blocks(pm, start)) {
-                  result.emplace_back(bstart - 1u);
+                  result.emplace_back(bstart - 1U);
             }
             return result;
       }
@@ -219,7 +220,7 @@ namespace luramas::ir::tools::extract {
                   boost::unordered_flat_map<std::shared_ptr<generation::cfg::block>, boost::unordered_flat_set<luramas_register>> block_data;
                   block_data.reserve(dominants.size());
 
-                  for (auto idx = 0u; idx < dominants.size(); ++idx) {
+                  for (auto idx = 0U; idx < dominants.size(); ++idx) {
 
                         const auto &block = dominants[idx];
 
@@ -233,7 +234,7 @@ namespace luramas::ir::tools::extract {
                               /* If source is capture but is dest in same stat without used again its defined */
                               if (const auto &capture = captures[loc]; !capture.empty()) {
                                     for (const auto &s : source) {
-                                          if (std::find(dest.begin(), dest.end(), s) != dest.end() &&
+                                          if (std::ranges::find(dest, s) != dest.end() &&
                                               static_cast<std::size_t>(std::count(source.begin(), source.end(), s)) <= luramas::ir::tools::exprs::count(capture, s)) {
                                                 data.insert(s);
                                           }
@@ -248,7 +249,7 @@ namespace luramas::ir::tools::extract {
                         }
 
                         /* Propagate  */
-                        for (auto t_idx = idx + 1u; t_idx < dominants.size(); ++t_idx) {
+                        for (auto t_idx = idx + 1U; t_idx < dominants.size(); ++t_idx) {
 
                               const auto &t_block = dominants[t_idx];
                               if (cfg.highlevel_scope_ids[t_block->get_front()] < cfg.highlevel_scope_ids[block->get_front()]) {
@@ -307,7 +308,7 @@ namespace luramas::ir::tools::extract {
                               for (auto p = curr; p; p = parent[p]) {
                                     result.emplace_back(p);
                               }
-                              std::reverse(result.begin(), result.end());
+                              std::ranges::reverse(result);
                               return result;
                         }
 

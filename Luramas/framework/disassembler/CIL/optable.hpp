@@ -242,6 +242,6 @@ namespace luramas::disassembler::CIL::optable {
 
       struct opcode {
             data::instructions inst;
-            std::uint32_t op = 0u;
+            std::uint32_t op = 0U;
       };
 } // namespace luramas::disassembler::CIL::optable

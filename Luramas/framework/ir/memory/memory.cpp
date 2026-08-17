@@ -13,8 +13,8 @@ std::string luramas::ir::memory::region::str() const {
       std::string result("int8_t region[" + std::to_string(this->data.size()) + "] = {");
       result.reserve(result.size() + this->data.size());
 
-      for (auto i = 0ull; i < this->data.size(); ++i) {
-            if (i != this->data.size() - 1u) {
+      for (auto i = 0ULL; i < this->data.size(); ++i) {
+            if (i != this->data.size() - 1U) {
                   result += ", ";
             }
             result += std::to_string(this->data[i]);
@@ -22,7 +22,7 @@ std::string luramas::ir::memory::region::str() const {
             if (it != this->annotate_names.end()) {
                   result += " /* " + it->second + " */";
             }
-            if (!((i + 1u) % 10u)) {
+            if (!((i + 1U) % 10U)) {
                   result += "\n";
             }
       }

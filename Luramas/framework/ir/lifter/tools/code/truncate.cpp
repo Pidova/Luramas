@@ -5,10 +5,10 @@ namespace luramas::ir::tools::truncate {
 
       luramas_address block(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_address end, const bool encapsulate, const bool include_gotos, const bool include_terminals, const std::shared_ptr<ir_stat> &close_on) {
 
-            const auto violation = violations::block_violates(pm, (encapsulate && tools::stat::branch::is_explicit_cond(pm[start])) ? start + 1u : start, end, violations::block_violates_flags({.finclude_gotos = include_gotos, .finclude_terminals = include_terminals, .close_on = close_on}));
+            const auto violation = violations::block_violates(pm, (encapsulate && tools::stat::branch::is_explicit_cond(pm[start])) ? start + 1U : start, end, violations::block_violates_flags({.finclude_gotos = include_gotos, .finclude_terminals = include_terminals, .close_on = close_on}));
             return violation.valid ? end : violation.reason == violations::block_violation_exceptions::hit_closing_on ? violation.ending_loc
-                                       : violation.ending_loc                                                         ? violation.ending_loc - 1u
-                                                                                                                      : 0u;
+                                       : violation.ending_loc                                                         ? violation.ending_loc - 1U
+                                                                                                                      : 0U;
       }
 
       removable_cond_result removable_cond(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
@@ -19,7 +19,7 @@ namespace luramas::ir::tools::truncate {
             }
 
             const auto take_jump = tools::common::safe_take_jump(pm, start);
-            const auto violation = violations::block_violates(pm, start + 1u, pm.amount());
+            const auto violation = violations::block_violates(pm, start + 1U, pm.amount());
             if (violation.ending_loc == take_jump) {
                   result.ending = take_jump;
                   return result;
@@ -33,7 +33,7 @@ namespace luramas::ir::tools::truncate {
 
       luramas_address most_relative_valid_block(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_addresses &ends) {
 
-            luramas_address result = 0u;
+            luramas_address result = 0U;
             for (const auto &i : ends) {
                   if (i > result && i > start && violations::block_violates(pm, start, i).valid) {
                         result = i;

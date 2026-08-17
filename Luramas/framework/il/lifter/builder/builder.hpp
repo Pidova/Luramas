@@ -516,18 +516,18 @@ namespace luramas::il::lifter::builder {
             luramas_id set_global(const std::string &global);
 
             /* Insert front of index */
-            void insertf(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v);
-            void insertf(const std::shared_ptr<luramas::il::disassembly> &v);
+            void insertf(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) const;
+            void insertf(const std::shared_ptr<luramas::il::disassembly> &v) const;
 
             /* Insert back of index */
-            void insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v);
-            void insert(const std::shared_ptr<luramas::il::disassembly> &v);
+            void insert(const std::vector<std::shared_ptr<luramas::il::disassembly>> &v) const;
+            void insert(const std::shared_ptr<luramas::il::disassembly> &v) const;
 
             expr make_var(const luramas_register r, const luramas_bitwidth bits, const bool unsign = false, const std::uint8_t precision = 0u);
             reg get_temp();
             expr make_temp();
 
-            void violation(const expr &l) const;
+            static void violation(const expr &l);
             void precomputed();
 
             /* Bit [min, max] */

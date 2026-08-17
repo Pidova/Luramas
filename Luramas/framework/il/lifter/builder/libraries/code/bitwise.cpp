@@ -7,11 +7,11 @@ namespace luramas::il::lifter::builder::libraries::bitwise {
             auto t = def.temp();
             t = x;
             auto result = def.temp();
-            result = 0u;
+            result = 0U;
             kwhile(t);
             {
-                  result += t & 1u;
-                  t >>= 1u;
+                  result += t & 1U;
+                  t >>= 1U;
             }
             kend;
             return result;

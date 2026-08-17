@@ -1,4 +1,5 @@
 #include "../types.hpp"
+#include <algorithm>
 
 /* Type */
 void luramas::ir::types::object::type::emit_ptrs(const std::uint8_t n) {
@@ -56,8 +57,8 @@ std::shared_ptr<luramas::ir::types::object::type> luramas::ir::types::object::ty
       return result;
 }
 std::string luramas::ir::types::object::type::str() const {
-      std::string result("");
-      for (auto i = 0u; i < this->ptrs; ++i) {
+      std::string result;
+      for (auto i = 0U; i < this->ptrs; ++i) {
             result += "*";
       }
       switch (this->k) {
@@ -77,9 +78,9 @@ std::string luramas::ir::types::object::type::str() const {
                   result += "(";
                   if (!this->dynamic_types.value().empty()) {
                         result += "<";
-                        for (auto i = 0u; i < this->dynamic_types.value().size(); ++i) {
+                        for (auto i = 0U; i < this->dynamic_types.value().size(); ++i) {
                               result += this->dynamic_types.value()[i]->str();
-                              if ((i + 1u) < this->dynamic_types.value().size()) {
+                              if ((i + 1U) < this->dynamic_types.value().size()) {
                                     result += ", ";
                               }
                         }
@@ -134,11 +135,11 @@ luramas::ir::types::object::type luramas::ir::types::object::type::load(std::ist
       bool has_dynamic_types = false;
       is.read(reinterpret_cast<char *>(&has_dynamic_types), sizeof(has_dynamic_types));
       if (has_dynamic_types) {
-            std::size_t dynamic_types_size = 0u;
+            std::size_t dynamic_types_size = 0U;
             is.read(reinterpret_cast<char *>(&dynamic_types_size), sizeof(dynamic_types_size));
             result.dynamic_types.emplace(std::vector<std::shared_ptr<object>>());
             result.dynamic_types->reserve(dynamic_types_size);
-            for (auto i = 0u; i < dynamic_types_size; ++i) {
+            for (auto i = 0U; i < dynamic_types_size; ++i) {
                   this->dynamic_types->emplace_back(std::make_shared<object>());
                   this->dynamic_types->back()->load(is);
             }
@@ -194,11 +195,11 @@ bool luramas::ir::types::object::compare(const object &other) const {
             return false;
       }
 
-      if (!std::equal(this->members.begin(), this->members.end(), other.members.begin(), other.members.end(), [](const auto &a, const auto &b) { return a->compare(*b); })) {
+      if (!std::ranges::equal(this->members, other.members, [](const auto &a, const auto &b) { return a->compare(*b); })) {
             return false;
       }
 
-      if (!std::equal(this->template_init.begin(), this->template_init.end(), other.template_init.begin(), other.template_init.end(), [](const auto &a, const auto &b) { return a->compare(*b); })) {
+      if (!std::ranges::equal(this->template_init, other.template_init, [](const auto &a, const auto &b) { return a->compare(*b); })) {
             return false;
       }
       return true;
@@ -230,9 +231,9 @@ std::string luramas::ir::types::object::str() const {
 
       if (!this->template_init.empty()) {
             result += "<";
-            for (auto i = 0u; i < this->template_init.size(); ++i) {
+            for (auto i = 0U; i < this->template_init.size(); ++i) {
                   result += this->template_init[i]->str();
-                  if ((i + 1u) < this->template_init.size()) {
+                  if ((i + 1U) < this->template_init.size()) {
                         result += ", ";
                   }
             }
@@ -241,9 +242,9 @@ std::string luramas::ir::types::object::str() const {
       result += "(";
       if (!this->members.empty()) {
             result += "<";
-            for (auto i = 0u; i < this->members.size(); ++i) {
+            for (auto i = 0U; i < this->members.size(); ++i) {
                   result += this->members[i]->str();
-                  if ((i + 1u) < this->members.size()) {
+                  if ((i + 1U) < this->members.size()) {
                         result += ", ";
                   }
             }
@@ -274,18 +275,18 @@ luramas::ir::types::object luramas::ir::types::object::load(std::istream &is) {
       object result;
       luramas::fs::load(is, result.name);
 
-      std::size_t members_size = 0u;
+      std::size_t members_size = 0U;
       is.read(reinterpret_cast<char *>(&members_size), sizeof(members_size));
       result.members.reserve(members_size);
-      for (auto i = 0u; i < members_size; ++i) {
+      for (auto i = 0U; i < members_size; ++i) {
             result.members.emplace_back(std::make_shared<type>());
             result.members.back()->load(is);
       }
 
-      std::size_t template_init_size = 0u;
+      std::size_t template_init_size = 0U;
       is.read(reinterpret_cast<char *>(&template_init_size), sizeof(template_init_size));
       result.template_init.reserve(template_init_size);
-      for (auto i = 0u; i < template_init_size; ++i) {
+      for (auto i = 0U; i < template_init_size; ++i) {
             result.template_init.push_back(std::make_shared<type>());
             result.template_init.back()->load(is);
       }

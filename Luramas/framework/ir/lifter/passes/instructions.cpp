@@ -1,4 +1,5 @@
 #include "includes/common.hpp"
+#include <algorithm>
 #include <ranges>
 
 namespace luramas::ir::passes {
@@ -21,15 +22,15 @@ namespace luramas::ir::passes {
 
                         if (const auto &ssv = *rssa.r.assigns[r].second.begin(); i && !ssa.phis.contains(ssv)) {
 
-                              if (const auto &past = ssa.defs[ssv]; past.first && past.first->is_k<keywords::assignment>() && pm.is_safe(past.first) && !ssa.captures.contains(ssv) && !tools::common::expects_definition(pm, i - 1u)) {
+                              if (const auto &past = ssa.defs[ssv]; past.first && past.first->is_k<keywords::assignment>() && pm.is_safe(past.first) && !ssa.captures.contains(ssv) && !tools::common::expects_definition(pm, i - 1U)) {
 
                                     const auto assignment_regs = tools::extract::assignment_regs(past.first);
-                                    if (const auto &t = past.first->r; t && !tools::mutations::modified_regs(pm, tools::transform::address_to_range(past.second.first, i - 1u), {assignment_regs.begin(), assignment_regs.end()}) &&
+                                    if (const auto &t = past.first->r; t && !tools::mutations::modified_regs(pm, tools::transform::address_to_range(past.second.first, i - 1U), {assignment_regs.begin(), assignment_regs.end()}) &&
                                                                        !s.scheduled_stats.contains(past.first) && pm.safe(past.first) &&
                                                                        tools::ssa::same_highlevel_scope_id(pm, ssa, past.second.first, i) &&
                                                                        !luramas::ir::tools::mutates(pm, t, past.second.first, i)) {
 
-                                          pm.move(pm[i - 1u], past.first);
+                                          pm.move(pm[i - 1U], past.first);
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                           s.scheduled_stats.insert(past.first);
                                     }
@@ -40,7 +41,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void jump_threading(pass_manager &pm, shared &s) {
+      void jump_threading(pass_manager &pm, shared & /*s*/) {
 
             for (const auto &i : pm.iter()) {
 
@@ -74,13 +75,13 @@ namespace luramas::ir::passes {
 
                                           bool hit = false;
                                           const auto last = tools::visitors::last_safe_end(pm, violation.ending_loc, hit);
-                                          valid = !hit && tools::stat::is_end(pm[last]) && tools::stat::branch::is_cond_goto_label(p, pm[last + 1u]);
+                                          valid = !hit && tools::stat::is_end(pm[last]) && tools::stat::branch::is_cond_goto_label(p, pm[last + 1U]);
                                     }
                                     if (pm.is_safe(p) && valid) {
 
                                           tools::stat::mutate::if_stat_cleared<true>(p);
 
-                                          pm.insert(pm[label - 1u], tools::stat::generate::end());
+                                          pm.insert(pm[label - 1U], tools::stat::generate::end());
                                           pm.set_safe(p);
                                           pm.mut(LURAMAS_DEBUG_LINE);
                                     }
@@ -95,7 +96,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void instruction_hoisting(pass_manager &pm, shared &s, generation::ssa::ssa &ssa) {
+      void instruction_hoisting(pass_manager &pm, shared & /*s*/, generation::ssa::ssa &ssa) {
 
             boost::unordered_flat_map<luramas_address, boost::unordered_flat_set<luramas_register>> inserted;
 
@@ -109,16 +110,16 @@ namespace luramas::ir::passes {
 
                                     const auto end = tools::common::safe_take_jump(pm, i);
                                     const auto blocks = tools::extract::dominate_blocks(pm, i);
-                                    if (blocks.size() > 1u) {
+                                    if (blocks.size() > 1U) {
                                           for (const auto &[reg, assignments] : tools::ssa::extract::same_assignments(pm, ssa, blocks, true, true)) {
 
                                                 /* Is safe? */
-                                                if (!std::none_of(assignments.begin(), assignments.end(), [&](const auto &p) { return !pm.is_safe(pm[p.first]); })) {
+                                                if (!std::ranges::none_of(assignments, [&](const auto &p) { return !pm.is_safe(pm[p.first]); })) {
                                                       continue;
                                                 }
 
                                                 /* Canonicalize */
-                                                if (std::all_of(assignments.begin(), assignments.end(), [&](const auto &pair) {
+                                                if (std::ranges::all_of(assignments, [&](const auto &pair) {
                                                           const auto &[node, end_block] = pair;
                                                           return !tools::ssa::used(pm, ssa, node, end_block, reg) &&
                                                                  !tools::mutates(pm, p, node, end_block);
@@ -127,7 +128,7 @@ namespace luramas::ir::passes {
                                                       for (const auto &[node, end_block] : assignments) {
                                                             pm.remove(pm[node]);
                                                       }
-                                                      pm.insert(pm[tools::trackers::next_safe_executable(pm, end) - 1u], pm[assignments.back().first]);
+                                                      pm.insert(pm[tools::trackers::next_safe_executable(pm, end) - 1U], pm[assignments.back().first]);
                                                       pm.mut(LURAMAS_DEBUG_LINE);
                                                 }
                                           }
@@ -141,7 +142,7 @@ namespace luramas::ir::passes {
 
                               /* Must be PHI */
                               bool phis = true;
-                              luramas_register target = 0u;
+                              luramas_register target = 0U;
                               for (const auto &[reg, data] : ssa.nodes[p].l.assigns) {
                                     for (const auto &ssa_reg : data.second) {
                                           target = reg;
@@ -161,7 +162,7 @@ namespace luramas::ir::passes {
                                     break;
                               }
 
-                              if (p->l && ssa.nodes[p].l.assigns.size() == 1u) {
+                              if (p->l && ssa.nodes[p].l.assigns.size() == 1U) {
 
                                     /* Get assignment blocks */
                                     const auto assignment_blocks = tools::ssa::extract::block_assignment(pm, ssa, blocks, target, tools::ssa::extract::hit_type::first);
@@ -170,12 +171,12 @@ namespace luramas::ir::passes {
                                     }
 
                                     /* Used from [Start block, assignment)? */
-                                    if (std::any_of(assignment_blocks.begin(), assignment_blocks.end(), [&](const auto &i) { return tools::ssa::used(pm, ssa, i.second.first, i.first, target); })) {
+                                    if (std::ranges::any_of(assignment_blocks, [&](const auto &i) { return tools::ssa::used(pm, ssa, i.second.first, i.first, target); })) {
                                           break;
                                     }
 
                                     /* Get primitive assignment if any */
-                                    luramas_address primitive_assignment = 0u;
+                                    luramas_address primitive_assignment = 0U;
                                     for (const auto &[asign, range] : assignment_blocks) {
                                           if (const auto &lp = pm[asign]; lp->is_assignment() && lp->r && lp->r->is_primitive() && pm.is_safe(lp)) {
                                                 primitive_assignment = asign;
@@ -184,7 +185,7 @@ namespace luramas::ir::passes {
                                     }
 
                                     /* See if dominant above blocks reg is getting used? */
-                                    if (const auto rev = tools::accumulate::reverse_dominant(pm, i - 1u); std::any_of(rev.begin(), rev.end(), [&](const auto &a) {
+                                    if (const auto rev = tools::accumulate::reverse_dominant(pm, i - 1U); std::ranges::any_of(rev, [&](const auto &a) {
                                               const auto it = inserted.find(a);
                                               return (it != inserted.end() && it->second.contains(target)) || ssa.nodes[pm[a]].l.refrence_regs.contains(target) || ssa.nodes[pm[a]].r.refrence_regs.contains(target);
                                         })) {
@@ -226,7 +227,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void definition_flattening(pass_manager &pm, shared &s, generation::ssa::ssa &ssa) {
+      void definition_flattening(pass_manager &pm, shared & /*s*/, generation::ssa::ssa &ssa) {
 
             boost::unordered_flat_set<std::shared_ptr<ir_stat::ir_expr>> unsafe_regs;
             std::vector<std::pair<luramas_address, std::size_t>> used_scope_ids;
@@ -247,7 +248,7 @@ namespace luramas::ir::passes {
 
                   if (const auto current_id = ssa.high_level_scope_id[def.second.first]; std::ranges::any_of(used_scope_ids, [&](const auto &p) { return current_id > p.second; })) {
 
-                        auto [loc, id] = *std::min_element(used_scope_ids.begin(), used_scope_ids.end(), [](const auto &a, const auto &b) { return a.second < b.second; });
+                        auto [loc, id] = *std::ranges::min_element(used_scope_ids, [](const auto &a, const auto &b) { return a.second < b.second; });
 
                         while (loc) {
                               if (ssa.high_level_scope_id[loc--] < id) {
@@ -271,10 +272,10 @@ namespace luramas::ir::passes {
                                     }
 
                                     /* See if it has been synthesized before */
-                                    if (const auto integral = tools::exprs::generate::integral(0u); !std::any_of(pm.ir.data.begin(), pm.ir.data.end(), [&](const auto &i) { return tools::stat::is_assignment(i, rexpr, integral) && i->flags.fsynthetic; })) {
+                                    if (const auto integral = tools::exprs::generate::integral(0U); !std::ranges::any_of(pm.ir.data, [&](const auto &i) { return tools::stat::is_assignment(i, rexpr, integral) && i->flags.fsynthetic; })) {
 
-                                          loc += tools::stat::is_page_function_start(tools::visitors::next(pm, loc));
-                                          loc += tools::stat::is_definition(tools::visitors::next(pm, loc));
+                                          loc += static_cast<std::tuple_element<0, struct std::pair<unsigned long long, unsigned long long>>::type>(tools::stat::is_page_function_start(tools::visitors::next(pm, loc)));
+                                          loc += static_cast<std::tuple_element<0, struct std::pair<unsigned long long, unsigned long long>>::type>(tools::stat::is_definition(tools::visitors::next(pm, loc)));
 
                                           unsafe_regs.insert(rexpr);
                                           const auto assignment = tools::stat::generate::assignment(rexpr, integral);
@@ -298,7 +299,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void update_closure_definition(pass_manager &pm, shared &s) {
+      void update_closure_definition(pass_manager &pm, shared & /*s*/) {
 
             tools::closure::space_stat::definition::update(pm.ir.data);
             return;

@@ -1249,7 +1249,7 @@ namespace luramas::ir::tools {
                 Inline data  (Must be pre ignored for recursion)     
                 High level variadics can not be safely inlined and therefore will return empty
             */
-            ir_stat::space inline_data(luramas::ir::passes::pass_manager &pm, const ir_stat::space &data, const ir_stat::ir_expr::space &calle_assigns, const ir_stat::ir_expr::space args, const bool register_calle_assigns = true);
+            ir_stat::space inline_data(luramas::ir::passes::pass_manager &pm, const ir_stat::space &data, const ir_stat::ir_expr::space &calle_assigns, const ir_stat::ir_expr::space &args, const bool register_calle_assigns = true);
 
             /* Inline page reference */
             struct inline_page_flags {

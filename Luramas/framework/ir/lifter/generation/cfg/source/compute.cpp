@@ -5,7 +5,7 @@
 
 namespace luramas::ir::cfg::compute {
 
-      boost::unordered_flat_map<std::shared_ptr<generation::cfg::block>, std::shared_ptr<generation::cfg::block>> immediate_dominators(const helpers::boost_graph &graph) {
+      static boost::unordered_flat_map<std::shared_ptr<generation::cfg::block>, std::shared_ptr<generation::cfg::block>> immediate_dominators(const helpers::boost_graph &graph) {
 
             boost::unordered_flat_map<std::shared_ptr<generation::cfg::block>, std::shared_ptr<generation::cfg::block>> result;
             const auto entry_it = graph.vertex_descriptor.find(graph.entry);

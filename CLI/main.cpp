@@ -25,7 +25,7 @@
 #include <CLI\CLI.hpp>
 
 /* Read file to string data given path */
-std::optional<std::string> read_file(const std::string &path) {
+static std::optional<std::string> read_file(const std::string &path) {
 
       std::ifstream file(path);
       if (!file.is_open()) {
@@ -36,14 +36,14 @@ std::optional<std::string> read_file(const std::string &path) {
       return buffer.str();
 }
 
-struct test_script {
-      std::string directory = ""; /* Reltive directory in test */
-      std::string name = "";      /* File name WITHOUT extension */
-      std::string code = "";      /* Read code */
+struct TestScript {
+      std::string directory; /* Reltive directory in test */
+      std::string name;      /* File name WITHOUT extension */
+      std::string code;      /* Read code */
 };
 
 /* Writes string content to <test_dir>/<scripts_dir>/<output_folder>/<script.name><extension> */
-bool write_output(const std::string &test_dir, const test_script &script, const std::string &content, const char *const extension) {
+static bool write_output(const std::string &test_dir, const TestScript &script, const std::string &content, const char *const extension) {
 
       const std::filesystem::path rel_path(script.directory);
 
@@ -68,9 +68,9 @@ bool write_output(const std::string &test_dir, const test_script &script, const 
 }
 
 /* Get script contents and location given dir */
-std::vector<test_script> get_scripts(const char *const test_dir, const char *const scripts_dir) {
+static std::vector<TestScript> get_scripts(const char *const test_dir, const char *const scripts_dir) {
 
-      std::vector<test_script> result;
+      std::vector<TestScript> result;
 
       const std::filesystem::path test_path(test_dir);
       const auto base_path = test_path / scripts_dir;
@@ -97,32 +97,29 @@ std::vector<test_script> get_scripts(const char *const test_dir, const char *con
                   const auto full_file_path = path.string();
                   const auto rel_stem = (std::filesystem::relative(path, base_path).parent_path() / path.stem()).generic_string();
                   if (auto content = read_file(full_file_path); content.has_value()) {
-                        result.push_back({std::filesystem::relative(path, test_path).generic_string(), rel_stem, std::move(*content)});
+                        result.push_back({.directory=std::filesystem::relative(path, test_path).generic_string(), .name=rel_stem, .code=std::move(*content)});
                   }
             }
       }
       return result;
 }
 
-std::optional<std::string> decompile(const std::string &target, const std::string &code, std::shared_ptr<luramas::ir::data::format::format> &format, const bool is_bytecode) {
+static std::optional<std::string> decompile(const std::string &target, const std::string &code, std::shared_ptr<luramas::ir::data::format::format> &format, const bool is_bytecode) {
 
 #if defined(LURAMAS_TARGET_LUAU) && defined(LURAMAS_TARGET_VERSION_6)
       if (target == luramas::supported_targets_str::LUAU_V6) {
-#include "luau/V6/example.hpp"
             return luramas::decompile_luau_v6(code, format, is_bytecode);
       }
 #endif
 
 #ifdef LURAMAS_TARGET_X86
       if (target == luramas::supported_targets_str::X86) {
-#include "x86-64/example.hpp"
             return luramas::decompile_x86(code, format, is_bytecode);
       }
 #endif
 
 #if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
       if (target == luramas::supported_targets_str::LUA_V53) {
-#include "lua/Lua_5.3/example.hpp"
             return luramas::decompile_lua_53(code, format, is_bytecode);
       }
 #endif
@@ -130,7 +127,7 @@ std::optional<std::string> decompile(const std::string &target, const std::strin
 }
 
 /* Read, decompile, and output tests */
-void decompile_tests(const std::string &test_dir, std::shared_ptr<luramas::ir::data::format::format> &format, const char *const scripts_directory, const char *const supported_targets_str, const char *const extension) {
+static void decompile_tests(const std::string &test_dir, std::shared_ptr<luramas::ir::data::format::format> &format, const char *const scripts_directory, const char *const supported_targets_str, const char *const extension) {
 
       decompile(supported_targets_str, "", format, false);
       for (const auto &i : get_scripts(test_dir.c_str(), scripts_directory)) {
@@ -147,9 +144,9 @@ int main(int argc, char **argv) {
       auto format = std::make_shared<luramas::ir::data::format::format>(); /* Syntax format */
 
       /* CLI options */
-      std::string input("");            /* Input directory */
+      std::string input;            /* Input directory */
       std::string target("x86");        /* Input target */
-      std::string test_dir("");         /* Directory of repo/tests */
+      std::string test_dir;         /* Directory of repo/tests */
       luramas_flag is_bytecode = false; /* Is input bytecode (Only for input) */
       luramas_flag all_tests = false;   /* Run all tests */
 
@@ -160,7 +157,7 @@ int main(int argc, char **argv) {
       app.add_option("-i,--input", input, "Input bytecode/source file")->required();
       app.add_option("-t,--target", target, "Target architecture / VM version")->default_val("x86")->transform(CLI::IsMember({"luau-v6", "x86", "lua-536"}));
       app.add_flag("-b,--bytecode", is_bytecode, "Treat the input file as bytecode (defaults to source code)");
-      const auto test_opt = app.add_option("-test", test_dir, "Run tests from root test directory")->check(CLI::ExistingDirectory);
+      auto *const test_opt = app.add_option("-test", test_dir, "Run tests from root test directory")->check(CLI::ExistingDirectory);
       app.add_flag("-all-tests", all_tests, "Run test suite across ALL supported target versions");
       CLI11_PARSE(app, argc, argv);
 

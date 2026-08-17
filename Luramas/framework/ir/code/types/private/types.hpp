@@ -83,7 +83,7 @@ namespace luramas::ir::types {
             object clone() const;
             std::string str() const;
             void serialize(std::ostream &os);
-            object load(std::istream &is);
+            static object load(std::istream &is);
             void clear();
       };
 

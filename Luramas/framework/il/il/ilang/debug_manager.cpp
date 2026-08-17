@@ -2,7 +2,7 @@
 
 namespace luramas::il {
 
-      const char *const ilang::debug_manager::get(const luramas_register reg, luramas_address loc) const {
+      const char *ilang::debug_manager::get(const luramas_register reg, luramas_address loc) const {
 
             if (this->defined.empty()) {
                   return nullptr;

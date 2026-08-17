@@ -6,7 +6,7 @@ namespace luramas::ir::tools::visitors {
       luramas_address last_end(luramas::ir::passes::pass_manager &pm, luramas_address start) {
 
             if (pm[start]->is_k<keywords::end>()) {
-                  while (pm.valid_next<1u>(start) && stat::is_end(pm[start + 1u])) {
+                  while (pm.valid_next<1U>(start) && stat::is_end(pm[start + 1U])) {
                         ++start;
                   }
             }
@@ -16,7 +16,7 @@ namespace luramas::ir::tools::visitors {
       luramas_address prev_last_end(luramas::ir::passes::pass_manager &pm, luramas_address start) {
 
             if (pm[start]->is_k<keywords::end>()) {
-                  while (pm.valid_prev<1u>(start) && stat::is_end(pm[start - 1u])) {
+                  while (pm.valid_prev<1U>(start) && stat::is_end(pm[start - 1U])) {
                         --start;
                   }
             }
@@ -26,12 +26,12 @@ namespace luramas::ir::tools::visitors {
       luramas_address last_safe_end(luramas::ir::passes::pass_manager &pm, luramas_address start, bool &hit) {
 
             hit = false;
-            while (pm.valid_next<1u>(start) && stat::is_end(pm[start])) {
+            while (pm.valid_next<1U>(start) && stat::is_end(pm[start])) {
                   if (pm[pm.processed.end_labels[pm[start]->end_label].first]->is_loop()) {
                         hit = true;
                         break;
                   }
-                  if (!stat::is_end(pm[start + 1u])) {
+                  if (!stat::is_end(pm[start + 1U])) {
                         break;
                   }
                   ++start;
@@ -45,7 +45,7 @@ namespace luramas::ir::tools::visitors {
       luramas_address prev_safe_end(luramas::ir::passes::pass_manager &pm, luramas_address start, bool &hit) {
 
             hit = false;
-            while (pm.valid_prev<1u>(start) && stat::is_end(pm[start - 1u])) {
+            while (pm.valid_prev<1U>(start) && stat::is_end(pm[start - 1U])) {
                   if (stat::is_end(pm[start]) && pm[pm.processed.end_labels[pm[start]->end_label].first]->is_loop()) {
                         hit = true;
                         break;
@@ -57,7 +57,7 @@ namespace luramas::ir::tools::visitors {
 
       luramas_address prev_cond(luramas::ir::passes::pass_manager &pm, luramas_address start) {
 
-            while (pm.valid_prev<1u>(start) && !stat::branch::is_cond(pm[start])) {
+            while (pm.valid_prev<1U>(start) && !stat::branch::is_cond(pm[start])) {
                   --start;
             }
             return start;
@@ -65,7 +65,7 @@ namespace luramas::ir::tools::visitors {
 
       luramas_address next_continuous_loop_end(luramas::ir::passes::pass_manager &pm, luramas_address start) {
 
-            while (pm.valid_next<1u>(start)) {
+            while (pm.valid_next<1U>(start)) {
                   const auto &p = pm[start];
                   if (!stat::is_end(p) || pm[pm.processed.end_labels[p->end_label].first]->is_loop()) {
                         break;
@@ -76,10 +76,10 @@ namespace luramas::ir::tools::visitors {
       }
 
       luramas_address prev_loc(luramas::ir::passes::pass_manager &pm, const luramas_address on) {
-            return on - pm.valid_prev<1u>(on);
+            return on - static_cast<luramas_address>(pm.valid_prev<1U>(on));
       }
       luramas_address next_loc(luramas::ir::passes::pass_manager &pm, const luramas_address on) {
-            return on + pm.valid_next<1u>(on);
+            return on + static_cast<luramas_address>(pm.valid_next<1U>(on));
       }
       std::shared_ptr<ir_stat> prev(luramas::ir::passes::pass_manager &pm, const luramas_address on) {
             return pm[prev_loc(pm, on)];
@@ -153,9 +153,9 @@ namespace luramas::ir::tools::visitors {
             if (stat != nullptr) {
 
                   const auto label = stat->end_label ? stat->end_label : stat->elif_end_label;
-                  return (!label || !stat::branch::is_explicit_cond(stat)) ? 0u : pm.processed.end_labels[label].second;
+                  return (!label || !stat::branch::is_explicit_cond(stat)) ? 0U : pm.processed.end_labels[label].second;
             }
-            return 0u;
+            return 0U;
       }
 
       bool parent_ifcond(luramas::ir::passes::pass_manager &pm, const luramas_address loc, luramas_address &buffer) {
@@ -177,7 +177,7 @@ namespace luramas::ir::tools::visitors {
 
             auto block = violations::block_violates(pm, loc, pm.amount());
             while (!block.valid && pm.contains(block.ending_loc) && ((block.reason != violations::block_violation_exceptions::invalid_end || !pm[tools::common::reverse_safe_take_jump(pm, block.ending_loc)]->is_loop()) && block.reason != violations::block_violation_exceptions::invalid_until)) {
-                  block = violations::block_violates(pm, block.ending_loc + 1u, pm.amount());
+                  block = violations::block_violates(pm, block.ending_loc + 1U, pm.amount());
             }
             if (!pm.contains(block.ending_loc)) {
                   return false;

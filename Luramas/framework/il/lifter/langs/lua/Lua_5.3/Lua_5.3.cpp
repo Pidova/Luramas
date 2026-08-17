@@ -21,7 +21,7 @@ namespace luramas::il::lifter {
                   }
                   auto result = std::make_shared<luramas::il::ilang>();
                   std::vector<std::shared_ptr<lua_53_disassembler::disassembly>> vect_dism;
-                  for (auto pc = 0u; pc < unsigned(p->sizecode);) {
+                  for (auto pc = 0U; pc < static_cast<unsigned>(p->sizecode);) {
                         auto dism = std::make_shared<lua_53_disassembler::disassembly>();
                         lua_53_disassembler::disassemble(pc, p, dism);
                         vect_dism.emplace_back(dism);
@@ -44,7 +44,7 @@ namespace luramas::il::lifter {
                         }
                         case LUA_TBOOLEAN: {
                               ptr->type = arch::data::kval_kinds::boolean;
-                              ptr->boolean.b = kval.value_.b;
+                              ptr->boolean.b = (kval.value_.b != 0);
                               break;
                         }
                         case LUA_TLIGHTUSERDATA: {
@@ -65,7 +65,7 @@ namespace luramas::il::lifter {
                         case LUA_TSTRING: {
 
                               ptr->type = arch::data::kval_kinds::string;
-                              const auto data = getstr(gco2ts(kval.value_.gc));
+                              auto *const data = getstr(gco2ts(kval.value_.gc));
                               if (!data) {
                                     luramas::error::error("String is nullptr");
                               }
@@ -74,7 +74,7 @@ namespace luramas::il::lifter {
                               break;
                         }
                         case LUA_TTABLE: {
-                              const auto t = gco2t(kval.value_.gc);
+                              auto *const t = gco2t(kval.value_.gc);
                               ptr->type = arch::data::kval_kinds::table;
                               ptr->table.array_size = t->sizearray;
                               ptr->table.node_size = t->lsizenode;

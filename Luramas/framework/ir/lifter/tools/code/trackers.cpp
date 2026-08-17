@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
 
@@ -40,24 +42,24 @@ namespace luramas::ir::tools::trackers {
             }
 
             result.reserve(result.size() + end_cond_stack.size() + until_cond_stack.size());
-            std::copy(end_cond_stack.begin(), end_cond_stack.end(), std::back_inserter(result));
-            std::copy(until_cond_stack.begin(), until_cond_stack.end(), std::back_inserter(result));
+            std::ranges::copy(end_cond_stack, std::back_inserter(result));
+            std::ranges::copy(until_cond_stack, std::back_inserter(result));
             return result;
       }
 
       luramas_address loop_break(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
-            return (!pm.valid(start) || !tools::stat::is_break(pm[start])) ? 0u : tools::common::safe_take_jump(pm, start);
+            return (!pm.valid(start) || !tools::stat::is_break(pm[start])) ? 0U : tools::common::safe_take_jump(pm, start);
       }
       luramas_address loop_continue(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
-            return (!pm.valid(start) || !tools::stat::is_continue(pm[start])) ? 0u : tools::common::safe_take_jump(pm, start);
+            return (!pm.valid(start) || !tools::stat::is_continue(pm[start])) ? 0U : tools::common::safe_take_jump(pm, start);
       }
 
       luramas_address else_end(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
             if (!pm.valid(start) || !tools::stat::branch::is_else_conditional(pm[start])) {
-                  return 0u;
+                  return 0U;
             }
 
             std::intptr_t stack = 0;
@@ -67,7 +69,7 @@ namespace luramas::ir::tools::trackers {
                         return o;
                   }
             }
-            return 0u;
+            return 0U;
       }
 
       luramas_address relative_scope(luramas::ir::passes::pass_manager &pm, const luramas_address most_out_scope, generation::cfg::cfg *cfg) {
@@ -77,13 +79,13 @@ namespace luramas::ir::tools::trackers {
                   c = generation::cfg::generate(pm.ir, LURAMAS_IR_ENTRY, pm.env_flags.fhas_pages);
                   cfg = &c;
             }
-            const auto contiguous = cfg->contiguous_firstlast_scopeid(cfg->highlevel_scope_ids[most_out_scope + 1u]);
-            return contiguous > most_out_scope ? 0u : contiguous;
+            const auto contiguous = cfg->contiguous_firstlast_scopeid(cfg->highlevel_scope_ids[most_out_scope + 1U]);
+            return contiguous > most_out_scope ? 0U : contiguous;
       }
 
       luramas_address next_safe_executable(luramas::ir::passes::pass_manager &pm, luramas_address start, const bool include_implicit_gotos, const luramas_vaddress expecting_goto) {
             const auto t_start = start;
-            if (!pm.contains(start + 1u)) {
+            if (!pm.contains(start + 1U)) {
                   return start;
             }
             while (pm.contains(start)) {
@@ -97,7 +99,7 @@ namespace luramas::ir::tools::trackers {
                   } else if (stat::branch::is_goto(e) || (include_implicit_gotos && tools::stat::is_break(e))) {
 
                         const auto taken = tools::common::safe_take_jump(pm, start);
-                        if (luramas_address(expecting_goto) == taken || taken < start) {
+                        if (static_cast<luramas_address>(expecting_goto) == taken || taken < start) {
                               break;
                         }
                         start = taken;
@@ -112,13 +114,13 @@ namespace luramas::ir::tools::trackers {
       luramas_blockrange parent_loop(luramas::ir::passes::pass_manager &pm, const luramas_address start) {
 
             if (!pm.contains(start)) {
-                  return std::make_pair(0u, 0u);
+                  return std::make_pair(0U, 0U);
             }
             if (pm[start]->is_loop()) {
                   return std::make_pair(start, tools::common::safe_take_jump(pm, start));
             }
 
-            std::size_t stack = 0u;
+            std::size_t stack = 0U;
             for (auto o = start; o < pm.amount(); ++o) {
 
                   if (const auto &d = pm[o]; d->is_loop()) {
@@ -131,7 +133,7 @@ namespace luramas::ir::tools::trackers {
                         }
                   }
             }
-            return std::make_pair(0u, 0u);
+            return std::make_pair(0U, 0U);
       }
 
       std::pair<bool, luramas_address> safe_trace_page(luramas::ir::passes::pass_manager &pm, const luramas_address start, const luramas_id id, const bool include_end) {
@@ -147,11 +149,11 @@ namespace luramas::ir::tools::trackers {
                         break;
                   }
             }
-            return {false, 0u};
+            return {false, 0U};
       }
 
       luramas_address ending_parent_loop(luramas::ir::passes::pass_manager &pm, const luramas_address loop_end) {
-            return !pm.contains(loop_end) || !stat::branch::is_loop_end(pm, pm[loop_end]) ? 0u : pm.processed.end_labels[pm[loop_end]->end_label].first;
+            return !pm.contains(loop_end) || !stat::branch::is_loop_end(pm, pm[loop_end]) ? 0U : pm.processed.end_labels[pm[loop_end]->end_label].first;
       }
 
       luramas_address next_safe_executable(luramas::ir::passes::pass_manager &pm, luramas_address start, const boost::unordered_flat_set<keywords> &k, const bool include_implicit_gotos, const luramas_vaddress expecting_goto) {

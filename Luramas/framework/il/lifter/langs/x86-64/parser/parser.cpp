@@ -18,7 +18,7 @@ namespace parser {
       void parse_instruction(const luramas::il::helpers::low::disassembly_manager<luramas::il::X86::lifter::MAX_LEN, cs_insn> &dism, const luramas::profile::externals::data<x86_reg> &externals, const luramas::il::X86::lifter::hardware_constants &hw_constants) {
 
             luramas_flag fflags_inited = false; /* Flags have been inited? */
-            luramas_address pc = 0u;
+            luramas_address pc = 0U;
             const auto &il = dism.il;
             vm::registrar registrar(x86_insn::X86_INS_NOP, nullptr, hw_constants, externals);
 
@@ -30,7 +30,7 @@ namespace parser {
             build->original_address_data = std::move(dism.original_address_data);
             build->suggested_bit_set = registrar.hw_constants.suggested_bit_set;
 
-            for (auto idx = 0u; idx < dism.data.size(); ++idx) {
+            for (auto idx = 0U; idx < dism.data.size(); ++idx) {
 
                   const auto &[vinst, d] = dism.data[idx];
 
@@ -46,7 +46,7 @@ namespace parser {
                   /* Open scope for SMC compare (Compare bytes if it equals SMC inside region) */
                   if (vinst.fstart_cmp_bytes) {
                         std::shared_ptr<luramas::il::disassembly> cmp = nullptr;
-                        for (auto i = 0u; i < vinst.inst.inst.bytes.size(); ++i) {
+                        for (auto i = 0U; i < vinst.inst.inst.bytes.size(); ++i) {
                               build->cmp(luramas::il::lifter::builder::build::expr(build, vinst.inst.inst.pc + i).memread(luramas::types::native::t_int8.bits()) == vinst.inst.inst.bytes[i]);
                               build->make<luramas::il::arch::opcodes::OP_SEGREGATE>(LURAMAS_IR_DEFAULT_SEGREGATION_ID);
                               cmp = build->make(luramas::il::arch::data::bin_kindflip(luramas::il::arch::data::bin_kinds::et_));
@@ -112,12 +112,12 @@ namespace parser {
 
                         /* Init registers */
                         {
-                              constexpr auto START = static_cast<std::size_t>(X86_REG_INVALID) + 1u;
-                              constexpr auto END = static_cast<std::size_t>(X86_REG_BND3);
-                              constexpr auto COUNT = END - START + 1u;
+                              constexpr auto kStart = static_cast<std::size_t>(X86_REG_INVALID) + 1U;
+                              constexpr auto kEnd = static_cast<std::size_t>(X86_REG_BND3);
+                              constexpr auto kCount = kEnd - kStart + 1U;
                               [&]<std::size_t... Is>(std::index_sequence<Is...>) {
-                                    (registrar.setr<static_cast<x86_reg>(START + Is)>(tools::make(build, static_cast<x86_reg>(START + Is))), ...);
-                              }(std::make_index_sequence<COUNT>{});
+                                    (registrar.setr<static_cast<x86_reg>(kStart + Is)>(tools::make(build, static_cast<x86_reg>(kStart + Is))), ...);
+                              }(std::make_index_sequence<kCount>{});
                         }
                         registrar.zero_flags();
                         fflags_inited = true;

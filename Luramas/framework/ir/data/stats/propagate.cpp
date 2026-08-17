@@ -25,7 +25,7 @@ namespace luramas::ir {
                   case keywords::stack_pop:
                   case keywords::stack_push:
                   case keywords::retn: {
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               auto &m = this->members[idx];
                               if (m != nullptr && (e == nullptr || *m != *e)) {
                                     if (m->is_flag(target)) {
@@ -102,7 +102,7 @@ namespace luramas::ir {
             }
             removals.clear();
             if (this->k != keywords::page_function_goto) {
-                  for (auto idx = 0u; idx < this->smembers.size(); ++idx) {
+                  for (auto idx = 0U; idx < this->smembers.size(); ++idx) {
                         auto &m = this->smembers[idx];
                         if (m != nullptr && (e == nullptr || *m != *e)) {
                               if (m->is_flag(target)) {
@@ -122,7 +122,7 @@ namespace luramas::ir {
                   }
                   removals.clear();
             }
-            for (auto idx = 0u; idx < this->tmembers.size(); ++idx) {
+            for (auto idx = 0U; idx < this->tmembers.size(); ++idx) {
                   auto &m = this->tmembers[idx];
                   if (m != nullptr && (e == nullptr || *m != *e)) {
                         if (m->is_flag(target)) {
@@ -167,7 +167,7 @@ namespace luramas::ir {
                   case keywords::stack_push:
                   case keywords::retn:
                   case keywords::page_function_goto: {
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               if (auto &m = this->members[idx]; m && (!e || *m != *e)) {
                                     if (m->is_reg(target)) {
                                           if (!e) {
@@ -238,7 +238,7 @@ namespace luramas::ir {
             }
             removals.clear();
             if (this->k != keywords::page_function_goto) {
-                  for (auto idx = 0u; idx < this->smembers.size(); ++idx) {
+                  for (auto idx = 0U; idx < this->smembers.size(); ++idx) {
                         if (auto &m = this->smembers[idx]; m && (!e || *m != *e)) {
                               if (m->is_reg(target)) {
                                     if (!e) {
@@ -257,7 +257,7 @@ namespace luramas::ir {
                   }
                   removals.clear();
             }
-            for (auto idx = 0u; idx < this->tmembers.size(); ++idx) {
+            for (auto idx = 0U; idx < this->tmembers.size(); ++idx) {
                   if (auto &m = this->tmembers[idx]; m && (!e || *m != *e)) {
                         if (m->is_reg(target)) {
                               if (!e) {

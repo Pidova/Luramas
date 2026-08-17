@@ -1,3 +1,5 @@
+#include <print>
+
 #include "../../ir.hpp"
 namespace luramas::ir {
 
@@ -14,9 +16,9 @@ namespace luramas::ir {
                               retn += "[EXTERNAL] ";
                         }
                         retn += "page_function_call<" + this->r->str("", stat_prefix) + ", " + this->ev->str("", stat_prefix) + ", " + this->xv->str("", stat_prefix) + ">(";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               retn += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     retn += ", ";
                               }
                         }
@@ -41,9 +43,9 @@ namespace luramas::ir {
                               retn += " ";
                         }
                         retn += this->l->str("", stat_prefix) + "(";
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               retn += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     retn += ", ";
                               }
                         }
@@ -91,9 +93,9 @@ namespace luramas::ir {
                         break;
                   }
                   case expr_kinds::concat: {
-                        for (auto idx = 0u; idx < this->members.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->members.size(); ++idx) {
                               retn += this->members[idx]->str("", stat_prefix);
-                              if ((idx + 1u) < this->members.size()) {
+                              if ((idx + 1U) < this->members.size()) {
                                     retn += " .. ";
                               }
                         }
@@ -162,15 +164,15 @@ namespace luramas::ir {
 
             switch (this->tk) {
                   case tkind::table: {
-                        std::string result("");
+                        std::string result;
                         result += "{ ";
-                        for (auto idx = 0u; idx < this->tmembers.size(); ++idx) {
+                        for (auto idx = 0U; idx < this->tmembers.size(); ++idx) {
                               const auto &[i, v] = this->tmembers[idx];
                               if (i) {
                                     result += "[" + i->str() + "] = ";
                               }
                               result += v->str();
-                              if ((idx + 1u) < this->tmembers.size()) {
+                              if ((idx + 1U) < this->tmembers.size()) {
                                     result += ", ";
                               }
                         }
@@ -224,7 +226,7 @@ namespace luramas::ir {
                                                                                                                                               : this->v;
       }
       void ir_stat::ir_expr::dump(const char *const descriminator) {
-            std::printf("%s %s\n", descriminator, this->str().c_str());
+            std::println("{} {}", descriminator, this->str());
             return;
       }
 } // namespace luramas::ir

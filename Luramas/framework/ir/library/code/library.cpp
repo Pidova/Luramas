@@ -73,7 +73,7 @@ namespace luramas::ir::library {
                   case kind::library: {
                         oss << "[library]\n";
                         if (this->lib.has_value()) {
-                              std::size_t count = 0u;
+                              std::size_t count = 0U;
                               for (const auto &[key, value] : this->lib.value()) {
                                     const bool last = (++count == this->lib.value().size());
                                     oss << indent << (is_last ? LURAMAS_PRETTY_BRANCH_INDENT : LURAMAS_PRETTY_BRANCH_VERTICLE LURAMAS_PRETTY_BRANCH_INDENT) << key << ":\n";
@@ -87,7 +87,7 @@ namespace luramas::ir::library {
                   case kind::exprs: {
                         oss << "[exprs]\n";
                         if (this->exprs.has_value()) {
-                              std::size_t count = 0u;
+                              std::size_t count = 0U;
                               for (const auto &expr : this->exprs.value()) {
                                     const auto last = (++count == this->exprs.value().size());
                                     oss << indent + (is_last ? LURAMAS_PRETTY_BRANCH_INDENT : LURAMAS_PRETTY_BRANCH_VERTICLE LURAMAS_PRETTY_BRANCH_INDENT)
@@ -100,7 +100,7 @@ namespace luramas::ir::library {
                   case kind::stats: {
                         oss << "[stats]\n";
                         if (this->stats.has_value()) {
-                              std::size_t count = 0u;
+                              std::size_t count = 0U;
                               for (const auto &stat : this->stats.value()) {
                                     const bool last = (++count == this->stats.value().size());
                                     oss << indent + (is_last ? LURAMAS_PRETTY_BRANCH_INDENT : LURAMAS_PRETTY_BRANCH_VERTICLE LURAMAS_PRETTY_BRANCH_INDENT)

@@ -1,8 +1,10 @@
+#include <algorithm>
+
 #include "includes/common.hpp"
 
 namespace luramas::ir::passes {
 
-      void dead_flag_elimination(pass_manager &pm, shared &s, generation::flag_ssa::fssa &fssa) {
+      void dead_flag_elimination(pass_manager &pm, shared & /*s*/, generation::flag_ssa::fssa &fssa) {
 
             for (const auto &i : pm.iter()) {
 
@@ -17,7 +19,7 @@ namespace luramas::ir::passes {
             return;
       }
 
-      void flag_propagation(pass_manager &pm, shared &s, generation::flag_ssa::fssa &fssa) {
+      void flag_propagation(pass_manager &pm, shared & /*s*/, generation::flag_ssa::fssa &fssa) {
 
             for (const auto &[loc, ssa] : fssa.set) {
 
@@ -50,7 +52,7 @@ namespace luramas::ir::passes {
                         pm.mut(LURAMAS_DEBUG_LINE);
                   } else {
 
-                        if (const auto end = refs_loc.empty() ? loc : std::max(loc, *std::max_element(refs_loc.begin(), refs_loc.end())); !tools::mutates(pm, stat->r, loc, end)) {
+                        if (const auto end = refs_loc.empty() ? loc : std::max(loc, *std::ranges::max_element(refs_loc)); !tools::mutates(pm, stat->r, loc, end)) {
 
                               for (const auto &ref : refs_loc) {
                                     if (const auto &p = pm[ref]; pm.safe(stat)) {

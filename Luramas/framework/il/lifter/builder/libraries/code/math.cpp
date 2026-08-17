@@ -1,5 +1,7 @@
-#include "../math.hpp"
+#include <utility>
+
 #include "../common/keywords.hpp"
+#include "../math.hpp"
 
 namespace luramas::il::lifter::builder::libraries::math {
 
@@ -19,7 +21,7 @@ namespace luramas::il::lifter::builder::libraries::math {
       }
       build::expr fabs(function_handler def, const build::expr &x) {
 
-            return abs(def, x);
+            return abs(std::move(def), x);
       }
 
       build::expr min(function_handler def, const build::expr &a, const build::expr &b) {
@@ -166,13 +168,13 @@ namespace luramas::il::lifter::builder::libraries::math {
             return result;
       }
 
-      build::expr sin(function_handler def, const build::expr &x) {
-            return x - (pow(def, x, build::expr(x.b, 3u)) / build::expr(x.b, 6u)) + (pow(def, x, build::expr(x.b, 5u)) / build::expr(x.b, 120u)) - (pow(def, x, build::expr(x.b, 7u)) / 5040u);
+      build::expr sin(const function_handler &def, const build::expr &x) {
+            return x - (pow(def, x, build::expr(x.b, 3U)) / build::expr(x.b, 6U)) + (pow(def, x, build::expr(x.b, 5U)) / build::expr(x.b, 120U)) - (pow(def, x, build::expr(x.b, 7U)) / 5040U);
       }
-      build::expr cos(function_handler def, const build::expr &x) {
-            return 1 - (pow(def, x, build::expr(x.b, 2u)) / build::expr(x.b, 2u)) + (pow(def, x, build::expr(x.b, 4u)) / build::expr(x.b, 24u)) - (pow(def, x, build::expr(x.b, 6u)) / 720u);
+      build::expr cos(const function_handler &def, const build::expr &x) {
+            return 1 - (pow(def, x, build::expr(x.b, 2U)) / build::expr(x.b, 2U)) + (pow(def, x, build::expr(x.b, 4U)) / build::expr(x.b, 24U)) - (pow(def, x, build::expr(x.b, 6U)) / 720U);
       }
-      build::expr tan(function_handler def, const build::expr &x) {
+      build::expr tan(const function_handler &def, const build::expr &x) {
             return sin(def, x) / cos(def, x);
       }
       build::expr atan(function_handler def, const build::expr &x) {
@@ -182,12 +184,12 @@ namespace luramas::il::lifter::builder::libraries::math {
 
             kif(absx <= 1);
             {
-                  result = x - pow(def, x, build::expr(x.b, 3u)) / 3 + pow(def, x, build::expr(x.b, 5u)) / 5 - pow(def, x, build::expr(x.b, 7u)) / 7;
+                  result = x - pow(def, x, build::expr(x.b, 3U)) / 3 + pow(def, x, build::expr(x.b, 5U)) / 5 - pow(def, x, build::expr(x.b, 7U)) / 7;
             }
             kelse;
             {
                   auto invx = 1 / x;
-                  auto approx = invx - pow(def, invx, build::expr(x.b, 3u)) / 3 + pow(def, invx, build::expr(x.b, 5u)) / 5 - pow(def, invx, build::expr(x.b, 7u)) / 7;
+                  auto approx = invx - pow(def, invx, build::expr(x.b, 3U)) / 3 + pow(def, invx, build::expr(x.b, 5U)) / 5 - pow(def, invx, build::expr(x.b, 7U)) / 7;
 
                   result = (1570796327 - approx) * sign(def, x);
             }
@@ -200,8 +202,8 @@ namespace luramas::il::lifter::builder::libraries::math {
             auto y = def.temp();
             auto prev = def.temp();
 
-            y = x - 1u;
-            prev = 0u;
+            y = x - 1U;
+            prev = 0U;
 
             kwhile(abs(def, y - prev) > 1);
             {
@@ -212,7 +214,7 @@ namespace luramas::il::lifter::builder::libraries::math {
             kend;
             return y;
       }
-      build::expr log(function_handler def, const build::expr &x, const build::expr &base) {
+      build::expr log(const function_handler &def, const build::expr &x, const build::expr &base) {
             return log(def, x) / log(def, base);
       }
 
@@ -293,15 +295,15 @@ namespace luramas::il::lifter::builder::libraries::math {
                   half = build::expr(def.b, 0.5);
             }
 
-            kif(round_control == 0u); /* round to nearest */
+            kif(round_control == 0U); /* round to nearest */
             {
                   result = src + half;
             }
-            kelseif(round_control == 1u); /* truncate */
+            kelseif(round_control == 1U); /* truncate */
             {
                   result = src;
             }
-            kelseif(round_control == 2u); /* floor */
+            kelseif(round_control == 2U); /* floor */
             {
                   kif(sign != 0);
                   {
@@ -312,7 +314,7 @@ namespace luramas::il::lifter::builder::libraries::math {
                         half = src;
                   }
             }
-            kelseif(round_control == 3u); /* ceil */
+            kelseif(round_control == 3U); /* ceil */
             {
                   kif(sign != 0);
                   {
@@ -339,8 +341,8 @@ namespace luramas::il::lifter::builder::libraries::math {
       build::expr parity(function_handler def, const build::expr &x) {
 
             auto t = def.temp();
-            t = 0u;
-            for (auto i = 0u; i < 8u; ++i) {
+            t = 0U;
+            for (auto i = 0U; i < 8U; ++i) {
                   t = t ^ x.read(i);
             }
             return t;
@@ -349,10 +351,10 @@ namespace luramas::il::lifter::builder::libraries::math {
       build::expr affine_byte(function_handler def, const build::expr &tsrc2qw, const build::expr &src1byte, const build::expr &imm8) {
 
             auto result = def.temp();
-            result = 0u;
-            for (auto i = 0u; i < 8u; ++i) {
+            result = 0U;
+            for (auto i = 0U; i < 8U; ++i) {
 
-                  const auto bit = parity(def, tsrc2qw.read((7u - i) * 8u, (7u - i) * 8u + 7u) & src1byte) ^ imm8.read(i);
+                  const auto bit = parity(def, tsrc2qw.read((7U - i) * 8U, ((7U - i) * 8U) + 7U) & src1byte) ^ imm8.read(i);
                   result.write(i, i, bit);
             }
             return result;
