@@ -195,11 +195,11 @@ namespace luramas::ir::tools::inliner {
                   }
 
                   p = p->clone();
-                  for (auto &i : p->extract_ordered_deep_exprs()) {
-                        if (tools::exprs::values::is_arg(i)) {
-                              if (const auto it = params.find(i->reg); it != params.end()) {
-                                    i->clear();
-                                    it->second->clone(i);
+                  for (auto &e : p->extract_ordered_deep_exprs()) {
+                        if (tools::exprs::values::is_arg(e)) {
+                              if (const auto it = params.find(e->reg); it != params.end()) {
+                                    e->clear();
+                                    it->second->clone(e);
                               } else {
                                     result.clear();
                                     return result;

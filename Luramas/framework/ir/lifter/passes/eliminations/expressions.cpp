@@ -169,7 +169,7 @@ namespace luramas::ir::passes {
                         }
                         continue;
                   }
-                  if (rssa.l.regs.size() == 1u) {
+                  if (rssa.l.regs.size() == 1U) {
 
                         const auto reg = *rssa.l.regs.begin();
                         if (pm.is_safe(p) && ssa.defs[*rssa.l.assigns[reg].second.begin()].second.second.first.empty()) {

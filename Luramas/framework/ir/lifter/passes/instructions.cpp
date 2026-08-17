@@ -274,8 +274,8 @@ namespace luramas::ir::passes {
                                     /* See if it has been synthesized before */
                                     if (const auto integral = tools::exprs::generate::integral(0U); !std::ranges::any_of(pm.ir.data, [&](const auto &i) { return tools::stat::is_assignment(i, rexpr, integral) && i->flags.fsynthetic; })) {
 
-                                          loc += static_cast<std::tuple_element<0, struct std::pair<unsigned long long, unsigned long long>>::type>(tools::stat::is_page_function_start(tools::visitors::next(pm, loc)));
-                                          loc += static_cast<std::tuple_element<0, struct std::pair<unsigned long long, unsigned long long>>::type>(tools::stat::is_definition(tools::visitors::next(pm, loc)));
+                                          loc += static_cast<std::tuple_element<0, struct std::pair<std::uint64_t, std::uint64_t>>::type>(tools::stat::is_page_function_start(tools::visitors::next(pm, loc)));
+                                          loc += static_cast<std::tuple_element<0, struct std::pair<std::uint64_t, std::uint64_t>>::type>(tools::stat::is_definition(tools::visitors::next(pm, loc)));
 
                                           unsafe_regs.insert(rexpr);
                                           const auto assignment = tools::stat::generate::assignment(rexpr, integral);

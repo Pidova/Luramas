@@ -1,7 +1,5 @@
 #include <algorithm>
 
-#include <algorithm>
-
 #include "../includes/common.hpp"
 
 namespace luramas::ir::passes {
@@ -103,7 +101,7 @@ namespace luramas::ir::passes {
 
                               /* FOLDS, (REG ARITH INT) */
                               const auto folds = tools::propagations::constant_folds(pm, ssa, tssa);
-                              is_complex_non_primitive = !((folds != 0u) && (folds == ref_count || folds + 1U == ref_count) && tools::exprs::values::is_general_purpose_register(past.first->r->l));
+                              is_complex_non_primitive = (folds == 0U) || (folds != ref_count && folds + 1U != ref_count) || !tools::exprs::values::is_general_purpose_register(past.first->r->l);
                         }
                         const auto is_table_assign_conflict = p->is_k<keywords::table_assign>() && p->l && p->l->l == past.first->l && past.first->r && tools::exprs::values::is_table(past.first->r);
                         const auto is_volatile_or_table_assign = past.first->flags.fvolatile || past.first->is_k<keywords::table_assign>();

@@ -386,7 +386,7 @@ namespace luramas::ir::tools::ssa {
             }
 
             const auto &assigns = ssa.nodes[n].l.assigns;
-            for (auto [reg, data] : assigns) {
+            for (const auto &[reg, data] : assigns) {
 
                   if (args.contains(reg) || (start && tools::ssa::defined_scope(pm, ssa, start - 1U, reg, false))) {
                         continue;

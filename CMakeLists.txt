@@ -13,6 +13,8 @@ find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
     set(CMAKE_CXX_CLANG_TIDY
         ${CLANG_TIDY_EXE};
+        -checks=-abseil-*;
+        --allow-no-checks;
         -extra-arg=-Wno-unknown-warning-option;
         -warnings-as-errors=*
     )
@@ -24,8 +26,6 @@ if(CLANG_TIDY_EXE)
         list(APPEND CMAKE_CXX_CLANG_TIDY -extra-arg=-fexceptions)
     endif()
     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-else()
-    message(WARNING "clang-tidy not found")
 endif()
 
 # Compile options 

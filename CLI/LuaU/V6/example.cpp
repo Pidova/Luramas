@@ -5,7 +5,7 @@
 /* Load bytecode to lua Proto */
 static Proto *load_bytecode(const std::vector<std::uint8_t> &data, lua_State *ls) {
 
-      if (luau_load(ls, "Luramas", (char *)data.data(), data.size(), 0)) {
+      if (luau_load(ls, "Luramas", reinterpret_cast<const char *>(data.data()), data.size(), 0)) {
 
             std::size_t len;
             const char *msg = lua_tolstring(ls, -1, &len);

@@ -2,13 +2,13 @@
 #include <boost/container/flat_set.hpp>
 #include <stack>
 
-struct condition {
+struct Condition {
       luramas_address cond_loc = 0U;
       luramas_address ending_loc = 0U;
       luramas_address else_loc = 0U;
 
-      explicit condition() = default;
-      explicit condition(const luramas_address loc)
+      explicit Condition() = default;
+      explicit Condition(const luramas_address loc)
           : cond_loc(loc) {
       }
 };
@@ -99,7 +99,7 @@ namespace luramas::ir::generation::cfg {
             generation::cfg::cfg result;
             boost::unordered_flat_map<luramas_address, std::vector<luramas_id>> expr_pages_refed;
             boost::unordered_flat_map<luramas_address, luramas_address> labels;
-            boost::unordered_flat_map<luramas_address, condition> end_labels;
+            boost::unordered_flat_map<luramas_address, Condition> end_labels;
             boost::unordered_flat_map<luramas_address, std::shared_ptr<generation::cfg::block>> blocks;
             boost::unordered_flat_map<luramas_address, std::shared_ptr<generation::cfg::block>> paged_extra_blocks;
             boost::unordered_flat_map<luramas_address, std::vector<std::shared_ptr<generation::cfg::block>>> pages_n_edges_blocks;
@@ -153,7 +153,7 @@ namespace luramas::ir::generation::cfg {
 
                         const auto &p = ir.data[i];
                         if (p->end_label) {
-                              if (auto [it, inserted] = end_labels.try_emplace(p->end_label, condition(i)); !inserted) {
+                              if (auto [it, inserted] = end_labels.try_emplace(p->end_label, Condition(i)); !inserted) {
                                     it->second.ending_loc = i;
                               }
                         }
@@ -508,12 +508,12 @@ namespace luramas::ir::generation::cfg {
 
                                     block->ending = i;
                                     if (premature_exit) {
-                                          block->node_range.second += static_cast<unsigned long long>(block->node_range.second == bentry);
+                                          block->node_range.second += static_cast<std::uint64_t>(block->node_range.second == bentry);
                                           break;
                                     }
                                     if (exit) {
 
-                                          block->node_range.second += static_cast<unsigned long long>(!p->is_scope_end() || block->fforced_end || p->is_k<keywords::until>());
+                                          block->node_range.second += static_cast<std::uint64_t>(!p->is_scope_end() || block->fforced_end || p->is_k<keywords::until>());
                                           if (has_pages_edges) {
 
                                                 luramas_flag extra_step = true;
@@ -522,7 +522,7 @@ namespace luramas::ir::generation::cfg {
                                                 const auto &data = pages_n_edges_blocks[i];
                                                 for (auto idx = 0U; idx < data.size(); ++idx) {
                                                       const auto &pd = data[idx];
-                                                      pd->emit(i, i, i, i + static_cast<unsigned long long>(extra_step));
+                                                      pd->emit(i, i, i, i + static_cast<std::uint64_t>(extra_step));
                                                       if (!first) {
                                                             first = pd;
                                                       }
@@ -547,7 +547,7 @@ namespace luramas::ir::generation::cfg {
                                                             const auto b = paged_extra_blocks[i];
                                                             prev->fall = b;
                                                             b->emit(block->jump, block->then, block->fall);
-                                                            b->emit(i, i, i, i + static_cast<unsigned long long>(extra_step));
+                                                            b->emit(i, i, i, i + static_cast<std::uint64_t>(extra_step));
                                                             extra_step = false;
                                                       } else if (!p->is_terminal()) {
                                                             if (const auto it = blocks.find(i + 1U); it != blocks.end()) {
@@ -557,7 +557,7 @@ namespace luramas::ir::generation::cfg {
                                                 }
                                                 block->emit(nullptr, nullptr, first);
                                           }
-                                          block->node_range.second += static_cast<unsigned long long>(block->node_range.second == bentry);
+                                          block->node_range.second += static_cast<std::uint64_t>(block->node_range.second == bentry);
                                           break;
                                     }
                                     ++block->node_range.second;

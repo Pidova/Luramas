@@ -581,7 +581,7 @@ void luramas::ir::passes::branch_optimization(pass_manager &pm, shared & /*s*/) 
                                     const auto &[end_stat, terminator, else_stat] = std::tie(pm[unfinished.closing_index + 3U], pm[unfinished.closing_index + 2U], pm[unfinished.closing_index + 1U]);
                                     if (tools::stat::branch::is_else_cond(else_stat) && terminator->is_terminator() && pm.is_safe(i, unfinished.closing_index + 1U)) {
 
-                                          if (const auto end_label = end_stat->end_label; (end_label != 0u) && std::ranges::none_of(std::views::iota(pm.processed.end_labels[end_label].first, unfinished.closing_index + 1U), [&](const auto s) { return tools::stat::branch::is_goto_label(pm[s], p); })) {
+                                          if (const auto end_label = end_stat->end_label; (end_label != 0U) && std::ranges::none_of(std::views::iota(pm.processed.end_labels[end_label].first, unfinished.closing_index + 1U), [&](const auto s) { return tools::stat::branch::is_goto_label(pm[s], p); })) {
 
                                                 pm.move(end_stat, {i, unfinished.closing_index + 1U});
                                                 pm.set_safe(i, unfinished.closing_index + 1U);

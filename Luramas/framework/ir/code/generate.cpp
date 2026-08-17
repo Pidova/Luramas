@@ -31,9 +31,9 @@ namespace extra {
           "while"};
 
       enum class closure_kind : std::uint8_t {
-            global,
-            local,
-            anonymous
+            GLOBAL,
+            LOCAL,
+            ANONYMOUS
       };
 } // namespace extra
 
@@ -57,7 +57,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
       auto param_variadic = std::make_shared<ir_stat::ir_expr>();
       param_variadic->emit_variadic();
 
-      struct signature {
+      struct Signature {
             luramas_id id = 0U;
             luramas_flag fuses_controller = false;
             std::string func_name;
@@ -65,7 +65,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
             std::vector<ir::types::signature> arg_types;
             std::vector<ir::types::signature> result_types;
       };
-      boost::unordered_flat_map<luramas_id, signature> signatures;
+      boost::unordered_flat_map<luramas_id, Signature> signatures;
 
       /* Variable naming */
       {
@@ -554,15 +554,15 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                 }
                                           }
                                     }
-                                    std::string buffer;
+                                    std::string ternary_buffer;
                                     ir::code::emitter::common::logical::emit_logical_compare(syn, cond, e->b, l, r, format);
-                                    ir::code::emitter::common::ternary::emit_ternary(syn, buffer, cond, expr(e->ev, else_collapse, false), else_prefix + expr(e->xv, else_collapse, false), format);
+                                    ir::code::emitter::common::ternary::emit_ternary(syn, ternary_buffer, cond, expr(e->ev, else_collapse, false), else_prefix + expr(e->xv, else_collapse, false), format);
                                     if (!from_stat) {
-                                          std::string parenthesize_buffer;
-                                          ir::code::emitter::common::line::emit_parenthesize(syn, parenthesize_buffer, buffer, format);
-                                          retn = parenthesize_buffer;
-                                    } else {
+                                          std::string buffer;
+                                          ir::code::emitter::common::line::emit_parenthesize(syn, buffer, ternary_buffer, format);
                                           retn = buffer;
+                                    } else {
+                                          retn = ternary_buffer;
                                     }
                                     break;
                               }
@@ -886,14 +886,14 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                 }
                                           }
 
-                                          const auto k = (c->flags.fdefine && c->l->is_register_reference()) ? extra::closure_kind::local : (c->l->is_global_tk() ? extra::closure_kind::global : extra::closure_kind::anonymous);
-                                          if (k != extra::closure_kind::anonymous) {
+                                          const auto k = (c->flags.fdefine && c->l->is_register_reference()) ? extra::closure_kind::LOCAL : (c->l->is_global_tk() ? extra::closure_kind::GLOBAL : extra::closure_kind::ANONYMOUS);
+                                          if (k != extra::closure_kind::ANONYMOUS) {
                                                 switch (k) {
-                                                      case extra::closure_kind::local: {
+                                                      case extra::closure_kind::LOCAL: {
                                                             indent += format->indent.indent_scope_function_pre;
                                                             break;
                                                       }
-                                                      case extra::closure_kind::global: {
+                                                      case extra::closure_kind::GLOBAL: {
                                                             indent += format->indent.indent_global_function_pre;
                                                             break;
                                                       }
@@ -901,13 +901,13 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                             break;
                                                       }
                                                 }
-                                                std::string data("");
+                                                std::string data;
                                                 for (auto i = 0U; i < c->r->closure.size(); ++i) {
                                                       const auto &x = c->r->closure[i];
                                                       data += stat(x, indent, i == c->r->closure.size() - 1U);
                                                 }
                                                 switch (k) {
-                                                      case extra::closure_kind::local: {
+                                                      case extra::closure_kind::LOCAL: {
 
                                                             indent += format->indent.indent_scope_function_post;
                                                             ir::code::emitter::common::function::emit_local_function(syn, result, vars.front(), params, data, format);
@@ -919,7 +919,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
                                                             ir::code::emitter::common::function::emit_local_function_end(syn, result, format);
                                                             break;
                                                       }
-                                                      case extra::closure_kind::global: {
+                                                      case extra::closure_kind::GLOBAL: {
 
                                                             indent += format->indent.indent_global_function_post;
                                                             ir::code::emitter::common::function::emit_global_function(syn, result, vars.front(), params, data, format);
@@ -1210,7 +1210,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
       {
 
             /* Generate signatures */
-            std::vector<signature> sigs;
+            std::vector<Signature> sigs;
             switch (syn) {
                   case ir::code::emitter::syntax::emitter_syntax::cpp: {
 
@@ -1220,7 +1220,7 @@ std::string luramas::ir::code::generation::generate(const ir::code::emitter::syn
 
                                     if (const auto &def = code[i + 1U]; def->is_k<keywords::definition>()) {
 
-                                          signature sig;
+                                          Signature sig;
                                           sig.id = p->r->extract_integral_base();
                                           sig.func_name = format->vars.naming_conventions.prefixes.page_function + std::to_string(sig.id);
                                           sig.fuses_controller = def->flags.fdef_uses_controller;

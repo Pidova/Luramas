@@ -96,8 +96,8 @@ namespace luramas::ir::tools::linked {
 
                               /* Add successors */
                               if (const auto it = successors.find(curr); it != successors.end()) {
-                                    for (const auto &[_, pid] : it->second) {
-                                          stack.emplace_back(pid);
+                                    for (const auto &[_, spid] : it->second) {
+                                          stack.emplace_back(spid);
                                     }
                               }
                         }

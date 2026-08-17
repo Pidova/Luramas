@@ -2,7 +2,7 @@
 #include "../lifter/tools/tools.hpp"
 #include <random>
 
-#define SEED_RANDOMNESS(seed) (seed *= (seed) + 2u)
+#define SEED_RANDOMNESS(seed) ((seed) *= (seed) + 2u)
 #define SEED_UNIFORM_U8(seed) ((std::uint8_t((seed) / 7u) + 8u) * 2u)
 #define ASGN_SEED_UNIFORM_U8(seed) ((seed) = SEED_UNIFORM_U8(seed))
 #define ASGN_SEED_UNIFORM_SMALL_U8(seed) ((seed) = SEED_UNIFORM_U8(seed) / 4u)
@@ -76,7 +76,7 @@ namespace luramas::ir::fuzzer {
             inline static std::uint64_t range_size(std::uint64_t seed) {
 
                   static constexpr std::uint8_t kProb1 = 50U; /* 50% */
-                  static constexpr std::uint8_t prob2 = 85U;  /* 50% + 35% = 85% */
+                  static constexpr std::uint8_t kProb2 = 85U; /* 50% + 35% = 85% */
 
                   const auto scaled_seed = (seed % 100U) + 1U;
 
@@ -84,9 +84,9 @@ namespace luramas::ir::fuzzer {
                         /* [1, 400] */
                         return 1U + (scaled_seed % 400U);
                   }
-                  if (scaled_seed <= prob2) {
+                  if (scaled_seed <= kProb2) {
                         /* [401, 1200] */
-                        return 401u + (scaled_seed % 800u);
+                        return 401U + (scaled_seed % 800U);
                   }
                   /* [1201, 4000] */
                   return 1201U + (scaled_seed % 2800U);

@@ -23,7 +23,7 @@ static Proto *compile_script(const std::string &code, bool &error, lua_State *&b
 static constexpr auto kLuaEnvUpvIdx = 0U;    /* Lua _ENV upvalue index */
 static constexpr auto kLuaReservedReg = 255U; /* All regs are below this number */
 
-static constexpr std::array keywords = {
+static constexpr std::array kEywords = {
     "and", "break", "do", "else", "elseif", "end", "false", "for", "function", "goto", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"}; /* Lua reserved keywords */
 
 /* String can be converted to a lua var? */
@@ -37,7 +37,7 @@ static bool is_lua_identifier(const std::string &s) {
                   return false;
             }
       }
-      return std::ranges::find(keywords, s) == keywords.end();
+      return std::ranges::find(kEywords, s) == kEywords.end();
 }
 
 std::optional<std::string> luramas::decompile_lua_53(const std::string &code, std::shared_ptr<luramas::ir::data::format::format> &format, const bool bytecode) {

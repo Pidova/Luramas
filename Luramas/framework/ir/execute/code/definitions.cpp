@@ -27,12 +27,12 @@ namespace luramas::ir::execution {
                   return k;
             }
             bool object::table::remove(const std::shared_ptr<object> &key) {
-                  return this->map.erase(key) != 0u;
+                  return this->map.erase(key) != 0U;
             }
             bool object::table::remove(const luramas_int &key) {
                   for (const auto &[idx, _] : this->map) {
                         if (*idx == key) {
-                              return this->map.erase(idx) != 0u;
+                              return this->map.erase(idx) != 0U;
                         }
                   }
                   return false;

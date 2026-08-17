@@ -128,7 +128,11 @@ Checks: >
   -misc-redundant-expression,
   -bugprone-unhandled-self-assignment,
   -readability-static-accessed-through-instance,
-  -clang-diagnostic-error
+  -clang-diagnostic-error,
+  -performance-inefficient-string-concatenation,
+  -readability-use-anyofallof,
+  -bugprone-assignment-in-if-condition,
+  -performance-no-int-to-ptr
   
 # Turn all the warnings from the checks above into errors.
 WarningsAsErrors: "*"

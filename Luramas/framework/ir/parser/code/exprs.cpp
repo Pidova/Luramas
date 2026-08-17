@@ -3,7 +3,7 @@
 
 namespace luramas::ir::parser::exprs {
 
-      struct associate {
+      struct Associate {
 
             expr_kinds fexpecting_keyword = expr_kinds::ternary;
             bool fexpecting_rvalue = false;
@@ -13,7 +13,7 @@ namespace luramas::ir::parser::exprs {
             il::arch::data::bin_kinds u = il::arch::data::bin_kinds::nothing;
 
             void clear() {
-                  *this = associate();
+                  *this = Associate();
                   return;
             }
             void clear_weak() {
@@ -180,7 +180,7 @@ namespace luramas::ir::parser::exprs {
             }
 
             /* Encapsulation token */
-            static luramas_count encapsulate(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx, std::vector<associate> &stack) {
+            static luramas_count encapsulate(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const luramas_index idx, std::vector<Associate> &stack) {
 
                   if (const auto i = str::match_substr(str, idx, LURAMAS_PARSING_EXPR_OPEN); i) {
 
@@ -256,7 +256,7 @@ namespace luramas::ir::parser::exprs {
             /* Generate expr from name */
             static std::shared_ptr<ir_stat::ir_expr> name(manager &m, const std::string &str) {
 
-                  const auto v = m.get(str);
+                  auto v = m.get(str);
                   if (!v) {
                         auto p = tools::exprs::generate::global(str);
                         set_flags(m, p);
@@ -267,7 +267,7 @@ namespace luramas::ir::parser::exprs {
             }
       } // namespace generate
 
-      static void add_value(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const std::shared_ptr<ir_stat::ir_expr> &expr, const luramas_index idx, std::vector<associate> &stack) {
+      static void add_value(error::result<std::shared_ptr<ir_stat::ir_expr>, errors> &err, const std::string &str, const std::shared_ptr<ir_stat::ir_expr> &expr, const luramas_index idx, std::vector<Associate> &stack) {
 
             if (!expr || stack.empty()) {
                   error<errors::invalid_keyword>(err, str, idx);
@@ -298,7 +298,7 @@ namespace luramas::ir::parser::exprs {
 
       error::result<std::shared_ptr<ir_stat::ir_expr>, errors> parse(manager &m, const std::string &str) {
 
-            std::vector<associate> stack = {associate()};
+            std::vector<Associate> stack = {Associate()};
             stack.reserve(5U);
             error::result<std::shared_ptr<ir_stat::ir_expr>, errors> result = nullptr;
 

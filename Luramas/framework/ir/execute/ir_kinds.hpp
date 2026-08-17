@@ -1,5 +1,6 @@
 #pragma once
-#include "definitions.hpp"
+#include "../ir.hpp"
+#include "data.hpp"
 
 namespace luramas::ir::execution::ir_kinds {
 

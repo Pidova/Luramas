@@ -11,7 +11,7 @@ namespace luramas::ir::tools::paging {
       luramas_blockrange details::page::code_range(const ir_stat::space &p) const {
             if (this->fvalid) {
                   auto result = this->range;
-                  result.first += static_cast<unsigned long long>(tools::stat::is_definition(p[++result.first]));
+                  result.first += static_cast<std::uint64_t>(tools::stat::is_definition(p[++result.first]));
                   --result.second;
                   return result;
             }
@@ -163,7 +163,7 @@ namespace luramas::ir::tools::paging {
 
             for (auto &[expr, map] : result.pages) {
                   for (auto &[id, page] : map) {
-                        page.fvalid = (page.range.second != 0u);
+                        page.fvalid = (page.range.second != 0U);
                   }
             }
             return result;

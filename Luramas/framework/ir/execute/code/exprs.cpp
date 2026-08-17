@@ -23,16 +23,12 @@ namespace luramas::ir::execution::exprs {
                   }
                   case expr_kinds::arith: {
 
-                        const auto l = execute(env, expr->l);
-                        const auto r = execute(env, expr->r);
-
-                        if (l) {
+                        if (auto l = execute(env, expr->l); l) {
                               return l;
                         }
-                        if (r) {
+                        if (auto r = execute(env, expr->r); r) {
                               return r;
                         }
-
                         break;
                   }
                   case expr_kinds::condition: {

@@ -195,7 +195,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                   case luramas::il::arch::data::bin_kinds::len_: {
                         switch (obj.k) {
                               case tkind::table: {
-                                    result.d.emit(!std::get<types::object::table>(obj.v).map.empty() != 0u);
+                                    result.d.emit(static_cast<unsigned int>(!std::get<types::object::table>(obj.v).map.empty()) != 0U);
                                     break;
                               }
                               case tkind::lura_int: {
@@ -210,7 +210,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                               }
                               case tkind::string: {
                                     if (f.funary_len_string) {
-                                          result.d.emit(!std::get<std::string>(obj.v).empty() != 0u);
+                                          result.d.emit(static_cast<unsigned int>(!std::get<std::string>(obj.v).empty()) != 0U);
                                           break;
                                     }
                                     exe_error<errors::kinds::invalid_unary_operand>(result);
@@ -428,7 +428,7 @@ namespace luramas::ir::execution::evaluate::exprs {
 
                         switch (b) {
                               case luramas::il::arch::data::bin_kinds::et_: {
-                                    const auto res = lv == 1u;
+                                    const auto res = lv == 1U;
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
@@ -437,7 +437,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                                     break;
                               }
                               case luramas::il::arch::data::bin_kinds::nt_: {
-                                    const auto res = lv != 1u;
+                                    const auto res = lv != 1U;
                                     if (f.fprimitive_objects) {
                                           result.d.emit(res);
                                     } else {
@@ -494,7 +494,7 @@ namespace luramas::ir::execution::evaluate::exprs {
                   case luramas::il::arch::data::bin_kinds::div_: {
                         if (rv == 0U) {
                               if (f.farithmetic_nan_zero) {
-                                    result.d.emit(0u);
+                                    result.d.emit(luramas_int(0U));
                               } else {
                                     exe_error<errors::kinds::division_by_zero>(result);
                                     return result;

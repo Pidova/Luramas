@@ -9,7 +9,7 @@ namespace luramas::types {
             return this->is<read_type::bytes>() && this->storage_size == memsize;
       }
       bool underlying_type::compare(const luramas_bitwidth bits, const bool unsign) const {
-            return this->is<read_type::bits>() && this->storage_size == bits && this->unsign == unsign && (this->precision == 0u);
+            return this->is<read_type::bits>() && this->storage_size == bits && this->unsign == unsign && (this->precision == 0U);
       }
       bool underlying_type::weak_compare(const underlying_type &other) const {
             return std::tie(this->read, this->storage_size) == std::tie(other.read, other.storage_size);
@@ -214,7 +214,7 @@ namespace luramas::types {
                   return;
             }
             bool object::empty() const {
-                  return std::strlen(this->name) == 0u;
+                  return std::strlen(this->name) == 0U;
             }
       } // namespace native::compiler
 

@@ -1,6 +1,6 @@
 #pragma once
-#include <stdexcept>
 #include <print>
+#include <stdexcept>
 
 #ifdef DEBUG
 #define LURAMAS_ASSERT(condition, message)                                    \

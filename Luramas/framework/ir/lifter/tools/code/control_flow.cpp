@@ -1,9 +1,6 @@
-#include <algorithm>
-
-#include <algorithm>
-
 #include "../extras/stats.hpp"
 #include "../tools.hpp"
+#include <algorithm>
 
 namespace luramas::ir::tools {
 
@@ -38,7 +35,7 @@ namespace luramas::ir::tools {
             }
 
             const auto &next = tools::visitors::next_safe_executable_stat(pm, label + 1U);
-            const auto end_loop = (next->end_label != 0u) && pm[pm.processed.end_labels[next->end_label].first]->is_loop();
+            const auto end_loop = (next->end_label != 0U) && pm[pm.processed.end_labels[next->end_label].first]->is_loop();
 
             if (!pending_label_loop && !next->is_loop() && !end_loop) {
                   return false;
@@ -78,7 +75,8 @@ namespace luramas::ir::tools {
                         } else {
                               cs.c.pop_back();
                         }
-                        if ((result.closing_val += tools::stat::branch::condition_stack(p)) < 0) {
+                        result.closing_val += tools::stat::branch::condition_stack(p);
+                        if (result.closing_val < 0) {
                               result.reason = cond_stack_reason::closing;
                               return result;
                         }
@@ -197,28 +195,28 @@ namespace luramas::ir::tools {
                               const auto violation = violations::block_violates(pm, loc, range.second);
                               if (violation.valid) {
                                     break;
+                              }
+                              const auto &violates_on = pm[violation.ending_loc];
+                              if (tools::stat::branch::is_loop_end(pm, violates_on)) {
+                                    pending_back_edges.erase(pm[tools::common::reverse_safe_take_jump(pm, violation.ending_loc)]);
                               } else {
-                                    const auto &violates_on = pm[violation.ending_loc];
-                                    if (tools::stat::branch::is_loop_end(pm, violates_on)) {
-                                          pending_back_edges.erase(pm[tools::common::reverse_safe_take_jump(pm, violation.ending_loc)]);
-                                    } else {
-                                          switch (violation.reason) {
-                                                case violations::block_violation_exceptions::invalid_end: {
-                                                      result.emplace_back(violates_on);
-                                                      break;
+                                    switch (violation.reason) {
+                                          case violations::block_violation_exceptions::invalid_end: {
+                                                result.emplace_back(violates_on);
+                                                break;
+                                          }
+                                          case violations::block_violation_exceptions::invalid_else_conditional: {
+                                                for (auto vloc = violation.ending_loc; vloc < tools::common::safe_take_jump(pm, violation.ending_loc) + 1U; ++vloc) {
+                                                      result.emplace_back(pm[vloc]);
                                                 }
-                                                case violations::block_violation_exceptions::invalid_else_conditional: {
-                                                      for (auto vloc = violation.ending_loc; vloc < tools::common::safe_take_jump(pm, violation.ending_loc) + 1U; ++vloc) {
-                                                            result.emplace_back(pm[vloc]);
-                                                      }
-                                                      break;
-                                                }
-                                                default: {
-                                                      break;
-                                                }
+                                                break;
+                                          }
+                                          default: {
+                                                break;
                                           }
                                     }
                               }
+
                               loc = violation.ending_loc;
                         } else if (tools::stat::is_label(i)) {
                               dependant = true;

@@ -332,7 +332,7 @@ namespace luramas::ir::tools::combine {
 
                         /* (cast<Tn>(a) >> {n - 1}) & 1 */
                         if (exprs::values::is_arith<il::arch::data::bin_kinds::shr_>(expr->l) && expr->r->is_integral(1U) &&
-                            exprs::values::is_cast(expr->l->l, luramas::types::signess::sign) && (expr->l->l->non_native->under.bits() != 0u) &&
+                            exprs::values::is_cast(expr->l->l, luramas::types::signess::sign) && (expr->l->l->non_native->under.bits() != 0U) &&
                             expr->l->r->is_integral(expr->l->l->non_native->under.bits() - 1U)) {
 
                               return exprs::generate::cond(expr->l->l, luramas::il::arch::data::bin_kinds::lt_, exprs::generate::integral(0U));

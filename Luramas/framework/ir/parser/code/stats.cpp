@@ -112,7 +112,7 @@ namespace luramas::ir::parser::stats {
             /* Generate expr from name */
             static std::shared_ptr<ir_stat::ir_expr> name(manager &m, const std::string &str) {
 
-                  const auto v = m.get(str);
+                  auto v = m.get(str);
                   if (!v) {
                         auto p = tools::exprs::generate::global(str);
                         set_flags(m, p);

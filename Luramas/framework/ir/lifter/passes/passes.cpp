@@ -30,7 +30,7 @@ namespace luramas::ir {
                   case keywords::until:
                   case keywords::switch_case:
                   case keywords::switch_default: {
-                        indenter -= static_cast<std::size_t>((indenter != 0u) && stat->c != condition_kind::if_);
+                        indenter -= static_cast<std::size_t>((indenter != 0U) && stat->c != condition_kind::if_);
                         break;
                   }
                   default: {
