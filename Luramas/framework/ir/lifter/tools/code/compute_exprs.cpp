@@ -339,7 +339,7 @@ namespace luramas::ir::tools::compute::exprs {
 
                                     const auto min = e->r->extract_integral();
                                     const auto max = e->ev->extract_integral();
-                                    if (!min && max > min && max + 1U == e->non_native->under.bits()) {
+                                    if (const auto vb = tools::exprs::evaluate::value_bits(e->l); !min && max >= min && vb && *vb && *vb <= ((max - min) + 1U)) {
 
                                           e = tools::exprs::generate::cast(e->l, e->non_native);
                                           if (mutate_pm) {
@@ -633,7 +633,7 @@ namespace luramas::ir::tools::compute::exprs {
             }
 
             /* (? ?? ?) and true */
-            if (e == expr_logical::and_ && tools::exprs::values::is_condition(l, false)) {
+            if (e == expr_logical::and_ && tools::exprs::values::is_condition(l, false) && tools::exprs::values::is_boolean(r, true)) {
                   if (mutate_pm) {
                         pm.mut(LURAMAS_DEBUG_LINE);
                   }
@@ -696,8 +696,8 @@ namespace luramas::ir::tools::compute::exprs {
                   if (mutate_pm) {
                         pm.mut(LURAMAS_DEBUG_LINE);
                   }
-                  return l->e == expr_logical::and_ ? tools::exprs::generate::cond(tools::exprs::generate::logical<expr_logical::and_>(l->l, l->r), il::arch::data::bin_kinds::et_)
-                                                    : tools::exprs::generate::cond(tools::exprs::generate::logical<expr_logical::or_>(l->l, l->r), il::arch::data::bin_kinds::et_);
+                  return l->e == expr_logical::and_ ? tools::exprs::generate::cond(tools::exprs::generate::logical<expr_logical::or_>(l->l, l->r), il::arch::data::bin_kinds::et_)
+                                                    : tools::exprs::generate::cond(tools::exprs::generate::logical<expr_logical::and_>(l->l, l->r), il::arch::data::bin_kinds::et_);
             }
             if (r) {
 
@@ -795,6 +795,14 @@ namespace luramas::ir::tools::compute::exprs {
                               /* ?? != INT */
                               return tools::exprs::generate::cond(l->l, il::arch::data::bin_kinds::ne_, l->r);
                         }
+                  }
+
+                  /* ??(NO VOLATILES) or true */
+                  if (e == expr_logical::or_ && tools::exprs::values::is_boolean(r, true) && !l->contains_volatile()) {
+                        if (mutate_pm) {
+                              pm.mut(LURAMAS_DEBUG_LINE);
+                        }
+                        return r;
                   }
             }
             return nullptr;

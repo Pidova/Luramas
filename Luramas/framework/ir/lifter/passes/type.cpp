@@ -61,6 +61,7 @@ namespace luramas::ir::passes {
                         const auto &n = pm[i];
                         if (const auto assigns = ssa.nodes[n].l.assigns.size(); assigns) {
                               n->flags.fdefine = tools::ssa::all_undefined(pm, ssa, i, args).size() == assigns;
+                              pm.mut(LURAMAS_DEBUG_LINE);
                         }
                   }
                   return;
@@ -314,7 +315,8 @@ namespace luramas::ir::passes {
                                           if (!tools::exprs::values::is_general_purpose_register(expr)) {
                                                 e = d.second;
                                           }
-                                          p->meta[id] = tools::exprs::generate::cast(!e ? tools::exprs::generate::reg(r) : e, pm.env_flags.options.odefault_type);
+                                          p->meta[id] = tools::exprs::generate::cast(!e ? tools::exprs::generate::reg_arg(r) : e, pm.env_flags.options.odefault_type);
+                                          pm.mut(LURAMAS_DEBUG_LINE);
                                     }
                               }
                         }

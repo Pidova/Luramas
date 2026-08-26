@@ -1285,13 +1285,13 @@ namespace luramas::ir::tools {
             namespace parameters {
 
                   /* Adjust params based off referenced outs */
-                  void adjust_referenced_out(luramas::ir::passes::pass_manager &pm, const generation::ssa::ssa &ssa, const std::vector<std::optional<luramas_address>> &parent_pages);
+                  bool adjust_referenced_out(luramas::ir::passes::pass_manager &pm, const generation::ssa::ssa &ssa, const std::vector<std::optional<luramas_address>> &parent_pages);
 
                   /* Adjust params based off successor params */
-                  void adjust_by_successors(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages);
+                  bool adjust_by_successors(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages);
 
                   /* Perform all params adjustments */
-                  void pre_adjust(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const generation::ssa::ssa &ssa, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages);
+                  bool pre_adjust(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const generation::ssa::ssa &ssa, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages);
             } // namespace parameters
 
             namespace args {

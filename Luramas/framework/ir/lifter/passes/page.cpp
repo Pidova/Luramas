@@ -140,6 +140,7 @@ namespace luramas::ir::passes {
             }
             for (const auto &p : boost::adaptors::reverse(open_pages)) {
                   pm.push_back(tools::stat::generate::page_function_end(tools::exprs::generate::integral(p)));
+                  pm.mut(LURAMAS_DEBUG_LINE);
             }
             return;
       }
@@ -470,8 +471,10 @@ namespace luramas::ir::passes {
             const auto details = tools::paging::gen_details(pm);
             const auto cfg = generation::cfg::generate(pm.ir, LURAMAS_IR_ENTRY, pm.ir.fhas_pages);
             const auto ssa = generation::ssa::generate(pm.ir, generation::ssa::ssa_flags({.finclude_captures = true, .finclude_references = pm.env_flags.fhas_references}), pm.processed.values, cfg);
-            tools::linked::parameters::pre_adjust(pm, cfg, ssa, details, tools::paging::parent_pages(pm));
-            tools::linked::args::adjust(pm, details);
+            const auto adjusted = tools::linked::parameters::pre_adjust(pm, cfg, ssa, details, tools::paging::parent_pages(pm));
+            if (tools::linked::args::adjust(pm, details) || adjusted) {
+                  pm.mut(LURAMAS_DEBUG_LINE);
+            }
             return;
       }
 
@@ -815,6 +818,7 @@ namespace luramas::ir::passes {
 
                         tools::eliminate::page(pm, page_details, page);
                         pm.remove(page.range);
+                        pm.mut(LURAMAS_DEBUG_LINE);
                   }
             }
             return;

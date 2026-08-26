@@ -17,7 +17,7 @@ namespace luramas::il::lifter::builder {
                       auto temp = b->make_temp();
                       temp = val;
                       if (!temp.r.size) {
-                            temp = temp.cast(types::underlying_type(false, luramas::types::read_type::bits, 0U, b->suggested_bit_set));
+                            temp = temp.cast(types::underlying_type(false, luramas::types::read_type::bits, 0U, b->instruction_interp));
                       }
                       return temp;
                 }(args))...);
@@ -304,7 +304,7 @@ namespace luramas::il::lifter::builder {
       }
       build::expr build::make_temp() {
             expr t(shared_from_this(), this->get_temp());
-            t.cast(this->suggested_bit_set, false);
+            t.cast(this->instruction_interp, false);
             t = 0;
             return t;
       }

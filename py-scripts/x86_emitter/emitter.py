@@ -365,7 +365,8 @@ addr_to_insn = {insn.address: insn for insn in instructions}
 
 # Description capstone
 def desc(insn):
-    hex_op_str = re.sub(r"\b\d+\b", lambda m: "0x%x" % int(m.group()), insn.op_str)
+    hex_op_str = re.sub(r"\b\d+\b", lambda m: "0x%x" %
+                        int(m.group()), insn.op_str)
     return f"{insn.mnemonic} {hex_op_str}".strip()
 
 
@@ -462,12 +463,14 @@ for insn in instructions:
             # Do NOT auto-connect ret edges, leave it for the user to wire up
             ret_edges.append((lbl, var, desc(insn)))
         else:
-            data_lines.append((f"b.emitd({bl}, std::nullopt, RETN);", desc(insn)))
+            data_lines.append(
+                (f"b.emitd({bl}, std::nullopt, RETN);", desc(insn)))
 
     elif is_jump or is_call:
         # Indirect branch: tag the kind, no edge. (USERED HANDLED)
         kind = "CALL" if is_call else "JUMP"
-        data_lines.append((f"b.emitd({bl}, std::nullopt, {kind});", desc(insn)))
+        data_lines.append(
+            (f"b.emitd({bl}, std::nullopt, {kind});", desc(insn)))
     else:
         data_lines.append((f"b.emitd({bl});", desc(insn)))
 
@@ -499,7 +502,8 @@ print(f"{BLOCK_INDENT}}}")
 if ret_edges:
     print(f"\n/* Connect these ret edges manually: */")
     for lbl, var, d in ret_edges:
-        print(f"// b.connect_edge<edges_k::next>({lbl}, {var});   /* {d} -> {lbl} */")
+        print(
+            f"// b.connect_edge<edges_k::next>({lbl}, {var});   /* {d} -> {lbl} */")
 
 # Output
 missing = [t for t in referenced_targets if t not in addr_to_insn]

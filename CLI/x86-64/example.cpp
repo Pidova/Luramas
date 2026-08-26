@@ -20,7 +20,7 @@ std::optional<std::string> luramas::decompile_x86(const std::string & /*code*/, 
 
       static constexpr auto kDefaultMode = kX64;
       luramas::il::X86::lifter::hardware_constants hw_constants;
-      hw_constants.suggested_bit_set = 32U;
+      hw_constants.instruction_interp = 32U;
       hw_constants.MAXVL = 512U;
 
       auto buffer = std::make_shared<luramas::il::ilang>(); /* IL buffer */
@@ -321,6 +321,7 @@ std::optional<std::string> luramas::decompile_x86(const std::string & /*code*/, 
 
       /* Setup environment flags */
       luramas::ir::passes::environment_flags env_flags;
+      env_flags.funary_not_binop_abstract = false;
       env_flags.feliminate_flags = true;
       env_flags.fprimitive_object = true;
       env_flags.fdefault_value_arith = false;
@@ -357,11 +358,8 @@ std::optional<std::string> luramas::decompile_x86(const std::string & /*code*/, 
       };
       format->linebreak.page_function_end_post = 1U;
 
-      for (const auto &u : luramas::ir::lift(closure, env_flags)) {
-            std::cout << u->str() << std::endl;
-      }
-      std::cin.get();
       std::cout << luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::cpp, luramas::ir::lift(closure, env_flags), format) << std::endl;
+      luramas::debug::copy_to_clipboard(LURMAS_GLOBAL_PDUMP);
       std::cin.get();
       return luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::cpp, luramas::ir::lift(closure, env_flags), format);
 }

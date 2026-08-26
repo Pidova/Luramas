@@ -942,6 +942,33 @@ namespace luramas::ir::tools::exprs {
                   const auto max = expr->ev->extract_integral();
                   return min > max ? 0u : (max - min) + 1u;
             }
+
+            /* WIDTH OF THE VALUE AN EXPR CAN ACTUALLY PRODUCE (nullopt == unknown/unbounded) */
+            inline std::optional<luramas_int> value_bits(const std::shared_ptr<ir_stat::ir_expr> &expr) {
+
+                  if (!expr) {
+                        return std::nullopt;
+                  }
+
+                  /* Comparisons and booleans */
+                  if (values::is_condition(expr) || expr->is_tk<tkind::boolean>() || values::types::is_boolean_cast(expr)) {
+                        return luramas_int(1U);
+                  }
+
+                  /* Bitread its own range */
+                  if (values::is_bitread(expr) && expr->r && expr->ev && expr->r->is_integral() && expr->ev->is_integral()) {
+                        const auto min = expr->r->extract_integral();
+                        const auto max = expr->ev->extract_integral();
+                        return min > max ? luramas_int(0U) : (max - min) + 1U;
+                  }
+
+                  /* Explicit basic cast */
+                  if (values::is_cast(expr) && expr->non_native && expr->non_native->basic()) {
+                        return luramas_int(expr->non_native->under.bits());
+                  }
+
+                  return std::nullopt;
+            }
       } // namespace evaluate
 
       template <typename t>

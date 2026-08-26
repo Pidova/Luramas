@@ -3,6 +3,7 @@ namespace luramas::ir {
 
       bool ir_stat::compare(const ir_stat &other, const bool safe, const bool include_labels) const {
 
+            /* Check volatiles */
             if (safe) {
                   if (this->is_volatile() || other.is_volatile()) {
                         return false;

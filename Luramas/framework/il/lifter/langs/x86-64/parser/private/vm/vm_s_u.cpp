@@ -36,7 +36,7 @@ namespace vm {
             const auto &dest = operands.front();
             const auto &count = operands.back();
 
-            const bool is_64bit = (registrar.hw_constants.suggested_bit_set == 64U);
+            const bool is_64bit = (registrar.hw_constants.instruction_interp == 64U);
             const auto count_mask = is_64bit ? 0x3F : 0x1F;
 
             auto temp_count = count & count_mask;
@@ -445,7 +445,7 @@ namespace vm {
       void STOSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             REG_AL.write(REG_AL);
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
                         ++REG_RDI;
@@ -472,7 +472,7 @@ namespace vm {
       void STOSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             REG_EAX.write(REG_EAX);
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
                         REG_RDI += 4U;
@@ -499,7 +499,7 @@ namespace vm {
       void STOSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             REG_RAX.write(REG_RAX);
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
                         REG_RDI += 8U;
@@ -528,7 +528,7 @@ namespace vm {
       void STOSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             REG_AX.write(REG_AX);
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
 

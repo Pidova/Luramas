@@ -65,6 +65,8 @@ namespace luramas::ir::passes {
 
                         /* Reinitialize args */
                         if (fmutated) {
+
+                              pm.mut(LURAMAS_DEBUG_LINE);
                               for (const auto &[exp, a_es] : page.references) {
 
                                     for (const auto &i : a_es) {

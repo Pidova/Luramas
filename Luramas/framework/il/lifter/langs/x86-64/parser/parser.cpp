@@ -28,7 +28,7 @@ namespace parser {
             auto build = std::make_shared<luramas::il::lifter::builder::build>();
             build->details = std::move(dism.details);
             build->original_address_data = std::move(dism.original_address_data);
-            build->suggested_bit_set = registrar.hw_constants.suggested_bit_set;
+            build->instruction_interp = registrar.hw_constants.instruction_interp;
 
             for (auto idx = 0U; idx < dism.data.size(); ++idx) {
 

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # Download https://www.intel.com/content/dam/develop/public/us/en/include/intrinsics-guide/data-3-6-9.xml
 import xmltodict
 import json
@@ -1718,7 +1718,8 @@ def parse_intrinsic(intrinsic):
                 type_str = r.get("@type")
                 parsed_type = get_parsed_type(type_str)
                 varname = r.get("@varname")
-                flag = varname[:-3] if varname and varname.endswith("_in") else ""
+                flag = varname[:-
+                               3] if varname and varname.endswith("_in") else ""
                 # Set index: if varname is "out" or flag exists, index is 0; otherwise use current index and increment.
                 if varname == "out" or flag:
                     index = 0
@@ -1758,7 +1759,8 @@ def parse_intrinsic(intrinsic):
                 param_index += 1
 
             parsed_params.append(
-                {"type": parsed_type, "varname": varname, "flag": flag, "index": index}
+                {"type": parsed_type, "varname": varname,
+                    "flag": flag, "index": index}
             )
 
     # Parse "instruction" field

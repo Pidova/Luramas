@@ -151,6 +151,9 @@ namespace luramas::builtins {
 
                   /* (Free cache) RESULT = MEMORY_CACHE_FREE(VALUE) */
                   static constexpr auto FREE = data::func(LURAMAS_MAKE_BUILTIN_NAME("MEMORY_CACHE_FREE"), 1, 1);
+
+                  /* (Clear/flush cached memory and write back modified lines) RESULT = MEMORY_CACHE_WRITE_BACK_CLEAR();*/
+                  static constexpr auto WRITE_BACK_CLEAR = data::func(LURAMAS_MAKE_BUILTIN_NAME("MEMORY_CACHE_WRITE_BACK_CLEAR"), 0, 0);
             } // namespace CACHE
 
             /* (Allocate memory) RESULT = MEMORY_ALLOC(VALUE) */

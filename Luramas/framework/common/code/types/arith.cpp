@@ -376,15 +376,12 @@ std::pair<std::uint16_t, std::uint16_t> luramas_int::first_trailing_ones() const
 }
 luramas_int luramas_int::sign_extend(const std::uint16_t s) const {
 
-      auto result = *this;
-      const auto width = this->bit_width();
-      if (s == width) {
+      if (s == 0U || s >= MAX_BIT_WIDTH) {
             return *this;
       }
-      if (result & (luramas_int(1) << (width - 1))) {
-            result |= ((~luramas_int(0)) << width);
-      }
-      return result & ((luramas_int(1) << s) - 1);
+      const auto bit = luramas_int(1) << (s - 1);
+      const auto value = *this & ((bit << 1) - 1);
+      return (value & bit) ? value - (bit << 1) : value;
 }
 luramas_int luramas_int::zero_extend(const std::uint16_t s) const {
       return s == this->bit_width() ? *this : *this & ((luramas_int(1) << s) - 1);

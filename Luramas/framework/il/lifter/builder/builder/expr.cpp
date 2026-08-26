@@ -145,6 +145,11 @@ namespace luramas::il::lifter::builder {
                         l.b->make<arch::opcodes::OP_GETSTACK>(rv.r.r, r.integral);
                         break;
                   }
+                  case expr_tkind::memory: {
+                        rv.emit(l.b, l.b->get_temp());
+                        l.b->make<arch::opcodes::OP_MEMREAD>(rv.r.r, r.r.r, r.bits());
+                        break;
+                  }
                   default: {
                         rv.emit(r);
                         break;
@@ -936,7 +941,7 @@ namespace luramas::il::lifter::builder {
                         break;
                   }
             }
-            return this->b->suggested_bit_set;
+            return this->b->instruction_interp;
       }
       luramas::types::signess build::expr::signess() const {
 

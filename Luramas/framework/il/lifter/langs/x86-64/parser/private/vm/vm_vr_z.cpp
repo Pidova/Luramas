@@ -360,7 +360,7 @@ namespace vm {
             REG_ZMM5 = 0U;
             REG_ZMM6 = 0U;
             REG_ZMM7 = 0U;
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   REG_ZMM8 = 0U;
                   REG_ZMM9 = 0U;
@@ -384,7 +384,7 @@ namespace vm {
             REG_ZMM5.fill(128U, 0U);
             REG_ZMM6.fill(128U, 0U);
             REG_ZMM7.fill(128U, 0U);
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   REG_ZMM8.fill(128U, 0U);
                   REG_ZMM9.fill(128U, 0U);
@@ -404,7 +404,9 @@ namespace vm {
             return;
       }
 
-      void WBINVD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void WBINVD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+
+            klura_call(luramas::builtins::MEMORY::CACHE::WRITE_BACK_CLEAR, {}, {});
             return;
       }
 
@@ -537,7 +539,7 @@ namespace vm {
 
       void XLATB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            switch (registrar.hw_constants.suggested_bit_set) {
+            switch (registrar.hw_constants.instruction_interp) {
                   case 8U:
                   case 16U: {
                         REG_AL = REG_BX[REG_AL];

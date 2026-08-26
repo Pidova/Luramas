@@ -207,6 +207,14 @@ namespace luramas::ir::execution::errors {
                         return "Invalid rvalue to assign to";
                   }
 
+                        /* Support errors */
+                  case kinds::unsupported_expr_tkind: {
+                        return "Unsupported expression tkind";
+                  }
+                  case kinds::unsupported_expr_type: {
+                        return "Unsupported expression type";
+                  }
+
                         /* Misc */
                   case kinds::null_pointer: {
                         return "Pointer is null";

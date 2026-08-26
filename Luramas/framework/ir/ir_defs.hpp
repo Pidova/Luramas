@@ -739,6 +739,7 @@ namespace luramas::ir {
                   luramas_flag fallow_ternaries = true;                   /* Allow the use of ternaries or unfold ternaries? */
                   luramas_flag fenable_aggresive_threadout = false;       /* Enables a pass that tries to aggressively remove labels */
                   luramas_flag fenable_block_merging = false;             /* Enables a pass that merges basic blocks */
+                  luramas_flag funary_not_binop_abstract = true;          /* Unary binary operation (not) is abstract? (Does not reflect C standard "!"?) */
 
                   /* Arith safety */
                   struct safety {

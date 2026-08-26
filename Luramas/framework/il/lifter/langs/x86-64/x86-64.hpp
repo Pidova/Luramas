@@ -8,8 +8,8 @@ namespace luramas::il::X86::lifter {
 
       /* Hardware constants CPU use */
       struct hardware_constants {
-            std::uint8_t suggested_bit_set = 0u; /* Max arch bitset supported by CPU */
-            std::uint16_t MAXVL = 0u;            /* Max vector length */
+            std::uint8_t instruction_interp = 0u; /* Abstract interpretation mode */
+            std::uint16_t MAXVL = 0u;             /* Max vector length */
       };
 
       /* Lifts x86 disassembly to IL disassembly */

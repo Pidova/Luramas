@@ -315,7 +315,7 @@ namespace vm {
             const auto &dest = operands.front();
             const auto &src = operands.back();
 
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   MOVSXD(registrar, operands);
             } else {
@@ -598,8 +598,8 @@ namespace vm {
 
       void CALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            build::page_calls(registrar, operands, registrar.hw_constants.suggested_bit_set == 64U ? REG_RSP : registrar.hw_constants.suggested_bit_set == 32U ? REG_ESP
-                                                                                                                                                               : REG_SP);
+            build::page_calls(registrar, operands, registrar.hw_constants.instruction_interp == 64U ? REG_RSP : registrar.hw_constants.instruction_interp == 32U ? REG_ESP
+                                                                                                                                                                 : REG_SP);
             return;
       }
 
@@ -937,7 +937,7 @@ namespace vm {
 
             const auto &dest = operands.front();
             const auto &src = operands.back();
-            const auto accumulator = registrar.hw_constants.suggested_bit_set == 64U ? REG_RAX : REG_EAX;
+            const auto accumulator = registrar.hw_constants.instruction_interp == 64U ? REG_RAX : REG_EAX;
 
             FZF = 1U;
             kif(accumulator == dest) {
@@ -1190,7 +1190,7 @@ namespace vm {
 
             const auto &dest = operands.front();
             const auto &src = operands.back();
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   dest.write(0U, 63U, LURAMAS_FBUILD_EXTEND_FLOAT(src.read(0U, 31U)));
             } else {
                   dest.write(0U, 31U, LURAMAS_FBUILD_EXTEND_FLOAT(src.read(0U, 31U)));

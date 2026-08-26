@@ -282,7 +282,7 @@ namespace vm {
             const auto &src = operands[1U];
             const auto &imm = operands.back();
 
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   const auto temp = luramas::il::lifter::builder::libraries::structure::concat(f, dest, src) >> (imm * 8U);
                   dest.write(0U, 63U, temp.read(0U, 63));
             } else {
@@ -1021,7 +1021,7 @@ namespace vm {
 
       void MOVSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   kif(FDF == 0U);
                   {
@@ -1053,7 +1053,7 @@ namespace vm {
 
       void MOVSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   kif(FDF == 0U);
                   {
@@ -1093,7 +1093,7 @@ namespace vm {
 
       void MOVSQ(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   kif(FDF == 0U);
                   {
@@ -1139,7 +1139,7 @@ namespace vm {
 
       void MOVSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.suggested_bit_set == 64U) {
+            if (registrar.hw_constants.instruction_interp == 64U) {
 
                   kif(FDF == 0U);
                   {
@@ -1353,7 +1353,7 @@ namespace vm {
             const auto &src1 = operands[2U];
             const auto &src2 = operands.back();
 
-            if (registrar.hw_constants.suggested_bit_set == 32U) {
+            if (registrar.hw_constants.instruction_interp == 32U) {
                   src1 = REG_EDX;
                   const auto product = src1 * src2;
                   dest1 = product.read(0, 31);

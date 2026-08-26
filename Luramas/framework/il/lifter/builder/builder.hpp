@@ -553,7 +553,7 @@ namespace luramas::il::lifter::builder {
 
             luramas_address idx = 0u;                                                                                                    /* Index of current IL disassembly placeholder */
             luramas_address pc = 0u;                                                                                                     /* Current PC */
-            std::uint8_t suggested_bit_set = 0u;                                                                                         /* Bit set to use */
+            std::uint8_t instruction_interp = 0u;                                                                                        /* Bit set to use */
             profile::details details;                                                                                                    /* Profile details */
             std::shared_ptr<luramas::il::ilang> il = nullptr;                                                                            /* Linked IL */
             std::shared_ptr<luramas::il::disassembly> current = nullptr;                                                                 /* Current disassembly */

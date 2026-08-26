@@ -110,7 +110,7 @@ def parse(text):
     seen = {}  # (namespace, name) -> first hex address kept
     for i, m in enumerate(marks):
         stop = marks[i + 1].start() if i + 1 < len(marks) else len(text)
-        block = text[m.start() : stop]
+        block = text[m.start(): stop]
 
         hdr = RE_REGADDR.match(block)
         hex_addr = hdr.group(1).upper()
@@ -143,11 +143,11 @@ def parse(text):
             return clean(seg[: e.start()] if e else seg)
 
         if access_m:
-            desc = cut(block[access_m.end() :]) or clean(
-                block[name_m.end() : access_m.start()]
+            desc = cut(block[access_m.end():]) or clean(
+                block[name_m.end(): access_m.start()]
             )
         else:
-            desc = cut(block[name_m.end() :])
+            desc = cut(block[name_m.end():])
 
         yield ns, name, hex_addr, desc
 

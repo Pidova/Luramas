@@ -23,12 +23,15 @@ namespace luramas::ir::execution::exprs {
                   }
                   case expr_kinds::arith: {
 
-                        if (auto l = execute(env, expr->l); l) {
+                        auto l = execute(env, expr->l);
+                        if (l) {
                               return l;
                         }
-                        if (auto r = execute(env, expr->r); r) {
+                        auto r = execute(env, expr->r);
+                        if (r) {
                               return r;
                         }
+
                         break;
                   }
                   case expr_kinds::condition: {
@@ -107,14 +110,22 @@ namespace luramas::ir::execution::exprs {
                               case tkind::object: {
                                     break;
                               }
-                              default: {
+                              case tkind::controller: {
                                     break;
+                              }
+                              case tkind::extpr: {
+                                    break;
+                              }
+                              default: {
+                                    exe_error<errors::kinds::unsupported_expr_tkind>(result);
+                                    return result;
                               }
                         }
                         break;
                   }
                   default: {
-                        break;
+                        exe_error<errors::kinds::unsupported_expr_type>(result);
+                        return result;
                   }
             }
             return result;

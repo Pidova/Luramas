@@ -1862,6 +1862,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
             for (const auto &[k, v] : pm.processed.labels) {
                   if (const auto it = pm.processed.jlabels_refs.find(k); it == pm.processed.jlabels_refs.end() || it->second.empty()) {
                         pm.remove(pm[v]);
+                        pm.mut(LURAMAS_DEBUG_LINE);
                   }
             }
       }

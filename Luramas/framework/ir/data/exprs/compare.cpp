@@ -3,9 +3,12 @@ namespace luramas::ir {
 
       bool ir_stat::ir_expr::compare(const ir_expr &other, const bool safe, const bool nest) const {
 
+            /* Wild card can be anything */
             if (this->flags.fglobal_wild || other.flags.fglobal_wild) {
                   return true;
             }
+
+            /* Check volatiles */
             if (safe) {
                   if (this->is_volatile() || other.is_volatile()) {
                         return false;

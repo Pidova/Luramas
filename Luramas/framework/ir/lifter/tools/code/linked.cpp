@@ -4,8 +4,9 @@ namespace luramas::ir::tools::linked {
 
       namespace parameters {
 
-            void adjust_referenced_out(luramas::ir::passes::pass_manager &pm, const generation::ssa::ssa &ssa, const std::vector<std::optional<luramas_address>> &parent_pages) {
+            bool adjust_referenced_out(luramas::ir::passes::pass_manager &pm, const generation::ssa::ssa &ssa, const std::vector<std::optional<luramas_address>> &parent_pages) {
 
+                  bool result = false;
                   const auto refed_out = tools::ssa::referenced_out_of_page(pm, ssa, parent_pages);
 
                   boost::unordered_flat_map<luramas_address, boost::unordered_flat_set<luramas_register>> pending_defs;
@@ -43,24 +44,32 @@ namespace luramas::ir::tools::linked {
                                     current_casts[e->l->reg] = e;
                               }
                         }
+                        luramas_registers before;
+                        for (const auto &[r, _] : def->args) {
+                              before.emplace_back(r);
+                        }
+
                         def->args.clear();
                         def->meta.clear();
                         for (const auto &r : s) {
-                              if (def->args.try_emplace(r, tools::exprs::generate::reg_arg(r)).second) {
-                                    if (const auto it = current_casts.find(r); it != current_casts.end()) {
-                                          def->meta.emplace_back(it->second);
-                                    } else {
-                                          def->meta.emplace_back(nullptr);
-                                    }
-                              }
+                              def->args.try_emplace(r, tools::exprs::generate::reg_arg(r));
                         }
+
+                        luramas_registers after;
+                        for (const auto &[r, _] : def->args) {
+                              const auto it = current_casts.find(r);
+                              def->meta.emplace_back(it != current_casts.end() ? it->second : nullptr);
+                              after.emplace_back(r);
+                        }
+                        result |= before != after;
                         current_casts.clear();
                   }
-                  return;
+                  return result;
             }
 
-            void adjust_by_successors(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages) {
+            bool adjust_by_successors(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages) {
 
+                  bool result = false;
                   const auto successors = tools::paging::successor_pages(pm, page_details, cfg, parent_pages, tools::paging::parents_encapsulating_pages(tools::paging::encapsulating_pages(pm, page_details, parent_pages)));
                   const auto defs = tools::paging::map_definitions(page_details);
 
@@ -105,11 +114,15 @@ namespace luramas::ir::tools::linked {
                         /* Update */
                         for (const auto &[reg, data] : args) {
                               if (def->args.try_emplace(reg, data.first).second) {
-                                    def->meta.emplace_back(data.second ? tools::exprs::generate::cast(data.first, data.second) : nullptr);
+
+                                    /* Args is sorted has to be inserted at the same index */
+                                    const auto idx = static_cast<std::size_t>(std::distance(def->args.begin(), def->args.find(reg)));
+                                    def->meta.insert(def->meta.begin() + std::min(idx, def->meta.size()), data.second ? tools::exprs::generate::cast(data.first, data.second) : nullptr);
+                                    result = true;
                               }
                         }
                   }
-                  return;
+                  return result;
             }
 
             static void adjust_dead_removal(luramas::ir::passes::pass_manager & /*pm*/) {
@@ -117,12 +130,12 @@ namespace luramas::ir::tools::linked {
                   return;
             }
 
-            void pre_adjust(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const generation::ssa::ssa &ssa, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages) {
+            bool pre_adjust(luramas::ir::passes::pass_manager &pm, const generation::cfg::cfg &cfg, const generation::ssa::ssa &ssa, const tools::paging::details &page_details, const std::vector<std::optional<luramas_address>> &parent_pages) {
 
-                  adjust_referenced_out(pm, ssa, parent_pages);
-                  adjust_by_successors(pm, cfg, page_details, parent_pages);
+                  const auto refed = adjust_referenced_out(pm, ssa, parent_pages);
+                  const auto succs = adjust_by_successors(pm, cfg, page_details, parent_pages);
                   adjust_dead_removal(pm);
-                  return;
+                  return refed || succs;
             }
       } // namespace parameters
 

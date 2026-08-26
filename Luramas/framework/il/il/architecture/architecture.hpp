@@ -204,7 +204,7 @@ namespace luramas::il::arch {
                   /* Unary */
                   len_,    /* (#) Length of array/vector/table. (L) */
                   minus_,  /* (-) Unary minus (MI) */
-                  not_,    /* (NOT/!) Unary not (N) */
+                  not_,    /* (NOT/!) Unary not or abstract not (N) */
                   bitnot_, /* (~) Unary bitnot (BN) */
                   plus_,   /* (+) Unary plus (P) */
                   ref_,    /* (&) Unary reference (R) */
@@ -334,9 +334,9 @@ namespace luramas::il::arch {
                         }
                         case bin_kinds::sub_: {
                               return bin_kinds::add_;
-                        }
+                        }                                                                                                                                                                                                                                                                                                                                                                                                                                             
                         case bin_kinds::mul_: {
-                              return bin_kinds::div_;
+                              return bin_kinds::div_;      
                         }
                         case bin_kinds::div_: {
                               return bin_kinds::mul_;
@@ -378,13 +378,13 @@ namespace luramas::il::arch {
                               return bin_kinds::eq_;
                         }
                         case bin_kinds::lt_: {
-                              return bin_kinds::gt_;
+                              return bin_kinds::gte_;
                         }
                         case bin_kinds::lte_: {
                               return bin_kinds::gt_;
                         }
                         case bin_kinds::gt_: {
-                              return bin_kinds::lt_;
+                              return bin_kinds::lte_;
                         }
                         case bin_kinds::gte_: {
                               return bin_kinds::lt_;

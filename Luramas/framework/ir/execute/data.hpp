@@ -90,6 +90,9 @@ namespace luramas::ir::execution {
                   assign_invalid_constant, /* Assigned to an constant value */
                   assign_invalid_rvalue,   /* Could not use value in rvalue */
 
+                  /* Support */
+                  unsupported_expr_tkind, /* Unsupported expr tkind */
+                  unsupported_expr_type,  /* Unsupported expr type */
                   /* Misc */
                   null_pointer, /* Pointer is null */
 
