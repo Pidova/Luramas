@@ -1,0 +1,3135 @@
+~ 0000-0000 noop x1: Unreachable code
+0001 Page generate main page m d=6335
+  ; INSERTED page_function_start (100) { ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  -r248 = 0
+  -setflag(2, r248)
+  -r249 = 0
+  -setflag(4, r249)
+  -r250 = 0
+  -setflag(128, r250)
+  -r251 = 0
+  -setflag(256, r251)
+  -r252 = 0
+  -setflag(512, r252)
+  -r253 = 0
+  -setflag(4096, r253)
+  ... 6295 more
+0002 Complete pages m d=5349
+  ; INSERTED DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) ON page_function_start (20) {
+  ; INSERTED } page_function_end(20) ON return ;
+  ; INSERTED DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) ON page_function_start (28) {
+  ; INSERTED } page_function_end(28) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) ON page_function_start (100) {
+  ; INSERTED } page_function_end(100) ON return ;
+  ; INSERTED DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) ON page_function_start (98) {
+  ; INSERTED } page_function_end(98) ON [PK] [RT=r44] return ; 20, 98
+  +    [PK] DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  +        [PK] DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  -        page_function_start (28) {
+  -            r248 = (r44 - 4)
+  -            r248 = int32_t(r248)
+  -            r248 = int32_t(r248)
+  -            r44 = r248
+  -            r36 = int64_t(r36)
+  -            memset<int32_t>(r44) = r36
+  -            r44 = int64_t(r44)
+  -            r36 = r44
+  -            r248 = int32_t(r248)
+  ... 5334 more
+~ 0003-0005 noop x3: Close pages, Merge labels into pages, Page promotion
+0006 Allign pages m d=5
+  ; REMOVING } page_function_end(98)
+  ; INSERTED } page_function_end(98) ON } page_function_end(28)
+  ; REMOVING } page_function_end(28)
+  ; INSERTED } page_function_end(28) ON } page_function_end(98)
+  -    } page_function_end(28)
+  -} page_function_end(98)
+  +    } page_function_end(98)
+  +} page_function_end(28)
+0007 Page adjust linked m d=21
+  -    [PK] DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  +    [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a253, a255, a256, a258, a261, a262, a263, a266, a274, 
+  -    page_function_call<20>()[r251, 82]
+  +    page_function_call<20>(a36, a44, a248, a250, a252, a256, a258, a261, a263, a266, a280, a283, a287, a290, 
+  -    page_function_call<28>()[r253, 82]
+  +    page_function_call<28>(a36, a39, a40, a43, a44, a248, a250, a253, a256, a258, a260, a263, a266, a268, a27
+  -        [PK] DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  +        [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a256, a258, a261, a263, a266, a280, a283, a287, a2
+  -    [PK] DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  +    [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44, a248, a250, a253, a256, a258, a260, a263, a266, a268, a27
+  -    page_function_goto<98>()
+  +    page_function_goto<98>(a36, a44, a248, a250, a256, a266, a268, a271, a286, a289, a294, a297, a299)
+  ... 2 more
+~ 0008-0016 noop x9: Label flatten*2, Branch redirection*2, Unreachable code, Close pages, Merge labels into pages, Page promotion, Allign pages
+0017 Constant propagation m d=5065
+  ; REMOVING r252 = int32_t(r252) x5
+  ; REMOVING r252 = (r44 + 4) x2
+  ; REMOVING r248 = int32_t(r248) x13
+  ; REMOVING r250 = r44 x2
+  ; REMOVING r251 = 0 x68
+  ; REMOVING r250 = r252 x42
+  ; REMOVING r249 = 0 x41
+  ; REMOVING r248 = r249 x54
+  ; REMOVING r253 = int32_t(r253) x18
+  ; REMOVING r299 = (r289 or r297) x3
+  ; REMOVING r300 = 0 x4
+  ; REMOVING r296 = int32_t(r296) x4
+  ; REMOVING r298 = 0 x4
+  ; REMOVING r292 = int32_t(r292) x5
+  ; REMOVING r291 = int32_t(r291) x3
+  ; REMOVING r295 = 0 x4
+  ; REMOVING r293 = memread<int32_t>(r252) x3
+  ; REMOVING r288 = int32_t(r288) x5
+  ; REMOVING r290 = 0 x4
+  ; REMOVING r283 = int32_t(r283) x4
+  ; REMOVING r284 = int32_t(r284) x4
+  ; REMOVING r287 = 0 x4
+  ; REMOVING r285 = memread<int32_t>(r252) x3
+  ; REMOVING r282 = (r281 & 1) x5
+  ; REMOVING r274 = r280 x3
+  ; REMOVING r274 = r278 x5
+  ; REMOVING r274 = r276 x5
+  ; REMOVING r274 = r266 x4
+  ; REMOVING r271 = r273 x5
+  ; REMOVING r268 = r270 x6
+  ; REMOVING r272 = 0 x6
+  ; REMOVING r269 = 0 x7
+  ; REMOVING r267 = 0 x10
+  ; REMOVING r265 = int32_t(r265) x6
+  ; REMOVING r265 = (r253 == 0) x3
+  ; REMOVING r264 = int32_t(r264) x7
+  ; REMOVING r264 = (r263 & 1) x4
+  ; REMOVING r263 = (r253 >> 31) x3
+  ; REMOVING r262 = int32_t(r262) x6
+  ; REMOVING r262 = (r253 < r35) x2
+  ; REMOVING r261 = int32_t(r261) x11
+  ; REMOVING r261 = (r260 > 15) x4
+  ; REMOVING r260 = (r257 + r258) x4
+  ; REMOVING r258 = (r259 & 15) x5
+  ; REMOVING r257 = (r35 & 15) x6
+  ; REMOVING r256 = uint1_t(r256) x5
+  ; REMOVING r253 = (r35 + r254) x2
+  ; REMOVING r252 = (r250 + -32) x7
+  ; REMOVING r250 = r36 x50
+  ; REMOVING r253 = memread<int32_t>(r252) x4
+  ; REMOVING r252 = (r250 + -24) x10
+  ; REMOVING r250 = r255
+  ; REMOVING r35 = int32_t(r35) x13
+  ; REMOVING r255 = (r250 + 0)
+  ; REMOVING r250 = r254
+  ; REMOVING r253 = 0 x3
+  ; REMOVING r252 = int64_t(r252) x16
+  ; REMOVING r250 = int64_t(r252)
+  ; REMOVING r253 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r252 = (r250 + -36) x6
+  ; REMOVING r250 = int32_t(r250) x9
+  ; REMOVING r248 = 3735928559
+  ; REMOVING r274 = (r273 & 1) x3
+  ; REMOVING r266 = r272 x3
+  ; REMOVING r266 = r270 x3
+  ; REMOVING r266 = r268 x7
+  ; REMOVING r266 = r258 x3
+  ; REMOVING r263 = r265 x6
+  ; REMOVING r260 = r262 x2
+  ; REMOVING r264 = 0 x9
+  ; REMOVING r261 = 0 x6
+  ; REMOVING r259 = 0 x7
+  ; REMOVING r257 = int32_t(r257) x9
+  ; REMOVING r257 = (r250 == 0) x3
+  ; REMOVING r256 = int32_t(r256) x7
+  ; REMOVING r255 = int32_t(r255) x8
+  ; REMOVING r254 = uint1_t(r254) x4
+  ; REMOVING r252 = 0 x5
+  ; REMOVING r250 = (r35 ~ 3735928559)
+  ; REMOVING r253 = memread<int32_t>(r250) x7
+  ; REMOVING r256 = 0 x5
+  ; REMOVING r253 = r248 x4
+  ; REMOVING r251 = flag(4) x3
+  ; REMOVING r252 = uint1_t(r252) x9
+  ; REMOVING r297 = uint32_t(r297) x4
+  ; REMOVING r296 = uint32_t(r296) x3
+  ; REMOVING r295 = uint32_t(r295) x3
+  ; REMOVING r293 = int32_t(r293) x3
+  ; REMOVING r291 = uint32_t(r291) x3
+  ; REMOVING r259 = int32_t(r259) x11
+  ; REMOVING r292 = memread<int32_t>(r252) x2
+  ; REMOVING r253 = r253 x3
+  ; REMOVING r290 = (r289 & 1) x2
+  ; REMOVING r282 = r288 x2
+  ; REMOVING r282 = r286 x4
+  ; REMOVING r282 = r284 x4
+  ; REMOVING r282 = r274 x4
+  ; REMOVING r279 = r281 x4
+  ; REMOVING r276 = r278 x4
+  ; REMOVING r280 = 0 x3
+  ; REMOVING r277 = 0 x4
+  ; REMOVING r275 = 0 x4
+  ; REMOVING r273 = int32_t(r273) x4
+  ; REMOVING r273 = (int32_t(r259) == 0) x4
+  ; REMOVING r272 = int32_t(r272) x4
+  ; REMOVING r272 = (r271 & 1) x7
+  ; REMOVING r271 = (int32_t(r259) >> 31) x4
+  ; REMOVING r269 = uint32_t(r269) x4
+  ; REMOVING r269 = (r270 < r253) x4
+  ; REMOVING r267 = uint32_t(r267) x4
+  ; REMOVING r267 = r268 x2
+  ; REMOVING r266 = int32_t(r266) x5
+  ; REMOVING r263 = (r264 & 15) x2
+  ; REMOVING r262 = uint1_t(r262) x2
+  ; REMOVING r255 = r258 x4
+  ; REMOVING r258 = (r257 - 2147483648) x4
+  ; REMOVING r257 = (r255 ~ 2147483648) x4
+  ; REMOVING r255 = int32_t(r253) x4
+  ; REMOVING r255 = r256
+  ; REMOVING r252 = (r250 + -20) x4
+  ; REMOVING r288 = (r287 ~= 0)
+  ; REMOVING r287 = (r286 & 0)
+  ; REMOVING r286 = (r283 & r285)
+  ; REMOVING r285 = (r35 ~ r253)
+  ; REMOVING r283 = (r35 ~ r284)
+  ; REMOVING r268 = 0 x7
+  ; REMOVING r266 = 7 x3
+  ; REMOVING r261 = (r35 < r262)
+  ; REMOVING r260 = int32_t(r260) x8
+  ; REMOVING r260 = (r257 < r258)
+  ; REMOVING r253 = (r35 - r254)
+  ; REMOVING r248 = 1 x5
+  ; REMOVING r251 = int32_t(r251) x4
+  ; REMOVING r281 = int32_t(r281) x3
+  ; REMOVING r281 = (r280 ~ r282) x3
+  ; REMOVING r282 = flag(2) x3
+  ; REMOVING r280 = (r279 & 1) x5
+  ; REMOVING r279 = (r251 >> 31) x3
+  ; REMOVING r278 = (r277 & 1) x3
+  ; REMOVING r270 = r276 x3
+  ; REMOVING r270 = r274 x4
+  ; REMOVING r270 = r272 x5
+  ; REMOVING r270 = r262 x4
+  ; REMOVING r267 = r269 x6
+  ; REMOVING r264 = 7 x3
+  ; REMOVING r265 = 0 x8
+  ; REMOVING r263 = 0 x8
+  ; REMOVING r261 = (r251 == 0) x2
+  ; REMOVING r260 = (r259 & 1) x3
+  ; REMOVING r259 = (r251 >> 31) x2
+  ; REMOVING r258 = int32_t(r258) x5
+  ; REMOVING r258 = (r257 & 1) x4
+  ; REMOVING r257 = (r35 >> r256) x2
+  ; REMOVING r256 = (r254 & 31) x3
+  ; REMOVING r254 = (r255 - int32_t(r250)) x2
+  ; REMOVING r253 = uint1_t(r253) x3
+  ; REMOVING r251 = (r35 << int32_t(r250)) x2
+  ; REMOVING r251 = r248 x5
+  ; REMOVING r248 = 149 x2
+  ; REMOVING r250 = uint1_t(r250) x2
+  ; REMOVING r271 = 0 x3
+  ; REMOVING r270 = (r269 & 1)
+  ; REMOVING r268 = (r262 ~ r267)
+  ; REMOVING r262 = r266
+  ; REMOVING r262 = r264
+  ; REMOVING r262 = r254
+  ; REMOVING r259 = r261
+  ; REMOVING r256 = r258
+  ; REMOVING r260 = 0 x3
+  ; REMOVING r257 = 0 x5
+  ; REMOVING r254 = int8_t(r254)
+  ; REMOVING r252 = (r251 & 1)
+  ; REMOVING r251 = (r248 >> 31)
+  ; REMOVING r248 = (r35 | r38)
+  ; REMOVING r250 = r253 x3
+  ; REMOVING r281 = (r280 & 1)
+  ; REMOVING r273 = r279
+  ; REMOVING r273 = r277
+  ; REMOVING r273 = r275
+  ; REMOVING r273 = r265
+  ; REMOVING r266 = 0 x3
+  ; REMOVING r264 = (r253 == 0)
+  ; REMOVING r263 = int32_t(r263) x6
+  ; REMOVING r263 = (r262 & 1)
+  ; REMOVING r262 = (r253 >> 31)
+  ; REMOVING r261 = uint1_t(r261)
+  ; REMOVING r258 = int8_t(r258)
+  ; REMOVING r252 = int8_t(r252)
+  ; REMOVING r257 = (r256 & 1) x2
+  ; REMOVING r256 = (r38 >> r255)
+  ; REMOVING r255 = (int8_t(r252) - 1)
+  ; REMOVING r248 = 31
+  ; REMOVING r264 = r266 x6
+  ; REMOVING r252 = r248 x2
+  ; REMOVING r251 = flag(8) x3
+  ; REMOVING r248 = r248 x2
+  ; REMOVING r285 = uint32_t(r285) x2
+  ; REMOVING r285 = (r284 ~= 0) x2
+  ; REMOVING r284 = (r283 & 0) x2
+  ; REMOVING r283 = (r281 & r282) x2
+  ; REMOVING r282 = (r40 ~ r254)
+  ; REMOVING r281 = (r40 ~ r248)
+  ; REMOVING r272 = r278 x2
+  ; REMOVING r272 = r276 x2
+  ; REMOVING r272 = r274 x2
+  ; REMOVING r272 = int32_t(r264)
+  ; REMOVING r269 = r271 x5
+  ; REMOVING r254 = int32_t(r254) x8
+  ; REMOVING r270 = 0 x2
+  ; REMOVING r269 = r275 x4
+  ; REMOVING r263 = (int32_t(r254) == 0) x2
+  ; REMOVING r260 = uint32_t(r260) x3
+  ; REMOVING r260 = (r40 < r248)
+  ; REMOVING r40 = uint32_t(r40)
+  ; REMOVING r259 = (r257 < r258) x2
+  ; REMOVING r258 = (int32_t(r248) & 15) x2
+  ; REMOVING r257 = (r40 & 15)
+  ; REMOVING r253 = (r252 - 2147483648) x2
+  ; REMOVING r252 = (r250 ~ 2147483648) x2
+  ; REMOVING r250 = int32_t(r248) x2
+  ; REMOVING r250 = uint64_t(r250)
+  ; REMOVING r253 = uint64_t(r253)
+  ; REMOVING r253 = (r252 % r38)
+  ; REMOVING r35 = uint64_t(r250)
+  ; REMOVING r250 = (r249 / r38)
+  ; REMOVING r249 = int32_t(r249)
+  ; REMOVING r35 = r253
+  ; REMOVING r38 = int32_t(r38)
+  ; REMOVING r248 = (r253 >> 31)
+  ; REMOVING r252 = (r250 + -28) x7
+  ; REMOVING r290 = (r287 and r289) x2
+  ; REMOVING r283 = (r280 and r282) x2
+  ; REMOVING r293 = 0 x4
+  ; REMOVING r291 = 0 x5
+  ; REMOVING r289 = (r250 >= 0) x3
+  ; REMOVING r285 = int32_t(r285) x2
+  ; REMOVING r286 = int32_t(r286) x2
+  ; REMOVING r288 = 0 x4
+  ; REMOVING r284 = 0 x4
+  ; REMOVING r282 = (r250 < 0) x2
+  ; REMOVING r279 = int32_t(r279) x2
+  ; REMOVING r278 = int32_t(r278) x3
+  ; REMOVING r281 = 0 x4
+  ; REMOVING r277 = (r276 & 1) x4
+  ; REMOVING r269 = r273 x4
+  ; REMOVING r269 = r261 x4
+  ; REMOVING r262 = 0 x7
+  ; REMOVING r261 = r262
+  ; REMOVING r260 = (r250 == 0) x3
+  ; REMOVING r259 = (r258 & 1) x4
+  ; REMOVING r258 = (r250 >> 31) x3
+  ; REMOVING r257 = (r250 < r35) x3
+  ; REMOVING r250 = (r35 + 1) x2
+  ; REMOVING r250 = int64_t(r250) x11
+  ; REMOVING r248 = 288
+  ; REMOVING r258 = r248
+  ; REMOVING r257 = r248
+  ; REMOVING r255 = (r250 or r252)
+  ; REMOVING r253 = flag(4)
+  ; REMOVING r297 = (r296 ~= 0)
+  ; REMOVING r296 = (r295 & 0)
+  ; REMOVING r295 = (r291 & r293)
+  ; REMOVING r293 = (r294 ~ r259)
+  ; REMOVING r291 = (r292 ~ r253)
+  ; REMOVING r289 = ~r282 x2
+  ; REMOVING r288 = (r282 ~ r287) x2
+  ; REMOVING r253 = uint32_t(r253)
+  ; REMOVING r268 = memread<int32_t>(r252) x2
+  ; REMOVING r266 = (int32_t(r263) < r265) x2
+  ; REMOVING r265 = (int32_t(r253) & 15) x3
+  ; REMOVING r260 = memread<int32_t>(r252) x2
+  ; REMOVING r254 = 0 x10
+  ; REMOVING r294 = (r291 and r292)
+  ; REMOVING r292 = (r293 < 0)
+  ; REMOVING r291 = (r35 < 0)
+  ; REMOVING r286 = (r283 and r284)
+  ; REMOVING r284 = (r285 > 0)
+  ; REMOVING r283 = (r35 > 0)
+  ; REMOVING r280 = (r274 ~ r279) x2
+  ; REMOVING r265 = (int32_t(r253) == 0) x2
+  ; REMOVING r263 = (int32_t(r253) >> 31)
+  ; REMOVING r254 = memread<int32_t>(r252) x2
+  ; REMOVING r261 = (r253 == 0)
+  ; REMOVING r259 = (r253 >> 31)
+  ; REMOVING r258 = uint1_t(r258)
+  ; REMOVING r255 = 0 x2
+  ; REMOVING r253 = (r35 ~ r254)
+  ; REMOVING r252 = (r250 + 8)
+  ; REMOVING r250 = r38 x3
+  ; REMOVING r252 = (r250 + -16) x5
+  ; REMOVING r248 = int64_t(r250) x2
+  ; REMOVING r255 = memread<int32_t>(r251) x2
+  ; REMOVING r254 = int64_t(r254) x3
+  ; REMOVING r254 = (r251 + 0) x2
+  ; REMOVING r253 = int64_t(r253) x4
+  ; REMOVING r253 = (r251 + int64_t(r250)) x2
+  ; REMOVING r251 = r35 x2
+  ; REMOVING r250 = (r248 * 4) x2
+  ; REMOVING r248 = r38 x2
+  ; REMOVING r253 = r257 x2
+  ; REMOVING r257 = (r256 - 2147483648)
+  ; REMOVING r256 = (r253 ~ 2147483648)
+  ; REMOVING r253 = r255
+  ; REMOVING r252 = (r250 + -8) x5
+  ; REMOVING r248 = 232
+  ; REMOVING r299 = int32_t(r299)
+  ; REMOVING r274 = int32_t(r266)
+  ; REMOVING r268 = 7
+  ; REMOVING r256 = int64_t(r256) x3
+  ; REMOVING r252 = (r250 + 4)
+  ; REMOVING r257 = (int64_t(r256) - 2147483648)
+  ; REMOVING r255 = memread<int32_t>(r250)
+  ; REMOVING r282 = (r35 ~ r254)
+  ; REMOVING r281 = (r35 ~ r248)
+  ; REMOVING r272 = r264
+  ; REMOVING r264 = r270 x3
+  ; REMOVING r260 = (r35 < r248)
+  ; REMOVING r35 = uint32_t(r35)
+  ; REMOVING r274 = 0
+  ; REMOVING r273 = 0
+  ; REMOVING r264 = r268 x3
+  ; REMOVING r264 = r256 x2
+  ; REMOVING r261 = r263 x3
+  ; REMOVING r258 = r260 x3
+  ; REMOVING r255 = (r250 == 0)
+  ; REMOVING r254 = (r253 & 1) x3
+  ; REMOVING r253 = (r250 >> 31)
+  ; REMOVING r250 = (r35 & 1)
+  ; REMOVING r250 = 0 x3
+  ; REMOVING r264 = int32_t(r256)
+  ; REMOVING r255 = (r248 == 0) x2
+  ; REMOVING r253 = (r248 >> 31) x2
+  ; REMOVING r248 = (r35 ~ r38)
+  ; REMOVING r262 = 1
+  ; REMOVING r255 = uint32_t(r255) x2
+  ; REMOVING r38 = uint32_t(r255)
+  ; REMOVING r253 = 3
+  ; REMOVING r254 = r248
+  ; REMOVING r266 = (r263 < r265)
+  ; REMOVING r290 = int32_t(r290)
+  ; REMOVING r281 = (r278 and r280)
+  ; REMOVING r288 = (r285 and r287)
+  ; REMOVING r289 = 0
+  ; REMOVING r287 = (r248 >= 0)
+  ; REMOVING r286 = 0
+  ; REMOVING r282 = 0
+  ; REMOVING r280 = (r248 < 0)
+  ; REMOVING r277 = int32_t(r277)
+  ; REMOVING r276 = (r35 > 0)
+  ; REMOVING r275 = (r274 & 1)
+  ; REMOVING r267 = r273
+  ; REMOVING r267 = r271
+  ; REMOVING r267 = r259
+  ; REMOVING r258 = (r248 == 0)
+  ; REMOVING r256 = (r248 >> 31)
+  ; REMOVING r254 = (r253 > 15)
+  ; REMOVING r253 = (r251 + r252)
+  ; REMOVING r252 = (r38 & 15)
+  ; REMOVING r251 = (r35 & 15)
+  ; REMOVING r248 = (r35 + r38)
+  ; REMOVING r277 = ~r270
+  ; REMOVING r276 = (r270 ~ r275)
+  ; REMOVING r262 = 7
+  ; REMOVING r260 = (int32_t(r259) & 1)
+  ; REMOVING r257 = (r38 >> r256)
+  ; REMOVING r254 = (r255 - r250)
+  ; REMOVING r251 = (r38 << r250)
+  ; REMOVING r250 = (r248 & 31)
+  ; REMOVING r252 = (r250 + 0)
+  ; REMOVING r248 = 90
+  ; REMOVING r260 = 7
+  ; REMOVING r256 = (r255 & 1) x2
+  ; REMOVING r255 = (r250 >> 31) x2
+  ; REMOVING r250 = (r35 ~ 90)
+  ; REMOVING r40 = int32_t(r40)
+  ; REMOVING r43 = int64_t(r43)
+  ; REMOVING r39 = int64_t(r39)
+  ; REMOVING r44 = int32_t(r248)
+  ; REMOVING r36 = int64_t(r36) x2
+  ; REMOVING r248 = (r44 - 4)
+  ; REMOVING r248 = 32 x2
+  ; REMOVING r285 = int64_t(r285)
+  ; REMOVING r286 = int64_t(r286)
+  ; REMOVING r279 = int64_t(r279)
+  ; REMOVING r278 = int64_t(r278)
+  ; REMOVING r260 = int64_t(r260)
+  ; REMOVING r259 = int64_t(r259) x2
+  ; REMOVING r258 = (r250 >> 63)
+  ; REMOVING r257 = int64_t(r257)
+  ; REMOVING r257 = (r250 < r44)
+  ; REMOVING r256 = (r255 > 15)
+  ; REMOVING r255 = (r253 + r254) x2
+  ; REMOVING r254 = (32 & 15)
+  ; REMOVING r253 = (r44 & 15)
+  ; REMOVING r250 = (r44 + 32)
+  ; REMOVING r248 = (r35 ~ r35)
+  ; REMOVING r248 = 29
+  ; REMOVING r252 = (r250 + -12) x5
+  ; REMOVING r292 = (r283 or r290) x2
+  ; REMOVING r289 = int32_t(r289)
+  ; REMOVING r282 = int32_t(r282) x2
+  ; REMOVING r279 = (1 > 0)
+  ; REMOVING r254 = (1 & 15)
+  ; REMOVING r253 = (r35 & 15)
+  ; REMOVING r251 = r44
+  ; REMOVING r248 = 101
+  ; REMOVING r248 = 3
+  ; REMOVING r286 = (3 < 0)
+  ; REMOVING r285 = (r35 < 0)
+  ; REMOVING r265 = 7
+  ; REMOVING r250 = (r35 + 3)
+  ; REMOVING r248 = 170
+  ; REMOVING r250 = (r35 ~ 170)
+  ; REMOVING r252 = flag(32)
+  ; REMOVING r264 = memread<int32_t>(r252)
+  ; REMOVING r252 = (r250 + -4)
+  ; REMOVING r281 = int64_t(r281)
+  ; REMOVING r281 = (r280 ~= 0)
+  ; REMOVING r280 = (r279 & 0)
+  ; REMOVING r279 = (r277 & r278)
+  ; REMOVING r278 = (r44 ~ r250)
+  ; REMOVING r277 = (r44 ~ 32)
+  ; REMOVING r275 = ~r268
+  ; REMOVING r268 = r272
+  ; REMOVING r273 = (r272 >> 1)
+  ; REMOVING r268 = r260
+  ; REMOVING r265 = r267
+  ; REMOVING r259 = (r250 == 0)
+  ; REMOVING r258 = int64_t(r258)
+  ; REMOVING r257 = (r250 >> 63)
+  ; REMOVING r256 = (r44 < 32)
+  ; REMOVING r255 = int64_t(r255)
+  ; REMOVING r44 = int64_t(r44)
+  ; REMOVING r250 = (int64_t(r44) - 32)
+  ; REMOVING r248 = 0
+  ; REMOVING r44 = r270
+  ; REMOVING r270 = (r44 - 4)
+  ; REMOVING r258 = 0
+  -    r248 = 0
+  -    setflag(2, r248)
+  -    r249 = 0
+  -    setflag(4, r249)
+  -    r250 = 0
+  -    setflag(128, r250)
+  -    r251 = 0
+  -    setflag(256, r251)
+  +    setflag(2, 0)
+  +    setflag(4, 0)
+  +    setflag(128, 0)
+  +    setflag(256, 0)
+  ... 4739 more
+0018 Constant propagation m d=2292
+  ; REMOVING r44 = int32_t(r44)
+  ; REMOVING r252 = int64_t(r252) x42
+  ; REMOVING r249 = 0 x54
+  ; REMOVING r296 = (r253 >= 0) x2
+  ; REMOVING r291 = (r35 < 0) x3
+  ; REMOVING r284 = (memread<int32_t>(int64_t(r252)) > 0) x3
+  ; REMOVING r281 = ~r280 x3
+  ; REMOVING r279 = (r278 >> 1) x2
+  ; REMOVING r277 = (r276 >> 2) x5
+  ; REMOVING r266 = int32_t(r266) x4
+  ; REMOVING r275 = (int32_t(r266) >> 4) x5
+  ; REMOVING r273 = 0 x5
+  ; REMOVING r270 = 7 x5
+  ; REMOVING r265 = int32_t((r253 == 0)) x3
+  ; REMOVING r264 = int32_t((r263 & 1)) x4
+  ; REMOVING r262 = int32_t((r253 < r35)) x2
+  ; REMOVING r260 = int32_t((r257 + r258))
+  ; REMOVING r259 = memread<int32_t>(int64_t(r252)) x3
+  ; REMOVING r254 = memread<int32_t>(int64_t(r252)) x4
+  ; REMOVING r250 = int64_t(r36) x39
+  ; REMOVING r255 = int64_t(r255)
+  ; REMOVING r250 = int64_t(r254)
+  ; REMOVING r252 = 0 x2
+  ; REMOVING r273 = ~r272 x3
+  ; REMOVING r269 = (r268 >> 2) x3
+  ; REMOVING r258 = int32_t(r258) x5
+  ; REMOVING r267 = (int32_t(r258) >> 4) x2
+  ; REMOVING r265 = 0 x3
+  ; REMOVING r262 = 7 x2
+  ; REMOVING r257 = int32_t((r250 == 0)) x3
+  ; REMOVING r256 = (int32_t(r255) & 1)
+  ; REMOVING r35 = memread<int32_t>(r250) x4
+  ; REMOVING r252 = int64_t((r250 + -36))
+  ; REMOVING r252 = flag(32) x2
+  ; REMOVING r297 = (uint32_t(r296) ~= 0) x3
+  ; REMOVING r295 = (uint32_t(r291) & int32_t(r293)) x3
+  ; REMOVING r253 = uint32_t(r253) x5
+  ; REMOVING r288 = (r286 ~ r287) x2
+  ; REMOVING r285 = (r284 >> 2) x4
+  ; REMOVING r274 = int32_t(r274) x4
+  ; REMOVING r283 = (int32_t(r274) >> 4) x2
+  ; REMOVING r281 = 0 x4
+  ; REMOVING r278 = 7 x4
+  ; REMOVING r273 = int32_t((int32_t(r259) == 0)) x4
+  ; REMOVING r272 = int32_t((r271 & 1)) x4
+  ; REMOVING r269 = uint32_t((r270 < uint32_t(r253))) x4
+  ; REMOVING r253 = 0 x4
+  ; REMOVING r267 = uint32_t(r268) x2
+  ; REMOVING r266 = (r263 < int32_t(r265))
+  ; REMOVING r264 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r258 = int32_t((r257 - 2147483648)) x2
+  ; REMOVING r255 = int32_t(int32_t(0))
+  ; REMOVING r35 = int32_t(r253)
+  ; REMOVING r288 = int32_t((r287 ~= 0))
+  ; REMOVING r286 = int32_t((r283 & r285))
+  ; REMOVING r284 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r261 = int32_t((r35 < r262))
+  ; REMOVING r260 = int32_t((r257 < r258))
+  ; REMOVING r35 = int32_t(r251) x2
+  ; REMOVING r281 = int32_t((r280 ~ r282)) x2
+  ; REMOVING r279 = int32_t((r251 >> 31)) x2
+  ; REMOVING r277 = ~r276 x3
+  ; REMOVING r275 = (r274 >> 1) x3
+  ; REMOVING r273 = (r272 >> 2) x4
+  ; REMOVING r262 = int32_t(r262) x4
+  ; REMOVING r269 = 0 x4
+  ; REMOVING r261 = int32_t((r251 == 0))
+  ; REMOVING r260 = int32_t((r259 & 1)) x3
+  ; REMOVING r258 = int32_t((r257 & 1)) x3
+  ; REMOVING r35 = r253 x4
+  ; REMOVING r254 = int32_t((r255 - int32_t(r250))) x2
+  ; REMOVING r252 = int64_t((r250 + -24)) x2
+  ; REMOVING r269 = ~r262
+  ; REMOVING r265 = (r264 >> 2)
+  ; REMOVING r254 = int32_t(r254)
+  ; REMOVING r263 = (int32_t(r254) >> 4)
+  ; REMOVING r261 = 0
+  ; REMOVING r258 = 7
+  ; REMOVING r253 = (r248 == 0)
+  ; REMOVING r252 = int32_t((r251 & 1))
+  ; REMOVING r38 = r250
+  ; REMOVING r280 = ~r279
+  ; REMOVING r278 = (r277 >> 1)
+  ; REMOVING r265 = int32_t(r265)
+  ; REMOVING r272 = 0
+  ; REMOVING r269 = 7
+  ; REMOVING r264 = int32_t((uint32_t(r253) == 0))
+  ; REMOVING r263 = int32_t((r262 & 1))
+  ; REMOVING r261 = int32_t(r261) x3
+  ; REMOVING r258 = (int8_t(r252) == 1)
+  ; REMOVING r257 = int32_t((r256 & 1)) x2
+  ; REMOVING r255 = int8_t((int8_t(r252) - 1))
+  ; REMOVING r253 = (r38 >> int8_t(r252))
+  ; REMOVING r271 = (r262 >> 4) x2
+  ; REMOVING r266 = 7 x2
+  ; REMOVING r252 = int64_t((r250 + -32)) x2
+  ; REMOVING r248 = uint32_t(r248) x2
+  ; REMOVING r285 = uint32_t((r284 ~= 0)) x2
+  ; REMOVING r283 = uint32_t((r281 & r282)) x2
+  ; REMOVING r40 = uint32_t(r40)
+  ; REMOVING r278 = (r276 ~ r277)
+  ; REMOVING r275 = (r274 >> 2) x2
+  ; REMOVING r273 = (int32_t(r264) >> 4)
+  ; REMOVING r271 = 0
+  ; REMOVING r268 = 7
+  ; REMOVING r268 = 0 x2
+  ; REMOVING r263 = int32_t((int32_t(r254) == 0)) x2
+  ; REMOVING r262 = (int32_t(r261) & 1) x2
+  ; REMOVING r260 = uint32_t((uint32_t(r40) < uint32_t(r248)))
+  ; REMOVING r248 = 0 x2
+  ; REMOVING r259 = int32_t((r257 < r258)) x2
+  ; REMOVING r256 = int32_t(r256) x3
+  ; REMOVING r253 = int32_t((r252 - 2147483648))
+  ; REMOVING r250 = int32_t(int32_t(0))
+  ; REMOVING r253 = uint64_t((r252 % r38))
+  ; REMOVING r252 = (int32_t(r251) | uint64_t(r250))
+  ; REMOVING r38 = int32_t(r38)
+  ; REMOVING r249 = uint64_t(r249)
+  ; REMOVING r248 = int32_t((r253 >> 31))
+  ; REMOVING r248 = 3
+  ; REMOVING r250 = int64_t(r252) x6
+  ; REMOVING r292 = ((r280 and r282) or (r287 and r289)) x2
+  ; REMOVING r285 = (r35 < 0) x2
+  ; REMOVING r286 = (1 < 0) x2
+  ; REMOVING r279 = (1 > 0)
+  ; REMOVING r278 = (r35 > 0) x3
+  ; REMOVING r276 = ~r275 x3
+  ; REMOVING r274 = (r273 >> 1) x3
+  ; REMOVING r272 = (r271 >> 2) x4
+  ; REMOVING r270 = (int32_t(r261) >> 4) x2
+  ; REMOVING r265 = 7 x2
+  ; REMOVING r260 = int32_t((r250 == 0)) x2
+  ; REMOVING r259 = int32_t((r258 & 1)) x3
+  ; REMOVING r257 = int32_t((r250 < r35)) x3
+  ; REMOVING r255 = (int32_t(r253) + int32_t(r254))
+  ; REMOVING r250 = r36 x5
+  ; REMOVING r252 = (flag(4) ~= uint1_t(r254))
+  ; REMOVING r297 = uint32_t((r296 ~= 0))
+  ; REMOVING r295 = uint32_t((r291 & r293))
+  ; REMOVING r294 = memread<int32_t>(r252)
+  ; REMOVING r282 = (r286 ~ r287) x2
+  ; REMOVING r253 = 100
+  ; REMOVING r267 = memread<int32_t>(int64_t(r252)) x2
+  ; REMOVING r265 = int32_t((int32_t(100) & 15))
+  ; REMOVING r257 = int32_t((r255 ~ 2147483648)) x2
+  ; REMOVING r289 = ((r283 and r284) and int32_t(r288))
+  ; REMOVING r297 = ((r291 and r292) and int32_t(r296))
+  ; REMOVING r293 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r285 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r281 = ~r274 x2
+  ; REMOVING r265 = int32_t((int32_t(r253) == 0)) x2
+  ; REMOVING r262 = (int32_t(r253) < r35) x2
+  ; REMOVING r261 = int32_t((r260 > 15)) x3
+  ; REMOVING r258 = int32_t((r259 & 15)) x2
+  ; REMOVING r257 = int32_t((r35 & 15)) x3
+  ; REMOVING r256 = 0
+  ; REMOVING r261 = int32_t((r253 == 0))
+  ; REMOVING r35 = memread<int32_t>(r251)
+  ; REMOVING r250 = int64_t(r38) x2
+  ; REMOVING r253 = memread<int64_t>(int64_t(r252)) x2
+  ; REMOVING r254 = int64_t((r251 + 0))
+  ; REMOVING r253 = int64_t((r251 + int64_t(r250)))
+  ; REMOVING r248 = int64_t(r38) x2
+  ; REMOVING r253 = int64_t(r257) x2
+  ; REMOVING r257 = int64_t((r256 - 2147483648))
+  ; REMOVING r253 = int64_t(r255)
+  ; REMOVING r296 = (int32_t(r253) >= 0)
+  ; REMOVING r292 = (memread<int32_t>(int64_t(r252)) < 0) x2
+  ; REMOVING r288 = (int32_t(r253) < 0)
+  ; REMOVING r283 = (r35 > 0) x2
+  ; REMOVING r264 = (int32_t(r263) & 1)
+  ; REMOVING r256 = uint1_t(r256)
+  ; REMOVING r288 = (r253 < 0)
+  ; REMOVING r251 = int64_t(r254)
+  ; REMOVING r251 = int64_t(r253)
+  ; REMOVING r251 = int64_t(r35)
+  ; REMOVING r257 = int64_t((int64_t(r256) - 2147483648))
+  ; REMOVING r253 = memread<int32_t>(r250)
+  ; REMOVING r252 = int64_t((r250 + -28))
+  ; REMOVING r35 = uint32_t(r35)
+  ; REMOVING r279 = ~r278
+  ; REMOVING r277 = (r276 >> 1)
+  ; REMOVING r273 = (r264 >> 4)
+  ; REMOVING r264 = bitread<int32_t>(int32_t(r254), 0, 7)
+  ; REMOVING r260 = uint32_t((uint32_t(r35) < uint32_t(r248)))
+  ; REMOVING r253 = int32_t(r253)
+  ; REMOVING r252 = int32_t((r250 ~ 2147483648))
+  ; REMOVING r271 = ~r270 x3
+  ; REMOVING r267 = (r266 >> 2) x3
+  ; REMOVING r265 = (int32_t(r256) >> 4) x3
+  ; REMOVING r263 = 0 x2
+  ; REMOVING r260 = 7 x3
+  ; REMOVING r255 = int32_t((r250 == 0))
+  ; REMOVING r254 = int32_t((r253 & 1)) x3
+  ; REMOVING r269 = (r268 >> 1) x2
+  ; REMOVING r255 = int32_t((r248 == 0)) x2
+  ; REMOVING r255 = uint32_t(r255)
+  ; REMOVING r260 = (int32_t(r259) ~= uint32_t(r255))
+  ; REMOVING r257 = (uint32_t(r255) & 0)
+  ; REMOVING r255 = (r256 * 3)
+  ; REMOVING r253 = 10
+  ; REMOVING r266 = int32_t((r263 < r265))
+  ; REMOVING r280 = int32_t((r248 < 0))
+  ; REMOVING r285 = (int32_t(r283) and int32_t(r284))
+  ; REMOVING r287 = int32_t((r248 >= 0))
+  ; REMOVING r278 = (r276 and int32_t(r277))
+  ; REMOVING r273 = (r271 ~ r272)
+  ; REMOVING r270 = (r269 >> 2)
+  ; REMOVING r259 = int32_t(r259)
+  ; REMOVING r268 = (int32_t(r259) >> 4)
+  ; REMOVING r266 = 0 x2
+  ; REMOVING r263 = 7 x2
+  ; REMOVING r258 = int32_t((r248 == 0))
+  ; REMOVING r255 = (r248 < r35)
+  ; REMOVING r254 = int32_t((r253 > 15))
+  ; REMOVING r251 = int32_t((r35 & 15))
+  ; REMOVING r252 = int32_t((r38 & 15))
+  ; REMOVING r280 = int32_t((r279 & 1))
+  ; REMOVING r282 = uint1_t(flag(2))
+  ; REMOVING r270 = (r274 ~ r275)
+  ; REMOVING r260 = int32_t((int32_t(r259) & 1))
+  ; REMOVING r38 = r253 x2
+  ; REMOVING r256 = int32_t((r254 & 31))
+  ; REMOVING r255 = 32
+  ; REMOVING r248 = 1
+  ; REMOVING r252 = int64_t((r250 + 0))
+  ; REMOVING r271 = (r270 >> 1) x2
+  ; REMOVING r256 = int32_t((r255 & 1)) x2
+  ; REMOVING r254 = 0
+  ; REMOVING r252 = int64_t((r250 + -20))
+  ; REMOVING r252 = int32_t((r44 + 4))
+  ; REMOVING r248 = memread<int32_t>(r44)
+  ; REMOVING r285 = (r44 < 0)
+  ; REMOVING r286 = (32 < 0)
+  ; REMOVING r279 = (32 > 0)
+  ; REMOVING r278 = (r44 > 0)
+  ; REMOVING r260 = int64_t((r250 == 0))
+  ; REMOVING r259 = int64_t((r258 & 1))
+  ; REMOVING r257 = int64_t((r250 < r44))
+  ; REMOVING r256 = int64_t((r255 > 15))
+  ; REMOVING r253 = int64_t((r44 & 15))
+  ; REMOVING r254 = int64_t((32 & 15))
+  ; REMOVING r252 = uint1_t(r252)
+  ; REMOVING r248 = int64_t(29)
+  ; REMOVING r252 = int64_t((r250 + -12)) x3
+  ; REMOVING r289 = (r250 >= 0)
+  ; REMOVING r282 = (r250 < 0) x2
+  ; REMOVING r275 = (r273 ~ r274)
+  ; REMOVING r270 = (r261 >> 4) x2
+  ; REMOVING r261 = bitread<int32_t>(r250, r268, r265)
+  ; REMOVING r256 = (r255 > 15)
+  ; REMOVING r254 = int32_t((1 & 15))
+  ; REMOVING r248 = 19
+  ; REMOVING r250 = r252
+  ; REMOVING r279 = (3 > 0)
+  ; REMOVING r261 = bitread<int32_t>(r250, 0, 7)
+  ; REMOVING r260 = (r250 == 0)
+  ; REMOVING r256 = (int32_t(r255) > 15)
+  ; REMOVING r253 = (r35 & 15)
+  ; REMOVING r254 = (3 & 15)
+  ; REMOVING r253 = 1000
+  ; REMOVING r266 = int32_t((int32_t(r263) < r265))
+  ; REMOVING r255 = int32_t(int32_t(1000))
+  ; REMOVING r253 = 9
+  ; REMOVING r281 = int64_t((r280 ~= 0))
+  ; REMOVING r277 = int64_t((int64_t(r44) ~ 32))
+  ; REMOVING r278 = int64_t((int64_t(r44) ~ r250))
+  ; REMOVING r268 = r274
+  ; REMOVING r271 = (r270 >> 2)
+  ; REMOVING r269 = (r260 >> 4)
+  ; REMOVING r260 = int32_t(r260)
+  ; REMOVING r267 = 0
+  ; REMOVING r259 = int64_t((r250 == 0))
+  ; REMOVING r258 = int64_t((r257 & 1))
+  ; REMOVING r256 = int64_t((int64_t(r44) < 32))
+  ; REMOVING r255 = (int64_t(r253) < int64_t(r254))
+  ; REMOVING r270 = int32_t(r270)
+  -    r252 = 0
+  -    setflag(512, r252)
+  +    setflag(512, 0)
+  -    r270 = int32_t(r270)
+  -    memset<int32_t>(r270) = int64_t(r36)
+  +    memset<int32_t>(int32_t(r270)) = int64_t(r36)
+  -    r251 = uint1_t(r252)
+  +    r251 = uint1_t(0)
+  -    r255 = (int64_t(r253) < int64_t(r254))
+  -    r255 = int64_t(r255)
+  +    r255 = int64_t((int64_t(r253) < int64_t(r254)))
+  -    r256 = int64_t((int64_t(r44) < 32))
+  ... 1997 more
+0019 Constant propagation m d=582
+  ; REMOVING r257 = int32_t((r35 & 15)) x3
+  ; REMOVING r254 = 331
+  ; REMOVING r252 = int64_t((r250 + -36))
+  ; REMOVING r272 = (r270 ~ r271)
+  ; REMOVING r255 = (r250 >> 31)
+  ; REMOVING r250 = int64_t(int64_t((r250 + -36)))
+  ; REMOVING r296 = (uint32_t((uint32_t(r291) & int32_t(r293))) & 0) x3
+  ; REMOVING r253 = uint32_t(0)
+  ; REMOVING r270 = memread<int32_t>(int64_t(r252)) x4
+  ; REMOVING r265 = (int32_t(0) & 15)
+  ; REMOVING r257 = int32_t((int32_t(int32_t(0)) ~ 2147483648))
+  ; REMOVING r287 = int32_t((int32_t((r283 & r285)) & 0))
+  ; REMOVING r263 = int32_t((r253 >> 31)) x2
+  ; REMOVING r258 = int32_t((memread<int32_t>(int64_t(r252)) & 15))
+  ; REMOVING r280 = int32_t((int32_t((r251 >> 31)) & 1)) x2
+  ; REMOVING r282 = uint1_t(flag(2)) x2
+  ; REMOVING r276 = (r274 ~ (r274 >> 1)) x2
+  ; REMOVING r259 = int32_t((r251 >> 31))
+  ; REMOVING r257 = int32_t((r253 >> r256)) x2
+  ; REMOVING r255 = 32 x2
+  ; REMOVING r252 = int64_t(int64_t((r250 + -24)))
+  ; REMOVING r252 = int64_t((int64_t(r36) + -32))
+  ; REMOVING r251 = int32_t((r248 >> 31))
+  ; REMOVING r262 = int32_t((uint32_t(r253) >> 31))
+  ; REMOVING r252 = int64_t(int64_t((r250 + -32)))
+  ; REMOVING r248 = uint32_t(0) x2
+  ; REMOVING r284 = uint32_t((uint32_t((r281 & r282)) & 0)) x2
+  ; REMOVING r40 = uint32_t(r40)
+  ; REMOVING r277 = (r276 >> 1)
+  ; REMOVING r261 = (int32_t(r254) >> 31) x2
+  ; REMOVING r258 = int32_t((int32_t(0) & 15))
+  ; REMOVING r257 = int32_t((r40 & 15))
+  ; REMOVING r252 = int32_t((int32_t(int32_t(0)) ~ 2147483648))
+  ; REMOVING r38 = int32_t(r38)
+  ; REMOVING r252 = uint64_t((int32_t(r251) | uint64_t(r250)))
+  ; REMOVING r249 = (int32_t(r248) | r253)
+  ; REMOVING r252 = int64_t((int64_t(r36) + -28)) x2
+  ; REMOVING r280 = (int32_t((r35 > 0)) and int32_t((1 > 0)))
+  ; REMOVING r282 = int32_t((r250 < 0))
+  ; REMOVING r287 = (int32_t((r35 < 0)) and int32_t((1 < 0)))
+  ; REMOVING r289 = int32_t((r250 >= 0))
+  ; REMOVING r258 = int32_t((r250 >> 31))
+  ; REMOVING r253 = (r35 & 15)
+  ; REMOVING r254 = (1 & 15)
+  ; REMOVING r254 = flag(32)
+  ; REMOVING r296 = uint32_t((uint32_t((r291 & r293)) & 0))
+  ; REMOVING r253 = uint32_t(100)
+  ; REMOVING r271 = int32_t((int32_t(r259) >> 31)) x3
+  ; REMOVING r255 = int32_t(int32_t(100))
+  ; REMOVING r250 = int64_t(r36) x4
+  ; REMOVING r292 = int32_t((memread<int32_t>(int64_t(r252)) < 0))
+  ; REMOVING r283 = int32_t((r35 > 0))
+  ; REMOVING r284 = int32_t((memread<int32_t>(int64_t(r252)) > 0))
+  ; REMOVING r288 = (int32_t(r253) < 0)
+  ; REMOVING r291 = int32_t((r35 < 0))
+  ; REMOVING r296 = (int32_t(r253) >= 0)
+  ; REMOVING r263 = int32_t((int32_t(r253) >> 31))
+  ; REMOVING r260 = int32_t((int32_t((r35 & 15)) + int32_t((r259 & 15)))) x2
+  ; REMOVING r259 = int32_t((r253 >> 31))
+  ; REMOVING r251 = int64_t(int64_t((r251 + 0)))
+  ; REMOVING r38 = memread<int64_t>(int64_t(r252)) x2
+  ; REMOVING r251 = int64_t(r35)
+  ; REMOVING r38 = int64_t(r257) x2
+  ; REMOVING r256 = int64_t((int64_t(r255) ~ 2147483648))
+  ; REMOVING r252 = int64_t((int64_t(r36) + -24))
+  ; REMOVING r263 = (int32_t(r253) >> 31)
+  ; REMOVING r260 = int32_t((int32_t((r35 & 15)) + r258))
+  ; REMOVING r280 = (r278 ~ (r278 >> 1))
+  ; REMOVING r254 = int64_t((int64_t(r253) + 0))
+  ; REMOVING r250 = int64_t(int64_t((r250 + -28)))
+  ; REMOVING r35 = uint32_t(r35)
+  ; REMOVING r278 = (r276 ~ (r276 >> 1))
+  ; REMOVING r253 = int32_t((int32_t((r250 ~ 2147483648)) - 2147483648))
+  ; REMOVING r253 = int32_t((r250 >> 31))
+  ; REMOVING r250 = int64_t(r252)
+  ; REMOVING r270 = (r268 ~ (r268 >> 1)) x2
+  ; REMOVING r253 = int32_t((r248 >> 31)) x2
+  ; REMOVING r259 = (int32_t(r258) - -2147483648)
+  ; REMOVING r253 = uint32_t(10)
+  ; REMOVING r287 = (r286 >> 1)
+  ; REMOVING r263 = int32_t((r264 & 15))
+  ; REMOVING r265 = int32_t((int32_t(10) & 15))
+  ; REMOVING r258 = int32_t((int32_t((r255 ~ 2147483648)) - 2147483648))
+  ; REMOVING r277 = (r38 > 0)
+  ; REMOVING r283 = (r35 < 0)
+  ; REMOVING r284 = (r38 < 0)
+  ; REMOVING r272 = (r271 >> 1)
+  ; REMOVING r256 = int32_t((r248 >> 31))
+  ; REMOVING r38 = int32_t(r251)
+  ; REMOVING r279 = int32_t((r251 >> 31))
+  ; REMOVING r275 = (r274 >> 1)
+  ; REMOVING r257 = int32_t((r253 >> int32_t((r254 & 31))))
+  ; REMOVING r252 = int64_t(int64_t((r250 + 0)))
+  ; REMOVING r253 = memread<int64_t>(int64_t(r252))
+  ; REMOVING r272 = (r270 ~ (r270 >> 1))
+  ; REMOVING r255 = int32_t((r250 >> 31)) x2
+  ; REMOVING r250 = int64_t(int64_t((r250 + -20)))
+  ; REMOVING r44 = int32_t(r44)
+  ; REMOVING r280 = (int64_t((r44 > 0)) and int64_t((32 > 0)))
+  ; REMOVING r282 = int64_t((r250 < 0))
+  ; REMOVING r287 = (int64_t((r44 < 0)) and int64_t((32 < 0)))
+  ; REMOVING r289 = int64_t((r250 >= 0))
+  ; REMOVING r275 = (r273 ~ (r273 >> 1)) x2
+  ; REMOVING r258 = int64_t((r250 >> 63))
+  ; REMOVING r255 = int64_t((int64_t((r44 & 15)) + int64_t((32 & 15))))
+  ; REMOVING r268 = 0
+  ; REMOVING r265 = 7
+  ; REMOVING r252 = (int64_t(r36) + -24)
+  ; REMOVING r255 = (int32_t((r35 & 15)) + int32_t((3 & 15)))
+  ; REMOVING r250 = int64_t(int64_t((r250 + -12)))
+  ; REMOVING r253 = uint32_t(1000)
+  ; REMOVING r268 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r265 = int32_t((int32_t(1000) & 15))
+  ; REMOVING r257 = int32_t((int32_t(int32_t(1000)) ~ 2147483648))
+  ; REMOVING r280 = int64_t((r279 & 0))
+  ; REMOVING r257 = int64_t((r250 >> 63))
+  ; REMOVING r254 = (32 & 15)
+  ; REMOVING r270 = int32_t((r44 - 4))
+  -    r270 = int32_t((r44 - 4))
+  -    memset<int32_t>(int32_t(r270)) = int64_t(r36)
+  +    memset<int32_t>(int32_t(int32_t((r44 - 4)))) = int64_t(r36)
+  -    r254 = (32 & 15)
+  -    r255 = int64_t((int64_t(r253) < int64_t(r254)))
+  +    r255 = int64_t((int64_t(r253) < int64_t((32 & 15))))
+  -    r257 = int64_t((r250 >> 63))
+  -    setflag(4, int64_t(int64_t((r257 & 1))))
+  +    setflag(4, int64_t(int64_t((int64_t((r250 >> 63)) & 1))))
+  -    r280 = int64_t((r279 & 0))
+  -    setflag(32, int64_t(int64_t((r280 ~= 0))))
+  +    setflag(32, int64_t(int64_t((int64_t((r279 & 0)) ~= 0))))
+  ... 445 more
+0020 Constant propagation m d=126
+  ; REMOVING r250 = int64_t(r36) x6
+  ; REMOVING r293 = (r294 ~ int32_t(r259)) x3
+  ; REMOVING r291 = (memread<int32_t>(int64_t(r252)) ~ uint32_t(uint32_t(0)))
+  ; REMOVING r285 = int32_t((r35 ~ r253))
+  ; REMOVING r283 = int32_t((r35 ~ memread<int32_t>(int64_t(r252))))
+  ; REMOVING r282 = uint32_t((uint32_t(r40) ~ int32_t(r254)))
+  ; REMOVING r281 = uint32_t((uint32_t(r40) ~ uint32_t(uint32_t(0))))
+  ; REMOVING r251 = (r40 << 32)
+  ; REMOVING r38 = int32_t(3)
+  ; REMOVING r293 = int32_t((memread<int32_t>(int64_t(r252)) ~ int32_t(r259)))
+  ; REMOVING r291 = uint32_t((r292 ~ uint32_t(uint32_t(100))))
+  ; REMOVING r259 = memread<int32_t>(int64_t(r252)) x2
+  ; REMOVING r257 = int64_t(int64_t((int64_t((int64_t(r255) ~ 2147483648)) - 2147483648)))
+  ; REMOVING r253 = int64_t((int64_t(r35) + int64_t(r250)))
+  ; REMOVING r257 = int64_t(int64_t((int64_t(r256) - 2147483648)))
+  ; REMOVING r282 = uint32_t((uint32_t(r35) ~ int32_t(r254)))
+  ; REMOVING r281 = uint32_t((uint32_t(r35) ~ uint32_t(uint32_t(0))))
+  ; REMOVING r250 = int32_t(int32_t(0))
+  ; REMOVING r291 = (memread<int32_t>(int64_t(r252)) ~ uint32_t(uint32_t(10)))
+  ; REMOVING r255 = int32_t(int32_t(10))
+  ; REMOVING r254 = int32_t((32 - r250))
+  ; REMOVING r250 = int64_t(memread<int64_t>(int64_t(r252)))
+  ; REMOVING r291 = (r292 ~ uint32_t(uint32_t(1000)))
+  -    r291 = (r292 ~ uint32_t(uint32_t(1000)))
+  -    r293 = (r294 ~ int32_t(r259))
+  -    r297 = uint32_t((uint32_t((uint32_t((uint32_t(r291) & int32_t(r293))) & 0)) ~= 0))
+  +    r297 = uint32_t((uint32_t((uint32_t((uint32_t((r292 ~ uint32_t(uint32_t(1000)))) & int32_t((r294 ~ int32_
+  -    r250 = int64_t(r36)
+  -    r248 = int32_t(0)
+  -    r248 = 0
+  -    r250 = int32_t((memread<int32_t>(int64_t(int64_t((r250 + -12)))) ~ 170))
+  +    r248 = int32_t(0)
+  +    r248 = 0
+  +    r250 = int32_t((memread<int32_t>(int64_t(int64_t((int64_t(r36) + -12)))) ~ 170))
+  -    r250 = int64_t(r36)
+  ... 87 more
+0021 Constant propagation m d=8
+  ; REMOVING r255 = memread<int32_t>(int64_t(int64_t((int64_t(r36) + -28))))
+  -    r255 = memread<int32_t>(int64_t(int64_t((int64_t(r36) + -28))))
+  -    r248 = int32_t(0)
+  -    r248 = 0
+  -    r250 = int64_t((int64_t(int64_t(int64_t(int64_t((int64_t((int64_t(r255) ~ 2147483648)) - 2147483648))))) 
+  +    r248 = int32_t(0)
+  +    r248 = 0
+  +    r250 = int64_t((int64_t(int64_t(int64_t(int64_t((int64_t((int64_t(memread<int32_t>(int64_t(int64_t((int64
+~ 0022-0024 noop x3: Constant propagation, Virtual function reconstruction*2
+0025 Dead code elimination m d=73
+  ; REMOVING ::label_357::
+  ; REMOVING ::label_883::
+  ; REMOVING ::label_1647::
+  ; REMOVING ::label_1994::
+  ; REMOVING ::label_2393::
+  ; REMOVING ::label_2861::
+  ; REMOVING ::label_2889::
+  ; REMOVING ::label_3231::
+  ; REMOVING ::label_3259::
+  ; REMOVING ::label_3551::
+  ; REMOVING ::label_3945::
+  -    if (not r250) then goto label_357 end
+  +    if (not r250) then goto label_356 end
+  -    goto 883
+  +    goto 882
+  -    ::label_357::
+  -        goto 883
+  +        goto 882
+  -        ::label_883::
+  -    if (not r250) then goto label_1647 end
+  +    if (not r250) then goto label_1646 end
+  -    goto 3551
+  +    goto 3550
+  ... 33 more
+0026 Dead code elimination m d=30
+  ; REMOVING ::label_358::
+  ; REMOVING ::label_1648::
+  ; REMOVING ::label_1995::
+  ; REMOVING ::label_2862::
+  ; REMOVING ::label_3232::
+  ; REMOVING ::label_3946::
+  -    goto 358
+  +    goto 356
+  -    ::label_358::
+  -    goto 1648
+  +    goto 1646
+  -    ::label_1648::
+  -    goto 1995
+  +    goto 1993
+  -    ::label_1995::
+  -    goto 2862
+  +    goto 2860
+  -    ::label_2862::
+  ... 6 more
+0027 Dead code elimination m d=4
+  ; REMOVING goto 2860
+  ; REMOVING goto 3230
+  -    goto 2860
+  -    goto 3230
+0028 Dead code elimination m d=4
+  ; REMOVING if (r248 ~= 238) then goto label_2860 end
+  ; REMOVING if (r253 ~= 265) then goto label_3230 end
+  -    if (r248 ~= 238) then goto label_2860 end
+  -    if (r253 ~= 265) then goto label_3230 end
+~ 0029-0030 noop x2: Dead code elimination, Dead label elimination
+0031 Dead store elimination m d=813
+  ; REMOVING r248 = int32_t(0) x55
+  ; REMOVING r248 = 0 x34
+  ; REMOVING r2 = flag(2) x29
+  ; REMOVING r251 = uint1_t(0)
+  ; REMOVING r260 = int32_t(0)
+  ; REMOVING r260 = 0 x4
+  ; REMOVING r262 = int32_t(0)
+  ; REMOVING r262 = 0 x5
+  ; REMOVING r265 = int32_t(0) x2
+  ; REMOVING r265 = 0 x2
+  ; REMOVING r248 = int32_t(32) x2
+  ; REMOVING r250 = int32_t(r250) x30
+  ; REMOVING r250 = 0 x63
+  ; REMOVING r253 = int32_t(r253) x9
+  ; REMOVING r253 = 0 x12
+  ; REMOVING r250 = int32_t(r252) x30
+  ; REMOVING r253 = int32_t(0) x2
+  ; REMOVING r253 = int32_t(9)
+  ; REMOVING r248 = int32_t(r248) x21
+  ; REMOVING r255 = int32_t(r255) x3
+  ; REMOVING r255 = 0 x5
+  ; REMOVING r274 = int32_t(r274) x3
+  ; REMOVING r274 = 0 x4
+  ; REMOVING r276 = int32_t(r276) x4
+  ; REMOVING r276 = 0 x4
+  ; REMOVING r279 = int32_t(r279) x4
+  ; REMOVING r279 = 0 x4
+  ; REMOVING r253 = uint1_t(r254) x2
+  ; REMOVING r258 = int32_t(r258) x5
+  ; REMOVING r258 = 0 x6
+  ; REMOVING r260 = int32_t(r260) x3
+  ; REMOVING r263 = int32_t(r263) x5
+  ; REMOVING r263 = 0 x6
+  ; REMOVING r248 = int32_t(170)
+  ; REMOVING r251 = uint1_t(r252) x7
+  ; REMOVING r261 = int32_t(0) x3
+  ; REMOVING r261 = 0 x8
+  ; REMOVING r263 = int32_t(0) x2
+  ; REMOVING r266 = int32_t(r272)
+  ; REMOVING r280 = int32_t(0) x2
+  ; REMOVING r280 = 0 x4
+  ; REMOVING r283 = int32_t(r283) x4
+  ; REMOVING r283 = 0 x4
+  ; REMOVING r287 = int32_t(r287) x4
+  ; REMOVING r287 = 0 x4
+  ; REMOVING r290 = int32_t(r290) x5
+  ; REMOVING r290 = 0 x4
+  ; REMOVING r292 = int32_t(r292) x4
+  ; REMOVING r292 = 0 x4
+  ; REMOVING r248 = int32_t(3)
+  ; REMOVING r250 = int32_t(int64_t(r252)) x2
+  ; REMOVING r248 = int32_t(19)
+  ; REMOVING r261 = int32_t(r261) x4
+  ; REMOVING r266 = int32_t(r266) x6
+  ; REMOVING r266 = 0 x10
+  ; REMOVING r280 = int32_t(r280) x2
+  ; REMOVING r248 = int32_t(1) x5
+  ; REMOVING r256 = int32_t(r256) x4
+  ; REMOVING r256 = 0 x4
+  ; REMOVING r35 = int32_t(r248)
+  ; REMOVING r44 = int32_t(int32_t((int32_t(r44) + 4)))
+  ; REMOVING r253 = uint1_t(0)
+  ; REMOVING r248 = int32_t(90)
+  ; REMOVING r252 = uint1_t(r253) x3
+  ; REMOVING r262 = int32_t(7)
+  ; REMOVING r264 = int32_t(0) x2
+  ; REMOVING r264 = 0 x7
+  ; REMOVING r267 = int32_t(r267) x3
+  ; REMOVING r267 = 0 x5
+  ; REMOVING r249 = uint1_t(r250) x2
+  ; REMOVING r259 = int32_t(r259) x2
+  ; REMOVING r259 = 0 x2
+  ; REMOVING r264 = int32_t(7)
+  ; REMOVING r278 = int32_t(r278)
+  ; REMOVING r278 = 0
+  ; REMOVING r281 = int32_t(r281)
+  ; REMOVING r281 = 0
+  ; REMOVING r285 = int32_t(r285)
+  ; REMOVING r285 = 0
+  ; REMOVING r288 = int32_t(r288)
+  ; REMOVING r288 = 0
+  ; REMOVING r250 = int32_t(0) x2
+  ; REMOVING r258 = int32_t(7)
+  ; REMOVING r255 = uint1_t(r256) x3
+  ; REMOVING r264 = int32_t(r270)
+  ; REMOVING r269 = int32_t(r269)
+  ; REMOVING r269 = 0 x2
+  ; REMOVING r248 = int32_t(uint32_t(0)) x2
+  ; REMOVING r251 = int32_t(0) x2
+  ; REMOVING r251 = 0 x2
+  ; REMOVING r248 = int32_t(int64_t(r250)) x2
+  ; REMOVING r266 = int32_t(7) x3
+  ; REMOVING r268 = int32_t(7) x2
+  ; REMOVING r268 = 0 x4
+  ; REMOVING r271 = int32_t(0) x2
+  ; REMOVING r271 = 0 x4
+  ; REMOVING r286 = int32_t(r286) x4
+  ; REMOVING r286 = 0 x4
+  ; REMOVING r289 = int32_t(r289) x4
+  ; REMOVING r289 = 0 x4
+  ; REMOVING r294 = int32_t(r294) x4
+  ; REMOVING r294 = 0 x4
+  ; REMOVING r297 = int32_t(r297) x4
+  ; REMOVING r297 = 0 x4
+  ; REMOVING r299 = int32_t(r299) x4
+  ; REMOVING r299 = 0 x4
+  ; REMOVING r257 = uint1_t(r258)
+  ; REMOVING r262 = int32_t(r262) x3
+  ; REMOVING r264 = int32_t(r264) x3
+  ; REMOVING r268 = int32_t(0) x2
+  ; REMOVING r271 = int32_t(r271) x3
+  ; REMOVING r255 = int32_t(r258)
+  ; REMOVING r261 = int32_t(r262)
+  ; REMOVING r266 = int32_t(0)
+  ; REMOVING r269 = int32_t(r275)
+  ; REMOVING r267 = int32_t(0) x2
+  ; REMOVING r260 = uint1_t(r261)
+  ; REMOVING r270 = int32_t(r276)
+  ; REMOVING r270 = 0
+  ; REMOVING r254 = int32_t(r254)
+  ; REMOVING r254 = 0
+  ; REMOVING r255 = int32_t(r256)
+  ; REMOVING r261 = uint1_t(r262)
+  ; REMOVING r274 = int32_t(r280)
+  ; REMOVING r248 = int32_t(3735928559)
+  ; REMOVING r252 = int32_t(r252)
+  ; REMOVING r250 = int32_t(r255)
+  ; REMOVING r268 = int32_t(r268)
+  ; REMOVING r35 = int32_t(r253)
+  -    r248 = int32_t(0)
+  -    r248 = 0
+  -    r2 = flag(2)
+  -    r251 = uint1_t(0)
+  -    r260 = int32_t(0)
+  -    r260 = 0
+  -    r262 = int32_t(0)
+  -    r262 = 0
+  -    r265 = int32_t(0)
+  -    r265 = 0
+  -    r248 = int32_t(32)
+  -    r250 = int32_t(r250)
+  ... 594 more
+0032 Constant fold m d=5
+  ; INSERTED page_function_goto<20>() ON if  (r252 ~= 101) then
+  ; INSERTED end ON if  (r252 ~= 101) then
+  -    if (r252 ~= 101) then goto label_699 end
+  +    if  (r252 ~= 101) then
+  +        page_function_goto<20>()
+  +    end
+0033 Constant fold m d=2
+  ; REMOVING ::label_699::
+  -    ::label_699::
+~ 0034-0035 noop x2: Constant fold, Control flow simplification
+0036 Expression Canonicalization m d=678
+  -    memset<int32_t>(int32_t(int32_t((r44 - 4)))) = int64_t(r36)
+  +    memset<int32_t>(int32_t((r44 - 4))) = int64_t(r36)
+  -    r250 = int64_t((int64_t(r44) - 32))
+  -    r253 = (int64_t(r44) & 15)
+  -    r255 = int64_t((int64_t(r253) < int64_t((32 & 15))))
+  +    r250 = (int64_t(r44) - 32)
+  +    r253 = bitread<int64_t>(int64_t(r44), 0, 3)
+  +    r255 = (int64_t(r253) < int64_t(0))
+  -    setflag(2, int64_t(int64_t((int64_t(r44) < 32))))
+  -    setflag(4, int64_t(int64_t((int64_t((r250 >> 63)) & 1))))
+  -    setflag(8, int64_t(int64_t((r250 == 0))))
+  +    setflag(2, int64_t((int64_t(r44) < 32)))
+  ... 526 more
+0037 Expression Canonicalization m d=478
+  -    r255 = (int64_t(r253) < int64_t(0))
+  +    r255 = (int64_t(r253) < 0)
+  -    setflag(2, int64_t((int64_t(r44) < 32)))
+  -    setflag(4, int64_t(bitread<int64_t>(int64_t((r250 >> 63)), 0, 0)))
+  -    setflag(8, int64_t((r250 == 0)))
+  +    setflag(2, (int64_t(r44) < 32))
+  +    setflag(4, bitread<int64_t>(int64_t((r250 >> 63)), 0, 0))
+  +    setflag(8, (r250 == 0))
+  -    setflag(32, int64_t((int64_t(0) ~= 0)))
+  +    setflag(32, (0 ~= 0))
+  -    r252 = (int64_t(r36) + -4)
+  +    r252 = (int64_t(r36) - 4)
+  ... 350 more
+0038 Expression Canonicalization m d=77
+  -    setflag(32, (0 ~= 0))
+  +    setflag(32, false)
+  -    r258 = ((1000 ~ 2147483648) - 2147483648)
+  +    r258 = (2147484648 - 2147483648)
+  -    r297 = (0 ~= 0)
+  +    r297 = false
+  -    r280 = ((r35 > 0) and true)
+  +    r280 = (r35 > 0)
+  -        r287 = ((r35 < 0) and false)
+  +        r287 = (false)
+  -        setflag(1, ((int64_t((r44 & 15)) + 0) > 15))
+  +        setflag(1, (int64_t((r44 & 15)) > 15))
+  ... 42 more
+0039 Expression Canonicalization m d=27
+  -    r258 = (2147484648 - 2147483648)
+  +    r258 = 1000
+  -        r287 = (false)
+  +        r287 = false
+  -        setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or ((false) and (r250 >= 0)))))
+  +        setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or (false and (r250 >= 0)))))
+  -    r259 = (memread<int32_t>(int64_t(r252)) - (2147483658 - 2147483648))
+  +    r259 = (memread<int32_t>(int64_t(r252)) - 10)
+  -    r254 = (r35 - (2147483648 - 2147483648))
+  +    r254 = (r35 - 0)
+  -    r258 = (2147483748 - 2147483648)
+  +    r258 = 100
+  ... 6 more
+0040 Expression Canonicalization m d=9
+  -        setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or (false and (r250 >= 0)))))
+  +        setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or false)))
+  -    r254 = (r35 - 0)
+  +    r254 = r35
+  -    setflag(32, (((r35 > 0) and (r250 < 0)) or (false and (r250 >= 0))))
+  +    setflag(32, (((r35 > 0) and (r250 < 0)) or false))
+~ 0041-0042 noop x2: Expression Canonicalization, Virtual function inline
+0043 Jump threading m d=194
+  ; INSERTED end ON goto 882 x3
+  ; INSERTED end ON goto 356
+  ; INSERTED end ON page_function_call<20>(a36, a44, a248, a250, a252, a256, a258, a261, 7, 0, a280, a283, a287, a290, a292)[r44, 82]
+  ; INSERTED end ON goto 3550 x4
+  ; INSERTED end ON goto 1646
+  ; INSERTED end ON goto 1715
+  ; INSERTED end ON goto 2392 x3
+  ; INSERTED end ON goto 1993
+  ; INSERTED end ON goto 2693
+  ; INSERTED end ON r248 = int64_t(r248)
+  ; INSERTED end ON goto 2888 x2
+  ; INSERTED end ON r253 = r248
+  ; INSERTED end ON goto 3258 x2
+  ; INSERTED end ON setflag(2, int32_t((r256 & 1)))
+  ; INSERTED end ON setflag(32, 0)
+  ; INSERTED end ON page_function_goto<98>(a36, a44, a248, a250, 0, a266, a268, a271, a286, a289, a294, a297, a299) x2
+  ; INSERTED end ON goto 3944
+  -    if (not r250) then goto label_356 end
+  -    r248 = 93
+  -    if (r248 ~= 38) then goto label_345 end
+  -    goto 356
+  -    ::label_345::
+  -    r248 = int64_t(r248)
+  -    r254 = r248
+  -    if (r254 ~= 93) then goto label_356 end
+  -    goto 882
+  +    if  (r250) then
+  +        r248 = 93
+  +        if  (r248 == 38) then
+  ... 165 more
+~ 0044-0047 noop x4: Allign pages, Page inliner, Dead page elimination, Close pages
+0048 Page adjust linkage m d=6
+  -    [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a253, a255, a256, a258, a261, a262, a263, a266, a274, 
+  +    [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a253, a255, a256, a258, a261, a262, a263, a266, a274, 
+  -        page_function_goto<20>()
+  +        page_function_goto<20>(a36, a44, a248, a250, a252, a256, a258, a261, a263, a266, a280, a283, a287, a2
+~ 0049-0050 noop x2: Page return params adjust, Page return promotion
+0051 Page code organization m d=429
+  ; REMOVING } page_function_end(20)
+  ; INSERTED } page_function_end(20) ON if (r248 ~= 29) then goto label_882 end
+  ; REMOVING } page_function_end(28)
+  ; INSERTED } page_function_end(28) ON if (r248 ~= 149) then goto label_3258 end
+  -        goto 198
+  -        ::label_882::
+  -        r248 = 0
+  -        setflag(32, 0)
+  -        setflag(2, 0)
+  -        setflag(4, bitread<int32_t>(int32_t((r248 >> 31)), 0, 0))
+  -        setflag(8, (r248 == 0))
+  -        r256 = bitread<int32_t>(r248, 0, 7)
+  -        r266 = (int32_t(r256) ~ (int32_t(r256) >> 4))
+  -        r268 = (r266 ~ (r266 >> 2))
+  -        setflag(16, (~(r268 ~ (r268 >> 1)) & 1))
+  -        r250 = int64_t((r44 + 32))
+  ... 408 more
+0052 Page code organization m d=1096
+  ; REMOVING } page_function_end(100)
+  ; INSERTED } page_function_end(100) ON } page_function_end(98)
+  -} page_function_end(100)
+  -page_function_start (28) {
+  -    [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44, a248, a250, a253, a256, a258, a260, a263, a266, a268, a27
+  -    r248 = int32_t((r44 - 4))
+  -    memset<int32_t>(int32_t(r248)) = int64_t(r36)
+  -    r44 = int64_t(r248)
+  -    r36 = r44
+  -    r252 = (int64_t(r36) - 8)
+  -    memset<int64_t>(int64_t(r252)) = int64_t(r39)
+  -    r252 = (int64_t(r36) - 16)
+  -    memset<int64_t>(int64_t(r252)) = int64_t(r43)
+  -    r252 = (int64_t(r36) - 20)
+  ... 1072 more
+~ 0053-0056 noop x4: Page code organization, Dead controller removal, Page promotion, Label flatten
+0057 Constant propagation m d=578
+  ; REMOVING r288 = (r253 < 0)
+  ; REMOVING r252 = (int64_t(r36) - 24) x3
+  ; REMOVING r255 = 331
+  ; REMOVING r35 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r297 = false x3
+  ; REMOVING r254 = r248 x2
+  ; REMOVING r248 = 322
+  ; REMOVING r263 = bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3) x2
+  ; REMOVING r258 = 0 x2
+  ; REMOVING r260 = memread<int32_t>(int64_t(r252)) x2
+  ; REMOVING r252 = (int64_t(r36) - 36) x3
+  ; REMOVING r280 = (r278 ~ r279)
+  ; REMOVING r262 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r271 = (int32_t(r262) >> 4) x2
+  ; REMOVING r250 = 1 x2
+  ; REMOVING r248 = int64_t(r248) x7
+  ; REMOVING r250 = r248 x4
+  ; REMOVING r35 = int32_t(r248) x2
+  ; REMOVING r267 = (r266 >> 1)
+  ; REMOVING r253 = (r248 == 0)
+  ; REMOVING r250 = int32_t(r253)
+  ; REMOVING r279 = (r277 ~ (r277 >> 1))
+  ; REMOVING r276 = (r275 >> 2)
+  ; REMOVING r274 = (int32_t(r265) >> 4)
+  ; REMOVING r252 = 31
+  ; REMOVING r256 = int32_t((r38 >> (int8_t(31) - 1)))
+  ; REMOVING r254 = (int8_t(31) ~= 0)
+  ; REMOVING r252 = (int64_t(r36) - 32) x3
+  ; REMOVING r276 = (r274 ~ (r274 >> 1))
+  ; REMOVING r261 = (r251 == 0) x2
+  ; REMOVING r259 = int32_t((r251 >> 31))
+  ; REMOVING r256 = ((32 - int32_t(r250)) & 31)
+  ; REMOVING r250 = (flag(8) == 0) x2
+  ; REMOVING r279 = ~(r276 ~ (r276 >> 1))
+  ; REMOVING r262 = (int32_t(r254) < 0)
+  ; REMOVING r253 = 0 x2
+  ; REMOVING r250 = (uint64_t((int32_t(r248) | r253)) / 3)
+  ; REMOVING r252 = (int64_t(r36) - 28) x3
+  ; REMOVING r35 = int32_t(r250) x3
+  ; REMOVING r275 = (r273 ~ (r273 >> 1))
+  ; REMOVING r248 = 240
+  ; REMOVING r250 = (flag(8) == 1)
+  ; REMOVING r287 = (r286 >> 1)
+  ; REMOVING r283 = (int32_t(r274) >> 4) x2
+  ; REMOVING r267 = memread<uint32_t>(int64_t(r252)) x2
+  ; REMOVING r266 = (int32_t(r263) < 4)
+  ; REMOVING r264 = memread<int32_t>(int64_t(r252)) x2
+  ; REMOVING r258 = 100
+  ; REMOVING r253 = int32_t(r253) x2
+  ; REMOVING r250 = (int64_t(r36) - 24)
+  ; REMOVING r274 = (r278 ~ r279) x2
+  ; REMOVING r251 = (int64_t(r35) + int64_t(r250))
+  ; REMOVING r252 = (memread<int64_t>(int64_t(r252)) + 8)
+  ; REMOVING r253 = memread<int64_t>(int64_t(r252))
+  ; REMOVING r289 = (r286 and (int32_t(r253) < 0))
+  ; REMOVING r297 = (r294 and (int32_t(r253) >= 0))
+  ; REMOVING r264 = (int32_t(r253) < 0)
+  ; REMOVING r258 = bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3)
+  ; REMOVING r299 = (r289 or r297)
+  ; REMOVING r294 = ((r35 < 0) and (memread<int32_t>(int64_t(r252)) < 0))
+  ; REMOVING r286 = ((r35 > 0) and (memread<int32_t>(int64_t(r252)) > 0))
+  ; REMOVING r252 = (int64_t(r36) - 16) x4
+  ; REMOVING r35 = r253 x2
+  ; REMOVING r250 = ((int64_t(r256) - 2147483648) * 4)
+  ; REMOVING r254 = r35
+  ; REMOVING r262 = (int32_t(r35) < 0)
+  ; REMOVING r270 = (r268 ~ r269)
+  ; REMOVING r258 = -2147483648
+  ; REMOVING r256 = memread<int32_t>(int64_t(r252))
+  ; REMOVING r250 = (flag(4) == uint1_t(flag(32)))
+  ; REMOVING r289 = ~(r286 ~ (r286 >> 1))
+  ; REMOVING r262 = uint1_t(r262)
+  ; REMOVING r250 = (int64_t(r36) - 32)
+  ; REMOVING r276 = (r35 > 0)
+  ; REMOVING r274 = ~(r271 ~ (r271 >> 1))
+  ; REMOVING r255 = (r248 < r35)
+  ; REMOVING r253 = (int32_t((r35 & 15)) + bitread<int32_t>(int32_t(r251), 0, 3))
+  ; REMOVING r281 = int32_t((bitread<int32_t>(int32_t((r251 >> 31)), 0, 0) ~ uint1_t(flag(2))))
+  ; REMOVING r278 = (~(r274 ~ (r274 >> 1)) & 1)
+  ; REMOVING r259 = (r251 >> 31)
+  ; REMOVING r267 = (int32_t(r258) >> 4)
+  ; REMOVING r252 = (int64_t(r36) - 20) x2
+  ; REMOVING r252 = (int64_t(r36) - 8) x3
+  ; REMOVING r44 = int64_t(r250)
+  ; REMOVING r248 = 0
+  ; REMOVING r248 = 29
+  ; REMOVING r250 = 29
+  ; REMOVING r252 = (int64_t(r36) - 12) x4
+  ; REMOVING r35 = int32_t(r35)
+  ; REMOVING r292 = int32_t((r283 or r290))
+  ; REMOVING r287 = false
+  ; REMOVING r280 = ((r35 > 0) and r279)
+  ; REMOVING r276 = ~(r273 ~ r274)
+  ; REMOVING r258 = int32_t((r250 >> 31))
+  ; REMOVING r256 = (r255 > 15)
+  ; REMOVING r253 = int32_t((r35 & 15))
+  ; REMOVING r40 = 19
+  ; REMOVING r286 = false
+  ; REMOVING r266 = 0
+  ; REMOVING r263 = 0
+  ; REMOVING r248 = 101
+  ; REMOVING r272 = (r270 ~ (r270 >> 1))
+  ; REMOVING r248 = 93
+  ; REMOVING r250 = (flag(4) == r252)
+  ; REMOVING r290 = (~(r286 ~ r287) & 1)
+  ; REMOVING r262 = 7
+  ; REMOVING r258 = 1000
+  ; REMOVING r250 = (int64_t(r36) - 12)
+  ; REMOVING r252 = (int64_t(r36) - 4)
+  ; REMOVING r276 = (~r274 & 1)
+  ; REMOVING r255 = (int64_t(r253) < 0)
+  -    r255 = (int64_t(r253) < 0)
+  -    setflag(1, r255)
+  +    setflag(1, (int64_t(r253) < 0))
+  -    r262 = 7
+  -    r276 = (~r274 & 1)
+  -    setflag(16, r276)
+  +    setflag(16, (~r274 & 1))
+  -    r252 = (int64_t(r36) - 4)
+  -    memset<int32_t>(int64_t(r252)) = 0
+  -    r252 = (int64_t(r36) - 8)
+  -    memset<int32_t>(int64_t(r252)) = 9
+  +    memset<int32_t>(int64_t((int64_t(r36) - 4))) = 0
+  ... 453 more
+0058 Constant propagation m d=186
+  ; REMOVING r252 = (int64_t(r36) - 36)
+  ; REMOVING r279 = (r278 >> 1) x3
+  ; REMOVING r248 = 149 x2
+  ; REMOVING r250 = 1
+  ; REMOVING r248 = 267
+  ; REMOVING r248 = (r40 << 32)
+  ; REMOVING r248 = 288 x2
+  ; REMOVING r263 = (memread<int32_t>(int64_t(r252)) & 15)
+  ; REMOVING r250 = (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)
+  ; REMOVING r252 = (int64_t(r36) - 16)
+  ; REMOVING r252 = (int64_t(r36) - 8)
+  ; REMOVING r248 = 232
+  ; REMOVING r286 = ((r35 > 0) and (memread<int32_t>(int64_t(r252)) > 0))
+  ; REMOVING r294 = ((r35 < 0) and (memread<int32_t>(int64_t(r252)) < 0))
+  ; REMOVING r289 = (((r35 > 0) and (memread<int32_t>(int64_t(r252)) > 0)) and (r253 < 0))
+  ; REMOVING r253 = memread<int64_t>(int64_t(r252))
+  ; REMOVING r248 = 208
+  ; REMOVING r35 = int32_t(r250) x3
+  ; REMOVING r269 = (r268 >> 1)
+  ; REMOVING r252 = (int64_t(r36) - 28)
+  ; REMOVING r252 = (int64_t(r36) - 32)
+  ; REMOVING r290 = (false and (r250 >= 0))
+  ; REMOVING r283 = (((r35 > 0) and r279) and (r250 < 0))
+  ; REMOVING r274 = (r273 >> 1)
+  ; REMOVING r255 = int32_t((int32_t((r35 & 15)) + 1))
+  ; REMOVING r250 = 101
+  ; REMOVING r35 = memread<int32_t>(int64_t((int64_t(r36) - 12)))
+  ; REMOVING r252 = uint1_t(flag(32))
+  ; REMOVING r287 = (r286 >> 1)
+  ; REMOVING r274 = (r272 ~ (r272 >> 1))
+  ; REMOVING r253 = bitread<int64_t>(int64_t(r44), 0, 3)
+  -    r253 = bitread<int64_t>(int64_t(r44), 0, 3)
+  -    setflag(1, (int64_t(r253) < 0))
+  +    setflag(1, (int64_t(bitread<int64_t>(int64_t(r44), 0, 3)) < 0))
+  -    r274 = (r272 ~ (r272 >> 1))
+  -    setflag(16, (~r274 & 1))
+  +    setflag(16, (~(r272 ~ (r272 >> 1)) & 1))
+  -    r287 = (r286 >> 1)
+  -    setflag(16, (~(r286 ~ r287) & 1))
+  +    setflag(16, (~(r286 ~ (r286 >> 1)) & 1))
+  -    r252 = uint1_t(flag(32))
+  -    if  ((flag(4) == r252)) then
+  +    if  ((flag(4) == uint1_t(flag(32)))) then
+  ... 129 more
+0059 Constant propagation m d=18
+  ; REMOVING r35 = memread<int64_t>(int64_t((int64_t(r36) - 8)))
+  ; REMOVING r252 = (int64_t(r36) - 8)
+  ; REMOVING r253 = memread<int32_t>(int64_t((int64_t(r36) - 32)))
+  ; REMOVING r279 = true
+  -        r279 = true
+  -        setflag(32, int32_t(((((r35 > 0) and r279) and (r250 < 0)) or (false and (r250 >= 0)))))
+  +        setflag(32, int32_t(((((r35 > 0) and true) and (r250 < 0)) or (false and (r250 >= 0)))))
+  -        r253 = memread<int32_t>(int64_t((int64_t(r36) - 32)))
+  -        r248 = int32_t((r253 ~ uint32_t(r255)))
+  +        r248 = int32_t((memread<int32_t>(int64_t((int64_t(r36) - 32))) ~ uint32_t(r255)))
+  -        r252 = (int64_t(r36) - 8)
+  -        r35 = memread<int32_t>((int64_t(memread<int64_t>(int64_t(r252))) + int64_t(((int64_t(r256) - 21474836
+  +        r35 = memread<int32_t>((int64_t(memread<int64_t>(int64_t((int64_t(r36) - 8)))) + int64_t(((int64_t(r2
+  -        r35 = memread<int64_t>(int64_t((int64_t(r36) - 8)))
+  -        r253 = (memread<int32_t>(int64_t((int64_t(r35) + int64_t((((memread<int64_t>((int64_t(r36) - 28)) ~ 2
+  +        r253 = (memread<int32_t>(int64_t((int64_t(memread<int64_t>(int64_t((int64_t(r36) - 8)))) + int64_t(((
+~ 0060-0063 noop x4: Constant propagation, Virtual function reconstruction*2, Dead code elimination
+0064 Dead label elimination m d=34
+  ; REMOVING ::label_345::
+  ; REMOVING ::label_685::
+  ; REMOVING ::label_871::
+  ; REMOVING ::label_1635::
+  ; REMOVING ::label_1710::
+  ; REMOVING ::label_1982::
+  ; REMOVING ::label_2381::
+  ; REMOVING ::label_2849::
+  ; REMOVING ::label_2860::
+  ; REMOVING ::label_2877::
+  ; REMOVING ::label_3219::
+  ; REMOVING ::label_3230::
+  ; REMOVING ::label_3247::
+  ; REMOVING ::label_3397::
+  ; REMOVING ::label_3409::
+  ; REMOVING ::label_3539::
+  ; REMOVING ::label_3932::
+  -        ::label_345::
+  -    ::label_685::
+  -        ::label_871::
+  -            ::label_1635::
+  -        ::label_1710::
+  -            ::label_1982::
+  -        ::label_2381::
+  -            ::label_2849::
+  -        ::label_2860::
+  -        ::label_2877::
+  -            ::label_3219::
+  -        ::label_3230::
+  ... 5 more
+~ 0065-0065 noop x1: Dead label elimination
+0066 Dead store elimination m d=42
+  ; REMOVING r248 = 0 x3
+  ; REMOVING r262 = 0
+  ; REMOVING r279 = 0
+  ; REMOVING r248 = 288
+  ; REMOVING r261 = 1
+  ; REMOVING r267 = 0 x2
+  ; REMOVING r248 = 208
+  ; REMOVING r255 = uint1_t(r256) x2
+  ; REMOVING r255 = 0 x2
+  ; REMOVING r262 = uint1_t(r262)
+  ; REMOVING r248 = 240
+  ; REMOVING r248 = int64_t(240)
+  ; REMOVING r248 = 267
+  ; REMOVING r253 = int64_t(267)
+  ; REMOVING r259 = 0
+  ; REMOVING r254 = 0
+  -    r248 = 0
+  -        r262 = 0
+  -        r279 = 0
+  -        r248 = 0
+  -        r248 = 288
+  -            r261 = 1
+  -        r267 = 0
+  -        r248 = 208
+  -        r255 = uint1_t(r256)
+  -        r267 = 0
+  -        r255 = 0
+  -        r248 = 0
+  ... 9 more
+0067 Constant fold m d=76
+  ; REMOVING goto 356
+  ; REMOVING end x16
+  ; REMOVING goto 882 x2
+  ; REMOVING goto 1646
+  ; REMOVING goto 3550 x3
+  ; REMOVING goto 1993
+  ; REMOVING goto 2392 x2
+  ; REMOVING goto 2693
+  ; REMOVING if  (240 == 240) then
+  ; REMOVING goto 2888
+  ; REMOVING if  (267 == 267) then
+  ; REMOVING goto 3258
+  ; REMOVING goto 3944
+  -        if  (93 == 38) then
+  -            goto 356
+  -        end
+  +        if (93 == 38) then goto label_356 end
+  -        if  (r248 == 93) then
+  -            goto 882
+  -        end
+  +        if (r248 == 93) then goto label_882 end
+  -        if  (29 == 93) then
+  -            goto 882
+  -        end
+  +        if (29 == 93) then goto label_882 end
+  ... 52 more
+0068 Constant fold m d=44
+  ; REMOVING if (93 ~= 38) then goto label_356 end
+  ; REMOVING if (29 ~= 29) then goto label_882 end
+  ; REMOVING if (288 ~= 159) then goto label_1646 end
+  ; REMOVING if (208 ~= 182) then goto label_1993 end
+  ; REMOVING if (232 == 208) then goto label_2392 end
+  ; REMOVING goto 2888
+  ; REMOVING end x2
+  ; REMOVING if (288 == 240) then goto label_2888 end
+  ; REMOVING goto 3258
+  ; REMOVING if (int64_t(149) ~= 149) then goto label_3258 end
+  ; REMOVING if (int64_t(149) ~= 149) then goto label_3550 end
+  ; REMOVING if (322 ~= 311) then goto label_3944 end
+  -    if  ((flag(4) == uint1_t(flag(32)))) then
+  -        if (93 == 38) then goto label_356 end
+  +    if  (((flag(4) == uint1_t(flag(32))) and (93 ~= 38))) then
+  -        if (29 == 93) then goto label_882 end
+  -        if (29 ~= 29) then goto label_882 end
+  +        if (((29 == 93) or (29 ~= 29))) then goto label_882 end
+  -        if  ((flag(4) == uint1_t(flag(32)))) then
+  -            if (288 == 159) then goto label_1646 end
+  +        if  (((flag(4) == uint1_t(flag(32))) and (288 ~= 159))) then
+  -        if  ((flag(8) == 0)) then
+  -            if (208 == 182) then goto label_1993 end
+  +        if  (((flag(8) == 0) and (208 ~= 182))) then
+  ... 23 more
+0069 Constant fold m d=24
+  ; REMOVING end x2
+  ; REMOVING if  (((flag(4) == uint1_t(flag(32))) and (288 ~= 159))) then
+  ; REMOVING if  (((flag(8) == 0) and (208 ~= 182))) then
+  ; REMOVING if ((((flag(8) == 1) or (flag(4) ~= uint1_t(flag(32)))) and (240 == 240))) then goto label_2888 end
+  ; REMOVING if (((149 == 267) or (int64_t(149) ~= 149))) then goto label_3258 end
+  ; REMOVING ::label_356::
+  ; REMOVING ::label_1646::
+  ; REMOVING ::label_1993::
+  ; REMOVING ::label_3944::
+  -    ::label_356::
+  -        if  (((flag(4) == uint1_t(flag(32))) and (288 ~= 159))) then
+  -            if (int64_t(288) == 288) then goto label_3550 end
+  -        end
+  -        ::label_1646::
+  +        if ((((flag(4) == uint1_t(flag(32))) and (288 ~= 159)) and (int64_t(288) == 288))) then goto label_35
+  -        if  (((flag(8) == 0) and (208 ~= 182))) then
+  -            if (int64_t(208) == 208) then goto label_2392 end
+  -        end
+  -        ::label_1993::
+  +        if ((((flag(8) == 0) and (208 ~= 182)) and (int64_t(208) == 208))) then goto label_2392 end
+  -        if ((((flag(8) == 1) or (flag(4) ~= uint1_t(flag(32)))) and (240 == 240))) then goto label_2888 end
+  ... 6 more
+0070 Constant fold m d=2
+  ; REMOVING ::label_2888::
+  -        ::label_2888::
+~ 0071-0072 noop x2: Constant fold, Control flow simplification
+0073 Expression Canonicalization m d=227
+  ; REMOVING if  (101 == 82) then
+  ; REMOVING r44 = int32_t(r44)
+  ; REMOVING page_function_call<20>(a36, a44, 101, 101, a252, a256, a258, a261, 7, 0, a280, a283, a287, a290, a292)[r44, 82]
+  ; REMOVING end
+  -    setflag(1, (int64_t(bitread<int64_t>(int64_t(r44), 0, 3)) < 0))
+  +    setflag(1, (bitread<int64_t>(int64_t(r44), 0, 3) < 0))
+  -    memset<int32_t>(int64_t((int64_t(r36) - 4))) = 0
+  -    memset<int32_t>(int64_t((int64_t(r36) - 8))) = 9
+  +    memset<int32_t>((int64_t(r36) - 4)) = 0
+  +    memset<int32_t>((int64_t(r36) - 8)) = 9
+  -    r261 = uint1_t(7)
+  -    setflag(1, (int32_t(bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3)) < 8))
+  +    r261 = 1
+  +    setflag(1, (bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3) < 8))
+  -    if  (((flag(4) == uint1_t(flag(32))) and (93 ~= 38))) then
+  -        r248 = int64_t(93)
+  ... 168 more
+0074 Expression Canonicalization m d=98
+  ; REMOVING if  (31 == 1) then
+  ; REMOVING setflag(32, 0)
+  ; REMOVING end
+  -    if  (((flag(4) == uint1_t(flag(32))) and true)) then
+  +    if  ((flag(4) == uint1_t(flag(32)))) then
+  -    r287 = (false)
+  +    r287 = false
+  -        setflag(4, (int32_t((r250 >> 31)) & 1))
+  +        setflag(4, bitread<int32_t>(int32_t((r250 >> 31)), 0, 0))
+  -        if ((false or false)) then goto label_882 end
+  +        if (false) then goto label_882 end
+  -    setflag(4, bitread<int32_t>(int32_t(0), 0, 0))
+  +    setflag(4, bitread<int32_t>(0, 0, 0))
+  -    r256 = int32_t(0)
+  +    r256 = 0
+  ... 57 more
+0075 Expression Canonicalization m d=65
+  ; REMOVING if  (true) then
+  ; REMOVING end
+  -    setflag(4, bitread<int32_t>(0, 0, 0))
+  +    setflag(4, int32_t(0))
+  -        setflag(2, bitread<int32_t>(int32_t((r253 >> bitread<int32_t>(31, 0, 4))), 0, 0))
+  -        setflag(4, bitread<int32_t>((r251 < 0), 0, 0))
+  +        setflag(2, bitread<int32_t>(int32_t((r253 >> int32_t(31))), 0, 0))
+  +        setflag(4, int32_t((r251 < 0)))
+  -        setflag(32, int32_t((bitread<int32_t>((r251 < 0), 0, 0) ~ uint1_t(flag(2)))))
+  +        setflag(32, int32_t((int32_t((r251 < 0)) ~ uint1_t(flag(2)))))
+  -        setflag(4, bitread<int32_t>(int32_t((r248 < 0)), 0, 0))
+  +        setflag(4, bitread<int32_t>((r248 < 0), 0, 0))
+  -        if (((flag(4) == uint1_t(flag(32))) and true)) then goto label_3550 end
+  +        if ((flag(4) == uint1_t(flag(32)))) then goto label_3550 end
+  ... 34 more
+0076 Expression Canonicalization m d=52
+  -    setflag(4, int32_t(0))
+  +    setflag(4, 0)
+  -        setflag(2, bitread<int32_t>(int32_t((r253 >> int32_t(31))), 0, 0))
+  -        setflag(4, int32_t((r251 < 0)))
+  +        setflag(2, bitread<int32_t>(int32_t((r253 >> 31)), 0, 0))
+  +        setflag(4, (r251 < 0))
+  -        setflag(32, int32_t((int32_t((r251 < 0)) ~ uint1_t(flag(2)))))
+  +        setflag(32, int32_t(((r251 < 0) ~ uint1_t(flag(2)))))
+  -        setflag(4, bitread<int32_t>((r248 < 0), 0, 0))
+  +        setflag(4, int32_t((r248 < 0)))
+  -        setflag(4, bitread<int32_t>((r248 < 0), 0, 0))
+  +        setflag(4, int32_t((r248 < 0)))
+  ... 24 more
+0077 Expression Canonicalization m d=30
+  -        setflag(2, bitread<int32_t>(int32_t((r253 >> 31)), 0, 0))
+  +        setflag(2, bitread<int32_t>(int32_t((r253 < 0)), 0, 0))
+  -        setflag(4, int32_t((r248 < 0)))
+  +        setflag(4, (r248 < 0))
+  -        setflag(4, int32_t((r248 < 0)))
+  +        setflag(4, (r248 < 0))
+  -        setflag(4, bitread<int32_t>(int32_t((r253 < 0)), 0, 0))
+  +        setflag(4, bitread<int32_t>((r253 < 0), 0, 0))
+  -        setflag(4, bitread<int32_t>(int32_t((r253 < 0)), 0, 0))
+  +        setflag(4, bitread<int32_t>((r253 < 0), 0, 0))
+  -        r40 = int32_t((r253 < 0))
+  +        r40 = (r253 < 0)
+  ... 8 more
+0078 Expression Canonicalization m d=15
+  -        setflag(2, bitread<int32_t>(int32_t((r253 < 0)), 0, 0))
+  +        setflag(2, bitread<int32_t>((r253 < 0), 0, 0))
+  -        setflag(4, bitread<int32_t>((r253 < 0), 0, 0))
+  +        setflag(4, int32_t((r253 < 0)))
+  -        setflag(4, bitread<int32_t>((r253 < 0), 0, 0))
+  +        setflag(4, int32_t((r253 < 0)))
+  -    setflag(2, bitread<int32_t>((r253 < 0), 0, 0))
+  +    setflag(2, int32_t((r253 < 0)))
+  -    setflag(4, bitread<int32_t>((r253 < 0), 0, 0))
+  +    setflag(4, int32_t((r253 < 0)))
+0079 Expression Canonicalization m d=15
+  -        setflag(2, bitread<int32_t>((r253 < 0), 0, 0))
+  +        setflag(2, int32_t((r253 < 0)))
+  -        setflag(4, int32_t((r253 < 0)))
+  +        setflag(4, (r253 < 0))
+  -        setflag(4, int32_t((r253 < 0)))
+  +        setflag(4, (r253 < 0))
+  -    setflag(2, int32_t((r253 < 0)))
+  +    setflag(2, (r253 < 0))
+  -    setflag(4, int32_t((r253 < 0)))
+  +    setflag(4, (r253 < 0))
+0080 Expression Canonicalization m d=3
+  -        setflag(2, int32_t((r253 < 0)))
+  +        setflag(2, (r253 < 0))
+~ 0081-0081 noop x1: Expression Canonicalization
+0082 Jump threading m d=115
+  ; INSERTED end ON if (true) then goto label_2693 end
+  ; INSERTED end ON memset<int32_t>((int64_t(r36) - 24)) = int32_t(r253)
+  -        if ((flag(8) == 0)) then goto label_2392 end
+  -        r256 = (memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648)
+  -        r35 = memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + ((int64_t(r256) - 2147483648) * 4)))
+  -        r252 = (memread<int64_t>((int64_t(r36) - 16)) + 4)
+  -        r253 = int32_t((r35 + memread<int32_t>(int64_t(r252))))
+  -        setflag(1, ((int32_t((r35 & 15)) + bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3)) > 15))
+  -        setflag(2, (r253 < r35))
+  -        setflag(4, (r253 < 0))
+  -        setflag(8, (r253 == 0))
+  -        r266 = bitread<int32_t>(r253, 0, 7)
+  -        r276 = (int32_t(r266) ~ (int32_t(r266) >> 4))
+  -        r278 = (r276 ~ (r276 >> 2))
+  ... 102 more
+~ 0083-0090 noop x8: Allign pages, Page inliner, Dead page elimination, Close pages, Page code organization, Dead controller removal, Page promotion, Label flatten
+0091 Constant propagation m d=72
+  ; REMOVING r248 = 322
+  ; REMOVING r256 = 31
+  ; REMOVING r254 = r40
+  ; REMOVING r256 = ((int32_t((r35 & 15)) + 1) > 15)
+  ; REMOVING r262 = (int32_t(r253) < r35) x2
+  ; REMOVING r299 = int32_t(((((r35 > 0) and (memread<int32_t>(int64_t(r252)) > 0)) and (int32_t(r253) < 0)) or (((r35 < 0) and (memread<int32_t>(int64_t(
+  ; REMOVING r256 = (memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648)
+  ; REMOVING r35 = int32_t(r248)
+  ; REMOVING r256 = 0
+  ; REMOVING r248 = 101
+  ; REMOVING r287 = false
+  ; REMOVING r252 = (int64_t(r36) - 24)
+  ; REMOVING r248 = 93
+  -        r248 = 93
+  -        if (r248 == 93) then goto label_882 end
+  +        if (93 == 93) then goto label_882 end
+  -    r287 = false
+  -    r290 = (r287 and r289)
+  +    r290 = (false and r289)
+  -    r252 = (int64_t(r36) - 24)
+  -    r43 = int64_t(r252)
+  -    r248 = 101
+  -    r252 = r248
+  +    r43 = int64_t((int64_t(r36) - 24))
+  +    r252 = 101
+  ... 42 more
+0092 Constant propagation m d=6
+  ; REMOVING r252 = 101
+  -    r252 = 101
+  -    if  (r252 ~= 101) then
+  -        page_function_goto<20>(a36, a44, 101, 101, a252, a256, a258, a261, 0, 0, a280, a283, false, a290, a29
+  +    if  (101 ~= 101) then
+  +        page_function_goto<20>(a36, a44, 101, 101, 101, a256, a258, a261, 0, 0, a280, a283, false, a290, a292
+~ 0093-0095 noop x3: Constant propagation, Virtual function reconstruction*2
+0096 Dead code elimination m d=3
+  ; REMOVING if  (not true) then
+  ; REMOVING end
+  -            if  (not true) then
+  -            end
+~ 0097-0097 noop x1: Dead code elimination
+0098 Dead label elimination m d=4
+  ; REMOVING ::label_2392::
+  ; REMOVING ::label_2693::
+  -            ::label_2392::
+  -        ::label_2693::
+~ 0099-0099 noop x1: Dead label elimination
+0100 Dead store elimination m d=6
+  ; REMOVING r279 = ((int64_t(r44) ~ 32) & int64_t((int64_t(r44) ~ r250)))
+  ; REMOVING r254 = 0
+  ; REMOVING r261 = uint1_t(r262)
+  -    r279 = ((int64_t(r44) ~ 32) & int64_t((int64_t(r44) ~ r250)))
+  -    r254 = 0
+  -        r261 = uint1_t(r262)
+0101 Constant fold m d=12
+  ; REMOVING end x2
+  ; REMOVING if  ((flag(4) == uint1_t(flag(32)))) then
+  ; REMOVING if  (322 == 322) then
+  -    if  ((flag(4) == uint1_t(flag(32)))) then
+  -        if (93 == 93) then goto label_882 end
+  -    end
+  +    if (((flag(4) == uint1_t(flag(32))) and (93 == 93))) then goto label_882 end
+  -    if  ((r250 and true)) then
+  -        if  (322 == 322) then
+  -            page_function_goto<98>(a36, a44, 322, a250, 0, a266, a268, a271, a286, a289, a294, false, a299)
+  -        end
+  +    if  (((r250 and true) and (322 == 322))) then
+  +        page_function_goto<98>(a36, a44, 322, a250, 0, a266, a268, a271, a286, a289, a294, false, a299)
+~ 0102-0103 noop x2: Constant fold, Control flow simplification
+0104 Expression Canonicalization m d=35
+  ; REMOVING if  (101 ~= 101) then
+  ; REMOVING page_function_goto<20>(a36, a44, 101, 101, 101, a256, a258, a261, 0, 0, a280, a283, false, a290, a292)
+  ; REMOVING end
+  -    if (((flag(4) == uint1_t(flag(32))) and (93 == 93))) then goto label_882 end
+  +    if (((flag(4) == uint1_t(flag(32))) and true)) then goto label_882 end
+  -    r290 = (false and r289)
+  +    r290 = false
+  -    r43 = int64_t((int64_t(r36) - 24))
+  -    if  (101 ~= 101) then
+  -        page_function_goto<20>(a36, a44, 101, 101, 101, a256, a258, a261, 0, 0, a280, a283, false, a290, a292
+  -    end
+  +    r43 = (int64_t(r36) - 24)
+  -    r266 = (int32_t(0) ~ (int32_t(0) >> 4))
+  +    r266 = (0 ~ (0 >> 4))
+  -        memset<int32_t>((int64_t(r36) - 32)) = int32_t(int32_t(r248))
+  ... 13 more
+0105 Expression Canonicalization m d=9
+  -    if (((flag(4) == uint1_t(flag(32))) and true)) then goto label_882 end
+  +    if ((flag(4) == uint1_t(flag(32)))) then goto label_882 end
+  -    r266 = (0 ~ (0 >> 4))
+  +    r266 = (0 ~ 0)
+  -    setflag(2, bitread<int32_t>(int32_t((r253 < 0)), 0, 0))
+  +    setflag(2, bitread<int32_t>((r253 < 0), 0, 0))
+0106 Expression Canonicalization m d=6
+  -    r266 = (0 ~ 0)
+  +    r266 = 0
+  -    setflag(2, bitread<int32_t>((r253 < 0), 0, 0))
+  +    setflag(2, int32_t((r253 < 0)))
+0107 Expression Canonicalization m d=3
+  -    setflag(2, int32_t((r253 < 0)))
+  +    setflag(2, (r253 < 0))
+~ 0108-0117 noop x10: Expression Canonicalization, Jump threading, Allign pages, Page inliner, Dead page elimination, Close pages, Page code organization, Dead controller removal, Page promotion, Label flatten
+0118 Constant propagation m d=20
+  ; REMOVING r262 = (r266 ~ (r266 >> 1))
+  ; REMOVING r266 = 0
+  ; REMOVING r290 = false
+  ; REMOVING r292 = int32_t((r283 or false))
+  ; REMOVING r280 = (r35 > 0)
+  -    r280 = (r35 > 0)
+  -    r283 = (r280 and (r250 < 0))
+  +    r283 = ((r35 > 0) and (r250 < 0))
+  -    r290 = false
+  -    r292 = int32_t((r283 or r290))
+  -    setflag(32, r292)
+  +    setflag(32, int32_t((r283 or false)))
+  -    page_function_call<28>(a36, a39, 19, a43, a44, 101, 101, a253, a256, a258, a260, 7, 0, 0, a271, a285, fal
+  +    page_function_call<28>(a36, a39, 19, a43, a44, 101, 101, a253, a256, a258, a260, 7, 0, 0, a271, a285, fal
+  -    r266 = 0
+  -    r268 = (r266 ~ (r266 >> 2))
+  +    r268 = (0 ~ (0 >> 2))
+  ... 3 more
+0119 Constant propagation m d=5
+  ; REMOVING r283 = ((r35 > 0) and (r250 < 0))
+  -    r283 = ((r35 > 0) and (r250 < 0))
+  -    setflag(32, int32_t((r283 or false)))
+  +    setflag(32, int32_t((((r35 > 0) and (r250 < 0)) or false)))
+~ 0120-0124 noop x5: Constant propagation, Virtual function reconstruction*2, Dead code elimination, Dead label elimination
+0125 Dead store elimination m d=6
+  ; REMOVING r256 = 0
+  ; REMOVING r261 = 1
+  ; REMOVING r262 = 0
+  -    r256 = 0
+  -    r261 = 1
+  -        r262 = 0
+~ 0126-0127 noop x2: Constant fold, Control flow simplification
+0128 Expression Canonicalization m d=3
+  -    r268 = (0 ~ (0 >> 2))
+  +    r268 = (0 ~ 0)
+0129 Expression Canonicalization m d=3
+  -    r268 = (0 ~ 0)
+  +    r268 = 0
+~ 0130-0139 noop x10: Expression Canonicalization, Jump threading, Allign pages, Page inliner, Dead page elimination, Close pages, Page code organization, Dead controller removal, Page promotion, Label flatten
+0140 Constant propagation m d=4
+  ; REMOVING r268 = 0
+  -    r268 = 0
+  -    setflag(16, (~(r268 ~ (r268 >> 1)) & 1))
+  +    setflag(16, (~(0 ~ (0 >> 1)) & 1))
+~ 0141-0148 noop x8: Constant propagation, Virtual function reconstruction*2, Dead code elimination, Dead label elimination, Dead store elimination, Constant fold, Control flow simplification
+0149 Expression Canonicalization m d=3
+  -    setflag(16, (~(0 ~ (0 >> 1)) & 1))
+  +    setflag(16, (~(0 ~ 0) & 1))
+0150 Expression Canonicalization m d=3
+  -    setflag(16, (~(0 ~ 0) & 1))
+  +    setflag(16, (~0 & 1))
+0151 Expression Canonicalization m d=3
+  -    setflag(16, (~0 & 1))
+  +    setflag(16, (-1 & 1))
+0152 Expression Canonicalization m d=3
+  -    setflag(16, (-1 & 1))
+  +    setflag(16, 1)
+~ 0153-0180 noop x28: Expression Canonicalization*2, Jump threading*2, Allign pages*2, Page inliner*2, Dead page elimination*2, Close pages*2, Page code organization*2, Dead controller removal*2, Page promotion*2, Label flatten*2, Constant propagation, Virtual function reconstruction*2, Dead code elimination, Dead label elimination, Dead store elimination, Constant fold, Control flow simplification
+0181 Unreachable code m d=4
+  ; REMOVING goto 198
+  ; REMOVING goto 1488
+  -    goto 198
+  -    goto 1488
+~ 0182-0184 noop x3: Branch redirection, Constant propagation, Virtual function reconstruction
+0185 Constant fold m d=2
+  ; REMOVING ::label_198::
+  -    ::label_198::
+~ 0186-0190 noop x5: Constant fold, Dead code elimination, Psuedo instruction elimination, Page inliner, Dead page elimination
+0191 Page code organization m d=102
+  ; REMOVING } page_function_end(28)
+  ; INSERTED } page_function_end(28) ON if (false) then goto label_3550 end
+  ; REMOVING } page_function_end(20)
+  ; INSERTED } page_function_end(20) ON return ;
+  +        ::label_882::
+  +        setflag(32, 0)
+  +        setflag(2, 0)
+  +        setflag(4, 0)
+  +        setflag(8, true)
+  +        setflag(16, 1)
+  +        r250 = int64_t((r44 + 32))
+  +        setflag(1, (int64_t((r44 & 15)) > 15))
+  +        setflag(2, (r250 < r44))
+  +        setflag(4, bitread<int64_t>(int64_t((r250 >> 63)), 0, 0))
+  +        setflag(8, (r250 == 0))
+  +        r261 = bitread<int64_t>(r250, 0, 7)
+  ... 86 more
+~ 0192-0199 noop x8: Page code organization, Dead controller removal, Page promotion, Label flatten, Branch redirection, Constant propagation, Virtual function reconstruction, Constant fold
+0200 Dead code elimination m d=4
+  ; REMOVING if (false) then goto label_882 end
+  ; REMOVING if (((flag(8) == 0) or false)) then goto label_3258 end
+  -        if (false) then goto label_882 end
+  -        if (((flag(8) == 0) or false)) then goto label_3258 end
+~ 0201-0201 noop x1: Dead code elimination
+0202 Page inliner m d=69
+  ; INSERTED if  (memread<int32_t>(r44) == 20) then ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r35 = memread<int32_t>((int64_t(r36) - 12)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r250 = int32_t((r35 + 1)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(1, ((int32_t((r35 & 15)) + 1) > 15)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(2, (r250 < r35)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(4, bitread<int32_t>(int32_t((r250 >> 31)), 0, 0)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(8, (r250 == 0)) ON [PK] [RT=r44] return ; 20, 98 x2
+  ; INSERTED r261 = bitread<int32_t>(r250, 0, 7) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r271 = (r261 ~ (r261 >> 4)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r273 = (r271 ~ (r271 >> 2)) ON [PK] [RT=r44] return ; 20, 98 x2
+  ; INSERTED setflag(16, (~(r273 ~ (r273 >> 1)) & 1)) ON [PK] [RT=r44] return ; 20, 98 x2
+  ; INSERTED setflag(32, int32_t((((r35 > 0) and (r250 < 0)) or false))) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED memset<int32_t>((int64_t(r36) - 12)) = int32_t(r250) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED ::label_882:: ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(32, 0) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(2, 0) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(4, 0) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(8, true) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(16, 1) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r250 = int64_t((r44 + 32)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(1, (int64_t((r44 & 15)) > 15)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(2, (r250 < r44)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(4, bitread<int64_t>(int64_t((r250 >> 63)), 0, 0)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r261 = bitread<int64_t>(r250, 0, 7) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r271 = (int32_t(r261) ~ (int32_t(r261) >> 4)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or false))) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED r36 = memread<int32_t>(int32_t(r250)) ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED return ;  ON [PK] [RT=r44] return ; 20, 98
+  ; INSERTED end ON [PK] [RT=r44] return ; 20, 98
+  ; REMOVING [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a256, a258, a261, a263, a266, a280, a283, a287, a290, a292}, [UPVALUES]{}, [FLAGS]{}, [CAS x2
+  ; REMOVING page_function_start (20) { x2
+  ; REMOVING } page_function_end(20) x2
+  ; REMOVING r35 = memread<int32_t>((int64_t(r36) - 12))
+  ; REMOVING r250 = int32_t((r35 + 1))
+  ; REMOVING setflag(1, ((int32_t((r35 & 15)) + 1) > 15))
+  ; REMOVING setflag(2, (r250 < r35))
+  ; REMOVING setflag(4, bitread<int32_t>(int32_t((r250 >> 31)), 0, 0))
+  ; REMOVING setflag(8, (r250 == 0)) x2
+  ; REMOVING r261 = bitread<int32_t>(r250, 0, 7)
+  ; REMOVING r271 = (r261 ~ (r261 >> 4))
+  ; REMOVING r273 = (r271 ~ (r271 >> 2)) x2
+  ; REMOVING setflag(16, (~(r273 ~ (r273 >> 1)) & 1)) x2
+  ; REMOVING setflag(32, int32_t((((r35 > 0) and (r250 < 0)) or false)))
+  ; REMOVING memset<int32_t>((int64_t(r36) - 12)) = int32_t(r250)
+  ; REMOVING ::label_882::
+  ; REMOVING setflag(32, 0)
+  ; REMOVING setflag(2, 0)
+  ; REMOVING setflag(4, 0)
+  ; REMOVING setflag(8, true)
+  ; REMOVING setflag(16, 1)
+  ; REMOVING r250 = int64_t((r44 + 32))
+  ; REMOVING setflag(1, (int64_t((r44 & 15)) > 15))
+  ; REMOVING setflag(2, (r250 < r44))
+  ; REMOVING setflag(4, bitread<int64_t>(int64_t((r250 >> 63)), 0, 0))
+  ; REMOVING r261 = bitread<int64_t>(r250, 0, 7)
+  ; REMOVING r271 = (int32_t(r261) ~ (int32_t(r261) >> 4))
+  ; REMOVING setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or false)))
+  ; REMOVING r36 = memread<int32_t>(int32_t(r250))
+  ; REMOVING return ;
+  -    page_function_start (20) {
+  -        [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a256, a258, a261, a263, a266, a280, a283, a287, a2
+  -        r35 = memread<int32_t>((int64_t(r36) - 12))
+  -        r250 = int32_t((r35 + 1))
+  -        setflag(1, ((int32_t((r35 & 15)) + 1) > 15))
+  -        setflag(2, (r250 < r35))
+  -        setflag(4, bitread<int32_t>(int32_t((r250 >> 31)), 0, 0))
+  -        setflag(8, (r250 == 0))
+  -        r261 = bitread<int32_t>(r250, 0, 7)
+  -        r271 = (r261 ~ (r261 >> 4))
+  -        r273 = (r271 ~ (r271 >> 2))
+  -        setflag(16, (~(r273 ~ (r273 >> 1)) & 1))
+  ... 55 more
+~ 0203-0203 noop x1: Dead page elimination
+0204 Page code organization m d=66
+  ; REMOVING } page_function_end(98)
+  ; INSERTED } page_function_end(98) ON [PK] [RT=r44] return ; 98
+  -        if  (memread<int32_t>(r44) == 20) then
+  -            r35 = memread<int32_t>((int64_t(r36) - 12))
+  -            r250 = int32_t((r35 + 1))
+  -            setflag(1, ((int32_t((r35 & 15)) + 1) > 15))
+  -            setflag(2, (r250 < r35))
+  -            setflag(4, bitread<int32_t>(int32_t((r250 >> 31)), 0, 0))
+  -            setflag(8, (r250 == 0))
+  -            r261 = bitread<int32_t>(r250, 0, 7)
+  -            r271 = (r261 ~ (r261 >> 4))
+  -            r273 = (r271 ~ (r271 >> 2))
+  -            setflag(16, (~(r273 ~ (r273 >> 1)) & 1))
+  -            setflag(32, int32_t((((r35 > 0) and (r250 < 0)) or false)))
+  ... 52 more
+~ 0205-0209 noop x5: Page code organization, Dead controller removal, Page promotion, Label flatten, Branch redirection
+0210 Constant propagation m d=35
+  ; REMOVING r252 = (int32_t(r44) + 4)
+  ; REMOVING r292 = (memread<int32_t>(int64_t(r252)) < 0)
+  ; REMOVING r283 = (r35 > 0)
+  ; REMOVING r280 = (r278 ~ (r278 >> 1))
+  ; REMOVING r263 = (r253 < 0)
+  ; REMOVING r261 = (int32_t((int32_t((r35 & 15)) + r258)) > 15)
+  ; REMOVING r287 = (r286 >> 1)
+  ; REMOVING r290 = (~(r286 ~ (r286 >> 1)) & 1)
+  ; REMOVING r290 = ((((int32_t(r250) > 0) and (int32_t(r251) > 0)) and (r248 < 0)) or (((int32_t(r250) < 0) and (int32_t(r251) < 0)) and (r248 >= 0)))
+  -        r290 = ((((int32_t(r250) > 0) and (int32_t(r251) > 0)) and (r248 < 0)) or (((int32_t(r250) < 0) and (
+  -        setflag(32, int32_t(r290))
+  +        setflag(32, int32_t(((((int32_t(r250) > 0) and (int32_t(r251) > 0)) and (r248 < 0)) or (((int32_t(r25
+  -        r290 = (~(r286 ~ (r286 >> 1)) & 1)
+  -        setflag(16, r290)
+  +        setflag(16, (~(r286 ~ (r286 >> 1)) & 1))
+  -    r287 = (r286 >> 1)
+  -    r289 = ~(r286 ~ r287)
+  +    r289 = ~(r286 ~ (r286 >> 1))
+  -        r261 = (int32_t((int32_t((r35 & 15)) + r258)) > 15)
+  -        setflag(1, int32_t(r261))
+  +        setflag(1, int32_t((int32_t((int32_t((r35 & 15)) + r258)) > 15)))
+  ... 15 more
+0211 Constant propagation m d=4
+  ; REMOVING r258 = bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3)
+  -        r258 = bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3)
+  -        setflag(1, int32_t((int32_t((int32_t((r35 & 15)) + r258)) > 15)))
+  +        setflag(1, int32_t((int32_t((int32_t((r35 & 15)) + bitread<int32_t>(memread<int32_t>(int64_t(r252)), 
+~ 0212-0213 noop x2: Constant propagation, Virtual function reconstruction
+0214 Constant fold m d=2
+  ; REMOVING ::label_3258::
+  -        ::label_3258::
+~ 0215-0233 noop x19: Constant fold*2, Dead code elimination*2, Page inliner*2, Dead page elimination*2, Page code organization*2, Dead controller removal*2, Page promotion*2, Label flatten*2, Branch redirection, Constant propagation, Virtual function reconstruction
+0234 Loop winding m d=340
+  ; INSERTED while (true) do ON ::label_1488::
+  ; INSERTED end ON goto 1488
+  ; REMOVING goto 1488
+  -        r252 = (int64_t(r36) - 28)
+  -        r259 = (memread<int32_t>(int64_t(r252)) - 10)
+  -        setflag(1, (bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3) < 10))
+  -        memset<int32_t>(int64_t(r252)) = memread<uint32_t>(int64_t(r252))
+  -        setflag(2, (memread<int32_t>(int64_t(r252)) < 10))
+  -        setflag(4, bitread<int32_t>((int32_t(r259) >> 31), 0, 0))
+  -        setflag(8, (int32_t(r259) == 0))
+  -        r274 = bitread<int32_t>(int32_t(r259), 0, 7)
+  -        r284 = (int32_t(r274) ~ (int32_t(r274) >> 4))
+  -        r286 = (r284 ~ (r284 >> 2))
+  -        setflag(16, (~(r286 ~ (r286 >> 1)) & 1))
+  -        r294 = memread<int32_t>(int64_t(r252))
+  ... 325 more
+~ 0235-0235 noop x1: Loop winding
+0236 Branch Optimization m d=23
+  ; INSERTED break ON if  ((flag(4) == uint1_t(flag(32)))) then
+  ; INSERTED end ON if  ((flag(4) == uint1_t(flag(32)))) then
+  ; INSERTED else  ON end
+  ; INSERTED end ON setflag(32, 0)
+  ; REMOVING goto 1715
+  ; REMOVING end
+  ; INSERTED break ON if  (true) then
+  ; INSERTED end ON if  (true) then
+  ; INSERTED break ON if  (false) then
+  ; INSERTED end ON if  (false) then
+  -            if ((flag(4) == uint1_t(flag(32)))) then goto label_3550 end
+  +            if  ((flag(4) == uint1_t(flag(32)))) then
+  +                break
+  +            end
+  -                goto 1715
+  +            else
+  +                setflag(2, 0)
+  +                setflag(32, 0)
+  -            setflag(2, 0)
+  -            setflag(32, 0)
+  -            if (true) then goto label_3550 end
+  +            if  (true) then
+  ... 6 more
+~ 0237-0240 noop x4: Branch Optimization, Branch threading, Loop simplification, Loop unrolling
+0241 Dead label elimination m d=6
+  ; REMOVING ::label_1488::
+  ; REMOVING ::label_1715::
+  ; REMOVING ::label_3550::
+  -        ::label_1488::
+  -            ::label_1715::
+  -    ::label_3550::
+~ 0242-0242 noop x1: Dead label elimination
+0243 Dead code elimination m d=4
+  ; REMOVING if  (false) then
+  ; REMOVING break
+  ; REMOVING end
+  -            if  (false) then
+  -                break
+  -            end
+~ 0244-0247 noop x4: Dead code elimination, Page inliner, Dead page elimination, Close pages
+0248 Page code organization m d=175
+  ; REMOVING } page_function_end(28)
+  ; INSERTED } page_function_end(28) ON [PK] [RT=r44] return ; 98
+  -        } page_function_end(28)
+  -    end
+  -    r253 = memread<int32_t>((int64_t(r36) - 24))
+  -    r251 = int32_t((r253 << 1))
+  -    setflag(2, (r253 < 0))
+  -    setflag(4, (r251 < 0))
+  -    setflag(8, (r251 == 0))
+  -    r262 = bitread<int32_t>(r251, 0, 7)
+  -    r272 = (int32_t(r262) ~ (int32_t(r262) >> 4))
+  -    r274 = (r272 ~ (r272 >> 2))
+  -    setflag(16, (~(r274 ~ (r274 >> 1)) & 1))
+  -    setflag(32, int32_t(((r251 < 0) ~ uint1_t(flag(2)))))
+  ... 160 more
+~ 0249-0266 noop x18: Page code organization*2, Dead controller removal*2, Page promotion*2, Label flatten*2, Loop winding, Branch Optimization, Branch threading, Loop simplification, Loop unrolling, Dead label elimination, Dead code elimination, Page inliner, Dead page elimination, Close pages
+0267 Dead store elimination m d=4
+  ; REMOVING r280 = 0
+  ; REMOVING r290 = 0
+  -    r280 = 0
+  -            r290 = 0
+0268 Expression Canonicalization m d=23
+  ; REMOVING if  (true) then
+  ; REMOVING end
+  -            if  (true) then
+  -                break
+  -            end
+  +            break
+  -            setflag(1, int32_t((int32_t((int32_t((r35 & 15)) + bitread<int32_t>(memread<int32_t>(int64_t(r252
+  +            setflag(1, ((int32_t((r35 & 15)) + bitread<int32_t>(memread<int32_t>(int64_t(r252)), 0, 3)) > 15)
+  -            setflag(4, int32_t(((r253 < 0) & 1)))
+  +            setflag(4, int32_t((r253 < 0)))
+  -            r286 = (int32_t((r35 > 0)) and (memread<int32_t>(int64_t(r252)) > 0))
+  +            r286 = ((r35 > 0) and (memread<int32_t>(int64_t(r252)) > 0))
+  -            r294 = ((r35 < 0) and int32_t((memread<int32_t>(int64_t(r252)) < 0)))
+  +            r294 = ((r35 < 0) and (memread<int32_t>(int64_t(r252)) < 0))
+  ... 4 more
+0269 Expression Canonicalization m d=6
+  -            setflag(4, int32_t((r253 < 0)))
+  +            setflag(4, (r253 < 0))
+  -        setflag(4, bitread<int64_t>(int64_t((r250 < 0)), 0, 0))
+  +        setflag(4, bitread<int64_t>((r250 < 0), 0, 0))
+0270 Expression Canonicalization m d=3
+  -        setflag(4, bitread<int64_t>((r250 < 0), 0, 0))
+  +        setflag(4, int64_t((r250 < 0)))
+0271 Expression Canonicalization m d=3
+  -        setflag(4, int64_t((r250 < 0)))
+  +        setflag(4, (r250 < 0))
+~ 0272-0272 noop x1: Expression Canonicalization
+0273 Constant propagation m d=469
+  ; REMOVING setflag(2, 0) x10
+  ; REMOVING setflag(4, 0) x2
+  ; REMOVING setflag(128, 0)
+  ; REMOVING setflag(256, 0)
+  ; REMOVING setflag(512, 0)
+  ; REMOVING setflag(4096, 0)
+  ; REMOVING setflag(65536, 0)
+  ; REMOVING setflag(2097152, 0)
+  ; REMOVING setflag(1, 0)
+  ; REMOVING setflag(8, 0)
+  ; REMOVING setflag(16, 0)
+  ; REMOVING setflag(32, 0) x10
+  ; REMOVING setflag(64, 0)
+  ; REMOVING setflag(1024, 0)
+  ; REMOVING setflag(2048, 0)
+  ; REMOVING setflag(8192, 0)
+  ; REMOVING setflag(16384, 0)
+  ; REMOVING setflag(32768, 0)
+  ; REMOVING setflag(131072, 0)
+  ; REMOVING setflag(262144, 0)
+  ; REMOVING setflag(524288, 0)
+  ; REMOVING setflag(1048576, 0)
+  ; REMOVING setflag(1, (bitread<int64_t>(r44, 0, 3) < 0))
+  ; REMOVING setflag(2, (r44 < 32))
+  ; REMOVING setflag(4, bitread<int64_t>((r250 >> 63), 0, 0))
+  ; REMOVING setflag(8, (r250 == 0)) x9
+  ; REMOVING setflag(16, (~(r272 ~ (r272 >> 1)) & 1))
+  ; REMOVING setflag(32, false) x8
+  ; REMOVING setflag(1, (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 8))
+  ; REMOVING setflag(2, (memread<int32_t>(r252) < 1000))
+  ; REMOVING setflag(8, (r259 == 0)) x4
+  ; REMOVING setflag(16, (~(r286 ~ (r286 >> 1)) & 1)) x3
+  ; REMOVING setflag(4, bitread<int32_t>((r250 >> 31), 0, 0)) x3
+  ; REMOVING setflag(16, (~(r270 ~ (r270 >> 1)) & 1)) x2
+  ; REMOVING setflag(1, r256)
+  ; REMOVING setflag(2, (r250 < r35)) x3
+  ; REMOVING setflag(4, (r258 & 1))
+  ; REMOVING setflag(8, r260)
+  ; REMOVING setflag(16, (~(r273 ~ (r273 >> 1)) & 1)) x4
+  ; REMOVING setflag(32, (((r35 > 0) and (r250 < 0)) or false)) x2
+  ; REMOVING setflag(4, (r251 < 0)) x3
+  ; REMOVING setflag(8, (r251 == 0)) x3
+  ; REMOVING setflag(16, (~(r274 ~ (r274 >> 1)) & 1)) x4
+  ; REMOVING setflag(32, int32_t(((r251 < 0) ~ uint1_t(flag(2))))) x3
+  ; REMOVING setflag(1, ((bitread<int32_t>(r250, 0, 3) + bitread<int32_t>(r251, 0, 3)) > 15))
+  ; REMOVING setflag(2, (r248 < r250))
+  ; REMOVING setflag(4, (r248 < 0)) x3
+  ; REMOVING setflag(8, (r248 == 0)) x3
+  ; REMOVING setflag(16, (~(r271 ~ (r271 >> 1)) & 1))
+  ; REMOVING setflag(32, ((((r250 > 0) and (r251 > 0)) and (r248 < 0)) or (((r250 < 0) and (r251 < 0)) and (r248 >= 0))))
+  ; REMOVING setflag(1, (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 10))
+  ; REMOVING setflag(2, (memread<int32_t>(r252) < 10))
+  ; REMOVING setflag(2, 1)
+  ; REMOVING setflag(32, 1)
+  ; REMOVING setflag(16, (~(r268 ~ (r268 >> 1)) & 1)) x2
+  ; REMOVING setflag(1, (bitread<int32_t>(r250, 0, 3) < 0))
+  ; REMOVING setflag(2, (uint32_t(r250) < 0))
+  ; REMOVING setflag(4, (r250 < 0)) x2
+  ; REMOVING setflag(16, (~(r276 ~ (r276 >> 1)) & 1)) x2
+  ; REMOVING setflag(1, (((r35 & 15) + bitread<int32_t>(memread<int32_t>(r252), 0, 3)) > 15)) x4
+  ; REMOVING setflag(2, (r253 < r35)) x2
+  ; REMOVING setflag(4, (r253 < 0)) x4
+  ; REMOVING setflag(8, (r253 == 0)) x4
+  ; REMOVING setflag(16, (~(r278 ~ (r278 >> 1)) & 1)) x5
+  ; REMOVING setflag(32, int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or r297)))
+  ; REMOVING setflag(2, (int32_t(r253) < r35)) x2
+  ; REMOVING setflag(4, (int32_t(r253) < 0))
+  ; REMOVING setflag(8, (int32_t(r253) == 0)) x2
+  ; REMOVING setflag(32, ((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (int32_t(r253) < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (int
+  ; REMOVING setflag(4, bitread<int32_t>((int32_t(r253) >> 31), 0, 0))
+  ; REMOVING setflag(32, r299) x2
+  ; REMOVING setflag(1, (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 4))
+  ; REMOVING setflag(2, (memread<int32_t>(r252) < 100))
+  ; REMOVING setflag(4, bitread<int32_t>((r259 >> 31), 0, 0)) x3
+  ; REMOVING setflag(1, ((int32_t((r35 & 15)) + 1) > 15)) x2
+  ; REMOVING setflag(4, bitread<int32_t>(int32_t((r250 >> 31)), 0, 0)) x2
+  ; REMOVING setflag(1, (int32_t((r40 & 15)) < 0))
+  ; REMOVING setflag(2, (uint32_t(r40) < 0))
+  ; REMOVING setflag(4, (int32_t(r40) < 0))
+  ; REMOVING setflag(8, (int32_t(r40) == 0))
+  ; REMOVING setflag(2, (r253 < 0)) x3
+  ; REMOVING setflag(2, bitread<int32_t>(int32_t((r38 >> 30)), 0, 0))
+  ; REMOVING setflag(4, bitread<int32_t>(int32_t((uint32_t(r253) >> 31)), 0, 0))
+  ; REMOVING setflag(8, (uint32_t(r253) == 0))
+  ; REMOVING setflag(16, (~(r277 ~ (r277 >> 1)) & 1))
+  ; REMOVING setflag(16, (~(r266 ~ (r266 >> 1)) & 1))
+  ; REMOVING setflag(1, ((r35 & 15) < bitread<int32_t>(memread<int32_t>(r252), 0, 3)))
+  ; REMOVING setflag(2, (r35 < memread<int32_t>(r252)))
+  ; REMOVING setflag(1, r266)
+  ; REMOVING setflag(2, (memread<int32_t>(r252) < 0))
+  ; REMOVING setflag(16, (r289 & 1))
+  ; REMOVING setflag(4, r256)
+  ; REMOVING setflag(16, (~(r270 ~ r271) & 1))
+  ; REMOVING setflag(32, int32_t((((r35 > 0) and (r250 < 0)) or false)))
+  ; REMOVING setflag(8, true)
+  ; REMOVING setflag(16, 1)
+  ; REMOVING setflag(1, ((r44 & 15) > 15))
+  ; REMOVING setflag(2, (r250 < r44))
+  ; REMOVING setflag(32, int32_t((((r44 > 0) and (r250 < 0)) or false)))
+  ; REMOVING setflag(4, (r271 & 1))
+  -    [PK] DEFINITION([ARGS]{a36, a44, a248, a250, a252, a253, a255, a256, a258, a261, a262, a263, a266, a274, 
+  -    setflag(2, 0)
+  -    setflag(4, 0)
+  -    setflag(128, 0)
+  -    setflag(256, 0)
+  -    setflag(512, 0)
+  -    setflag(4096, 0)
+  -    setflag(65536, 0)
+  -    setflag(2097152, 0)
+  -    setflag(1, 0)
+  -    setflag(8, 0)
+  -    setflag(16, 0)
+  ... 377 more
+0274 Constant propagation m d=48
+  ; REMOVING r248 = memread<int32_t>(r44)
+  ; REMOVING r289 = (r286 and (r253 < 0))
+  ; REMOVING r297 = (r294 and (r253 >= 0))
+  ; REMOVING r250 = int64_t(r36)
+  ; REMOVING r270 = (r268 ~ (r268 >> 2))
+  ; REMOVING r250 = ((r271 & 1) == uint1_t(false))
+  ; REMOVING r268 = memread<int32_t>(r252)
+  ; REMOVING r35 = memread<int32_t>((int64_t(r36) - 36))
+  ; REMOVING r252 = (int64_t(r36) - 24) x2
+  ; REMOVING r253 = memread<int32_t>((int64_t(r36) - 24))
+  ; REMOVING r35 = r253
+  ; REMOVING r253 = memread<int32_t>(memread<int64_t>((int64_t(r36) - 16)))
+  ; REMOVING r253 = r44
+  -    r253 = r44
+  -    page_function_call<28>(a36, a39, 19, a43, a44, false, a299)[r253, 82]
+  +    page_function_call<28>(a36, a39, 19, a43, a44, false, a299)[r44, 82]
+  -        r253 = memread<int32_t>(memread<int64_t>((int64_t(r36) - 16)))
+  -        r251 = (r253 << 1)
+  +        r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1)
+  -                r35 = r253
+  -                r252 = (int64_t(r36) - 24)
+  -                r253 = (r35 + memread<int32_t>(r252))
+  +                r253 = (r253 + memread<int32_t>((int64_t(r36) - 24)))
+  -        r253 = memread<int32_t>((int64_t(r36) - 24))
+  -        r251 = (r253 << 1)
+  ... 24 more
+0275 Constant propagation m d=15
+  ; REMOVING r286 = ((r35 > 0) and (memread<int32_t>(r252) > 0))
+  ; REMOVING r294 = ((r35 < 0) and (memread<int32_t>(r252) < 0))
+  ; REMOVING r35 = r250
+  ; REMOVING r271 = (r259 >> 31)
+  -        r271 = (r259 >> 31)
+  -        if  (((((r271 & 1) == uint1_t(false)) and true) and true)) then
+  +        if  ((((((r259 >> 31) & 1) == uint1_t(false)) and true) and true)) then
+  -        r35 = r250
+  -        memset<int32_t>((int64_t(r36) - 36)) = r35
+  +        memset<int32_t>((int64_t(r36) - 36)) = r250
+  -            r286 = ((r35 > 0) and (memread<int32_t>(r252) > 0))
+  -            r294 = ((r35 < 0) and (memread<int32_t>(r252) < 0))
+  -            r299 = int32_t(((r286 and (r253 < 0)) or (r294 and (r253 >= 0))))
+  +            r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and 
+0276 Constant propagation m d=11
+  -    [PK] DEFINITION([ARGS]{a36, a44, a263, a266, a290, a299}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), 
+  -    memset<int32_t>(int32_t((r44 - 4))) = r36
+  +    [PK] DEFINITION([ARGS]{a36, a44, a299}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}
+  +    memset<int32_t>((r44 - 4)) = r36
+  -    page_function_call<28>(a36, a39, 19, a43, a44, false, a299)[r44, 82]
+  +    page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  -        [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44, a297, a299}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t
+  +        [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64
+0277 Constant propagation m d=3
+  -    [PK] DEFINITION([ARGS]{a36, a44, a299}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}
+  +    [PK] DEFINITION([ARGS]{a36, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44)}, [RESULTS]
+~ 0278-0280 noop x3: Constant propagation, Virtual function reconstruction, Loop canonicalize exits
+0281 Dead code elimination m d=4
+  ; REMOVING else
+  -            if  (0 ~= r255) then
+  -            else
+  +            if  (0 == r255) then
+0282 Dead code elimination m d=3
+  ; REMOVING end
+  ; REMOVING if  (0 == r255) then
+  -            if  (0 == r255) then
+  -            end
+~ 0283-0289 noop x7: Dead code elimination, Page inliner, Dead page elimination, Page code organization, Dead controller removal, Page promotion, Label flatten
+0290 Expression Canonicalization m d=15
+  -    if ((bitread<int32_t>((r259 >> 31), 0, 0) == uint1_t(false))) then goto label_882 end
+  +    if ((bitread<int32_t>((r259 >> 31), 0, 0) == 0)) then goto label_882 end
+  -            if  ((bitread<int32_t>((r259 >> 31), 0, 0) == uint1_t(false))) then
+  +            if  ((bitread<int32_t>((r259 >> 31), 0, 0) == 0)) then
+  -            if  ((r250 == 0) ~= 0) then
+  +            if  (r250 == 0) then
+  -        memset<int32_t>(r252) = uint32_t(memread<int32_t>(r252))
+  +        memset<int32_t>(r252) = memread<uint32_t>(r252)
+  -        if  ((((((r259 >> 31) & 1) == uint1_t(false)) and true) and true)) then
+  +        if  (((((r259 >> 31) & 1) == 0) and true)) then
+0291 Expression Canonicalization m d=15
+  -    if ((bitread<int32_t>((r259 >> 31), 0, 0) == 0)) then goto label_882 end
+  +    if ((bitread<int32_t>((r259 < 0), 0, 0) == 0)) then goto label_882 end
+  -    r258 = (r250 >> 31)
+  +    r258 = (r250 < 0)
+  -            if  ((bitread<int32_t>((r259 >> 31), 0, 0) == 0)) then
+  +            if  ((bitread<int32_t>((r259 < 0), 0, 0) == 0)) then
+  -        if  (((((r259 >> 31) & 1) == 0) and true)) then
+  +        if  ((((r259 < 0) & 1) == 0)) then
+  -        r256 = bitread<int32_t>((r250 >> 31), 0, 0)
+  +        r256 = bitread<int32_t>((r250 < 0), 0, 0)
+0292 Expression Canonicalization m d=12
+  -    if ((bitread<int32_t>((r259 < 0), 0, 0) == 0)) then goto label_882 end
+  +    if ((int32_t((r259 < 0)) == 0)) then goto label_882 end
+  -            if  ((bitread<int32_t>((r259 < 0), 0, 0) == 0)) then
+  +            if  ((int32_t((r259 < 0)) == 0)) then
+  -        if  ((((r259 < 0) & 1) == 0)) then
+  +        if  (((r259 < 0) == 0)) then
+  -        r256 = bitread<int32_t>((r250 < 0), 0, 0)
+  +        r256 = int32_t((r250 < 0))
+0293 Expression Canonicalization m d=12
+  -    if ((int32_t((r259 < 0)) == 0)) then goto label_882 end
+  +    if (((r259 < 0) == 0)) then goto label_882 end
+  -            if  ((int32_t((r259 < 0)) == 0)) then
+  +            if  (((r259 < 0) == 0)) then
+  -        if  (((r259 < 0) == 0)) then
+  +        if  ((r259 >= 0)) then
+  -        r256 = int32_t((r250 < 0))
+  +        r256 = (r250 < 0)
+0294 Expression Canonicalization m d=6
+  -    if (((r259 < 0) == 0)) then goto label_882 end
+  +    if ((r259 >= 0)) then goto label_882 end
+  -            if  (((r259 < 0) == 0)) then
+  +            if  ((r259 >= 0)) then
+~ 0295-0295 noop x1: Expression Canonicalization
+0296 Constant propagation m d=4
+  ; REMOVING r255 = uint32_t((memread<int32_t>((int64_t(r36) - 28)) * 3))
+  -            r255 = uint32_t((memread<int32_t>((int64_t(r36) - 28)) * 3))
+  -            r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ int32_t(r255))
+  +            r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ int32_t(uint32_t((memread<int32_t>((int64_t(r36) 
+~ 0297-0306 noop x10: Constant propagation, Virtual function reconstruction, Loop canonicalize exits, Dead code elimination, Page inliner, Dead page elimination, Page code organization, Dead controller removal, Page promotion, Label flatten
+0307 Expression Canonicalization m d=3
+  -            r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ int32_t(uint32_t((memread<int32_t>((int64_t(r36) 
+  +            r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ int32_t((memread<int32_t>((int64_t(r36) - 28)) * 
+0308 Expression Canonicalization m d=3
+  -            r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ int32_t((memread<int32_t>((int64_t(r36) - 28)) * 
+  +            r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ (memread<int32_t>((int64_t(r36) - 28)) * 3))
+~ 0309-0329 noop x21: Expression Canonicalization*2, Constant propagation*2, Virtual function reconstruction*2, Loop canonicalize exits*2, Dead code elimination*2, Page inliner*2, Dead page elimination*2, Page code organization*2, Dead controller removal*2, Page promotion*2, Label flatten
+0330 Unreachable code m d=51
+  ; REMOVING r35 = memread<int32_t>((int64_t(r36) - 28))
+  ; REMOVING r250 = int32_t((r35 + 1)) x2
+  ; REMOVING r261 = bitread<int32_t>(r250, 0, 7) x2
+  ; REMOVING r271 = (int32_t(r261) ~ (int32_t(r261) >> 4))
+  ; REMOVING r273 = (r271 ~ (r271 >> 2)) x2
+  ; REMOVING memset<int32_t>((int64_t(r36) - 28)) = int32_t(r250)
+  ; REMOVING r253 = memread<int32_t>((int64_t(r36) - 28))
+  ; REMOVING r40 = (r253 < 0)
+  ; REMOVING r40 = ((int32_t((r40 << 32)) | (uint64_t((int32_t((r40 << 32)) | r253)) / 3)) % 3)
+  ; REMOVING r264 = bitread<int32_t>(int32_t(r40), 0, 7)
+  ; REMOVING r274 = (int32_t(r264) ~ (int32_t(r264) >> 4))
+  ; REMOVING r276 = (r274 ~ (r274 >> 2))
+  ; REMOVING r253 = memread<int32_t>((int64_t(r36) - 32))
+  ; REMOVING r251 = int32_t((r253 << 1))
+  ; REMOVING r262 = bitread<int32_t>(r251, 0, 7)
+  ; REMOVING r272 = (int32_t(r262) ~ (int32_t(r262) >> 4))
+  ; REMOVING r274 = (r272 ~ (r272 >> 2))
+  ; REMOVING r38 = memread<int32_t>((int64_t(r36) - 32))
+  ; REMOVING r253 = (r38 < 0)
+  ; REMOVING r265 = bitread<int32_t>(uint32_t(r253), 0, 7)
+  ; REMOVING r275 = (int32_t(r265) ~ (int32_t(r265) >> 4))
+  ; REMOVING r277 = (r275 ~ (r275 >> 2))
+  ; REMOVING r248 = (int32_t(r251) | int32_t(r253))
+  ; REMOVING r254 = bitread<int32_t>(r248, 0, 7)
+  ; REMOVING r264 = (int32_t(r254) ~ (int32_t(r254) >> 4))
+  ; REMOVING r266 = (r264 ~ (r264 >> 2))
+  ; REMOVING memset<int32_t>((int64_t(r36) - 32)) = int32_t(r248)
+  ; REMOVING if  (memread<int32_t>(r44) == 20) then
+  ; REMOVING r35 = memread<int32_t>((int64_t(r36) - 12))
+  ; REMOVING r271 = (r261 ~ (r261 >> 4))
+  ; REMOVING memset<int32_t>((int64_t(r36) - 12)) = int32_t(r250)
+  ; REMOVING end x2
+  -            r35 = memread<int32_t>((int64_t(r36) - 28))
+  -            r250 = int32_t((r35 + 1))
+  -            r261 = bitread<int32_t>(r250, 0, 7)
+  -            r271 = (int32_t(r261) ~ (int32_t(r261) >> 4))
+  -            r273 = (r271 ~ (r271 >> 2))
+  -            memset<int32_t>((int64_t(r36) - 28)) = int32_t(r250)
+  -            r253 = memread<int32_t>((int64_t(r36) - 28))
+  -            r40 = (r253 < 0)
+  -            r40 = ((int32_t((r40 << 32)) | (uint64_t((int32_t((r40 << 32)) | r253)) / 3)) % 3)
+  -            r264 = bitread<int32_t>(int32_t(r40), 0, 7)
+  -            r274 = (int32_t(r264) ~ (int32_t(r264) >> 4))
+  -            r276 = (r274 ~ (r274 >> 2))
+  ... 37 more
+~ 0331-0332 noop x2: Dead code elimination, Close pages
+0333 Allign pages m d=5
+  ; REMOVING } page_function_end(98)
+  ; INSERTED } page_function_end(98) ON } page_function_end(28)
+  ; REMOVING } page_function_end(28)
+  ; INSERTED } page_function_end(28) ON } page_function_end(98)
+  -        } page_function_end(28)
+  -    } page_function_end(98)
+  +        } page_function_end(98)
+  +    } page_function_end(28)
+0334 Organize pages m d=266
+  ; INSERTED goto 884 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING page_function_start (28) {
+  ; INSERTED page_function_start (28) { ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64_t(a39), int32_t(a40), int64_t(a43), int
+  ; INSERTED [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64_t(a39), int32_t(a40), int64_t(a43), int
+  ; REMOVING r248 = (r44 - 4)
+  ; INSERTED r248 = (r44 - 4) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>(r248) = r36
+  ; INSERTED memset<int32_t>(r248) = r36 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r44 = int64_t(r248)
+  ; INSERTED r44 = int64_t(r248) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r36 = r44
+  ; INSERTED r36 = r44 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int64_t>((int64_t(r36) - 8)) = r39
+  ; INSERTED memset<int64_t>((int64_t(r36) - 8)) = r39 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int64_t>((int64_t(r36) - 16)) = r43
+  ; INSERTED memset<int64_t>((int64_t(r36) - 16)) = r43 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 20)) = r40
+  ; INSERTED memset<int32_t>((int64_t(r36) - 20)) = r40 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 24)) = 0
+  ; INSERTED memset<int32_t>((int64_t(r36) - 24)) = 0 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 28)) = 0
+  ; INSERTED memset<int32_t>((int64_t(r36) - 28)) = 0 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r250 = (memread<int32_t>((int64_t(r36) - 20)) ~ 90)
+  ; INSERTED r250 = (memread<int32_t>((int64_t(r36) - 20)) ~ 90) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r258 = bitread<int32_t>(r250, 0, 7) x2
+  ; INSERTED r258 = bitread<int32_t>(r250, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r268 = (r258 ~ (r258 >> 4)) x2
+  ; INSERTED r268 = (r258 ~ (r258 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r270 = (r268 ~ (r268 >> 2))
+  ; INSERTED r270 = (r268 ~ (r268 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1)
+  ; INSERTED r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}
+  ; REMOVING r262 = bitread<int32_t>(r251, 0, 7) x2
+  ; INSERTED r262 = bitread<int32_t>(r251, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r272 = (r262 ~ (r262 >> 4)) x3
+  ; INSERTED r272 = (r262 ~ (r262 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r274 = (r272 ~ (r272 >> 2)) x3
+  ; INSERTED r274 = (r272 ~ (r272 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r248 = (r250 + r251)
+  ; INSERTED r248 = (r250 + r251) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r259 = bitread<int32_t>(r248, 0, 7)
+  ; INSERTED r259 = bitread<int32_t>(r248, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r269 = (r259 ~ (r259 >> 4))
+  ; INSERTED r269 = (r259 ~ (r259 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r271 = (r269 ~ (r269 >> 2))
+  ; INSERTED r271 = (r269 ~ (r269 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 32)) = r248 x2
+  ; INSERTED memset<int32_t>((int64_t(r36) - 32)) = r248 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING while (true) do
+  ; INSERTED while (true) do ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r252 = (int64_t(r36) - 28)
+  ; INSERTED r252 = (int64_t(r36) - 28) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r259 = (memread<int32_t>(r252) - 10)
+  ; INSERTED r259 = (memread<int32_t>(r252) - 10) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>(r252) = memread<uint32_t>(r252) x3
+  ; INSERTED memset<int32_t>(r252) = memread<uint32_t>(r252) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r274 = bitread<int32_t>(r259, 0, 7) x3
+  ; INSERTED r274 = bitread<int32_t>(r259, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r284 = (r274 ~ (r274 >> 4)) x3
+  ; INSERTED r284 = (r274 ~ (r274 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r286 = (r284 ~ (r284 >> 2)) x3
+  ; INSERTED r286 = (r284 ~ (r284 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r294 = memread<int32_t>(r252) x2
+  ; INSERTED r294 = memread<int32_t>(r252) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING if  ((r259 >= 0)) then x2
+  ; INSERTED if  ((r259 >= 0)) then ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING break x2
+  ; INSERTED break ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING end x4
+  ; INSERTED end ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x4
+  ; REMOVING r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ (memread<int32_t>((int64_t(r36) - 28)) * 3))
+  ; INSERTED r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ (memread<int32_t>((int64_t(r36) - 28)) * 3)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{},
+  ; REMOVING r256 = bitread<int32_t>(r248, 0, 7)
+  ; INSERTED r256 = bitread<int32_t>(r248, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r266 = (r256 ~ (r256 >> 4)) x2
+  ; INSERTED r266 = (r256 ~ (r256 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r268 = (r266 ~ (r266 >> 2)) x2
+  ; INSERTED r268 = (r266 ~ (r266 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r250 = bitread<int32_t>(memread<int32_t>((int64_t(r36) - 32)), 0, 0)
+  ; INSERTED r250 = bitread<int32_t>(memread<int32_t>((int64_t(r36) - 32)), 0, 0) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r256 = bitread<int32_t>(r250, 0, 7)
+  ; INSERTED r256 = bitread<int32_t>(r250, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r264 = bitread<int32_t>(r250, 0, 7)
+  ; INSERTED r264 = bitread<int32_t>(r250, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r274 = (r264 ~ (r264 >> 4))
+  ; INSERTED r274 = (r264 ~ (r264 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r276 = (r274 ~ (r274 >> 2))
+  ; INSERTED r276 = (r274 ~ (r274 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING if  (r250 == 0) then
+  ; INSERTED if  (r250 == 0) then ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r35 = memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; INSERTED r35 = memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4))) ON
+  ; REMOVING r252 = (memread<int64_t>((int64_t(r36) - 16)) + 4)
+  ; INSERTED r252 = (memread<int64_t>((int64_t(r36) - 16)) + 4) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r253 = (r35 + memread<int32_t>(r252)) x3
+  ; INSERTED r253 = (r35 + memread<int32_t>(r252)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r266 = bitread<int32_t>(r253, 0, 7) x3
+  ; INSERTED r266 = bitread<int32_t>(r253, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x3
+  ; REMOVING r276 = (r266 ~ (r266 >> 4)) x5
+  ; INSERTED r276 = (r266 ~ (r266 >> 4)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x5
+  ; REMOVING r278 = (r276 ~ (r276 >> 2)) x5
+  ; INSERTED r278 = (r276 ~ (r276 >> 2)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x5
+  ; REMOVING r297 = (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0))
+  ; INSERTED r297 = (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}
+  ; REMOVING r253 = (r253 + memread<int32_t>((int64_t(r36) - 24)))
+  ; INSERTED r253 = (r253 + memread<int32_t>((int64_t(r36) - 24))) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r266 = bitread<int32_t>(int32_t(r253), 0, 7) x2
+  ; INSERTED r266 = bitread<int32_t>(int32_t(r253), 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING memset<int32_t>((int64_t(r36) - 24)) = int32_t(r253) x2
+  ; INSERTED memset<int32_t>((int64_t(r36) - 24)) = int32_t(r253) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r253 = (memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; INSERTED r253 = (memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; REMOVING r262 = bitread<int32_t>(r253, 0, 7)
+  ; INSERTED r262 = bitread<int32_t>(r253, 0, 7) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r35 = r253
+  ; INSERTED r35 = r253 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r252 = (int64_t(r36) - 24) x2
+  ; INSERTED r252 = (int64_t(r36) - 24) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{}) x2
+  ; REMOVING r299 = ((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (int32_t(r253) < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (int32_t(
+  ; INSERTED r299 = ((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (int32_t(r253) < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (int32_t(
+  ; REMOVING r259 = (memread<int32_t>(r252) - 100)
+  ; INSERTED r259 = (memread<int32_t>(r252) - 100) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r292 = memread<int32_t>(r252)
+  ; INSERTED r292 = memread<int32_t>(r252) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r251 = (memread<int32_t>((int64_t(r36) - 24)) << 1)
+  ; INSERTED r251 = (memread<int32_t>((int64_t(r36) - 24)) << 1) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 36)) = r251
+  ; INSERTED memset<int32_t>((int64_t(r36) - 36)) = r251 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r253 = (memread<int32_t>((int64_t(r36) - 36)) - memread<int32_t>((int64_t(r36) - 24)))
+  ; INSERTED r253 = (memread<int32_t>((int64_t(r36) - 36)) - memread<int32_t>((int64_t(r36) - 24))) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CAST
+  ; REMOVING r256 = 1
+  ; INSERTED r256 = 1 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 36)) = r253
+  ; INSERTED memset<int32_t>((int64_t(r36) - 36)) = r253 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r252 = (int64_t(r36) - 20)
+  ; INSERTED r252 = (int64_t(r36) - 20) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r259 = memread<int32_t>(r252)
+  ; INSERTED r259 = memread<int32_t>(r252) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r266 = (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 0)
+  ; INSERTED r266 = (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 0) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r289 = ~(r286 ~ (r286 >> 1))
+  ; INSERTED r289 = ~(r286 ~ (r286 >> 1)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r248 = 322
+  ; INSERTED r248 = 322 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING page_function_goto<98>(a36, a44, 0)
+  ; INSERTED page_function_goto<98>(a36, a44, 0) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r250 = (memread<int32_t>((int64_t(r36) - 36)) ~ 3735928559)
+  ; INSERTED r250 = (memread<int32_t>((int64_t(r36) - 36)) ~ 3735928559) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r256 = (r250 < 0)
+  ; INSERTED r256 = (r250 < 0) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r271 = ((r268 ~ (r268 >> 2)) >> 1)
+  ; INSERTED r271 = ((r268 ~ (r268 >> 2)) >> 1) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r248 = 0
+  ; INSERTED r248 = 0 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING memset<int32_t>((int64_t(r36) - 36)) = r250
+  ; INSERTED memset<int32_t>((int64_t(r36) - 36)) = r250 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING page_function_start (98) {
+  ; INSERTED page_function_start (98) { ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}, [RESULTS]{})
+  ; INSERTED [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}, [RESULTS]{}) ON DEFINITION([ARGS]{
+  ; REMOVING memset<int32_t>(331) = memread<int32_t>((r36 - 36))
+  ; INSERTED memset<int32_t>(331) = memread<int32_t>((r36 - 36)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r35 = memread<int32_t>((r36 - 24))
+  ; INSERTED r35 = memread<int32_t>((r36 - 24)) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r252 = (r36 - 32)
+  ; INSERTED r252 = (r36 - 32) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r268 = 0
+  ; INSERTED r268 = 0 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r271 = 0
+  ; INSERTED r271 = 0 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0
+  ; INSERTED r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0
+  ; REMOVING r250 = 0
+  ; INSERTED r250 = 0 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r36 = memread<int32_t>(r44)
+  ; INSERTED r36 = memread<int32_t>(r44) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING r44 = (r44 + 4)
+  ; INSERTED r44 = (r44 + 4) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING [PK] [RT=r44] return ; 98
+  ; INSERTED [PK] [RT=r44] return ; 98 ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING } page_function_end(98)
+  ; INSERTED } page_function_end(98) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; REMOVING } page_function_end(28)
+  ; INSERTED } page_function_end(28) ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  ; INSERTED ::label_884:: ON DEFINITION([ARGS]{}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{}, [RESULTS]{})
+  +goto 884
+  +page_function_start (28) {
+  +    [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64_t(a
+  +    r248 = (r44 - 4)
+  +    memset<int32_t>(r248) = r36
+  +    r44 = int64_t(r248)
+  +    r36 = r44
+  +    memset<int64_t>((int64_t(r36) - 8)) = r39
+  +    memset<int64_t>((int64_t(r36) - 16)) = r43
+  +    memset<int32_t>((int64_t(r36) - 20)) = r40
+  +    memset<int32_t>((int64_t(r36) - 24)) = 0
+  +    memset<int32_t>((int64_t(r36) - 28)) = 0
+  ... 252 more
+~ 0335-0335 noop x1: Organize pages
+0336 Page promote nofall m d=36
+  ; REMOVING page_function_start (98) {
+  ; INSERTED page_function_start (98) { ON goto 884
+  ; REMOVING [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}, [RESULTS]{})
+  ; INSERTED [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}, [RESULTS]{}) ON goto 884
+  ; REMOVING memset<int32_t>(331) = memread<int32_t>((r36 - 36))
+  ; INSERTED memset<int32_t>(331) = memread<int32_t>((r36 - 36)) ON goto 884
+  ; REMOVING r35 = memread<int32_t>((r36 - 24))
+  ; INSERTED r35 = memread<int32_t>((r36 - 24)) ON goto 884
+  ; REMOVING r252 = (r36 - 32)
+  ; INSERTED r252 = (r36 - 32) ON goto 884
+  ; REMOVING r253 = (r35 + memread<int32_t>(r252))
+  ; INSERTED r253 = (r35 + memread<int32_t>(r252)) ON goto 884
+  ; REMOVING r268 = 0
+  ; INSERTED r268 = 0 ON goto 884
+  ; REMOVING r271 = 0
+  ; INSERTED r271 = 0 ON goto 884
+  ; REMOVING r266 = bitread<int32_t>(r253, 0, 7)
+  ; INSERTED r266 = bitread<int32_t>(r253, 0, 7) ON goto 884
+  ; REMOVING r276 = (r266 ~ (r266 >> 4))
+  ; INSERTED r276 = (r266 ~ (r266 >> 4)) ON goto 884
+  ; REMOVING r278 = (r276 ~ (r276 >> 2))
+  ; INSERTED r278 = (r276 ~ (r276 >> 2)) ON goto 884
+  ; REMOVING r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0
+  ; INSERTED r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0
+  ; REMOVING r250 = 0
+  ; INSERTED r250 = 0 ON goto 884
+  ; REMOVING r36 = memread<int32_t>(r44)
+  ; INSERTED r36 = memread<int32_t>(r44) ON goto 884
+  ; REMOVING r44 = (r44 + 4)
+  ; INSERTED r44 = (r44 + 4) ON goto 884
+  ; REMOVING [PK] [RT=r44] return ; 98
+  ; INSERTED [PK] [RT=r44] return ; 98 ON goto 884
+  ; REMOVING } page_function_end(98)
+  ; INSERTED } page_function_end(98) ON goto 884
+  +page_function_start (98) {
+  +    [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}
+  +    memset<int32_t>(331) = memread<int32_t>((r36 - 36))
+  +    r35 = memread<int32_t>((r36 - 24))
+  +    r252 = (r36 - 32)
+  +    r253 = (r35 + memread<int32_t>(r252))
+  +    r268 = 0
+  +    r271 = 0
+  +    r266 = bitread<int32_t>(r253, 0, 7)
+  +    r276 = (r266 ~ (r266 >> 4))
+  +    r278 = (r276 ~ (r276 >> 2))
+  +    r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and (memread
+  ... 22 more
+0337 Page promote nofall m d=2
+  ; INSERTED page_function_goto<98>() ON memset<int32_t>((int64_t(r36) - 36)) = r250
+  +    page_function_goto<98>()
+~ 0338-0338 noop x1: Page promote global gotos controller
+0339 Page adjust linkage m d=6
+  -        page_function_goto<98>(a36, a44, 0)
+  +        page_function_goto<98>(a36, a44, a256)
+  -    page_function_goto<98>()
+  +    page_function_goto<98>(a36, a44, a256)
+~ 0340-0344 noop x5: Page adjust linkage, Page return params adjust, Page code organization, Page optimization, Page promote orphans
+0345 Page inliner m d=93
+  ; INSERTED memset<int32_t>(r44) = 82 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r248 = (r44 - 4) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>(r248) = r36 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r44 = int64_t(r248) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r36 = r44 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int64_t>((int64_t(r36) - 8)) = r39 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int64_t>((int64_t(r36) - 16)) = r43 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 20)) = r40 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 24)) = 0 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 28)) = 0 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r250 = (memread<int32_t>((int64_t(r36) - 20)) ~ 90) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r258 = bitread<int32_t>(r250, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r268 = (r258 ~ (r258 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r270 = (r268 ~ (r268 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r262 = bitread<int32_t>(r251, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r272 = (r262 ~ (r262 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x3
+  ; INSERTED r274 = (r272 ~ (r272 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x3
+  ; INSERTED r248 = (r250 + r251) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r259 = bitread<int32_t>(r248, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r269 = (r259 ~ (r259 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r271 = (r269 ~ (r269 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 32)) = r248 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED while (true) do ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r252 = (int64_t(r36) - 28) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r259 = (memread<int32_t>(r252) - 10) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>(r252) = memread<uint32_t>(r252) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x3
+  ; INSERTED r274 = bitread<int32_t>(r259, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x3
+  ; INSERTED r284 = (r274 ~ (r274 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x3
+  ; INSERTED r286 = (r284 ~ (r284 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x3
+  ; INSERTED r294 = memread<int32_t>(r252) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED if  ((r259 >= 0)) then ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED break ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED end ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x4
+  ; INSERTED r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ (memread<int32_t>((int64_t(r36) - 28)) * 3)) ON page_function_call<28>(a36, a39, 19, a43, a44
+  ; INSERTED r256 = bitread<int32_t>(r248, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r266 = (r256 ~ (r256 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r268 = (r266 ~ (r266 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r250 = bitread<int32_t>(memread<int32_t>((int64_t(r36) - 32)), 0, 0) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r256 = bitread<int32_t>(r250, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r264 = bitread<int32_t>(r250, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r274 = (r264 ~ (r264 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r276 = (r274 ~ (r274 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED if  (r250 == 0) then ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r35 = memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4))) ON
+  ; INSERTED r252 = (memread<int64_t>((int64_t(r36) - 16)) + 4) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r253 = (r35 + memread<int32_t>(r252)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r266 = bitread<int32_t>(r253, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r276 = (r266 ~ (r266 >> 4)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x4
+  ; INSERTED r278 = (r276 ~ (r276 >> 2)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x4
+  ; INSERTED r297 = (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r253 = (r253 + memread<int32_t>((int64_t(r36) - 24))) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r266 = bitread<int32_t>(int32_t(r253), 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED memset<int32_t>((int64_t(r36) - 24)) = int32_t(r253) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r253 = (memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; INSERTED r262 = bitread<int32_t>(r253, 0, 7) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r35 = r253 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r252 = (int64_t(r36) - 24) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r299 = ((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (int32_t(r253) < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (int32_t(
+  ; INSERTED r259 = (memread<int32_t>(r252) - 100) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r292 = memread<int32_t>(r252) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r251 = (memread<int32_t>((int64_t(r36) - 24)) << 1) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 36)) = r251 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r253 = (memread<int32_t>((int64_t(r36) - 36)) - memread<int32_t>((int64_t(r36) - 24))) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44,
+  ; INSERTED r256 = 1 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 36)) = r253 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r252 = (int64_t(r36) - 20) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r259 = memread<int32_t>(r252) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r266 = (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 0) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r289 = ~(r286 ~ (r286 >> 1)) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r248 = 322 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED page_function_goto<98>(a36, a44, a256) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82] x2
+  ; INSERTED r250 = (memread<int32_t>((int64_t(r36) - 36)) ~ 3735928559) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r256 = (r250 < 0) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r271 = ((r268 ~ (r268 >> 2)) >> 1) ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED r248 = 0 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; INSERTED memset<int32_t>((int64_t(r36) - 36)) = r250 ON page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; REMOVING page_function_call<28>(a36, a39, 19, a43, a44)[r44, 82]
+  ; REMOVING [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64_t(a39), int32_t(a40), int64_t(a43), int x2
+  ; REMOVING page_function_start (28) { x2
+  ; REMOVING } page_function_end(28) x2
+  ; REMOVING r248 = (r44 - 4)
+  ; REMOVING memset<int32_t>(r248) = r36
+  ; REMOVING r44 = int64_t(r248)
+  ; REMOVING r36 = r44
+  ; REMOVING memset<int64_t>((int64_t(r36) - 8)) = r39
+  ; REMOVING memset<int64_t>((int64_t(r36) - 16)) = r43
+  ; REMOVING memset<int32_t>((int64_t(r36) - 20)) = r40
+  ; REMOVING memset<int32_t>((int64_t(r36) - 24)) = 0
+  ; REMOVING memset<int32_t>((int64_t(r36) - 28)) = 0
+  ; REMOVING r250 = (memread<int32_t>((int64_t(r36) - 20)) ~ 90)
+  ; REMOVING r258 = bitread<int32_t>(r250, 0, 7) x2
+  ; REMOVING r268 = (r258 ~ (r258 >> 4)) x2
+  ; REMOVING r270 = (r268 ~ (r268 >> 2))
+  ; REMOVING r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1)
+  ; REMOVING r262 = bitread<int32_t>(r251, 0, 7) x2
+  ; REMOVING r272 = (r262 ~ (r262 >> 4)) x3
+  ; REMOVING r274 = (r272 ~ (r272 >> 2)) x3
+  ; REMOVING r248 = (r250 + r251)
+  ; REMOVING r259 = bitread<int32_t>(r248, 0, 7)
+  ; REMOVING r269 = (r259 ~ (r259 >> 4))
+  ; REMOVING r271 = (r269 ~ (r269 >> 2))
+  ; REMOVING memset<int32_t>((int64_t(r36) - 32)) = r248 x2
+  ; REMOVING while (true) do
+  ; REMOVING r252 = (int64_t(r36) - 28)
+  ; REMOVING r259 = (memread<int32_t>(r252) - 10)
+  ; REMOVING memset<int32_t>(r252) = memread<uint32_t>(r252) x3
+  ; REMOVING r274 = bitread<int32_t>(r259, 0, 7) x3
+  ; REMOVING r284 = (r274 ~ (r274 >> 4)) x3
+  ; REMOVING r286 = (r284 ~ (r284 >> 2)) x3
+  ; REMOVING r294 = memread<int32_t>(r252) x2
+  ; REMOVING if  ((r259 >= 0)) then x2
+  ; REMOVING break x2
+  ; REMOVING end x4
+  ; REMOVING r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ (memread<int32_t>((int64_t(r36) - 28)) * 3))
+  ; REMOVING r256 = bitread<int32_t>(r248, 0, 7)
+  ; REMOVING r266 = (r256 ~ (r256 >> 4)) x2
+  ; REMOVING r268 = (r266 ~ (r266 >> 2)) x2
+  ; REMOVING r250 = bitread<int32_t>(memread<int32_t>((int64_t(r36) - 32)), 0, 0)
+  ; REMOVING r256 = bitread<int32_t>(r250, 0, 7)
+  ; REMOVING r264 = bitread<int32_t>(r250, 0, 7)
+  ; REMOVING r274 = (r264 ~ (r264 >> 4))
+  ; REMOVING r276 = (r274 ~ (r274 >> 2))
+  ; REMOVING if  (r250 == 0) then
+  ; REMOVING r35 = memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; REMOVING r252 = (memread<int64_t>((int64_t(r36) - 16)) + 4)
+  ; REMOVING r253 = (r35 + memread<int32_t>(r252)) x2
+  ; REMOVING r266 = bitread<int32_t>(r253, 0, 7) x2
+  ; REMOVING r276 = (r266 ~ (r266 >> 4)) x4
+  ; REMOVING r278 = (r276 ~ (r276 >> 2)) x4
+  ; REMOVING r297 = (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (r253 >= 0))
+  ; REMOVING r253 = (r253 + memread<int32_t>((int64_t(r36) - 24)))
+  ; REMOVING r266 = bitread<int32_t>(int32_t(r253), 0, 7) x2
+  ; REMOVING memset<int32_t>((int64_t(r36) - 24)) = int32_t(r253) x2
+  ; REMOVING r253 = (memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; REMOVING r262 = bitread<int32_t>(r253, 0, 7)
+  ; REMOVING r35 = r253
+  ; REMOVING r252 = (int64_t(r36) - 24) x2
+  ; REMOVING r299 = ((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (int32_t(r253) < 0)) or (((r35 < 0) and (memread<int32_t>(r252) < 0)) and (int32_t(
+  ; REMOVING r259 = (memread<int32_t>(r252) - 100)
+  ; REMOVING r292 = memread<int32_t>(r252)
+  ; REMOVING r251 = (memread<int32_t>((int64_t(r36) - 24)) << 1)
+  ; REMOVING memset<int32_t>((int64_t(r36) - 36)) = r251
+  ; REMOVING r253 = (memread<int32_t>((int64_t(r36) - 36)) - memread<int32_t>((int64_t(r36) - 24)))
+  ; REMOVING r256 = 1
+  ; REMOVING memset<int32_t>((int64_t(r36) - 36)) = r253
+  ; REMOVING r252 = (int64_t(r36) - 20)
+  ; REMOVING r259 = memread<int32_t>(r252)
+  ; REMOVING r266 = (bitread<int32_t>(memread<int32_t>(r252), 0, 3) < 0)
+  ; REMOVING r289 = ~(r286 ~ (r286 >> 1))
+  ; REMOVING r248 = 322
+  ; REMOVING page_function_goto<98>(a36, a44, a256) x2
+  ; REMOVING r250 = (memread<int32_t>((int64_t(r36) - 36)) ~ 3735928559)
+  ; REMOVING r256 = (r250 < 0)
+  ; REMOVING r271 = ((r268 ~ (r268 >> 2)) >> 1)
+  ; REMOVING r248 = 0
+  ; REMOVING memset<int32_t>((int64_t(r36) - 36)) = r250
+  -page_function_start (28) {
+  -    [PK] DEFINITION([ARGS]{a36, a39, a40, a43, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64_t(a
+  +::label_884::
+  +page_function_start (100) {
+  +    [PK] DEFINITION([ARGS]{a36, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44)}, [RESULTS]
+  +    memset<int32_t>((r44 - 4)) = r36
+  +    r36 = r44
+  +    r250 = (r44 - 32)
+  +    r260 = bitread<int64_t>(r250, 0, 7)
+  +    r270 = (int32_t(r260) ~ (int32_t(r260) >> 4))
+  +    r272 = (r270 ~ (r270 >> 2))
+  +    r44 = r250
+  ... 79 more
+0346 Constant fold m d=3
+  ; REMOVING goto 884
+  ; INSERTED page_function_goto<100>() ON goto 884
+  -goto 884
+  +page_function_goto<100>()
+0347 Constant fold m d=2
+  ; REMOVING ::label_884::
+  -::label_884::
+~ 0348-0354 noop x7: Constant fold, Close pages, Allign pages, Organize pages, Page promote nofall*2, Page promote global gotos controller
+0355 Page adjust linkage m d=6
+  -page_function_goto<100>()
+  +page_function_goto<100>(a36, a40, a44)
+  -    [PK] DEFINITION([ARGS]{a36, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44)}, [RESULTS]
+  +    [PK] DEFINITION([ARGS]{a36, a40, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), nil, int32_t(a44)},
+~ 0356-0378 noop x23: Page adjust linkage*2, Page return params adjust*2, Page code organization*2, Page optimization*2, Page promote orphans*2, Page inliner*2, Constant fold*2, Close pages, Allign pages, Organize pages, Page promote nofall*2, Page promote global gotos controller, Unreachable code, Dead code elimination, Sub-expression reordering
+0379 Dead store elimination m d=55
+  ; REMOVING r268 = 0
+  ; REMOVING r271 = 0
+  ; REMOVING r278 = (r276 ~ (r276 >> 2)) x5
+  ; REMOVING r250 = 0
+  ; REMOVING r272 = (r270 ~ (r270 >> 2))
+  ; REMOVING r248 = 93
+  ; REMOVING r270 = (r268 ~ (r268 >> 2)) x2
+  ; REMOVING r258 = (r250 < 0)
+  ; REMOVING r260 = (r250 == 0)
+  ; REMOVING r273 = (r271 ~ (r271 >> 2)) x2
+  ; REMOVING r285 = (r35 < 0)
+  ; REMOVING r289 = (r250 >= 0)
+  ; REMOVING r274 = (r272 ~ (r272 >> 2)) x3
+  ; REMOVING r271 = (r269 ~ (r269 >> 2))
+  ; REMOVING r286 = (r284 ~ (r284 >> 2)) x2
+  ; REMOVING r268 = (r266 ~ (r266 >> 2)) x2
+  ; REMOVING r289 = ~(r286 ~ (r286 >> 1))
+  ; REMOVING r248 = 322
+  ; REMOVING r271 = ((r268 ~ (r268 >> 2)) >> 1)
+  ; REMOVING r248 = 0
+  -    r268 = 0
+  -    r271 = 0
+  -    r278 = (r276 ~ (r276 >> 2))
+  -    r250 = 0
+  -    r272 = (r270 ~ (r270 >> 2))
+  -    r248 = 93
+  -    r270 = (r268 ~ (r268 >> 2))
+  -    r258 = (r250 < 0)
+  -    r260 = (r250 == 0)
+  -    r273 = (r271 ~ (r271 >> 2))
+  -    r285 = (r35 < 0)
+  -    r289 = (r250 >= 0)
+  ... 18 more
+0380 Dead store elimination m d=40
+  ; REMOVING r276 = (r266 ~ (r266 >> 4)) x5
+  ; REMOVING r270 = (int32_t(r260) ~ (int32_t(r260) >> 4))
+  ; REMOVING r286 = (r284 ~ (r284 >> 2)) x2
+  ; REMOVING r268 = (r258 ~ (r258 >> 4)) x3
+  ; REMOVING r271 = (r261 ~ (r261 >> 4))
+  ; REMOVING r269 = (r259 ~ (r259 >> 4))
+  ; REMOVING r284 = (r274 ~ (r274 >> 4)) x2
+  ; REMOVING r266 = (r256 ~ (r256 >> 4)) x2
+  ; REMOVING r272 = (r262 ~ (r262 >> 4)) x2
+  ; REMOVING r271 = (int32_t(r261) ~ (int32_t(r261) >> 4))
+  -    r276 = (r266 ~ (r266 >> 4))
+  -    r270 = (int32_t(r260) ~ (int32_t(r260) >> 4))
+  -    r286 = (r284 ~ (r284 >> 2))
+  -    r268 = (r258 ~ (r258 >> 4))
+  -    r271 = (r261 ~ (r261 >> 4))
+  -    r268 = (r258 ~ (r258 >> 4))
+  -    r269 = (r259 ~ (r259 >> 4))
+  -        r284 = (r274 ~ (r274 >> 4))
+  -        r266 = (r256 ~ (r256 >> 4))
+  -        r266 = (r256 ~ (r256 >> 4))
+  -            r276 = (r266 ~ (r266 >> 4))
+  -            r276 = (r266 ~ (r266 >> 4))
+  ... 8 more
+0381 Dead store elimination m d=44
+  ; REMOVING r266 = bitread<int32_t>(r253, 0, 7) x3
+  ; REMOVING r260 = bitread<int64_t>(r250, 0, 7)
+  ; REMOVING r284 = (r274 ~ (r274 >> 4)) x2
+  ; REMOVING r258 = bitread<int32_t>(r250, 0, 7) x3
+  ; REMOVING r261 = bitread<int32_t>(r250, 0, 7)
+  ; REMOVING r272 = (r262 ~ (r262 >> 4))
+  ; REMOVING r259 = bitread<int32_t>(r248, 0, 7)
+  ; REMOVING r274 = bitread<int32_t>(r259, 0, 7) x2
+  ; REMOVING r256 = bitread<int32_t>(r248, 0, 7)
+  ; REMOVING r256 = bitread<int32_t>(r250, 0, 7)
+  ; REMOVING r276 = (r274 ~ (r274 >> 2))
+  ; REMOVING r266 = bitread<int32_t>(int32_t(r253), 0, 7) x2
+  ; REMOVING r262 = bitread<int32_t>(r253, 0, 7)
+  ; REMOVING r262 = bitread<int32_t>(r251, 0, 7)
+  ; REMOVING r261 = bitread<int64_t>(r250, 0, 7)
+  -    r266 = bitread<int32_t>(r253, 0, 7)
+  -    r260 = bitread<int64_t>(r250, 0, 7)
+  -    r284 = (r274 ~ (r274 >> 4))
+  -    r258 = bitread<int32_t>(r250, 0, 7)
+  -    r261 = bitread<int32_t>(r250, 0, 7)
+  -    r258 = bitread<int32_t>(r250, 0, 7)
+  -    r272 = (r262 ~ (r262 >> 4))
+  -    r259 = bitread<int32_t>(r248, 0, 7)
+  -        r274 = bitread<int32_t>(r259, 0, 7)
+  -        r256 = bitread<int32_t>(r248, 0, 7)
+  -        r256 = bitread<int32_t>(r250, 0, 7)
+  -        r276 = (r274 ~ (r274 >> 2))
+  ... 10 more
+0382 Dead store elimination m d=8
+  ; REMOVING r256 = (((r35 & 15) + 3) > 15)
+  ; REMOVING r262 = bitread<int32_t>(r251, 0, 7)
+  ; REMOVING r274 = (r264 ~ (r264 >> 4))
+  ; REMOVING r274 = bitread<int32_t>(r259, 0, 7)
+  -    r256 = (((r35 & 15) + 3) > 15)
+  -    r262 = bitread<int32_t>(r251, 0, 7)
+  -        r274 = (r264 ~ (r264 >> 4))
+  -    r274 = bitread<int32_t>(r259, 0, 7)
+0383 Dead store elimination m d=4
+  ; REMOVING r274 = bitread<int32_t>(r259, 0, 7)
+  ; REMOVING r264 = bitread<int32_t>(r250, 0, 7)
+  -    r274 = bitread<int32_t>(r259, 0, 7)
+  -        r264 = bitread<int32_t>(r250, 0, 7)
+~ 0384-0384 noop x1: Dead store elimination
+0385 Constant propagation m d=51
+  ; REMOVING r250 = (r44 + 32)
+  ; REMOVING r256 = 1
+  ; REMOVING r253 = (memread<int32_t>((int64_t(r36) - 36)) - memread<int32_t>((int64_t(r36) - 24)))
+  ; REMOVING r251 = (memread<int32_t>((int64_t(r36) - 24)) << 1)
+  ; REMOVING r253 = (memread<int32_t>((memread<int64_t>((int64_t(r36) - 8)) + (((memread<int64_t>((int64_t(r36) - 28)) ~ 2147483648) - 2147483648) * 4)))
+  ; REMOVING r253 = (r253 + memread<int32_t>((int64_t(r36) - 24)))
+  ; REMOVING r250 = bitread<int32_t>(memread<int32_t>((int64_t(r36) - 32)), 0, 0)
+  ; REMOVING r248 = (memread<int32_t>((int64_t(r36) - 32)) ~ (memread<int32_t>((int64_t(r36) - 28)) * 3))
+  ; REMOVING r248 = (r250 + r251)
+  ; REMOVING r44 = int32_t(r44)
+  ; REMOVING r250 = (r35 + 3)
+  ; REMOVING r250 = (memread<int32_t>((r36 - 12)) ~ 170)
+  ; REMOVING r250 = (r44 - 32)
+  -    r250 = (r44 - 32)
+  -    r44 = r250
+  +    r44 = (r44 - 32)
+  -    r250 = (memread<int32_t>((r36 - 12)) ~ 170)
+  -    memset<int32_t>((r36 - 20)) = r250
+  +    memset<int32_t>((r36 - 20)) = (memread<int32_t>((r36 - 12)) ~ 170)
+  -    r250 = (r35 + 3)
+  -    memset<int32_t>((r36 - 16)) = r250
+  +    memset<int32_t>((r36 - 16)) = (r35 + 3)
+  -    r44 = int32_t(r44)
+  -    memset<int32_t>(r44) = 82
+  -    r248 = (r44 - 4)
+  ... 29 more
+0386 Constant propagation m d=9
+  ; REMOVING r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1)
+  ; REMOVING r250 = (memread<int32_t>((int64_t(r36) - 20)) ~ 90)
+  ; REMOVING r35 = memread<int32_t>((r36 - 12))
+  -    r35 = memread<int32_t>((r36 - 12))
+  -    memset<int32_t>((r36 - 16)) = (r35 + 3)
+  +    memset<int32_t>((r36 - 16)) = (memread<int32_t>((r36 - 12)) + 3)
+  -    r250 = (memread<int32_t>((int64_t(r36) - 20)) ~ 90)
+  -    r251 = (memread<int32_t>(memread<int64_t>((int64_t(r36) - 16))) << 1)
+  -    memset<int32_t>((int64_t(r36) - 32)) = (r250 + r251)
+  +    memset<int32_t>((int64_t(r36) - 32)) = ((memread<int32_t>((int64_t(r36) - 20)) ~ 90) + (memread<int32_t>(
+~ 0387-0399 noop x13: Constant propagation*2, Virtual function reconstruction*2, Page promote global gotos controller*2, Page adjust linkage*2, Page return params adjust*2, Dead store elimination, Constant fold, Expression Canonicalization
+0400 Branch Optimization m d=111
+  ; INSERTED end ON page_function_goto<98>(a36, a44, a256)
+  -    if ((r259 >= 0)) then goto label_882 end
+  -    memset<int32_t>((r36 - 24)) = memread<int32_t>((r36 - 12))
+  -    memset<int32_t>((r36 - 20)) = (memread<int32_t>((r36 - 12)) ~ 170)
+  -    memset<int32_t>((r36 - 16)) = (memread<int32_t>((r36 - 12)) + 3)
+  -    r39 = (r36 - 8)
+  -    r43 = (r36 - 24)
+  -    memset<int32_t>(int32_t(r44)) = 82
+  -    r248 = (int32_t(r44) - 4)
+  -    memset<int32_t>(r248) = r36
+  -    r44 = int64_t(r248)
+  -    r36 = r44
+  -    memset<int64_t>((int64_t(r36) - 8)) = r39
+  ... 95 more
+~ 0401-0419 noop x19: Branch Optimization, Dead code elimination, Flag optimization, Constant propagation*2, Virtual function reconstruction, Branch redirection, Update closure definition, Page adjust linkage, Page return params adjust, Unreachable code, Dead page elimination, Page code organization, Dead controller removal, Page promotion, Dead store elimination, Sub-expression reordering, Branch simplification, Variadic function
+0420 Dead label elimination m d=2
+  ; REMOVING ::label_882::
+  -    ::label_882::
+~ 0421-0442 noop x22: Dead label elimination*2, Constant fold, Expression Canonicalization, Branch Optimization, Dead code elimination, Flag optimization, Virtual function reconstruction, Branch redirection, Page adjust linkage*2, Page return params adjust*2, Unreachable code, Dead page elimination, Constant propagation, Page code organization, Dead controller removal, Page promotion, Dead store elimination, Branch simplification, Definition flattening
+0443 Definition inference m d=124
+  -    memset<int32_t>(331) = memread<int32_t>((r36 - 36))
+  -    r35 = memread<int32_t>((r36 - 24))
+  -    r252 = (r36 - 32)
+  -    r253 = (r35 + memread<int32_t>(r252))
+  -    r299 = int32_t(((((r35 > 0) and (memread<int32_t>(r252) > 0)) and (r253 < 0)) or (((r35 < 0) and (memread
+  -    r36 = memread<int32_t>(r44)
+  -    r44 = (r44 + 4)
+  -    [PK] [RT=r44] return ; 98
+  +    memset<int32_t>(331) = memread<int32_t>((a36 - 36))
+  +    local r35 = memread<int32_t>((a36 - 24))
+  +    local r252 = (a36 - 32)
+  +    local r253 = (r35 + memread<int32_t>(r252))
+  ... 100 more
+~ 0444-0445 noop x2: Page referenced out of scope, Page pass
+0446 Set descriptor types m d=6
+  -    [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), nil}
+  +    [PK] DEFINITION([ARGS]{a36, a44, a256}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int32_t(a44), int6
+  -    [PK] DEFINITION([ARGS]{a36, a40, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), nil, int32_t(a44)},
+  +    [PK] DEFINITION([ARGS]{a36, a40, a44}, [UPVALUES]{}, [FLAGS]{}, [CASTS]{int64_t(a36), int64_t(a40), int32
+~ 0447-0448 noop x2: Page set controller flag, Static definition inference

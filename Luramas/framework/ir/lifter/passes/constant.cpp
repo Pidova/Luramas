@@ -801,7 +801,7 @@ void luramas::ir::passes::constant_fold(pass_manager &pm, shared &s) {
                                                 /[r[BASE + AMT] = ? (not r)] (Can repeart)/
                                           */
                                           if (pm.is_safe(np) && tools::stat::assignment::same_single_table_assignment_table_reg(prev, np) && !tools::stat::assignment::is_rvalue_contains(np, prev->l->reg) &&
-                                              np->l->r->is_integral() && (np->l->r->n - LURAMAS_IR_CONSTANT_TABLE_BASE) == std::count_if(prev->r->tmembers.begin(), prev->r->tmembers.end(), [](const auto &p) { return p.first == nullptr; })) {
+                                              np->l->r->is_integral() && (np->l->r->n - pm.env_flags.input.istart_table_index) == std::count_if(prev->r->tmembers.begin(), prev->r->tmembers.end(), [](const auto &p) { return p.first == nullptr; })) {
 
                                                 prev->r->emit_table_set(np->r, nullptr);
                                                 pm.remove(np);

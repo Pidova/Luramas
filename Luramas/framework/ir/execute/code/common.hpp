@@ -11,6 +11,6 @@ namespace luramas::ir::execution {
       }
 
       namespace exprs {
-
+            exe_expr execute(environment &env, const std::shared_ptr<ir_stat::ir_expr> &expr);
       }
 } // namespace luramas::ir::execution

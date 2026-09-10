@@ -1021,8 +1021,12 @@ namespace vm {
 
       void MOVSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.instruction_interp == 64U) {
+            auto dst = klura_vtemp;
+            dst = (registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI;
+            dst.emit_mem(dst.b, dst.r);
+            dst = ((registrar.hw_constants.instruction_interp == 64U) ? REG_RSI : REG_ESI).memread(8U);
 
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
                         ++REG_RSI;
@@ -1035,7 +1039,6 @@ namespace vm {
                   }
                   kend;
             } else {
-
                   kif(FDF == 0U);
                   {
                         ++REG_ESI;
@@ -1053,8 +1056,12 @@ namespace vm {
 
       void MOVSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.instruction_interp == 64U) {
+            auto dst = klura_vtemp;
+            dst = (registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI;
+            dst.emit_mem(dst.b, dst.r);
+            dst = ((registrar.hw_constants.instruction_interp == 64U) ? REG_RSI : REG_ESI).memread(32U);
 
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
                         REG_RSI += 4U;
@@ -1067,7 +1074,6 @@ namespace vm {
                   }
                   kend;
             } else {
-
                   kif(FDF == 0U);
                   {
                         REG_ESI += 4U;
@@ -1083,11 +1089,20 @@ namespace vm {
             return;
       }
 
-      void MOVSHDUP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void MOVSHDUP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
+            dest.write(0U, 31U, src.read(0U, 31U));
+            dest.write(32U, 63U, src.read(0U, 31U));
+            dest.write(64U, 95U, src.read(64U, 95U));
+            dest.write(96U, 127U, src.read(64U, 95U));
             return;
       }
 
-      void MOVSLDUP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void MOVSLDUP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            MOVSHDUP(registrar, operands);
             return;
       }
 
@@ -1139,8 +1154,12 @@ namespace vm {
 
       void MOVSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            if (registrar.hw_constants.instruction_interp == 64U) {
+            auto dst = klura_vtemp;
+            dst = (registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI;
+            dst.emit_mem(dst.b, dst.r);
+            dst = ((registrar.hw_constants.instruction_interp == 64U) ? REG_RSI : REG_ESI).memread(16U);
 
+            if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
                         REG_RSI += 2U;
@@ -1153,7 +1172,6 @@ namespace vm {
                   }
                   kend;
             } else {
-
                   kif(FDF == 0U);
                   {
                         REG_ESI += 2U;
@@ -1172,7 +1190,10 @@ namespace vm {
       void MOVSX(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
             function_handler f(registrar.build);
-            operands.front() = luramas::il::lifter::builder::libraries::structure::extend_sign(f, operands.back(), operands.back().bits() == 8U ? luramas::types::native::t_int16 : luramas::types::native::t_int32);
+
+            const auto &dest = operands.front();
+            const auto &src = operands.back();
+            dest = luramas::il::lifter::builder::libraries::structure::extend_sign(f, src, dest.type());
             return;
       }
 
@@ -1197,9 +1218,8 @@ namespace vm {
 
       void MOVZX(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            auto dest = operands.front();
-            const auto &src = operands.back();
-            dest = LURAMAS_FBUILD_ZEROEXTEND(dest, src);
+            const auto &dest = operands.front();
+            dest = luramas::il::lifter::builder::libraries::structure::zero_extend(operands.back(), dest.bits());
             return;
       }
 
@@ -1469,7 +1489,16 @@ namespace vm {
 
       void OUTSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            klura_call(luramas::builtins::IO::INPUT, {REG_SI, klura_tint(0U), REG_DX});
+            klura_call(luramas::builtins::IO::OUTPUT, {REG_DX, REG_RSI.memread(16U)}, {});
+            kif(FDF == 0U);
+            {
+                  REG_RSI += 2U;
+            }
+            kelse;
+            {
+                  REG_RSI -= 2U;
+            }
+            kend;
             return;
       }
 } // namespace vm

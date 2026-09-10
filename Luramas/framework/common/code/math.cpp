@@ -58,6 +58,13 @@ namespace luramas::math {
             return result;
       }
 
+      luramas_int floor_div(const luramas_int &a, const luramas_int &b) {
+            if (a.precise() || b.precise()) {
+                  return luramas_int(std::floor(a.extract_double() / b.extract_double()));
+            }
+            return luramas_int(a.extract_base() / b.extract_base());
+      }
+
       luramas_int pow(const luramas_int &base, luramas_int exp) {
             if (exp == 0) {
                   return 1;

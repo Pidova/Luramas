@@ -97,7 +97,7 @@ static std::vector<TestScript> get_scripts(const char *const test_dir, const cha
                   const auto full_file_path = path.string();
                   const auto rel_stem = (std::filesystem::relative(path, base_path).parent_path() / path.stem()).generic_string();
                   if (auto content = read_file(full_file_path); content.has_value()) {
-                        result.push_back({.directory=std::filesystem::relative(path, test_path).generic_string(), .name=rel_stem, .code=std::move(*content)});
+                        result.push_back({.directory = std::filesystem::relative(path, test_path).generic_string(), .name = rel_stem, .code = std::move(*content)});
                   }
             }
       }
@@ -144,9 +144,9 @@ int main(int argc, char **argv) {
       auto format = std::make_shared<luramas::ir::data::format::format>(); /* Syntax format */
 
       /* CLI options */
-      std::string input;            /* Input directory */
+      std::string input;                /* Input directory */
       std::string target("x86");        /* Input target */
-      std::string test_dir;         /* Directory of repo/tests */
+      std::string test_dir;             /* Directory of repo/tests */
       luramas_flag is_bytecode = false; /* Is input bytecode (Only for input) */
       luramas_flag all_tests = false;   /* Run all tests */
 

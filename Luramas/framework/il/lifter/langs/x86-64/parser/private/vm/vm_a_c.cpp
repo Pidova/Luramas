@@ -893,7 +893,23 @@ namespace vm {
             return;
       }
 
-      void CMPSB(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void CMPSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+
+            const auto lhs = REG_RSI.memread(8U);
+            const auto rhs = REG_RDI.memread(8U);
+            const auto temp = lhs - rhs;
+            kif(FDF == 0U);
+            {
+                  ++REG_RSI;
+                  ++REG_RDI;
+            }
+            kelse;
+            {
+                  --REG_RSI;
+                  --REG_RDI;
+            }
+            kend;
+            tools::eflags::mutate<F_COMMON>(registrar, tools::eflags::flag_data(registrar.inst, lhs, temp, rhs));
             return;
       }
 
@@ -909,7 +925,24 @@ namespace vm {
             return;
       }
 
-      void CMPSW(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void CMPSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+
+            const auto lhs = REG_RSI.memread(16U);
+            const auto rhs = REG_RDI.memread(16U);
+            const auto temp = lhs - rhs;
+
+            kif(FDF == 0U);
+            {
+                  REG_RSI += 2U;
+                  REG_RDI += 2U;
+            }
+            kelse;
+            {
+                  REG_RSI -= 2U;
+                  REG_RDI -= 2U;
+            }
+            kend;
+            tools::eflags::mutate<F_COMMON>(registrar, tools::eflags::flag_data(registrar.inst, lhs, temp, rhs));
             return;
       }
 
@@ -1222,7 +1255,8 @@ namespace vm {
 
       void CWDE(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            REG_EAX = REG_AX >> 15U;
+            function_handler f(registrar.build);
+            REG_EAX = luramas::il::lifter::builder::libraries::structure::extend_sign(f, REG_AX, luramas::types::native::t_int32);
             return;
       }
 

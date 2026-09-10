@@ -1,8 +1,8 @@
 #if defined(LURAMAS_TARGET_LUA) && defined(LURAMAS_TARGET_VERSION_53)
 #include "example.hpp"
 
-#include <algorithm>
 #include "../../Luramas/framework/il/lifter/langs/lua/Lua_5.3/include.hpp"
+#include <algorithm>
 
 /* Compiles script/bytecode and returns proto. */
 static Proto *compile_script(const std::string &code, bool &error, lua_State *&buffer, const bool bytecode) {
@@ -20,7 +20,7 @@ static Proto *compile_script(const std::string &code, bool &error, lua_State *&b
       }
       return gco2cl((buffer->top - 1)->value_.gc)->l.p; /* Code proto */
 }
-static constexpr auto kLuaEnvUpvIdx = 0U;    /* Lua _ENV upvalue index */
+static constexpr auto kLuaEnvUpvIdx = 0U;     /* Lua _ENV upvalue index */
 static constexpr auto kLuaReservedReg = 255U; /* All regs are below this number */
 
 static constexpr std::array kEywords = {
@@ -54,7 +54,7 @@ std::optional<std::string> luramas::decompile_lua_53(const std::string &code, st
       }
 
       auto il = luramas::il::lifter::lift_proto(proto, kLuaReservedReg); /* Generate IL */
-      auto closure = luramas::closures::gen_closure(il);                  /* Generate closure info */
+      auto closure = luramas::closures::gen_closure(il);                 /* Generate closure info */
 
       luramas::ir::passes::environment_flags f; /* Env flags */
       f.fallow_ternaries = false;               /* Disable ternaries */
@@ -78,7 +78,7 @@ std::optional<std::string> luramas::decompile_lua_53(const std::string &code, st
 
       const auto env = luramas::ir::tools::exprs::generate::global("_ENV"); /* Env global */
       env->flags.fimplicit_table = true;                                    /* Set Env global as implicit table */
-      f.input.iupvalues[kLuaEnvUpvIdx] = env;                             /* Add Lua default Env */
+      f.input.iupvalues[kLuaEnvUpvIdx] = env;                               /* Add Lua default Env */
       const auto lifted = luramas::ir::lift(closure, f);                    /* Lift to IR */
       return luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::lua, lifted, format);
 }

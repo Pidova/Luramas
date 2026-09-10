@@ -11,24 +11,27 @@ namespace luramas::ir {
             amount   /* PSUEDO AMT (CANT BE ASSIGNED TO ANYTHING) */
       };
 
-      /* IR expr kinds */
+      /* 
+        IR expr kinds
+        Schema: [HINT]; 'RESULTING_TYPE(TKind_1|Tkind_..n, any means type can be anything) RESULT' = VALUES USED?
+      */
       enum class expr_kinds : std::uint8_t {
             nothing,            /* Nothing */
             bitread,            /* Extract bits from value; (L (Val), (INDEX STARTS AT 0)[R(Min), EV(Max)], non_native(castable) ) */
             bitwrite,           /* Writes bits (Index starts at 0)[EV(MIN), XV(MAX)] to the L(first source) but it incs from start to end of R(second source) ending either at end or bitwidth and Interpret result same as bit cast (BOTH SOURCES ARE CONST) */
             memoryread,         /* Memory read; L(Target), R(Offset), non_native(Read type), [OPTIONAL]xtype(Cast value after read as non_native)  */
             call,               /* Call to function but return address is internally managed Function(L), Args(Members) */
-            arith,              /* Arithmetic; (L(L-Value) OP R(R-Value)) */
-            condition,          /* Generic condition */
+            arith,              /* Arithmetic; 'LURAMAS_INT RESULT' = (L(L-Value) OP R(R-Value)) */
+            condition,          /* Generic condition; 'BOOLEAN RESULT' = (L(L-Value) OP [OPTIONAL]R(R-Value)) */
             unpack,             /* Unpack variables */
-            concat,             /* String concat */
-            idx,                /* Index table; L[R] */
-            unary,              /* Unary */
+            concat,             /* String concat; 'STRING RESULT' = (MEMBERS) */
+            idx,                /* Index table; 'ANY RESULT' = L[R] */
+            unary,              /* Unary; 'LURAMAS_INT|BOOLEAN RESULT' = (OP L(L-Value)) */
             reg,                /* Register (Can use a non_native type, has no effects other then descriptor) */
             self,               /* Self */
             closure,            /* Closure */
             upvalue,            /* Upvalue */
-            ternary,            /* Ternary: (l CMP r) ? ev : xv */
+            ternary,            /* Ternary; 'BOOLEAN RESULT' =  (l CMP r) ? ev : xv */
             cast,               /* Cast to type */
             flag,               /* Get flag based on ID */
             blank_lvalue,       /* Nothing just L-Value: L */
@@ -36,7 +39,7 @@ namespace luramas::ir {
             amount              /* PSUEDO AMT (CANT BE ASSIGNED TO ANYTHING) */
       };
 
-      /* IR register expression kinds */
+      /* IR register expression kinds (Descriptor for register) */
       enum class expr_reg_kinds : std::uint8_t {
             nothing, /* Nothing */
             reg,     /* Register */

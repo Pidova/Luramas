@@ -43,9 +43,11 @@ std::optional<std::string> luramas::decompile_luau_v6(const std::string &code, s
             return std::nullopt;
       }
 
-      auto il = luramas::il::lifter::lift(proto);        /* Generate IL */
-      auto closure = luramas::closures::gen_closure(il); /* Generate closure info */
-      const auto lifted = luramas::ir::lift(closure);    /* Lift to IR */
+      auto il = luramas::il::lifter::lift(proto);                /* Generate IL */
+      auto closure = luramas::closures::gen_closure(il);         /* Generate closure info */
+      luramas::ir::passes::environment_flags env_flags;          /* Lifter env flags */
+      env_flags.input.istart_table_index = 1U;                   /* Start table index */
+      const auto lifted = luramas::ir::lift(closure, env_flags); /* Lift to IR */
       return luramas::ir::code::generation::generate(luramas::ir::code::emitter::syntax::emitter_syntax::luau, lifted, format);
 }
 #endif

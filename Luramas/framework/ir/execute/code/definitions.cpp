@@ -58,6 +58,11 @@ namespace luramas::ir::execution {
                   this->v = s;
                   return;
             }
+            void object::emit(const std::shared_ptr<luramas::ir::types::object::type> &t) {
+                  this->k = tkind::object;
+                  this->v = t;
+                  return;
+            }
             void object::emit(const table &t) {
                   this->k = tkind::table;
                   this->v = t;
@@ -66,6 +71,21 @@ namespace luramas::ir::execution {
             void object::emit(const std::vector<std::shared_ptr<object>> &v) {
                   this->k = tkind::variadic;
                   this->v = v;
+                  return;
+            }
+            void object::emitk(const std::string &s) {
+                  this->k = tkind::kvalue;
+                  this->v = s;
+                  return;
+            }
+            void object::emits(const luramas_int &stack_id) {
+                  this->k = tkind::stack;
+                  this->v = stack_id;
+                  return;
+            }
+            void object::emit_ref(const std::shared_ptr<object> &o) {
+                  this->f_ref = true;
+                  this->v = o;
                   return;
             }
 
@@ -107,6 +127,40 @@ namespace luramas::ir::execution {
             void object::clear() {
                   *this = object();
                   return;
+            }
+            object object::clone() const {
+
+                  object result;
+                  result.k = this->k;
+
+                  std::visit(
+                      [&](const auto &held) {
+                            if constexpr (std::is_same_v<std::decay_t<decltype(held)>, table>) {
+
+                                  auto copy = held;
+                                  copy.map.clear();
+                                  for (const auto &[key, value] : held.map) {
+                                        copy.map.emplace(key ? std::make_shared<object>(key->clone()) : nullptr,
+                                            value ? std::make_shared<object>(value->clone()) : nullptr);
+                                  }
+                                  result.v = std::move(copy);
+
+                            } else if constexpr (std::is_same_v<std::decay_t<decltype(held)>, std::vector<std::shared_ptr<object>>>) {
+
+                                  std::vector<std::shared_ptr<object>> copy;
+                                  copy.reserve(held.size());
+                                  for (const auto &e : held) {
+                                        copy.emplace_back(e ? std::make_shared<object>(e->clone()) : nullptr);
+                                  }
+                                  result.v = std::move(copy);
+
+                            } else {
+                                  result.v = held;
+                            }
+                      },
+                      this->v);
+
+                  return result;
             }
 
       } // namespace types

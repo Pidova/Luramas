@@ -64,6 +64,7 @@ namespace luramas::error {
                 : d(nullptr) {
             }
 
+            /* Emit error code and error */
             constexpr void emit(const err_code ec, const std::string &what) {
                   this->h.emit(ec, what);
                   return;
@@ -73,6 +74,8 @@ namespace luramas::error {
                   this->h.emit(ec, what);
                   return;
             }
+
+            /* Emit data */
             template <err_code ec>
             constexpr void emit(const data &d, const std::string &what) {
                   this->d = d;
@@ -87,6 +90,8 @@ namespace luramas::error {
                   this->h = h;
                   return;
             }
+            
+            /* Error string */
             std::string str() const {
                   return this->h.what;
             }

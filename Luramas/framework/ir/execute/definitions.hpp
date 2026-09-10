@@ -1,7 +1,6 @@
 #pragma once
 #include "../ir.hpp"
 #include "data.hpp"
-#include "ir_kinds.hpp"
 #include <boost/container/flat_map.hpp>
 #include <variant>
 
@@ -52,8 +51,12 @@ namespace luramas::ir::execution {
                   void emit(const bool b);
                   void emit(const luramas_int &i);
                   void emit(const std::string &s);
+                  void emit(const std::shared_ptr<ir::types::object::type> &t);
                   void emit(const table &t);
                   void emit(const std::vector<std::shared_ptr<object>> &v);
+                  void emitk(const std::string &s);
+                  void emits(const luramas_int &stack_id);
+                  void emit_ref(const std::shared_ptr<object> &o);
 
                   /* Operators */
                   bool operator<(const luramas_int &i) const;
@@ -72,15 +75,19 @@ namespace luramas::ir::execution {
 
                   /* Misc */
                   void clear();
+                  object clone() const;
 
-                  tkind k = tkind::nothing; /* Kind */
+                  luramas_flag f_ref = false; /* Is reference? */
+                  tkind k = tkind::nothing;   /* Kind */
                   std::variant<
                       std::monostate,
-                      bool,                                 /* Boolean */
-                      luramas_int,                          /* Integral */
-                      std::string,                          /* String value, Kvalue, etc */
-                      table,                                /* Map table */
-                      std::vector<std::shared_ptr<object>>> /* Variadic, etc */
+                      bool,                                     /* Boolean */
+                      luramas_int,                              /* Integral */
+                      std::string,                              /* String value, Kvalue, etc */
+                      table,                                    /* Map table */
+                      std::vector<std::shared_ptr<object>>,     /* Variadic, etc */
+                      std::shared_ptr<ir::types::object::type>, /* Type */
+                      std::shared_ptr<object>>                  /* Reference */
                       v;
             };
 
@@ -99,22 +106,23 @@ namespace luramas::ir::execution {
 
       } // namespace types
 
-      struct execution_flags {
-
-            luramas_flag flocals_only = false; /* Evaluate only locals */
-      };
-
       class environment {
 
           public:
-            environment_flags flags;
+            passes::environment_flags flags; /* Env flags */
 
-            std::vector<luramas_address> call_stack;
-            std::vector<luramas_blockrange> breakables;
-            types::memory memory;
-            types::stack stack;
-            boost::unordered_flat_map<luramas_register, types::object> registers;
-            boost::unordered_flat_map<std::string, types::object> globals;
+            std::vector<luramas_address> page_call_stack;                                          /* When a page function is called its return address (Next instruction in IR) is added here */
+            std::vector<std::pair<bool, luramas_blockrange>> scope;                                /* Scopes: {loop?, range} */
+            types::memory memory;                                                                  /* Env memory */
+            types::stack stack;                                                                    /* Env stack */
+            boost::unordered_flat_map<luramas_register, std::shared_ptr<types::object>> registers; /* Register number -> Object */
+            boost::unordered_flat_map<luramas_register, std::shared_ptr<types::object>> oflags;    /* Flag number -> Object */
+            boost::unordered_flat_map<std::string, std::shared_ptr<types::object>> globals;     /* Globals -> Object */
+            std::vector<std::shared_ptr<types::object>> controller;                                /* Controller object based on page function calls (Used for page functions) */
+            std::vector<std::shared_ptr<types::object>> input_variadic;                            /* When a function is called variadic objects are passes here */
+            boost::unordered_flat_map<luramas_id, std::shared_ptr<ir_stat::ir_expr>> exprts;      /* Exprt type ID -> Expr */
       };
       using c_function = void (*)(const environment &env, const std::vector<std::shared_ptr<types::object>> &args, const std::vector<std::shared_ptr<types::object>> &result);
+
+      using exe_expr = error::result<std::shared_ptr<types::object>, errors::kinds>; /* Expression type */
 } // namespace luramas::ir::execution

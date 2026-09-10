@@ -740,6 +740,11 @@ namespace luramas::ir {
                   luramas_flag fenable_aggresive_threadout = false;       /* Enables a pass that tries to aggressively remove labels */
                   luramas_flag fenable_block_merging = false;             /* Enables a pass that merges basic blocks */
                   luramas_flag funary_not_binop_abstract = true;          /* Unary binary operation (not) is abstract? (Does not reflect C standard "!"?) */
+                  luramas_flag fref_variadics = false;                    /* Allow variadics to be implicitly referenced (i.e ... = 0; outside scope its 0) ? */
+                  luramas_flag fcan_pack_registers = true;                /* Can registers be packed? */
+                  luramas_flag fcan_arith_boolean = true;                 /* Can arithmetic l or r be boolean, will get promoted if so to next type hierarchy? true + true == true by default */
+                  luramas_flag fcan_arith_add_string = true;              /* Can arithmetic l or r be string add (i.e "aa" + 1 will result in "aa1") */
+                  luramas_flag fboolean_arith_wraps = false;              /* Boolean arith wraps? (i.e true + true = false) */
 
                   /* Arith safety */
                   struct safety {
@@ -756,15 +761,13 @@ namespace luramas::ir {
                         /* Stack */
                         std::optional<types::object::type> spage_function_call_stack_size = std::nullopt; /* Every time a page function is called push address to stack but with n size */
                         std::optional<luramas_id> spage_function_call_stack_id = std::nullopt;            /* Add return value to where to what stack? */
-                  } safety;
-
-                  /* Keywords */
-                  luramas_flag fcan_pack_registers = true; /* Can registers be packed? */
+                  } safety;                                                                               /* Safety */
 
                   struct input {
 
+                        luramas_count istart_table_index = 0u;                                                 /* Start table index */
                         boost::unordered_flat_map<luramas_index, std::shared_ptr<ir_stat::ir_expr>> iupvalues; /* Input upvalues on the main function {index, expr} */
-                  } input;
+                  } input;                                                                                     /* Input user data */
 
                   struct options {
 
@@ -801,7 +804,7 @@ namespace luramas::ir {
                         cb_gen_stats opage_return_action = nullptr;       /* Action when pagen return stat is executed */
                         cb_valid_stat opropagation_exception = nullptr;   /* If assignment is not phi and variables in expression does not get mutated it will check this if valid */
                         cb_ostr_expr oresolve_global_qualifier = nullptr; /* If a name qualifier can be transformed into a global will return the expecting string else nullopt */
-                  } options;
+                  } options;                                              /* Optional data */
             };
 
             /* Data shared between environment */

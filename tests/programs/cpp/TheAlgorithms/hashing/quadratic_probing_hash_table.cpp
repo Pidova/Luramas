@@ -37,7 +37,7 @@ namespace quadratic_probing {
       struct Entry {
             explicit Entry(int key = notPresent)
                 : key(key) {
-            }        ///< constructor
+            } ///< constructor
             int key; ///< key value
       };
 

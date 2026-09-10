@@ -71,7 +71,7 @@ int64_t binary_search(const int64_t *arr, const uint16_t l_index, const uint16_t
       // recursion
       if (arr[middle_index] > n) {
             return binary_search(arr, l_index, middle_index - 1, n);
-      }                                                        // left
+      } // left
       return binary_search(arr, middle_index + 1, r_index, n); // right
 }
 

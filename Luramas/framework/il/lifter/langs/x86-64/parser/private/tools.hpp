@@ -97,32 +97,65 @@ namespace tools {
                   auto r = d.r;
                   auto res = !d.result.empty() ? d.result : l;
 
+                  /* Temp CF */
+                  [[maybe_unused]] const auto cf_in = registrar.build->make_temp(cf);
+
+                  /* R or zero */
+                  [[maybe_unused]] const auto rv = !r.empty() ? r : luramas::il::lifter::builder::build::expr(registrar.build, 0u);
+
                   /* AF */
                   if constexpr (combined & static_cast<std::uint32_t>(xeflags::AF)) {
 
                         static constexpr auto mask = 15u;
+                        switch (d.inst) {
 
-                        /* AF = (((l & mask) + (r(0 if no r) & mask)) > mask) | ((result & mask) < (l & mask)); */
-                        af = (((l & mask) + ((!r.empty() ? r : luramas::il::lifter::builder::build::expr(registrar.build, 0u)) & mask)) > mask) | ((res & mask) < (l & mask));
+                              /* Subtractive */
+                              case x86_insn::X86_INS_SUB:
+                              case x86_insn::X86_INS_CMP:
+                              case x86_insn::X86_INS_DEC:
+                              case x86_insn::X86_INS_NEG:
+                              case x86_insn::X86_INS_CMPSB:
+                              case x86_insn::X86_INS_CMPSW:
+                              case x86_insn::X86_INS_CMPSD:
+                              case x86_insn::X86_INS_CMPSQ:
+                              case x86_insn::X86_INS_SCASB:
+                              case x86_insn::X86_INS_SCASW:
+                              case x86_insn::X86_INS_SCASD:
+                              case x86_insn::X86_INS_SCASQ: {
+
+                                    af = (l & mask) < (rv & mask);
+                                    break;
+                              }
+                              case x86_insn::X86_INS_SBB: {
+
+                                    af = ((l & mask) < (rv & mask)) | (cf_in & ((l & mask) == (rv & mask)));
+                                    break;
+                              }
+                              case x86_insn::X86_INS_ADC: {
+
+                                    af = (((l & mask) + (rv & mask) + cf_in) > mask);
+                                    break;
+                              }
+                              default: {
+
+                                    af = (((l & mask) + (rv & mask)) > mask);
+                                    break;
+                              }
+                        }
                   }
 
                   /* CF */
                   if constexpr (combined & static_cast<std::uint32_t>(xeflags::CF)) {
                         switch (d.inst) {
-
                               case x86_insn::X86_INS_ADC: {
 
-                                    cf = (res < l) || (res < r);
+                                    cf = (res < l) | (cf_in & (res == l));
                                     break;
                               }
-                              case x86_insn::X86_INS_ADD: {
+                              case x86_insn::X86_INS_ADD:
+                              case x86_insn::X86_INS_XADD: {
 
                                     cf = res < l;
-                                    break;
-                              }
-                              case x86_insn::X86_INS_CMC: {
-
-                                    cf = res > (luramas::il::lifter::builder::build::expr(registrar.build, 1u) << std::max(std::max(l.bits(), r.bits()), res.bits())) - 1;
                                     break;
                               }
                               case x86_insn::X86_INS_CMP: {
@@ -130,85 +163,30 @@ namespace tools {
                                     cf = l.cast(true) < r.cast(true);
                                     break;
                               }
-                              case x86_insn::X86_INS_CMPSB:
-                              case x86_insn::X86_INS_CMPSW:
-                              case x86_insn::X86_INS_CMPSD:
-                              case x86_insn::X86_INS_CMPSQ: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_CMPXCHG: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_COMISD: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_COMISS: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_FCOMI: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_FCOMPI: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_FUCOMI: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_FUCOMPI: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_UCOMISD: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_UCOMISS: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_MUL: {
-
-                                    cf = (res >> res.bits()) != 0;
-                                    break;
-                              }
-                              case x86_insn::X86_INS_RSM: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SAL: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SAR: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SHL: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SHR: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SBB: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SCASB:
-                              case x86_insn::X86_INS_SCASW:
-                              case x86_insn::X86_INS_SCASD:
-                              case x86_insn::X86_INS_SCASQ: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SHLD: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SHRD: {
-                                    break;
-                              }
                               case x86_insn::X86_INS_SUB: {
 
                                     cf = (l < r);
                                     break;
                               }
-                              case x86_insn::X86_INS_XADD: {
+                              case x86_insn::X86_INS_SBB: {
 
-                                    cf = (res < l);
+                                    cf = (l < r) | (cf_in & (l == r));
                                     break;
                               }
+                              case x86_insn::X86_INS_SHL:
+                              case x86_insn::X86_INS_SAL:
+                              case x86_insn::X86_INS_SHLD: {
 
+                                    cf = (l >> ((l.bits() - rv) & (l.bits() - 1u))) & 1u;
+                                    break;
+                              }
+                              case x86_insn::X86_INS_SHR:
+                              case x86_insn::X86_INS_SAR:
+                              case x86_insn::X86_INS_SHRD: {
+
+                                    cf = (l >> ((rv - 1u) & (l.bits() - 1u))) & 1u;
+                                    break;
+                              }
                               case x86_insn::X86_INS_AND:
                               case x86_insn::X86_INS_BSF:
                               case x86_insn::X86_INS_BSR:
@@ -233,7 +211,6 @@ namespace tools {
 
                   /* SF */
                   if constexpr (combined & static_cast<std::uint32_t>(xeflags::SF)) {
-
                         sf = LURAMAS_FBUILD_SIGNBIT(res);
                   }
 
@@ -245,66 +222,51 @@ namespace tools {
                   /* PF */
                   if constexpr (combined & static_cast<std::uint32_t>(xeflags::PF)) {
 
-                        auto result = registrar.build->make_temp(res);
-                        switch (res.bits()) {
-                              case 64u: {
-                                    result ^= (result >> 32u);
-                                    [[fallthrough]];
-                              }
-                              case 32u: {
-                                    result ^= (result >> 16u);
-                                    [[fallthrough]];
-                              }
-                              case 16u: {
-                                    result ^= (result >> 8u);
-                                    [[fallthrough]];
-                              }
-                              case 8u: {
-
-                                    result ^= (result >> 4u);
-                                    result ^= (result >> 2u);
-                                    result ^= (result >> 1u);
-
-                                    pf = (~(result & 1u)) & 1u;
-                                    break;
-                              }
-                              default: {
-                                    break;
-                              }
-                        }
+                        auto result = registrar.build->make_temp(res.read(0u, 7u));
+                        result ^= (result >> 4u);
+                        result ^= (result >> 2u);
+                        result ^= (result >> 1u);
+                        pf = (~result) & 1u;
                   }
 
                   /* OF */
                   if constexpr (combined & static_cast<std::uint32_t>(xeflags::OF)) {
                         switch (d.inst) {
-                              case x86_insn::X86_INS_ADC: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_ADD: {
+                              case x86_insn::X86_INS_ADD:
+                              case x86_insn::X86_INS_XADD: {
 
                                     of = ((l > 0 && r > 0 && res < 0) || (l < 0 && r < 0 && res >= 0));
                                     break;
                               }
-                              case x86_insn::X86_INS_CMP: {
+                              case x86_insn::X86_INS_ADC: {
+
+                                    of = ((l > 0 && r > 0 && res < 0) || (l < 0 && r < 0 && res >= 0));
+                                    break;
+                              }
+
+                              case x86_insn::X86_INS_CMP:
+                              case x86_insn::X86_INS_SBB: {
 
                                     of = (((l ^ r) & (l ^ res)) & LURAMAS_FBUILD_SIGNMASK(res)) != 0;
                                     break;
                               }
+                              case x86_insn::X86_INS_SUB:
                               case x86_insn::X86_INS_CMPSB:
                               case x86_insn::X86_INS_CMPSW:
                               case x86_insn::X86_INS_CMPSD:
-                              case x86_insn::X86_INS_CMPSQ: {
+                              case x86_insn::X86_INS_CMPSQ:
+                              case x86_insn::X86_INS_SCASB:
+                              case x86_insn::X86_INS_SCASW:
+                              case x86_insn::X86_INS_SCASD:
+                              case x86_insn::X86_INS_SCASQ: {
+
+                                    of = (((l ^ r) & (l ^ res)) & LURAMAS_FBUILD_SIGNMASK(res)) != 0;
                                     break;
                               }
-                              case x86_insn::X86_INS_CMPXCHG: {
-                                    break;
-                              }
+
                               case x86_insn::X86_INS_DEC: {
 
                                     of = (l < 0 && res > 0);
-                                    break;
-                              }
-                              case x86_insn::X86_INS_IMUL: {
                                     break;
                               }
                               case x86_insn::X86_INS_INC: {
@@ -312,57 +274,27 @@ namespace tools {
                                     of = (l > 0 && res < 0);
                                     break;
                               }
-                              case x86_insn::X86_INS_MUL: {
-                                    break;
-                              }
                               case x86_insn::X86_INS_NEG: {
+
+                                    of = (l < 0 && res < 0);
                                     break;
                               }
-                              case x86_insn::X86_INS_RCL: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_RCR: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_ROL: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_ROR: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_RSM: {
-                                    break;
-                              }
+                              case x86_insn::X86_INS_SHL:
                               case x86_insn::X86_INS_SAL: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SAR: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SHL: {
+
+                                    of = LURAMAS_FBUILD_SIGNBIT(res) ^ cf;
                                     break;
                               }
                               case x86_insn::X86_INS_SHR: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SBB: {
 
-                                    of = (((l ^ r) & (l ^ res)) & LURAMAS_FBUILD_SIGNMASK(res)) != 0;
+                                    of = LURAMAS_FBUILD_SIGNBIT(l);
                                     break;
                               }
-                              case x86_insn::X86_INS_SCASB:
-                              case x86_insn::X86_INS_SCASW:
-                              case x86_insn::X86_INS_SCASD:
-                              case x86_insn::X86_INS_SCASQ: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_SUB: {
-                                    break;
-                              }
-                              case x86_insn::X86_INS_XADD: {
-                                    break;
-                              }
+                              case x86_insn::X86_INS_SAR: {
 
+                                    of = false;
+                                    break;
+                              }
                               case x86_insn::X86_INS_AND:
                               case x86_insn::X86_INS_BSF:
                               case x86_insn::X86_INS_BSR:
@@ -377,6 +309,7 @@ namespace tools {
                               case x86_insn::X86_INS_OR:
                               case x86_insn::X86_INS_TEST:
                               case x86_insn::X86_INS_XOR: {
+
                                     of = false;
                                     break;
                               }

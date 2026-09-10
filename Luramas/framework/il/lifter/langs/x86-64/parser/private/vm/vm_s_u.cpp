@@ -6,11 +6,11 @@ namespace vm {
 
       void SAHF(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            FSF = REG_AH;
-            FZF = REG_AH;
-            FAF = REG_AH;
-            FPF = REG_AH;
-            FCF = REG_AH;
+            FCF = REG_AH[0U];
+            FPF = REG_AH[2U];
+            FAF = REG_AH[4U];
+            FZF = REG_AH[6U];
+            FSF = REG_AH[7U];
             return;
       }
 
@@ -36,12 +36,12 @@ namespace vm {
             const auto &dest = operands.front();
             const auto &count = operands.back();
 
-            const bool is_64bit = (registrar.hw_constants.instruction_interp == 64U);
-            const auto count_mask = is_64bit ? 0x3F : 0x1F;
+            const auto wide = (dest.bits() == 64U);
+            const auto count_mask = wide ? 0x3F : 0x1F;
 
             auto temp_count = count & count_mask;
 
-            if (is_64bit) {
+            if (wide) {
                   result = (dest >> temp_count).cast(luramas::types::native::t_uint64);
             } else {
                   result = (dest >> temp_count).cast(luramas::types::native::t_uint32);
@@ -57,7 +57,7 @@ namespace vm {
             }
             kend;
 
-            tools::eflags::mutate<xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, result, count));
+            tools::eflags::mutate<xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, result, temp_count));
             dest = result;
             return;
       }
@@ -83,8 +83,8 @@ namespace vm {
 
       void SCASB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            const auto temp = REG_AL - REG_DIL;
-
+            const auto rhs = ((registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI).memread(8U);
+            const auto temp = REG_AL - rhs;
             kif(FDF == 0U);
             {
                   ++REG_EDI;
@@ -94,7 +94,7 @@ namespace vm {
                   --REG_EDI;
             }
             kend;
-            tools::eflags::mutate<F_COMMON>(registrar, tools::eflags::flag_data(registrar.inst, REG_AL, temp, REG_DIL));
+            tools::eflags::mutate<F_COMMON>(registrar, tools::eflags::flag_data(registrar.inst, REG_AL, temp, rhs));
             return;
       }
 
@@ -191,7 +191,7 @@ namespace vm {
 
       void SETLE(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            operands.front() = FZF == 1U && FSF != FOF;
+            operands.front() = FZF == 1U || FSF != FOF;
             return;
       }
 
@@ -300,14 +300,34 @@ namespace vm {
 
             const auto &dest = operands.front();
             const auto &src = operands.back();
-            const auto product = dest << src;
 
-            tools::eflags::mutate<xeflags::CF, xeflags::OF, xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, product, src));
+            const auto count_mask = (dest.bits() == 64U) ? 0x3FU : 0x1FU;
+            const auto count = src & count_mask;
+            const auto product = dest << count;
+
+            tools::eflags::mutate<xeflags::CF, xeflags::OF, xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, product, count));
             dest = product;
             return;
       }
 
-      void SHLD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void SHLD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto &dest = operands.at(0U);
+            const auto &src = operands.at(1U);
+            const auto &count = operands.back();
+
+            const auto size = dest.bits();
+            const auto n = count & (size - 1U);
+            const auto product = klura_vtemp;
+
+            kif(n != 0U);
+            {
+                  product = (dest << n) | (src >> (size - n));
+                  FCF = dest[size - n];
+                  tools::eflags::mutate<xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, product, src));
+                  dest = product;
+            }
+            kend;
             return;
       }
 
@@ -321,14 +341,34 @@ namespace vm {
 
             const auto &dest = operands.front();
             const auto &src = operands.back();
-            const auto product = dest >> src;
 
-            tools::eflags::mutate<xeflags::CF, xeflags::OF, xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, product, src));
+            const auto count_mask = (dest.bits() == 64U) ? 0x3FU : 0x1FU;
+            const auto count = src & count_mask;
+            const auto product = dest >> count;
+
+            tools::eflags::mutate<xeflags::CF, xeflags::OF, xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, product, count));
             dest = product;
             return;
       }
 
-      void SHRD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void SHRD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto &dest = operands.at(0U);
+            const auto &src = operands.at(1U);
+            const auto &count = operands.back();
+
+            const auto size = dest.bits();
+            const auto n = count & (size - 1U);
+            const auto product = klura_vtemp;
+
+            kif(n != 0U);
+            {
+                  product = (dest >> n) | (src << (size - n));
+                  FCF = dest[n - 1U];
+                  tools::eflags::mutate<xeflags::SF, xeflags::ZF, xeflags::PF>(registrar, tools::eflags::flag_data(registrar.inst, dest, product, src));
+                  dest = product;
+            }
+            kend;
             return;
       }
 
@@ -444,7 +484,11 @@ namespace vm {
 
       void STOSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            REG_AL.write(REG_AL);
+            auto dst = klura_vtemp;
+            dst = (registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI;
+            dst.emit_mem(dst.b, dst.r);
+            dst = REG_AL;
+
             if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
@@ -471,7 +515,11 @@ namespace vm {
 
       void STOSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            REG_EAX.write(REG_EAX);
+            auto dst = klura_vtemp;
+            dst = (registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI;
+            dst.emit_mem(dst.b, dst.r);
+            dst = REG_EAX;
+
             if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
@@ -527,11 +575,14 @@ namespace vm {
 
       void STOSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            REG_AX.write(REG_AX);
+            auto dst = klura_vtemp;
+            dst = (registrar.hw_constants.instruction_interp == 64U) ? REG_RDI : REG_EDI;
+            dst.emit_mem(dst.b, dst.r);
+            dst = REG_AX;
+
             if (registrar.hw_constants.instruction_interp == 64U) {
                   kif(FDF == 0U);
                   {
-
                         REG_RDI += 2U;
                   }
                   kelse;
@@ -542,7 +593,6 @@ namespace vm {
             } else {
                   kif(FDF == 0U);
                   {
-
                         REG_EDI += 2U;
                   }
                   kelse;

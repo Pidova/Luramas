@@ -15,28 +15,30 @@ namespace vm {
       void POPAW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             auto temp = registrar.build->make_temp(REG_SP);
-            registrar.build->make_pop(REG_AX);
-            registrar.build->make_pop(REG_CX);
-            registrar.build->make_pop(REG_DX);
-            registrar.build->make_pop(REG_BX);
-            registrar.build->make_pop(temp);
-            registrar.build->make_pop(REG_BP);
-            registrar.build->make_pop(REG_SI);
+
             registrar.build->make_pop(REG_DI);
+            registrar.build->make_pop(REG_SI);
+            registrar.build->make_pop(REG_BP);
+            registrar.build->make_pop(temp);
+            registrar.build->make_pop(REG_BX);
+            registrar.build->make_pop(REG_DX);
+            registrar.build->make_pop(REG_CX);
+            registrar.build->make_pop(REG_AX);
             return;
       }
 
       void POPAL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
             auto temp = registrar.build->make_temp(REG_ESP);
-            registrar.build->make_pop(REG_EAX);
-            registrar.build->make_pop(REG_ECX);
-            registrar.build->make_pop(REG_EDX);
-            registrar.build->make_pop(REG_EBX);
-            registrar.build->make_pop(temp);
-            registrar.build->make_pop(REG_EBP);
-            registrar.build->make_pop(REG_ESI);
+
             registrar.build->make_pop(REG_EDI);
+            registrar.build->make_pop(REG_ESI);
+            registrar.build->make_pop(REG_EBP);
+            registrar.build->make_pop(temp);
+            registrar.build->make_pop(REG_EBX);
+            registrar.build->make_pop(REG_EDX);
+            registrar.build->make_pop(REG_ECX);
+            registrar.build->make_pop(REG_EAX);
             return;
       }
 
@@ -57,11 +59,24 @@ namespace vm {
             return;
       }
 
-      void POPF(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void POPF(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+
+            const auto flags = klura_vtemp;
+            build::stack_pop(registrar, flags);
+            FCF = flags[0U];
+            FPF = flags[2U];
+            FAF = flags[4U];
+            FZF = flags[6U];
+            FSF = flags[7U];
+            FIF = flags[9U];
+            FDF = flags[10U];
+            FOF = flags[11U];
             return;
       }
 
-      void POPFD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void POPFD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            vm::POPF(registrar, operands);
             return;
       }
 
@@ -236,11 +251,17 @@ namespace vm {
             return;
       }
 
-      void PUSHF(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void PUSHF(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+
+            const auto flags = klura_vtemp;
+            flags = (FOF << 11U) | (FDF << 10U) | (FIF << 9U) | (FSF << 7U) | (FZF << 6U) | (FAF << 4U) | (FPF << 2U) | (1U << 1U) | FCF;
+            build::stack_push(registrar, flags);
             return;
       }
 
-      void PUSHFD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void PUSHFD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            vm::PUSHF(registrar, operands);
             return;
       }
 
@@ -260,14 +281,31 @@ namespace vm {
             return;
       }
 
-      void RCR(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void RCR(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
-            //const auto dest = operands.front();
-            //const auto src = operands.back();
-            //
-            //const auto res = (dest >> src) | (FCF << (dest.bits() - src));
-            //tools::eflags::mutate(registrar, tools::eflags::flag_data(registrar.inst, dest, res, src), xeflags::CF, xeflags::OF);
-            //dest = res;
+            const auto &dest = operands.front();
+            const auto &count = operands.back();
+
+            function_handler f(registrar.build);
+            const auto size = dest.bits();
+            const auto countmask = size - 1U;
+            const auto temp_cf = klura_vtemp;
+            const auto temp_count = (count & countmask) % (size + 1U);
+
+            kif((count & countmask) == 1U);
+            {
+                  FOF = luramas::il::lifter::builder::libraries::structure::most_significant_bit(f, dest) ^ FCF;
+            }
+            kend;
+
+            kwhile(temp_count != 0);
+            {
+                  temp_cf = dest[0U];
+                  dest = (dest >> 1U) | (FCF << (size - 1U));
+                  FCF = temp_cf;
+                  --temp_count;
+            }
+            kwhile_end;
             return;
       }
 

@@ -93,10 +93,14 @@ namespace luramas::ir::execution {
                   /* Support */
                   unsupported_expr_tkind, /* Unsupported expr tkind */
                   unsupported_expr_type,  /* Unsupported expr type */
-                  /* Misc */
-                  null_pointer, /* Pointer is null */
 
-                  amount /* Amount */
+                  /* Misc */
+                  null_pointer,     /* Pointer is null */
+                  undefined_global, /* Global is undefined */
+                  undefined_exprt,  /* Exprt is undefined */
+
+                  unsupported_error, /* Placeholder error */
+                  amount             /* Amount */
             };
 
             /* Get what string from kind */

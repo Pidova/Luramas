@@ -36,7 +36,7 @@ namespace double_hashing {
       struct Entry {
             explicit Entry(int key = notPresent)
                 : key(key) {
-            }        ///< constructor
+            } ///< constructor
             int key; ///< key value
       };
 

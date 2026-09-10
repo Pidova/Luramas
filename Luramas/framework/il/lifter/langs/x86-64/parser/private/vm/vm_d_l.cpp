@@ -216,12 +216,20 @@ namespace vm {
 
       void LCALL(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
+            if (operands.size() >= 2U) {
+                  vm::CALL(registrar, {operands.back()});
+                  return;
+            }
             vm::CALL(registrar, operands);
             return;
       }
 
       void LJMP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
 
+            if (operands.size() >= 2U) {
+                  vm::JMP(registrar, {operands.back()});
+                  return;
+            }
             vm::JMP(registrar, operands);
             return;
       }
@@ -659,7 +667,16 @@ namespace vm {
 
       void INSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            klura_call(luramas::builtins::IO::OUTPUT, {klura_tint(0U), REG_DX}, {REG_DIL});
+            klura_call(luramas::builtins::IO::INPUT, {REG_DX}, {REG_DIL});
+            kif(FDF == 0U);
+            {
+                  ++REG_RDI;
+            }
+            kelse;
+            {
+                  --REG_RDI;
+            }
+            kend;
             return;
       }
 
@@ -679,7 +696,16 @@ namespace vm {
 
       void INSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
-            klura_call(luramas::builtins::IO::OUTPUT, {klura_tint(0U), REG_DX}, {REG_DI});
+            klura_call(luramas::builtins::IO::INPUT, {REG_DX}, {REG_DI});
+            kif(FDF == 0U);
+            {
+                  REG_RDI += 2U;
+            }
+            kelse;
+            {
+                  REG_RDI -= 2U;
+            }
+            kend;
             return;
       }
 
@@ -733,11 +759,18 @@ namespace vm {
             return;
       }
 
-      void IRET(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void IRET(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto ip = klura_vtemp;
+            build::stack_pop(registrar, ip);
+            build::stack_pop(registrar, klura_vtemp);
+            vm::POPF(registrar, operands);
+            vm::RET(registrar, {});
             return;
       }
 
       void IRETD(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+
             return;
       }
 
@@ -1552,6 +1585,7 @@ namespace vm {
 
       void LODSB(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
+            REG_AL = REG_RSI.memread(8U);
             kif(FDF == 0U);
             {
                   REG_RSI += 1U;
@@ -1566,6 +1600,7 @@ namespace vm {
 
       void LODSD(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
+            REG_EAX = REG_RSI.memread(32U);
             kif(FDF == 0U);
             {
                   REG_RSI += 4U;
@@ -1594,6 +1629,7 @@ namespace vm {
 
       void LODSW(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
 
+            REG_AX = REG_RSI.memread(16U);
             kif(FDF == 0U);
             {
                   REG_RSI += 2U;
@@ -1606,19 +1642,57 @@ namespace vm {
             return;
       }
 
-      void LOOP(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void LOOP(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto counter = registrar.hw_constants.instruction_interp == 64U   ? REG_RCX
+                                 : registrar.hw_constants.instruction_interp == 32U ? REG_ECX
+                                                                                    : REG_CX;
+            --counter;
+            kif(counter != 0U);
+            {
+                  build::page_gotos(registrar, operands);
+            }
+            kend;
             return;
       }
 
-      void LOOPE(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void LOOPE(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto counter = registrar.hw_constants.instruction_interp == 64U   ? REG_RCX
+                                 : registrar.hw_constants.instruction_interp == 32U ? REG_ECX
+                                                                                    : REG_CX;
+            --counter;
+            kif(counter != 0U && FZF == 1U);
+            {
+                  build::page_gotos(registrar, operands);
+            }
+            kend;
             return;
       }
 
-      void LOOPNE(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void LOOPNE(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto counter = registrar.hw_constants.instruction_interp == 64U   ? REG_RCX
+                                 : registrar.hw_constants.instruction_interp == 32U ? REG_ECX
+                                                                                    : REG_CX;
+            --counter;
+            kif(counter != 0U && FZF == 0U);
+            {
+                  build::page_gotos(registrar, operands);
+            }
+            kend;
             return;
       }
 
-      void RETF(const registrar & /*registrar*/, const std::vector<luramas::il::lifter::builder::build::expr> & /*operands*/) {
+      void RETF(const registrar &registrar, const std::vector<luramas::il::lifter::builder::build::expr> &operands) {
+
+            const auto ip = klura_vtemp;
+            build::stack_pop(registrar, ip);
+            build::stack_pop(registrar, klura_vtemp); /* discarded CS */
+            if (!operands.empty()) {
+                  build::reg_stack(registrar) += operands.front();
+            }
+            vm::RET(registrar, {});
             return;
       }
 

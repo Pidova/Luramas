@@ -10,23 +10,34 @@ namespace luramas::math {
             std::size_t mix(const std::size_t seed, std::size_t value);
       }
 
+      /* Is i a decimal? */
       bool is_decimal(const luramas_int &i);
 
+      /* Log2 of n */
       luramas_int log2(luramas_int n);
 
+      /* Round i down */
       luramas_int floor(const luramas_int &i);
 
+      /* Round i up */
       luramas_int round(const luramas_int &i);
 
+      /* Absoulte value of i */
       luramas_int abs(const luramas_int &i);
 
+      /* Float modulus of a and b */
       luramas_int fmod(const luramas_int &a, const luramas_int &b);
 
       /* Calculates power of two given n (returns 0 if not) */
       luramas_int power_of_two(luramas_int n);
 
+      /* Floor division given a/b */
+      luramas_int floor_div(const luramas_int &a, const luramas_int &b);
+
+      /* Power base^exp */
       luramas_int pow(const luramas_int &base, luramas_int exp);
 
+      /* Count number of digits in n */
       luramas_int count_digits(luramas_int n);
 
       /* If n is a max bites it counts its bytes */

@@ -334,9 +334,9 @@ namespace luramas::il::arch {
                         }
                         case bin_kinds::sub_: {
                               return bin_kinds::add_;
-                        }                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                        }
                         case bin_kinds::mul_: {
-                              return bin_kinds::div_;      
+                              return bin_kinds::div_;
                         }
                         case bin_kinds::div_: {
                               return bin_kinds::mul_;
